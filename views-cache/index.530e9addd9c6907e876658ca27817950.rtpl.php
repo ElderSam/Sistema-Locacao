@@ -1,3 +1,7 @@
+<?php if(!class_exists('Rain\Tpl')){exit;}?>&lt;?php
+    require('header.php');
+
+?&gt;
 <div id="accordion">
 <div class="card">
     <div class="card-header" id="headingTwo">
@@ -164,6 +168,11 @@
         </div>
 
 
+&lt;?php
+    require('footer.php');
+
+?&gt;
+    
     <script src="js/script.js"></script>
 
 	<script type="text/javascript">
@@ -183,3 +192,4 @@
     	});
 	</script>
 
+</html>
