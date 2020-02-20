@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Eldersam\\": "vendor\\locacao\\php-classes\\src"
+            "Locacao\\": "vendor\\locacao\\php-classes\\src"
         }
     }
 }

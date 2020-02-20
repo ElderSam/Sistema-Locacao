@@ -1,0 +1,87 @@
+    
+    <div class="promo-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-promo promo1">
+                        <i class="fa fa-refresh"></i>
+                        <p>1 ano de garantia</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-promo promo2">
+                        <i class="fa fa-truck"></i>
+                        <p>Frete grátis</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-promo promo3">
+                        <i class="fa fa-lock"></i>
+                        <p>Pagamento seguro</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-promo promo4">
+                        <i class="fa fa-gift"></i>
+                        <p>Novos produtos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End promo area -->
+    
+    <div class="maincontent-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="latest-product">
+                        <h2 class="section-title">Produtos</h2>
+                        <div class="product-carousel">
+
+                            {loop="$products"}
+                            <div class="single-product">
+                                <div class="product-f-image">
+                                    <img src="{$value.desphoto}" alt="">
+                                    <div class="product-hover">
+                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Comprar</a>
+                                        <a href="/products/{$value.desurl}" class="view-details-link"><i class="fa fa-link"></i> Ver detalhes</a>
+                                    </div>
+                                </div>
+                                
+                                <h2><a href="/products/{$value.desurl}">{$value.desproduct}</a></h2>
+                                
+                                <div class="product-carousel-price">
+                                    <ins>R${function="formatPrice($value.vlprice)"}</ins>
+                                </div> 
+                            </div>
+                           {/loop}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End main content area -->
+    
+    <div class="brands-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="brand-wrapper">
+                        <div class="brand-list">
+                            <img src="/res/site/img/brand1.png" alt="">
+                            <img src="/res/site/img/brand2.png" alt="">
+                            <img src="/res/site/img/brand3.png" alt="">
+                            <img src="/res/site/img/brand4.png" alt="">
+                            <img src="/res/site/img/brand5.png" alt="">
+                            <img src="/res/site/img/brand6.png" alt="">
+                            <img src="/res/site/img/brand1.png" alt="">
+                            <img src="/res/site/img/brand2.png" alt="">                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End brands area -->

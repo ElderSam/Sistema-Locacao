@@ -1,18 +1,23 @@
 <?php
 
-require('vendor/autoload.php');
+require_once("vendor/autoload.php");
 
 //nasmespace
 use \Slim\Slim;
 use \Locacao\Page;
 
+//cria a aplicação Slim
+$app = new Slim();
+
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', true);
 
-
-$app = new Slim();
-
 $app->get('/', function(){
+
+    //echo "Hello World!";
+    $page = new Page();
+
+    $page->setTpl("index");
 
 });
 
