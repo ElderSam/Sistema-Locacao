@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   <style>
+       form{
+        max-width: 25rem;
+        border: .2rem solid black;
+        border-radius: 10px;
+       }
+       form #btnLogin:hover{
+           background-color: greenyellow;
+           color: black;
+       }
+   </style>
+</head>
+<body class="bg-dark">
+    <br><br>
+    <form class="form-signin mx-auto mt-5 p-2 bg-light">
+        <div class="mx-auto">
+            <img class="mb-4" src="{{ site.baseurl }}/docs/{{ site.docs_version }}/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h1 class="">Login</h1>
+        </div>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Endereço de Email" required autofocus>
+        <br>
+        <label for="inputPassword" class="sr-only">Senha</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Me lembre
+          </label>
+        </div>
+        <button id="btnLogin" class="btn btn-lg btn-primary btn-block" type="submit"> Entrar</button>
+        <br>
+        <a href=""> Esqueci minha senha</a>
+      
+      </form>
+      
+</body>
+</html>
