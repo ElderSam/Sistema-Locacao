@@ -7,12 +7,18 @@ var ctx = document.getElementById("myBarChart");
 var myLineChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ["January", "February", "March", "April", "May", "June"],
+    labels: ["Janeiro", "Fevereiro", "Março", "Abril"],
     datasets: [{
-      label: "Revenue",
+      label: "Contas a pagar",
+      backgroundColor: "rgba(216,17,2,1)",
+      borderColor: "rgba(2,117,216,1)",
+      data: [1700, 3450, 3200, 5300],
+    },
+    {
+      label: "Contas a receber",
       backgroundColor: "rgba(2,117,216,1)",
       borderColor: "rgba(2,117,216,1)",
-      data: [4215, 5312, 6251, 7841, 9821, 14984],
+      data: [1350, 2900, 4000, 6400],
     }],
   },
   options: {
