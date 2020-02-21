@@ -1,4 +1,4 @@
-    </div>
+<?php if(!class_exists('Rain\Tpl')){exit;}?>    </div>
     
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="/res/plugins/bootstrap-bundle/bootstrap.bundle.min.js"
