@@ -14,12 +14,28 @@ $app->config('debug', true);
 
 $app->get('/', function(){
 
-    //echo "Hello World!";
-    $page = new Page();
+    $sql = new Locacao\DB\Sql();
 
-    $page->setTpl("index");
+    $results = $sql->select("SELECT * FROM usuario");
+
+    echo json_encode($results);
+    //echo "Hello World!";
+    /*$page = new Page();
+
+    $page->setTpl("index");*/
 
 });
+
+
+$app->get('/clientes', function(){
+
+    echo "help";
+    //$page = new Page();
+
+    //$page->setTpl("clientes");
+
+});
+
 
 //executa
 $app->run();
