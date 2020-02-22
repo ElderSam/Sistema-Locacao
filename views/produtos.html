@@ -1,14 +1,13 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
-            <h1 class="mt-4">Clientes</h1>
+            <h1 class="mt-4">Produtos</h1>
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Clientes</li>
+                <li class="breadcrumb-item active">home/Produtos</li>
             </ol>
 
            
             <div class="card mb-4">
-                <div class="card-header"><i class="fas fa-table mr-1"></i>Lista de Clientes</div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
@@ -32,12 +31,12 @@
                         
                                     <td>$1320,800</td>
                                     <td>
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'view')" value="View"
-                                            class="btn btn-warning">
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Edit"
-                                            class="btn btn-primary">
-                                        <input type="button" onclick="deleteRow('.$data->id.')" value="Delete"
-                                            class="btn btn-danger">
+                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
+                                            <i class="fas fa-bars sm"></i>
+                                        </button>
+                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -48,12 +47,12 @@
                         
                                     <td>$170,750</td>
                                     <td>
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'view')" value="View"
-                                            class="btn btn-warning">
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Edit"
-                                            class="btn btn-primary">
-                                        <input type="button" onclick="deleteRow('.$data->id.')" value="Delete"
-                                            class="btn btn-danger">
+                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
+                                            <i class="fas fa-bars sm"></i>
+                                        </button>
+                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -64,12 +63,12 @@
                         
                                     <td>$860,00</td>
                                     <td>
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'view')" value="View"
-                                            class="btn btn-warning">
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Edit"
-                                            class="btn btn-primary">
-                                        <input type="button" onclick="deleteRow('.$data->id.')" value="Delete"
-                                            class="btn btn-danger">
+                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
+                                            <i class="fas fa-bars sm"></i>
+                                        </button>
+                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -80,12 +79,12 @@
                         
                                     <td>$433,00</td>
                                     <td>
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'view')" value="View"
-                                            class="btn btn-warning">
-                                        <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Edit"
-                                            class="btn btn-primary">
-                                        <input type="button" onclick="deleteRow('.$data->id.')" value="Delete"
-                                            class="btn btn-danger">
+                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
+                                            <i class="fas fa-bars sm"></i>
+                                        </button>
+                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -112,7 +111,7 @@
 <script>
 	$(document).ready(function() {
 
-  	$("#linkClientes").addClass("active"); 
+  	$("#linkProdutos").addClass("active"); 
 
 	$('#example').DataTable();
 	
