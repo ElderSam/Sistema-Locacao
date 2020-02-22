@@ -1,4 +1,4 @@
-<!--Modal de detalhe de Clientes-->
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!--Modal de detalhe de Clientes-->
 <div class="modal fade" id="modal-cliente" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Cliente"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

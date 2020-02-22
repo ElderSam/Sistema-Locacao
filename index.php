@@ -14,26 +14,34 @@ $app->config('debug', true);
 
 $app->get('/', function(){
 
-    $sql = new Locacao\DB\Sql();
+    $page = new Page();
 
-    $results = $sql->select("SELECT * FROM usuario");
+    $page->setTpl("index");
 
-    echo json_encode($results);
-    //echo "Hello World!";
-    /*$page = new Page();
+});
 
-    $page->setTpl("index");*/
+$app->get('/produtos', function(){
+
+    $page = new Page();
+
+    $page->setTpl("produtos");
 
 });
 
 
 $app->get('/clientes', function(){
 
-    echo "help";
-    //$page = new Page();
+    $page = new Page();
 
-    //$page->setTpl("clientes");
+    $page->setTpl("clientes");
+    $page->setTpl("modais");
 
+});
+
+
+$app->get('/obras', function(){
+
+    echo "Essa página ainda não foi criada!";
 });
 
 

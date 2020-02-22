@@ -13,11 +13,11 @@
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand" href="index.html">Sistema Locação</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
+            <a class="navbar-brand" href="/">Sistema Locação</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
             ><!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+                    <input class="form-control" type="text" placeholder="Procurar por..." aria-label="Search" aria-describedby="basic-addon2" />
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
                     </div>
@@ -42,7 +42,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="/">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -56,8 +56,8 @@
                                 data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav bg-secondary" id="sideNavCostumers">
                                     <a class="nav-link" href="/clientes">Clientes</a>
-                                    <a class="nav-link" href="#">Orçamentos</a>
-                                    <a class="nav-link" href="#">Obras</a>
+                                    <a class="nav-link" href="/orcamentos">Orçamentos</a>
+                                    <a class="nav-link" href="/obras">Obras</a>
                                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                         data-target="#pagesCollapseAuth" aria-expanded="false"
                                         aria-controls="pagesCollapseAuth">Contratos
@@ -65,7 +65,10 @@
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
                                         data-parent="#sideNavCostumers">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="#">Termos Aditivos</a>
+                                            <a class="nav-link" href="/contratos">Contratos</a>
+                                        </nav>
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="/contratos/aditivos">Termos Aditivos</a>
                                         </nav>
                                     </div>
                                 </nav>
@@ -79,25 +82,26 @@
                             <div class="collapse" id="collapseProducts" aria-labelledby="headingOne"
                                 data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav bg-secondary">
-                                    <a class="nav-link" href="#">Containers</a>
-                                    <a class="nav-link" href="#">Elétricos</a>
-                                    <a class="nav-link" href="#">Mecânicos</a>
+                                    <a class="nav-link" href="/produtos">Todos</a>
+                                    <a class="nav-link" href="/produtos/containers">Containers</a>
+                                    <a class="nav-link" href="/produtos/eletricos">Elétricos</a>
+                                    <a class="nav-link" href="/produtos/mecanicos">Mecânicos</a>
                                 </nav>
                             </div>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/locacoes">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Locações
                             </a>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/faturas">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Faturas
                             </a>
                             <br>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/relatorios">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Relatórios
                             </a>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/usuarios">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Usuários
                             </a>
@@ -109,7 +113,7 @@
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
+                        <div class="small">Logado como:</div>
                         Admin
                     </div>
                 </nav>
