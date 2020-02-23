@@ -47,18 +47,44 @@ $app->get('/costumers', function(){
     $page = new Page();
 
     $page->setTpl("clientes");
-    $page->setTpl("modais");
+  
 
 });
 
 
-$app->get('/works', function(){
+$app->get('/users', function(){
 
     User::verifyLogin();
 
-    echo "Essa página ainda não foi criada!";
+    $page = new Page();
+
+    $page->setTpl("usuarios");
+  
+
 });
 
+$app->get('/index', function(){
+
+    User::verifyLogin();
+
+    $page = new Page();
+
+    $page->setTpl("index");
+  
+
+});
+
+
+$app->get('/construction', function(){
+
+    User::verifyLogin();
+
+    $page = new Page();
+
+    $page->setTpl("obras");
+  
+
+});
 
 /* rota página login ---------------------------------- */
 $app->get('/login', function(){

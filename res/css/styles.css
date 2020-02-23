@@ -69,6 +69,22 @@ body {
   background-color: #fff;
 }
 
+<style>
+
+#verde1{
+background-color: rgb(73, 168, 28);
+}
+
+#verde2{
+background-color: rgb(73, 168, 28);
+}
+
+#verde3{
+background-color: rgb(73, 168, 28);
+}
+
+</style>
+
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
