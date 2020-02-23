@@ -66,6 +66,13 @@ class User extends Model{
         $_SESSION[User::SESSION] = NULL;
     }
 
+    public static function listAll(){
+
+        $sql = new Sql();
+
+        return $sql->select("SELECT * FROM usuarios ORDER BY nomeUsuario");
+    }
+
 
 
 }

@@ -12,10 +12,12 @@ session_start();
 //cria a aplicação Slim
 $app = new Slim();
 
-//require_once("users.php");
+
 
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', true);
+
+require_once("users.php");
 
 $app->get('/', function(){
 
@@ -27,7 +29,7 @@ $app->get('/', function(){
 
 });
 
-$app->get('/produtos', function(){
+$app->get('/products', function(){
 
     User::verifyLogin();
 
@@ -38,7 +40,7 @@ $app->get('/produtos', function(){
 });
 
 
-$app->get('/clientes', function(){
+$app->get('/costumers', function(){
 
     User::verifyLogin();
 
@@ -50,7 +52,7 @@ $app->get('/clientes', function(){
 });
 
 
-$app->get('/obras', function(){
+$app->get('/works', function(){
 
     User::verifyLogin();
 
