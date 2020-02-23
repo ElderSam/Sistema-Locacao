@@ -10,7 +10,7 @@ use \Locacao\Page;
 $app = new Slim();
 
 //configura o modo Debug para explicar cada erro 
-$app->config('debug', true);
+$app->config('debug', false);
 
 $app->get('/', function(){
 
