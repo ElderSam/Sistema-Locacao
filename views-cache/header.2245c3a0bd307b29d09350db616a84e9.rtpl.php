@@ -277,9 +277,9 @@
                             <div class="collapse" id="collapseCostumers" aria-labelledby="headingOne"
                                 data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav bg-secondary" id="sideNavCostumers">
-                                    <a class="nav-link" href="/clientes">Clientes</a>
-                                    <a class="nav-link" href="/orcamentos">Orçamentos</a>
-                                    <a class="nav-link" href="/obras">Obras</a>
+                                    <a class="nav-link" href="/costumers">Clientes</a>
+                                    <a class="nav-link" href="/budgets">Orçamentos</a>
+                                    <a class="nav-link" href="/works">Obras</a>
                                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                         data-target="#pagesCollapseAuth" aria-expanded="false"
                                         aria-controls="pagesCollapseAuth">Contratos
@@ -287,10 +287,10 @@
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
                                         data-parent="#sideNavCostumers">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="/contratos">Contratos</a>
+                                            <a class="nav-link" href="/contracts">Contratos</a>
                                         </nav>
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="/contratos/aditivos">Termos Aditivos</a>
+                                            <a class="nav-link" href="/contracts/additives">Termos Aditivos</a>
                                         </nav>
                                     </div>
                                 </nav>
@@ -304,26 +304,26 @@
                             <div class="collapse" id="collapseProducts" aria-labelledby="headingOne"
                                 data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav bg-secondary">
-                                    <a class="nav-link" href="/produtos">Todos</a>
-                                    <a class="nav-link" href="/produtos/containers">Containers</a>
-                                    <a class="nav-link" href="/produtos/eletricos">Elétricos</a>
-                                    <a class="nav-link" href="/produtos/mecanicos">Mecânicos</a>
+                                    <a class="nav-link" href="/products">Todos</a>
+                                    <a class="nav-link" href="/products/containers">Containers</a>
+                                    <a class="nav-link" href="/products/electric">Elétricos</a>
+                                    <a class="nav-link" href="/products/mechanics">Mecânicos</a>
                                 </nav>
                             </div>
-                            <a class="nav-link" href="/locacoes">
+                            <a class="nav-link" href="/locations">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Locações
                             </a>
-                            <a class="nav-link" href="/faturas">
+                            <a class="nav-link" href="/invoices">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Faturas
                             </a>
                             <br>
-                            <a class="nav-link" href="/relatorios">
+                            <a class="nav-link" href="/reports">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Relatórios
                             </a>
-                            <a class="nav-link" href="/usuarios">
+                            <a class="nav-link" href="/users">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Usuários
                             </a>
