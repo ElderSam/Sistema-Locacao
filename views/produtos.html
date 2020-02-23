@@ -2,8 +2,12 @@
     <main>
         <div class="container-fluid">
             <h1 class="mt-4">Produtos</h1>
-            <ol class="breadcrumb mb-4">
+            <ol class="breadcrumb mb-4 justify-content-between">
                 <li class="breadcrumb-item active">home/Produtos</li>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productsModal">
+                    Cadastrar
+                </button>           
             </ol>
 
            
@@ -39,54 +43,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Escritório</td>
-                                    <td>C002</td>
-                                    <td>Alugado</td>
-                                    <td>Container</td>
-                        
-                                    <td>$170,750</td>
-                                    <td>
-                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
-                                            <i class="fas fa-bars sm"></i>
-                                        </button>
-                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Almoxarifado</td>
-                                    <td>C003</td>
-                                    <td>Disponível</td>
-                                    <td>Container</td>
-                        
-                                    <td>$860,00</td>
-                                    <td>
-                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
-                                            <i class="fas fa-bars sm"></i>
-                                        </button>
-                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Padrão</td>
-                                    <td>C004</td>
-                                    <td>Manutenção</td>
-                                    <td>Container</td>
-                        
-                                    <td>$433,00</td>
-                                    <td>
-                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
-                                            <i class="fas fa-bars sm"></i>
-                                        </button>
-                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                              
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>

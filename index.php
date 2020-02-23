@@ -13,7 +13,6 @@ session_start();
 $app = new Slim();
 
 
-
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', true);
 
@@ -47,7 +46,6 @@ $app->get('/costumers', function(){
     $page = new Page();
 
     $page->setTpl("clientes");
-    $page->setTpl("modais");
 
 });
 
@@ -56,7 +54,10 @@ $app->get('/works', function(){
 
     User::verifyLogin();
 
-    echo "Essa página ainda não foi criada!";
+    $page = new Page();
+
+    $page->setTpl("obras");
+
 });
 
 
