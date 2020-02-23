@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Dashboard - SB Admin</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav id="verde1" class="sb-topnav navbar navbar-expand navbar-dark">
+            <a class="navbar-brand" href="index.html">Sistema de Locação</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
+            ><!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ml-auto ml-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Activity Log</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login.html">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav id="verde2" class="sb-sidenav accordion sb-sidenav-dark id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading"></div>
+                            <a class="nav-link" href="index.html"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                                Início</a>
+                            <a class="nav-link" href="charts.html"
+                            ><div class="sb-nav-link-icon"><i class="fas fa-user-friends"></i></div>
+                            Clientes</a>
+                              
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-box-open"></i></div>
+                                Produtos
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                            ></a>
+
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="containers.html">Containers</a>
+                                    <a class="nav-link" href="eqp-mecanicos.html">Equipamentos Mecânicos</a>
+                                    <a class="nav-link" href="eqp-eletricos.html">Equipamentos Elétricos</a></nav>
+                            </div>
+
+                            <a class="nav-link" href="locacoes.html"
+                            ><div class="sb-nav-link-icon"><i class="fas fa-align-left"></i></div>
+                            Locações</a>
+
+                            <a class="nav-link" href="financas.html"
+                            ><div class="sb-nav-link-icon"><i class="far fa-chart-bar"></i></div>
+                            Finanças</a>
+
+                            <a class="nav-link" href="usuarios.html"
+                            ><div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                            Usuários</a>
+
+                            <a class="nav-link" href="fornecedores.html"
+                            ><div class="sb-nav-link-icon"><i class="fas fa-users-cog"></i></div>
+                            Fornecedores</a>
+
+                            <a class="nav-link" href="configuracoes.html"
+                            ><div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                            Configurações</a>
+                            
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Start Bootstrap
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid">
+                        <h2 class="mt-4">Usuários</h2>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Lista de Usuários</li>
+                        </ol>
+                        <div class="row">
+                            <div class="col-sm-9"></div>
+                            <div class="col-sm-3 mb-2">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-novoUsuario">
+                                    NOVO USUÁRIO
+                                </button>
+                            </div>    
+                        </div>  
+                        <div class="card mb-4">
+                            <div class="card-header"><i class="fas fa-table mr-1"></i>DataTable Example</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Foto</th>
+                                                <th>Usuário</th>
+                                                <th>Função</th>
+                                                <th>Data de Cadastro</th>
+                                                <th>Administrador</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Foto</th>
+                                                <th>Usuário</th>
+                                                <th>Função</th>
+                                                <th>Data de Cadastro</th>
+                                                <th>Administrador</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <td><img src= "assets/img/default-50x50.gif" alt="imagem-usuario" class="rounded-circle rounded-sm"></td>
+                                                <td>João</td>
+                                                <td>Aux Administrativo</td>
+                                                <td>20/03/2017</td>
+                                                <td>Sim</td>
+                                                <td>
+                                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-usuario">
+                                                Detalhes
+                                                </button>
+                                                <input type="button" onclick="deleteRow('.$data->id.')" value="Deletar" class="btn btn-danger">
+                                                </td>
+                                            </tr>
+
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2019</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+<!--Scripts-->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/chart-area-demo.js"></script>
+        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/datatables-demo.js"></script>
+    
+      <!--Modais-->
+
+<!--Modal de novo Cliente-->
+<div class="modal fade" id="modal-novoCliente" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Cliente" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3 class="modal-title"><b>Novo Cliente</b></h3>
+            <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+            </button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                <div class="form-row">
+
+                    <div class="form-group col-lg-2">
+                    <label for="codigo">Código</label>
+                    <input type="text" class="form-control" name="codigo" id="codigo" placeholder="000">
+                    </div>
+
+                    <div class="form-group col-lg-8">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome Completo">
+                    </div>
+
+                    <div class="form-group col-lg-2">
+                    <label for="status">Status</label>
+                    <select id="status" class="form-control">
+                    <option selected>Ativo</option>
+                    <option>Inativo</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-12">
+                    <label for="status">Tipo de Cliente</label>
+                    <select id="status" class="form-control">
+                    <option selected>Pessoa Física</option>
+                    <option>Pessoa Jurídica</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">RG</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="00 000 000-0">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">CPF</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="000 000 000-00">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">EI</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="00 000 000-0">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">CNPJ</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="000 000 000-00">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputAddress">Telefone 01</label>
+                    <input type="text" class="form-control" id="telefone01" placeholder="(00)00000000">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputAddress">Telefone 02</label>
+                    <input type="phone" class="form-control" id="telefone02" placeholder="(00)00000000">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputEmail4">Email 01</label>
+                    <input type="email" class="form-control" id="inputEmail4" placeholder="exemplo@exemplo.com">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputEmail4">Email 02</label>
+                    <input type="email" class="form-control" id="inputEmail4" placeholder="exemplo@exemplo.com">
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputEmail4">Data de Cadastro</label>
+                    <input type="date" class="form-control" id="inputEmail4" placeholder="00/00/0000">
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputEstado">UF</label>
+                    <select id="inputEstado" class="form-control">
+                    <option selected>Escolher...</option>
+                    <option>...</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputAddress">CEP</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="00000-000">
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                    <label for="inputAddress">Cidade</label>
+                    <input type="text" class="form-control" id="inputAddress">
+                    </div>
+
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputPassword4">Endereço</label>
+                    <input type="text" class="form-control" id="inputPassword4" placeholder="Rua Exemplo">
+                    </div>
+
+                    </div>
+                    <div class="form-group col-lg-3">
+                    <label for="inputAddress">Número</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="000">
+                    </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-sm-5"></div>       
+                        <div class="col-sm-7">
+        
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Salvar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>        
+                              
+                    </div>
+
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Modal de detalhe de Usuário-->
+<div class="modal fade" id="modal-usuario" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Usuario" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3 class="modal-title"><b>Detalhes do Usuário</b></h3>
+            <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+            </button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                <div class="form-row">
+
+                    <div class="form-group col-lg-3">
+                        <label for="codigo">Foto</label>
+                        <figure class="figure">
+                            <img src="assets/img/user2-160x160.jpg" class="figure-img img-fluid rounded" alt="...">
+                        </figure>
+                    </div>
+
+                    <div class="form-group col-lg-2">
+                    <label for="nome">Código</label>
+                    <input type="text" class="form-control" name="codigo" id="nome" placeholder="Código">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="status">Status</label>
+                    <select id="status" class="form-control">
+                    <option selected>Ativo</option>
+                    <option>Inativo</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-12">
+                    <label for="status">Tipo de Cliente</label>
+                    <select id="status" class="form-control">
+                    <option selected>Pessoa Física</option>
+                    <option>Pessoa Jurídica</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">RG</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="00 000 000-0">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">CPF</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="000 000 000-00">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">EI</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="00 000 000-0">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="nome">CNPJ</label>
+                    <input type="text" class="form-control" name="nome" id="nome" placeholder="000 000 000-00">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputAddress">Telefone 01</label>
+                    <input type="text" class="form-control" id="telefone01" placeholder="(00)00000000">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputAddress">Telefone 02</label>
+                    <input type="phone" class="form-control" id="telefone02" placeholder="(00)00000000">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputEmail4">Email 01</label>
+                    <input type="email" class="form-control" id="inputEmail4" placeholder="exemplo@exemplo.com">
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputEmail4">Email 02</label>
+                    <input type="email" class="form-control" id="inputEmail4" placeholder="exemplo@exemplo.com">
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputEmail4">Data de Cadastro</label>
+                    <input type="date" class="form-control" id="inputEmail4" placeholder="00/00/0000">
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputEstado">UF</label>
+                    <select id="inputEstado" class="form-control">
+                    <option selected>Escolher...</option>
+                    <option>...</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                    <label for="inputAddress">CEP</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="00000-000">
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                    <label for="inputAddress">Cidade</label>
+                    <input type="text" class="form-control" id="inputAddress">
+                    </div>
+
+
+                    <div class="form-group col-lg-6">
+                    <label for="inputPassword4">Endereço</label>
+                    <input type="text" class="form-control" id="inputPassword4" placeholder="Rua Exemplo">
+                    </div>
+
+                    </div>
+                    <div class="form-group col-lg-3">
+                    <label for="inputAddress">Número</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="000">
+                    </div>
+
+                    <input type="button" onclick="viewORedit('.$data->id.', \'edit\')" value="Editar" class="btn btn-primary">
+                    <br><br>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-sm-5"></div>
+                        <div class="col-sm-7">
+                            <a class="btn btn-dark" href="obras.html" role="button">Obras</a>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>                 
+                    </div>
+
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
