@@ -13,7 +13,6 @@ session_start();
 $app = new Slim();
 
 
-
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', false);
 
@@ -47,7 +46,10 @@ $app->get('/costumers', function(){
     $page = new Page();
 
     $page->setTpl("clientes");
+<<<<<<< HEAD
   
+=======
+>>>>>>> 0b155d899c955c75822635c442ce9b3b0d156da9
 
 });
 
@@ -58,6 +60,7 @@ $app->get('/users', function(){
 
     $page = new Page();
 
+<<<<<<< HEAD
     $page->setTpl("usuarios");
   
 
@@ -71,6 +74,9 @@ $app->get('/index', function(){
 
     $page->setTpl("index");
   
+=======
+    $page->setTpl("obras");
+>>>>>>> 0b155d899c955c75822635c442ce9b3b0d156da9
 
 });
 
