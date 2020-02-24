@@ -1,4 +1,4 @@
-<div id="layoutSidenav_content">
+<?php if(!class_exists('Rain\Tpl')){exit;}?><div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
 

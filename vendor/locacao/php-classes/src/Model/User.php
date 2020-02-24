@@ -73,6 +73,63 @@ class User extends Model{
         return $sql->select("SELECT * FROM usuarios ORDER BY nomeUsuario");
     }
 
+    public function save(){
+
+        $sql = new Sql();
+
+        $results = $sql->select("CALL sp_usuarios_save(:nomeCompleto, :funcao, :nomeusuario, :senha, :email, :administrador, :foto", array(
+            ":nomeCompleto"=>$this->getnomeCompleto(),
+            ":funcao"=>$this->getfuncao(),
+            ":nomeusuario"=>$this->getnomeusuario(),
+            ":senha"=>$this->getsenha(),
+            ":email"=>$this->getemail(),
+            ":administrador"=>$this->getadministrador(),
+            ":foto"=>$this->getfoto()
+        ));
+
+        $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+    }
+
+    public function get($iduser){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM usuarios WHERE idUsuario = :idUsuario", array(
+            ":idUsuario"=>$iduser
+        ));
+
+        $this->setData($results[0]);
+    }
+
+    public function update(){
+
+        $sql = new Sql();
+
+        $results = $sql->select("CALL sp_usuariosUpdate_save(:idUsuario, :nomeCompleto, :funcao, :nomeusuario, :senha, :email, :administrador, :foto", array(
+            ":idUsuario"=>$this->getidUsuario(),
+            ":nomeCompleto"=>$this->getnomeCompleto(),
+            ":funcao"=>$this->getfuncao(),
+            ":nomeusuario"=>$this->getnomeusuario(),
+            ":senha"=>$this->getsenha(),
+            ":email"=>$this->getemail(),
+            ":administrador"=>$this->getadministrador(),
+            ":foto"=>$this->getfoto()
+        ));
+
+        $this->setData($resulst[0]);
+    }
+
+    public function delete(){
+
+        $sql = new Sql();
+
+        $sql->query("CALL sp_usuarios_delete(:idUsuario)", array(
+            ":idUsuario"=>$this->getidUsuario()
+        ));
+    }
+
+    
+
 
 
 }

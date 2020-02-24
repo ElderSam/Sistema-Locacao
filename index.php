@@ -28,6 +28,7 @@ $app->get('/', function(){
 
 });
 
+
 $app->get('/products', function(){
 
     User::verifyLogin();
@@ -39,6 +40,17 @@ $app->get('/products', function(){
 });
 
 
+$app->get('/products/containers', function(){
+
+    User::verifyLogin();
+
+    $page = new Page();
+
+    $page->setTpl("produtos-containers");
+
+});
+
+
 $app->get('/costumers', function(){
 
     User::verifyLogin();
@@ -46,10 +58,6 @@ $app->get('/costumers', function(){
     $page = new Page();
 
     $page->setTpl("clientes");
-<<<<<<< HEAD
-  
-=======
->>>>>>> 0b155d899c955c75822635c442ce9b3b0d156da9
 
 });
 
@@ -60,24 +68,8 @@ $app->get('/users', function(){
 
     $page = new Page();
 
-<<<<<<< HEAD
     $page->setTpl("usuarios");
   
-
-});
-
-$app->get('/index', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("index");
-  
-=======
-    $page->setTpl("obras");
->>>>>>> 0b155d899c955c75822635c442ce9b3b0d156da9
-
 });
 
 

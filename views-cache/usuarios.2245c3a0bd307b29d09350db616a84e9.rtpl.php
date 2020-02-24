@@ -1,4 +1,4 @@
-<div id="layoutSidenav_content">
+<?php if(!class_exists('Rain\Tpl')){exit;}?><div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
             <h2 class="mt-4">Usuários</h2>
@@ -25,7 +25,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {loop="$users"}
+                                <?php $counter1=-1;  if( isset($users) && ( is_array($users) || $users instanceof Traversable ) && sizeof($users) ) foreach( $users as $key1 => $value1 ){ $counter1++; ?>
                                 <tr>
                                     <td><img src="../res/assets/img/default-50x50.gif" alt="imagem-usuario"
                                             class="rounded-circle rounded-sm"></td>
@@ -45,7 +45,7 @@
                                     </td>
                                 </tr>
 
-                                {/loop}
+                                <?php } ?>
 
                             </tbody>
                             <tfoot class="bg-dark text-white">

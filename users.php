@@ -21,15 +21,15 @@ $app->get("/users", function(){
 });
 
 /* rota para página de criar usuário -------------------*/
-/*$app->get("/users/create", function(){
+$app->get("/users/create", function(){
 
     User::verifyLogin();
 
-    $page = new Page();
+   /* $page = new Page();
 
-    $page->setTpl("usuarios-create");
+    $page->setTpl("usuarios-create");*/
 
-});*/
+});
 
 /* rota para deletar usuário --------------------------*/
 $app->get("/users/:iduser/delete", function($iduser){
