@@ -16,7 +16,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                        <thead class="bg-secondary text-white">
+                        <thead class="bg-dark text-white">
                             <tr>
                                 <th>Código</th>
                                 <th title="responsável pela obra">Resposavel</th>
@@ -49,7 +49,7 @@
                             </tr>
                         </tbody>
 
-                        <tfoot  class="bg-secondary text-white">
+                        <tfoot  class="bg-dark text-white">
                             <tr>
                                 <th>Código</th>
                                 <th title="responsável pela obra">Resposavel</th>
