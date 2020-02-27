@@ -5,7 +5,7 @@
             <ol class="breadcrumb mb-4 justify-content-between">
                 <li class="breadcrumb-item active">Início/Usuários</li>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#userModal">
+                <button id="btnAddUser" type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">
                     Novo Usuário
                 </button>
             </ol>
@@ -18,27 +18,27 @@
                                 <tr>
                                     <th>Foto</th>
                                     <th>Usuário</th>
+                                    <th>Nome Completo</th>
                                     <th>Função</th>
-                                    <th>Data de Cadastro</th>
-                                    <th>Administrador</th>
-                                    <th></th>
+                                    <th title="Administrador">Admin</th>
+                                    <th>Opções</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="viewUser">
                                 {loop="$users"}
                                 <tr>
-                                    <td><img src="../res/assets/img/default-50x50.gif" alt="imagem-usuario"
-                                            class="rounded-circle rounded-sm"></td>
-                                    <td>João</td>
-                                    <td>Aux Administrativo</td>
-                                    <td>20/03/2017</td>
-                                    <td>Sim</td>
+                                    <td><img src="{$value->foto}" alt="imagem-usuario"
+                                            class="rounded-circle rounded-sm" style="max-width: 5rem; max-height: 5rem;"></td>
+                                    <td>{$value->nomeUsuario}</td>
+                                    <td>{$value->nomeCompleto}</td>
+                                    <td>{$value->funcao}</td>
+                                    <td>{if="$value->administrador == 1"}Sim{else}Não{/if}</td>
                                     <td>
                                         <button type="button" title="ver detalhes" class="btn btn-warning"
-                                            data-toggle="modal" data-target="#usersModal">
+                                        onclick="loadEditUser('{$value->idUsuario}');">
                                             <i class="fas fa-bars sm"></i>
                                         </button>
-                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')"
+                                        <button type="button" title="excluir" onclick="removeUser(`{$value->idUsuario}`);"
                                             class="btn btn-danger">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -52,10 +52,10 @@
                                 <tr>
                                     <th>Foto</th>
                                     <th>Usuário</th>
+                                    <th>Nome Completo</th>
                                     <th>Função</th>
-                                    <th>Data de Cadastro</th>
-                                    <th>Administrador</th>
-                                    <th></th>
+                                    <th title="Administrador">Admin</th>
+                                    <th>Opções</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -64,103 +64,218 @@
             </div>
         </div> <!-- fim container-fluid-->
 
-        <!-- Users Modal -->
 
-        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Usuario"
-            aria-hidden="true">
+
+
+        <!-- Users Add Modal -------------------------------------------->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="Cadastrar Usuario" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b>Detalhes do Usuário</b></h3>
+                        <h3 class="modal-title"><b>Cadastrar Usuário</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form>
+                        <form id="formCreateUser">
                             <div class="form-row">
 
-                                <div class="form-group col-lg-12">
-                                    <figure class="figure">
-                                        <img src="../res/assets/img/user2-160x160.jpg"
-                                            class="figure-img img-fluid rounded" alt="...">
-                                    </figure>
-                                </div>
-
-                                <div style="margin-top: -1.9rem;" class="form-group col-lg-12">
-
-                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                                </div>
-
-
-
                                 <div class="form-group col-lg-6">
-                                    <label for="nome">Nome Completo</label>
-                                    <input type="text" class="form-control" name="nome" id="nome"
-                                        placeholder="Nome Completo">
+                                    <label for="nomeCompleto">Nome Completo</label>
+                                    <input type="text" class="form-control" name="nomeCompleto" id="nomeCompleto"
+                                        placeholder="Nome Completo" required="">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-6">
 
                                     <label for="funcao">Função</label>
                                     <input type="text" class="form-control" name="funcao" id="funcao"
-                                        placeholder="Função na empresa">
+                                        placeholder="Função na empresa" required="">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-6">
-                                    <label for="usuario">Usuário</label>
-                                    <input type="text" class="form-control" name="usuario" id="usuario"
-                                        placeholder="Nome de Usuário">
+                                    <label for="nomeUsuario">Usuário</label>
+                                    <input type="text" class="form-control" name="nomeUsuario" id="nomeUsuario"
+                                        placeholder="Nome de Usuário" required="">
+                                    <span class="help-block"></span>
                                 </div>
 
 
                                 <div class="form-group col-lg-6">
                                     <label for="senha">Senha</label>
                                     <input type="password" class="form-control" name="senha" id="senha" minlength="6"
-                                        required="" placeholder="sua senha">
+                                        placeholder="sua senha" required="">
+                                    <span class="help-block"></span>
                                 </div>
 
 
                                 <div class="form-group col-lg-6">
                                     <label for="email">Email</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="exemplo@exemplo.com">
+                                        placeholder="exemplo@exemplo.com" required="">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-2">
                                     <label for="administrador">Administrador?</label>
-                                    <select id="administrador" class="form-control">
+                                    <select id="administrador" name="administrador" class="form-control" required="">
                                         <option value="0" selected>Não</option>
                                         <option value="1">Sim</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
+                                
+                                <div class="form-group">
+                                    
+                                    <div class="box box-widget">
+                                      <div class="box-body">
+                                        <img class="img-responsive" id="image-preview" src="/res/img/users/user-default.jpg" alt="Photo">
+                                      </div>
+                                    </div>
+                                    <label for="file">Foto</label>
+                                    <input type="file" class="form-control-file" id="desImagePath" name="desImagePath">
+                                    <div id="loadingImg"></div>
+                                    <span class="help-block"></span>
+                                  </div>
 
 
                                 <div hidden="true">
-                                    <label for="id">Id</label>
-                                    <input type="text" id="id" name="id">
+                                    <label for="idUsuario">Id</label>
+                                    <input type="text" id="idUsuario" name="idUsuario">
                                 </div>
                             </div>
-
-                        <div style="margin: 0px;" class="breadcrumb justify-content-between">
-
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Editar"
-                                class="btn btn-primary">
-                        </div>
-
-                            
+                           
                         </form>
+
+                        <span class="status-form float-right" style="margin-top: -1.4rem;"></span>
+                        <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                            
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            
+                            <input id="btnCreateUser" type="submit" value="Cadastrar" class="btn btn-primary">
+                            
+                        </div>
 
                     </div>
 
                 </div>
             </div>
+        </div>
+        <!-- End Users Add Modal --------------------------------------------->
 
-            <!-- end Users Modal-->
+        <!-- Users Edit Modal -------------------------------------------->
+        <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Usuario" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b>Editar Usuário</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
 
-            <!--
+                    <div class="modal-body">
+                        <form id="formEditUser">
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-6">
+                                    <label for="nomeCompleto">Nome Completo</label>
+                                    <input type="text" class="form-control" name="nomeCompleto" id="nomeCompleto"
+                                        placeholder="Nome Completo" required="">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+
+                                    <label for="funcao">Função</label>
+                                    <input type="text" class="form-control" name="funcao" id="funcao"
+                                        placeholder="Função na empresa" required="">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="nomeUsuario">Usuário</label>
+                                    <input type="text" class="form-control" name="nomeUsuario" id="nomeUsuario"
+                                        placeholder="Nome de Usuário" required="">
+                                    <span class="help-block"></span>
+                                </div>
+
+
+                                <div class="form-group col-lg-6">
+                                    <label for="senha">Senha</label>
+                                    <br><button type="button" id="btnChangePassword" class="btn btn-warning">Alterar Senha</button>
+                                    <!--input type="password" class="form-control" name="senha" id="senha" minlength="6"
+                                         placeholder="sua senha" required="">
+                                    <span class="help-block"></span-->
+                                </div>
+
+
+                                <div class="form-group col-lg-6">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        placeholder="exemplo@exemplo.com" required="">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-2">
+                                    <label for="administrador">Administrador?</label>
+                                    <select id="administrador" name="administrador" class="form-control" required="">
+                                        <option value="0" selected>Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="dtCadastro">Data de Cadastro</label>
+                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
+                                </div>
+                                
+                                <div class="form-group">
+                                    
+                                    <div class="box box-widget">
+                                        <div id="divImg" class="box-body">
+                                            <img src="" id="image" style="max-width: 200px; max-height: 200px;">
+                                        </div>
+                                    </div>
+                                    <label for="file">Foto</label>
+                                    <input type="file" class="form-control-file" id="desOldImagePath" name="desOldImagePath">
+                                    <div id="loadingImg"></div>
+                                
+                                </div>
+
+
+                                <div hidden="true">
+                                    <label for="idUsuario">Id</label>
+                                    <input type="text" id="idUsuario" name="idUsuario">
+                                </div>
+                            </div>
+                            
+                        </form>
+                        <div style="margin: 0px;" class="breadcrumb justify-content-between">
+                            
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            
+                                <input id="btnEditUser" type="submit" value="Editar" class="btn btn-primary">
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- End Users Add Modal --------------------------------------------->
+            
+    <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+            
+<script src="../res/js/util.js"></script>
+<script src="../res/js/users.js"></script>
+ <!--
 <script>
 	$(document).ready(function() {
 

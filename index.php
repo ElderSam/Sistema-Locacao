@@ -14,7 +14,7 @@ $app = new Slim();
 
 
 //configura o modo Debug para explicar cada erro 
-$app->config('debug', false);
+$app->config('debug', true);
 
 require_once("users.php");
 
@@ -59,17 +59,6 @@ $app->get('/costumers', function(){
 
     $page->setTpl("clientes");
 
-});
-
-
-$app->get('/users', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("usuarios");
-  
 });
 
 

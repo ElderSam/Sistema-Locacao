@@ -57,7 +57,7 @@ class User extends Model{
 
             header("Location: /login");
             exit;
-
+            
         }
     }
 
@@ -70,24 +70,48 @@ class User extends Model{
 
         $sql = new Sql();
 
-        return $sql->select("SELECT * FROM usuarios ORDER BY nomeUsuario");
+        return json_encode( $sql->select("SELECT * FROM usuarios ORDER BY nomeUsuario"));
     }
 
-    public function save(){
 
+    public function save(){
+        
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_usuarios_save(:nomeCompleto, :funcao, :nomeusuario, :senha, :email, :administrador, :foto", array(
-            ":nomeCompleto"=>$this->getnomeCompleto(),
-            ":funcao"=>$this->getfuncao(),
-            ":nomeusuario"=>$this->getnomeusuario(),
-            ":senha"=>$this->getsenha(),
-            ":email"=>$this->getemail(),
-            ":administrador"=>$this->getadministrador(),
-            ":foto"=>$this->getfoto()
-        ));
+        if(($this->getnomeCompleto() != "") && ($this->getfuncao() != "") && ($this->getemail() != "")){
+           
+            $results = $sql->select("CALL sp_usuarios_save(:nomeCompleto, :funcao, :nomeUsuario, :senha, :email, :administrador, :foto)", array(
+                ":nomeCompleto"=>$this->getnomeCompleto(),
+                ":funcao"=>$this->getfuncao(),
+                ":nomeUsuario"=>$this->getnomeUsuario(),
+                ":senha"=>$this->getsenha(),
+                ":email"=>$this->getemail(),
+                ":administrador"=>$this->getadministrador(),
+                ":foto"=>$this->getfoto()
+            ));
 
-        $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+
+            if(count($results) > 0){
+                $this->setidUsuario($results[0]['idUsuario']); //esse id vai ser usado para colocar o nome da foto
+
+                return json_encode($results[0]);
+
+            }else{
+                return json_encode([
+                    "error"=>true,
+                    "msg"=>"Erro ao inserir Usuário!"
+                    ]);
+            }
+
+            $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+        
+        }else{
+
+            return json_encode([
+				'error' => true,
+				"msg" => "Campos incompletos!"
+			]);
+        }
     }
 
     public function get($iduser){
@@ -101,6 +125,30 @@ class User extends Model{
         $this->setData($results[0]);
     }
 
+    public static function searchName($name){ //search if name or user already exists
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM usuarios WHERE (nomeCompleto = :nomeCompleto)", array(
+            ":nomeCompleto"=>$name
+        ));
+
+        return $results;
+    }
+
+    public static function searchUser($user){ //search if name or user already exists
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM usuarios WHERE (nomeUsuario = :nomeUsuario)", array(
+            ":nomeUsuario"=>$user
+        ));
+
+        return $results;
+    }
+
+    
+
     public function update(){
 
         $sql = new Sql();
@@ -109,7 +157,7 @@ class User extends Model{
             ":idUsuario"=>$this->getidUsuario(),
             ":nomeCompleto"=>$this->getnomeCompleto(),
             ":funcao"=>$this->getfuncao(),
-            ":nomeusuario"=>$this->getnomeusuario(),
+            ":nomeUsuario"=>$this->getnomeUsuario(),
             ":senha"=>$this->getsenha(),
             ":email"=>$this->getemail(),
             ":administrador"=>$this->getadministrador(),
@@ -127,8 +175,6 @@ class User extends Model{
             ":idUsuario"=>$this->getidUsuario()
         ));
     }
-
-    
 
 
 

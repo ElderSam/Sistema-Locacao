@@ -1,0 +1,13 @@
+
+    
+    /* for incorrects inputs in forms*/
+    .help-block{
+        color: rgb(161, 0, 0);  
+    }
+    
+    .has-error {
+      border-color: #f00;
+    } 
+
+    /*-------------------*/
+ 

@@ -1,0 +1,23 @@
+DELIMITER ;;
+CREATE PROCEDURE `db_locacao`.`sp_usuarios_save`(
+  pnomeCompleto VARCHAR(60),
+  pfuncao VARCHAR(45),
+  pnomeUsuario VARCHAR(45),
+  psenha VARCHAR(250),
+  pemail VARCHAR(45),
+  padministrador TINYINT,
+  pfoto VARCHAR(100)
+)
+BEGIN
+  
+    DECLARE vidUsuario INT;
+    
+  INSERT INTO usuarios (nomeCompleto, funcao, nomeusuario, senha, email, administrador, foto)
+    VALUES(pnomeCompleto, pfuncao, pnomeusuario, psenha, pemail, padministrador, pfoto);
+    
+    SET vidUsuario = LAST_INSERT_ID();
+    
+    SELECT * FROM usuarios WHERE idusuario = LAST_INSERT_ID();
+    
+END ;;
+DELIMITER ;
