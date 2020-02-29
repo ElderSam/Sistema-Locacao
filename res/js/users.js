@@ -1,4 +1,22 @@
 $(function() {
+
+	
+	myTable = $("#dataTable").DataTable({ 
+		"oLanguage": DATATABLE_PTBR,
+		"autoWidth": false, //largura
+		"processing": true, //mensagem 'processando'
+		"serverSide": true,
+		"ajax": {
+			"url": "/users/list_datatables", //para chamar o método ajax_list_user
+			"type": "POST",
+		},
+		"columnDefs": [
+			{ targets: "no-sort", orderable: false }, //para não ordenar
+			{ targets: "text-center", className: "text-center" },
+		]
+	});
+
+
 	$("#btnChangePassword").click(function() {
 		alert('Essa função ainda não foi implementada!')
 	 });
@@ -31,27 +49,31 @@ $(function() {
 				if (JSON.parse(response).error) {
 					console.log('erro ao cadastrar novo usuário!')
 					response = JSON.parse(response)
-					//swal("Erro!", JSON.parse(response).message, "error");
+					
+					Swal.fire(
+						'Erro!',
+						'Por favor verifique os campos',
+						'error'
+					)
 
 					if(response['error_list']){
-
-						alert("Erro! Campos Incorretos")
 						
 						showErrorsModal(response['error_list'])
-
 					}
 					
 				} else {
 					$('#addModal').modal('hide');
 					
 					console.log(response)
-					//swal("Tudo certo!", "Usuário adicionado com sucesso!", "success");
-					//dt_user.ajax.reload();
+					Swal.fire(
+						'Sucesso!',
+						'Usuário cadastrado!',
+						'success'
+					  )
+
 					loadUsers();
 					$('#formCreateUser').trigger("reset");
-
-					$("#tableHorarios").DataTable();
-					alert("usuário adicionado!")
+					
 				}
 
 				limparCampos();
@@ -67,65 +89,26 @@ $(function() {
 
 		return false;
 	});
-	
 
-	function loadUsers() {
+	function loadUsers(){
 
-        $("#viewUser").html("");
-
-        $.getJSON('/users/json', function (response) {
-
-            response.forEach(element => {
-					
-					$("#viewUser").append(`<tr>
-					<td><img src="${element.foto}" alt="imagem-usuario"
-							class="rounded-circle rounded-sm" style="max-width: 5rem; max-height: 5rem;"></td>
-					<td>${element.nomeUsuario}</td>
-					<td>${element.nomeCompleto}</td>
-					<td>${element.funcao}</td>
-					<td>${((element.administrador == 1) ? 'Sim' : 'Não')}</td>
-					<td>
-						<button type="button" title="ver detalhes" class="btn btn-warning"
-							 onclick='loadEditUser(${element.idUsuario});'>
-							<i class="fas fa-bars sm"></i>
-						</button>
-						<button type="button" title="excluir" onclick="removeUser(${element.idUsuario});"
-							class="btn btn-danger">
-							<i class="fas fa-trash"></i>
-						</button>
-					</td>
-				</tr>`);
-
-			});
-
-        }).fail(function () {
-            console.log("Rota não encontrada!");
+		myTable.destroy();
+		
+		myTable = $("#dataTable").DataTable({ 
+			"oLanguage": DATATABLE_PTBR,
+			"autoWidth": false, //largura
+			"processing": true, //mensagem 'processando'
+			"serverSide": true,
+			"ajax": {
+				"url": "/users/list_datatables", //para chamar o método ajax_list_user
+				"type": "POST",
+			},
+			"columnDefs": [
+				{ targets: "no-sort", orderable: false }, //para não ordenar
+				{ targets: "text-center", className: "text-center" },
+			]
 		});
-		
-		
 	}
-
-	/* carrega tabela de usuários --------------------------------------------------------------*/
-/*	var dt_user = $("#dt_users").DataTable({ 
-		"oLanguage": DATATABLE_PTBR,
-		"autoWidth": false,
-		"processing": true,
-		"serverSide": true,
-		"ajax": {
-			"url": "/users/json", //para chamar o método ajax_list_user
-			"type": "POST",
-		},
-		"columnDefs": [
-			{ targets: "no-sort", orderable: false }, //para não ordenar
-			{ targets: "dt-center", className: "dt-center" },
-		],
-		"drawCallback": function() { //drawCallback = depois que desenhou, faça o evento abaixo. Executa depois que cadastra ou atualiza
-			console.log("carregou a tabela")
-			//active_btn_user(); //ativa os eventos dos botões (editar e deletar)
-		}
-	});*/
-
-
 });
 
 //limpar campos do modal Cadastrar
@@ -208,6 +191,7 @@ function loadEditUser(idUsuario) {
 					//swal("Tudo certo!", "Usuário editado com sucesso!", "success");
 					loadUsers();
 					$(`#formEditUser`).trigger("reset");
+					//$("#dataTable").DataTable();
 				}
 
 			},

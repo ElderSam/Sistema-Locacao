@@ -16,41 +16,19 @@
                         <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                             <thead class="bg-dark text-white">
                                 <tr>
-                                    <th>Foto</th>
                                     <th>Usuário</th>
                                     <th>Nome Completo</th>
                                     <th>Função</th>
-                                    <th title="Administrador">Admin</th>
+                                    <th class="text-center" title="Administrador">Admin</th>
                                     <th>Opções</th>
                                 </tr>
                             </thead>
-                            <tbody id="viewUser">
-                                {loop="$users"}
-                                <tr>
-                                    <td><img src="{$value->foto}" alt="imagem-usuario"
-                                            class="rounded-circle rounded-sm" style="max-width: 5rem; max-height: 5rem;"></td>
-                                    <td>{$value->nomeUsuario}</td>
-                                    <td>{$value->nomeCompleto}</td>
-                                    <td>{$value->funcao}</td>
-                                    <td>{if="$value->administrador == 1"}Sim{else}Não{/if}</td>
-                                    <td>
-                                        <button type="button" title="ver detalhes" class="btn btn-warning"
-                                        onclick="loadEditUser('{$value->idUsuario}');">
-                                            <i class="fas fa-bars sm"></i>
-                                        </button>
-                                        <button type="button" title="excluir" onclick="removeUser(`{$value->idUsuario}`);"
-                                            class="btn btn-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <tbody id="listUsers">
 
-                                {/loop}
 
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
-                                    <th>Foto</th>
                                     <th>Usuário</th>
                                     <th>Nome Completo</th>
                                     <th>Função</th>

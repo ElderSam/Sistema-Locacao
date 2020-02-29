@@ -3,11 +3,11 @@
 namespace Locacao\Model;
 
 use \Locacao\DB\Sql;
-use \Locacao\Model;
+use \Locacao\Generator;
 use \Locacao\Mailer;
 
 
-class User extends Model{
+class User extends Generator{
 
     const SESSION = "User";
     const SECRET = "Loc_Secret"; //here your key (secret)
@@ -70,7 +70,7 @@ class User extends Model{
 
         $sql = new Sql();
 
-        return json_encode( $sql->select("SELECT * FROM usuarios ORDER BY nomeUsuario"));
+        return json_encode( $sql->select("SELECT  idUsuario, nomeCompleto, funcao, nomeUsuario, email, administrador, foto, dtCadastro FROM usuarios ORDER BY nomeUsuario"));
     }
 
 
@@ -118,7 +118,7 @@ class User extends Model{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM usuarios WHERE idUsuario = :idUsuario", array(
+        $results = $sql->select("SELECT idUsuario, nomeCompleto, funcao, nomeUsuario, email, administrador, foto, dtCadastro FROM usuarios WHERE idUsuario = :idUsuario", array(
             ":idUsuario"=>$iduser
         ));
 
@@ -147,6 +147,72 @@ class User extends Model{
         return $results;
     }
 
+    public function get_datatable($requestData, $column_search, $column_order){
+        
+        $query = "SELECT idUsuario, nomeCompleto, funcao, nomeUsuario, email, administrador, foto, dtCadastro FROM usuarios";
+
+        if (!empty($requestData['search']['value'])) {
+
+            $first = TRUE;
+
+            foreach ($column_search as $field) {
+
+                $search = strtoupper($requestData['search']['value']);
+
+                if ($field == "administrador") {
+
+                    if ($search == "SIM") {
+                        $search = 1;
+                    } else if (($search == "NãO") || ($search == "NÃO") || ($search == "NAO")) {
+                        $search = 0;
+                    }
+                }
+
+                if ($first) {
+                    $query .= " WHERE ($field LIKE '$search%'"; //primeiro caso
+                    $first = FALSE;
+                } else {
+                    $query .= " OR $field LIKE '$search%'";
+                }
+            }
+            if (!$first) {
+                $query .= ")"; //termina o WHERE e a query
+            }
+
+        }
+        
+        $res = $this->searchAll($query);
+        $this->setTotalFiltered(count($res));
+
+        //ordenar o resultado
+        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
+        
+        $users = new User();
+        return array(
+            'totalFiltered'=>$this->getTotalFiltered(),
+            'data'=>$users->searchAll($query)
+        );
+    }
+
+    public function searchAll($query){
+
+        $sql = new Sql();
+
+        $results = $sql->select($query);
+
+        return $results;
+
+    }
+
+    public static function total() { //retorna a quantidade todal de registros na tabela
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM usuarios");
+
+        return count($results);		
+	}
     
 
     public function update(){
@@ -164,7 +230,7 @@ class User extends Model{
             ":foto"=>$this->getfoto()
         ));
 
-        $this->setData($resulst[0]);
+        $this->setData($results[0]);
     }
 
     public function delete(){

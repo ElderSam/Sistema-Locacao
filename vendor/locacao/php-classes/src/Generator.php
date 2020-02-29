@@ -3,7 +3,7 @@
 /* Usando a classe Model para fazer automaticamente todos os Getters e Setters de todas as Classes */
 namespace Locacao;
 
-class Model{
+class Generator{
 
     private $values = [];
 

@@ -34,6 +34,21 @@ $app->get('/users/json', function(){
   
 });
 
+$app->post('/users/list_datatables', function(){ //ajax list datatables
+
+	User::verifyLogin();
+	
+	
+	//Receber a requisão da pesquisa 
+	$requestData = $_REQUEST;
+
+	$users = new UserController();
+	echo $users->ajax_list_users($requestData);
+	
+});
+
+
+
 /* rota para página de criar usuário -------------------*/
 /*$app->get("/users/create", function(){
 
