@@ -49,36 +49,20 @@ function showErrorsModal(error_list) {
 } 
 
 /* para mostrar imagem que acabou de fazer upload antes de enviar --------------------- */
-document.querySelector('#formCreateUser #desImagePath').addEventListener('change', function(){
+document.querySelector('#formUser #desImagePath').addEventListener('change', function(){
 	
 	var file = new FileReader();
-	$('#formCreateUser #loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
+	$('#formUser #loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
 		
 	file.onload = function() {
 	
-	document.querySelector('#formCreateUser #image-preview').src = file.result;
-	$('#formCreateUser #loadingImg').html('');
+		document.querySelector('#formUser #image-preview').src = file.result;
+		$('#formUser #loadingImg').html('');
 	}
 
 	file.readAsDataURL(this.files[0]);
 
 });
-
-document.querySelector('#desOldImagePath').addEventListener('change', function(){
-	
-	var file = new FileReader();
-	$('#formEditUser #loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
-		
-	file.onload = function() {
-	
-	document.querySelector('#formEditUser #image').src = file.result;
-	$('#formEditUser #loadingImg').html('');
-	}
-
-	file.readAsDataURL(this.files[0]);
-
-});
-
 
 function loadingImg(message="") { //para mostrar animação de carregando (círculo girando)
 	return "<i class='fa fa-circle-o-notch fa-spin'></i>&nbsp;" + message

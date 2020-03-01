@@ -5,7 +5,7 @@
             <ol class="breadcrumb mb-4 justify-content-between">
                 <li class="breadcrumb-item active">Início/Usuários</li>
                 <!-- Button trigger modal -->
-                <button id="btnAddUser" type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">
+                <button id="btnAddUser" type="button" class="btn btn-success" data-toggle="modal" data-target="#userModal">
                     Novo Usuário
                 </button>
             </ol>
@@ -45,19 +45,19 @@
 
 
 
-        <!-- Users Add Modal -------------------------------------------->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="Cadastrar Usuario" aria-hidden="true">
+        <!-- User Modal -------------------------------------------->
+        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="Cadastrar Usuario" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b>Cadastrar Usuário</b></h3>
+                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Usuário</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form id="formCreateUser">
+                        <form id="formUser">
                             <div class="form-row">
 
                                 <div class="form-group col-lg-6">
@@ -82,13 +82,23 @@
                                     <span class="help-block"></span>
                                 </div>
 
-
+                                <!--Aparece apenas para Cadastrar -->
                                 <div class="form-group col-lg-6">
                                     <label for="senha">Senha</label>
                                     <input type="password" class="form-control" name="senha" id="senha" minlength="6"
-                                        placeholder="sua senha" required="">
+                                        placeholder="sua senha" autocomplete="cc-number" required="">
                                     <span class="help-block"></span>
                                 </div>
+
+                                <!--Aparece apenas para Editar -->
+                                <div class="form-group col-lg-6">
+                                    <label for="senha">Senha</label>
+                                    <br><button type="button" id="btnChangePassword" class="btn btn-warning">Alterar Senha</button>
+                                    <!--input type="password" class="form-control" name="senha" id="senha" minlength="6"
+                                         placeholder="sua senha" required="">
+                                    <span class="help-block"></span-->
+                                </div>
+
 
 
                                 <div class="form-group col-lg-6">
@@ -106,6 +116,12 @@
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
+
+                                <!--Aparece apenas para Editar -->
+                                <div class="form-group col-lg-6">
+                                    <label for="dtCadastro">Data de Cadastro</label>
+                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
+                                </div>
                                 
                                 <div class="form-group">
                                     
@@ -114,13 +130,15 @@
                                         <img class="img-responsive" id="image-preview" src="/res/img/users/user-default.jpg" alt="Photo">
                                       </div>
                                     </div>
-                                    <label for="file">Foto</label>
-                                    <input type="file" class="form-control-file" id="desImagePath" name="desImagePath">
-                                    <div id="loadingImg"></div>
-                                    <span class="help-block"></span>
+                                    <div>
+                                        <label for="file">Foto</label>
+                                        <input type="file" class="form-control-file" id="desImagePath" name="desImagePath">
+                                        <div id="loadingImg"></div>
+                                        <span class="help-block"></span>
+                                    </div>
                                   </div>
 
-
+                                <!--Aparece apenas para Editar -->
                                 <div hidden="true">
                                     <label for="idUsuario">Id</label>
                                     <input type="text" id="idUsuario" name="idUsuario">
@@ -132,113 +150,12 @@
                         <span class="status-form float-right" style="margin-top: -1.4rem;"></span>
                         <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
                             
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <!-- btnCreateUser and btnEditUser-->
+                            <input id="btnSaveUser" type="submit" value="Cadastrar" class="btn btn-success">
                             
-                            <input id="btnCreateUser" type="submit" value="Cadastrar" class="btn btn-primary">
-                            
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- End Users Add Modal --------------------------------------------->
-
-        <!-- Users Edit Modal -------------------------------------------->
-        <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Usuario" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b>Editar Usuário</b></h3>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="formEditUser">
-                            <div class="form-row">
-
-                                <div class="form-group col-lg-6">
-                                    <label for="nomeCompleto">Nome Completo</label>
-                                    <input type="text" class="form-control" name="nomeCompleto" id="nomeCompleto"
-                                        placeholder="Nome Completo" required="">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-6">
-
-                                    <label for="funcao">Função</label>
-                                    <input type="text" class="form-control" name="funcao" id="funcao"
-                                        placeholder="Função na empresa" required="">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="nomeUsuario">Usuário</label>
-                                    <input type="text" class="form-control" name="nomeUsuario" id="nomeUsuario"
-                                        placeholder="Nome de Usuário" required="">
-                                    <span class="help-block"></span>
-                                </div>
-
-
-                                <div class="form-group col-lg-6">
-                                    <label for="senha">Senha</label>
-                                    <br><button type="button" id="btnChangePassword" class="btn btn-warning">Alterar Senha</button>
-                                    <!--input type="password" class="form-control" name="senha" id="senha" minlength="6"
-                                         placeholder="sua senha" required="">
-                                    <span class="help-block"></span-->
-                                </div>
-
-
-                                <div class="form-group col-lg-6">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="exemplo@exemplo.com" required="">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-2">
-                                    <label for="administrador">Administrador?</label>
-                                    <select id="administrador" name="administrador" class="form-control" required="">
-                                        <option value="0" selected>Não</option>
-                                        <option value="1">Sim</option>
-                                    </select>
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="dtCadastro">Data de Cadastro</label>
-                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
-                                </div>
-                                
-                                <div class="form-group">
-                                    
-                                    <div class="box box-widget">
-                                        <div id="divImg" class="box-body">
-                                            <img src="" id="image" style="max-width: 200px; max-height: 200px;">
-                                        </div>
-                                    </div>
-                                    <label for="file">Foto</label>
-                                    <input type="file" class="form-control-file" id="desOldImagePath" name="desOldImagePath">
-                                    <div id="loadingImg"></div>
-                                
-                                </div>
-
-
-                                <div hidden="true">
-                                    <label for="idUsuario">Id</label>
-                                    <input type="text" id="idUsuario" name="idUsuario">
-                                </div>
-                            </div>
-                            
-                        </form>
-                        <div style="margin: 0px;" class="breadcrumb justify-content-between">
-                            
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            
-                                <input id="btnEditUser" type="submit" value="Editar" class="btn btn-primary">
+                            <!-- para desbloquear os camps para editar o usuário -->
+                            <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
                             
                         </div>
 
@@ -247,9 +164,10 @@
                 </div>
             </div>
         </div>
-        <!-- End Users Add Modal --------------------------------------------->
-            
-    <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+        <!-- End User Modal --------------------------------------------->
+
+ 
+<script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
             
 <script src="../res/js/util.js"></script>
 <script src="../res/js/users.js"></script>

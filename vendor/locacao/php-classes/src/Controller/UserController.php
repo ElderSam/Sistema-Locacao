@@ -14,38 +14,56 @@ class UserController extends Generator
     }
 
 
-    public function save()
-    { //add a new user
+    public function save($update = false) //Add a new user or Update
+    {
 
         User::verifyLogin();
 
-        $error = $this->verifyFields(); //verifica os campos do formulário
+        $error = $this->verifyFields($update); //verifica os campos do formulário
         $aux = json_decode($error);
 
         if ($aux->error) {
             return $error;
         }
 
-        $_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+        $_POST['inadmin'] = (isset($_POST['inadmin'])) ? 1 : 0;
 
-        //criptografa a senha
-        $_POST['senha'] = password_hash($_POST["senha"], PASSWORD_DEFAULT, [
-            "cost" => 12
-        ]);
+        if (isset($_POST['senha'])) {
+            //criptografa a senha
+            $_POST['senha'] = password_hash($_POST['senha'], PASSWORD_DEFAULT, [
+                "cost" => 12
+            ]);
+        }
+
 
         $user = new User(); //Model
 
         $user->setData($_POST);
 
-        $image = $this->uploadImage($_FILES);
+        if ($update) { //se for atualizar
+
+            $search = new User();
+            //pega o caminho da imagem atual
+            $res = $search->get((int) $_POST['idUsuario']);
+            $desOldImagePath = $res['foto'];
+        }else{
+            $desOldImagePath = "";
+        }
+
+        $image = $this->uploadImage($_FILES, $desOldImagePath); //salva imagem na pasta
 
         $user->setfoto($image);
 
-        return $user->save();
+        if ($update) { //se for atualizar
+            return $user->update();
+
+        } else { // se for cadastrar novo usuário
+            return $user->insert();
+        }
     }
 
 
-    public function verifyFields()
+    public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
 
         $errors = array();
@@ -61,18 +79,31 @@ class UserController extends Generator
         if ($_POST["nomeUsuario"] == "") {
             $errors["#nomeUsuario"] = "Nome de Usuário é obrigatório!";
         }
-        if ($_POST["senha"] == "") {
+        if (($_POST["senha"] == "") && (!$update)) {
             $errors["#senha"] = "Senha é obrigatória!";
         }
         if ($_POST["email"] == "") {
             $errors["#email"] = "E-mail é obrigatório!";
+
+        }else if($this->validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
+            $errors["#email"] = "E-mail Incorreto!";
         }
 
 
         $exists = User::searchName($_POST["nomeCompleto"]);
         if (count($exists) > 0) { //se existe nome completo igual já registrado
 
-            $errors["#nomeCompleto"] = "Já existe um usuário com esse Nome Completo";
+            if ($update) {
+                foreach ($exists as $user) {
+
+                    if (($_POST['nomeCompleto'] == $user['nomeCompleto']) && ($_POST['idUsuario'] != $user['idUsuario'])) {
+                        $errors["#nomeCompleto"] = "Já existe um usuário com esse Nome Completo";
+                        break;
+                    }
+                }
+            } else {
+                $errors["#nomeCompleto"] = "Já existe um usuário com esse Nome Completo";
+            }
         }
 
         $exists = 0;
@@ -80,7 +111,18 @@ class UserController extends Generator
         $exists = User::searchUser($_POST["nomeUsuario"]);
         if (count($exists) > 0) { //se existe usuário igual já registrado
 
-            $errors["#nomeUsuario"] = "Esse usuário já existe";
+            if ($update) {
+                foreach ($exists as $user) {
+
+                    if (($_POST['nomeUsuario'] == $user['nomeUsuario']) && ($_POST['idUsuario'] != $user['idUsuario'])) {
+                        $errors["#nomeUsuario"] = "Esse usuário já existe";
+                        break;
+                    }
+                }
+            } else {
+                $errors["#nomeUsuario"] = "Esse usuário já existe";
+            }
+
         }
 
 
@@ -101,6 +143,23 @@ class UserController extends Generator
             }*/
         }
     }/* --- fim verificaErros() ---------------------------*/
+
+
+    public function validaEmail($email)
+    {
+        //verifica se e-mail esta no formato correto de escrita
+        if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
+            return false;
+        } else {
+            //Valida o dominio
+            $dominio = explode('@', $email);
+            if (!checkdnsrr($dominio[1], 'A')) {
+                return false;
+            } else {
+                return true;
+            } // Retorno true para indicar que o e-mail é valido
+        }
+    }
 
 
     public function uploadImage($files, $desOldImagePath = "")
@@ -199,13 +258,13 @@ class UserController extends Generator
         $column_order = array("nomeUsuario", "nomeCompleto", "funcao", "administrador"); //ordem que vai aparecer (o nome primeiro)
 
         //faz a pesquisa no banco de dados
-        $users = new User();
+        $users = new User(); //model
 
         $datatable = $users->get_datatable($requestData, $column_search, $column_order);
-       
+
         $data = array();
 
-        foreach ($datatable['data'] as $user) {
+        foreach ($datatable['data'] as $user) { //para cada registro retornado
 
             if ($user['administrador'] == 0) {
                 $isAdm = "Não";
@@ -222,17 +281,17 @@ class UserController extends Generator
             $row[] = $user['nomeCompleto'];
             $row[] = $user['funcao'];
             $row[] = $isAdm;
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning'
-                onclick='loadEditUser($id);'>
+            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+                onclick='loadUser($id);'>
                     <i class='fas fa-bars sm'></i>
                 </button>
                 <button type='button' title='excluir' onclick='removeUser($id);'
-                    class='btn btn-danger'>
+                    class='btn btn-danger btnDelete'>
                     <i class='fas fa-trash'></i>
                 </button>";
 
             $data[] = $row;
-        }
+        } //
 
         //Cria o array de informações a serem retornadas para o Javascript
         $json = array(

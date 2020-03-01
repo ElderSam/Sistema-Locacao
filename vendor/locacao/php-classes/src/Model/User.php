@@ -4,7 +4,7 @@ namespace Locacao\Model;
 
 use \Locacao\DB\Sql;
 use \Locacao\Generator;
-use \Locacao\Mailer;
+//use \Locacao\Mailer;
 
 
 class User extends Generator{
@@ -74,7 +74,7 @@ class User extends Generator{
     }
 
 
-    public function save(){
+    public function insert(){
         
         $sql = new Sql();
 
@@ -92,7 +92,8 @@ class User extends Generator{
 
 
             if(count($results) > 0){
-                $this->setidUsuario($results[0]['idUsuario']); //esse id vai ser usado para colocar o nome da foto
+
+                $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
 
                 return json_encode($results[0]);
 
@@ -102,9 +103,7 @@ class User extends Generator{
                     "msg"=>"Erro ao inserir Usuário!"
                     ]);
             }
-
-            $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
-        
+       
         }else{
 
             return json_encode([
@@ -151,13 +150,14 @@ class User extends Generator{
         
         $query = "SELECT idUsuario, nomeCompleto, funcao, nomeUsuario, email, administrador, foto, dtCadastro FROM usuarios";
 
-        if (!empty($requestData['search']['value'])) {
+        if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
             $first = TRUE;
 
             foreach ($column_search as $field) {
 
-                $search = strtoupper($requestData['search']['value']);
+                $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
+
 
                 if ($field == "administrador") {
 
@@ -168,13 +168,14 @@ class User extends Generator{
                     }
                 }
 
+                //filtra no banco
                 if ($first) {
                     $query .= " WHERE ($field LIKE '$search%'"; //primeiro caso
                     $first = FALSE;
                 } else {
                     $query .= " OR $field LIKE '$search%'";
                 }
-            }
+            } //fim do foreach
             if (!$first) {
                 $query .= ")"; //termina o WHERE e a query
             }
@@ -195,7 +196,7 @@ class User extends Generator{
         );
     }
 
-    public function searchAll($query){
+    public function searchAll($query){ //pesquisa genérica (para todos os campos). Recebe uma query
 
         $sql = new Sql();
 
@@ -219,18 +220,30 @@ class User extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_usuariosUpdate_save(:idUsuario, :nomeCompleto, :funcao, :nomeusuario, :senha, :email, :administrador, :foto", array(
+        $results = $sql->select("CALL sp_usuariosUpdate_save(:idUsuario, :nomeCompleto, :funcao, :nomeUsuario, :email, :administrador, :foto)", array(
             ":idUsuario"=>$this->getidUsuario(),
             ":nomeCompleto"=>$this->getnomeCompleto(),
             ":funcao"=>$this->getfuncao(),
             ":nomeUsuario"=>$this->getnomeUsuario(),
-            ":senha"=>$this->getsenha(),
+            //":senha"=>$this->getsenha(),
             ":email"=>$this->getemail(),
             ":administrador"=>$this->getadministrador(),
             ":foto"=>$this->getfoto()
         ));
 
-        $this->setData($results[0]);
+        if(count($results) > 0){
+
+            $this->setData($results[0]); //carrega atributos desse objeto com o retorno da atualização no banco
+
+            return json_encode($results[0]);
+
+        }else{
+            return json_encode([
+                "error"=>true,
+                "msg"=>"Erro ao atualizar Usuário!"
+                ]);
+        }
+
     }
 
     public function delete(){

@@ -14,15 +14,15 @@ $app->get('/users', function(){
 
     User::verifyLogin();
 	
-    $users = User::listAll();
-	//print_r($users);
-    $page = new Page();
-
-	$users = json_decode($users, false);
+    //$users = User::listAll();
+	//$users = json_decode($users, false);
 	
-    $page->setTpl("usuarios", array(
+	$page = new Page();
+	$page->setTpl("usuarios");
+
+    /*$page->setTpl("usuarios", array(
         "users"=>$users
-    ));
+    ));*/
   
 });
 
@@ -37,7 +37,6 @@ $app->get('/users/json', function(){
 $app->post('/users/list_datatables', function(){ //ajax list datatables
 
 	User::verifyLogin();
-	
 	
 	//Receber a requisão da pesquisa 
 	$requestData = $_REQUEST;
@@ -119,22 +118,15 @@ $app->post("/users/create", function(){
 
 
 /* rota para atualizar usuário --------------------------*/
-$app->post("/users/:iduser", function($iduser){
-    
+$app->post("/users/:iduser", function($iduser){ //update
+	
     User::verifyLogin();
 
-    $user = new User();
+	$user = new UserController();
 
-	$_POST["administrador"] = (isset($_POST["administrador"])) ? 1 : 0;
+	$update = true;
 	
-	$user->get((int)$iduser);
-
-	$user->setData($_POST);
-
-	$user->update();
-
-	header("Location: /users");
-	exit;
+	echo $user->save($update);
 	
 });
 
