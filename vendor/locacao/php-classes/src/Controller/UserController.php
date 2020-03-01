@@ -285,7 +285,7 @@ class UserController extends Generator
                 onclick='loadUser($id);'>
                     <i class='fas fa-bars sm'></i>
                 </button>
-                <button type='button' title='excluir' onclick='removeUser($id);'
+                <button type='button' title='excluir' onclick='deleteUser($id);'
                     class='btn btn-danger btnDelete'>
                     <i class='fas fa-trash'></i>
                 </button>";

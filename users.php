@@ -61,7 +61,7 @@ $app->post('/users/list_datatables', function(){ //ajax list datatables
 });*/
 
 /* rota para deletar usuário --------------------------*/
-$app->get("/users/:iduser/delete", function($iduser){
+$app->post("/users/:iduser/delete", function($iduser){
     
     User::verifyLogin();
 
@@ -69,10 +69,8 @@ $app->get("/users/:iduser/delete", function($iduser){
 
 	$user->get((int)$iduser); //carrega o usuário, para ter certeza que ainda existe no banco
 
-	$user->delete();
+	echo $user->delete();
 
-	header("Location: /users");
-	exit;
 });
 
 
@@ -125,7 +123,7 @@ $app->post("/users/:iduser", function($iduser){ //update
 	$user = new UserController();
 
 	$update = true;
-	
+
 	echo $user->save($update);
 	
 });

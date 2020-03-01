@@ -2,6 +2,7 @@
 
 namespace Locacao\Model;
 
+use Exception;
 use \Locacao\DB\Sql;
 use \Locacao\Generator;
 //use \Locacao\Mailer;
@@ -250,9 +251,27 @@ class User extends Generator{
 
         $sql = new Sql();
 
-        $sql->query("CALL sp_usuarios_delete(:idUsuario)", array(
-            ":idUsuario"=>$this->getidUsuario()
-        ));
+        try{
+            $sql->query("CALL sp_usuarios_delete(:idUsuario)", array(
+                ":idUsuario"=>$this->getidUsuario()
+            ));
+
+            echo json_encode([
+                "error"=>false,
+            ]);
+
+        }catch(Exception $e){
+
+            echo json_encode([
+                "error"=>true,
+                "msg"=>$e->getMessage()
+            ]);
+
+        }
+
+
+
+        
     }
 
 

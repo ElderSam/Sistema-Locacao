@@ -119,7 +119,7 @@ $(function() { //quando a página carrega
 					clearErrors();
 
 					if (JSON.parse(response).error) {
-						console.log('erro ao editar novo usuário!')
+						console.log('erro ao editar usuário!')
 
 						response = JSON.parse(response)
 
@@ -249,6 +249,64 @@ function loadUser(idUsuario) { //carrega todos os campos do modal referente ao u
 		console.log("Rota não encontrada!");
 	});
 
+}
+
+function deleteUser(idUsuario){
+
+	Swal.fire({
+		title: 'Você tem certeza?',
+		text: "Você não será capaz de reverter isso!",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Sim, apagar!'
+
+	}).then((result) => {
+
+		if (result.value) {
+
+			$.ajax({
+				type: "POST",
+				url: `/users/${idUsuario}/delete`,
+				contentType: false,
+				processData: false,
+				/*beforeSend: function() {
+					//...
+				},*/
+				success: function (response) {
+		
+					if (JSON.parse(response).error) {
+						console.log('erro ao excluir!')
+						response = JSON.parse(response)
+						
+						Swal.fire(
+							'Erro!',
+							'Por favor verifique os campos',
+							'error'
+						)
+						
+					} else {					
+										
+						Swal.fire(
+							'Excluído!',
+							'Registro apagado!',
+							'success'
+						)
+
+						loadTableUsers();						
+					}					
+				},
+				error: function (response) {
+
+					console.log(`Erro! Mensagem: ${response}`);		
+				}
+			});		
+
+		}
+	})
+
+	$('.swal2-cancel').html('Cancelar');
 }
 
 
