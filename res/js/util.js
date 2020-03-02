@@ -1,3 +1,32 @@
+$(function() { //quando a página carrega
+
+    loadUsernameMenu();
+});
+
+
+//carrega o nome do usuário atual e a foto no menu superior
+function loadUsernameMenu(){
+	$.ajax({
+		type: "POST",
+		url: '/users/varUser', //pede as variáveis do usuario atual
+		contentType: false,
+		processData: false,
+		success: function (response) {
+
+			if (JSON.parse(response).error) {
+				console.log('erro ao carregar nome e foto do usuário no menu superior!')					
+				
+			} else {
+				response = JSON.parse(response)
+				$('#username').html(response.nomeUsuario)
+				$('#image-username').attr('src', response.foto)
+				
+			}
+			
+		}
+	});
+}
+
 
 //tradução do DataTables para Português-----------------------------
 const DATATABLE_PTBR = { 

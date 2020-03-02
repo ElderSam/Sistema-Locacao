@@ -26,6 +26,17 @@ $app->get('/users', function(){
   
 });
 
+$app->post('/users/varUser', function(){ //para mostrar nome e foto do usuário no menu
+
+	echo json_encode([
+		"nomeUsuario"=>$_SESSION['User']['nomeUsuario'],
+		"foto"=>$_SESSION['User']['foto']
+	]);
+
+});
+
+
+
 $app->get('/users/json', function(){
 
     User::verifyLogin();
