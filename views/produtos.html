@@ -5,8 +5,8 @@
             <ol class="breadcrumb mb-4 justify-content-between">
                 <li class="breadcrumb-item active">home/Produtos</li>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productsModal">
-                    Cadastrar
+                <button id="btnAddProduct" type="button" class="btn btn-success" data-toggle="modal" data-target="#productModal">
+                    Novo Produto
                 </button>           
             </ol>
 
@@ -18,37 +18,21 @@
                             <thead class="bg-dark text-white">
                             
                                 <tr>
-                                    <th>Descrição</th>
                                     <th>Código</th>
-                                    <th>Status</th>
+                                    <th>Descrição</th>
+                                    <th class="text-center">Status</th>
                                     <th>Tipo</th>
-                                    <th>Base Aluguel</th>
+                                    <th class="text-center">Base Aluguel</th>
                                     <th>Opções</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Almoxarifado</td>
-                                    <td>C001</td>
-                                    <td>Disponível</td>
-                                    <td>Container</td>
-                        
-                                    <td>$1320,800</td>
-                                    <td>
-                                        <button type="button" title="ver detalhes" class="btn btn-warning" data-toggle="modal" data-target="#modal-produto">
-                                            <i class="fas fa-bars sm"></i>
-                                        </button>
-                                        <button type="button" title="excluir" onclick="deleteRow('.$data->id.')" class="btn btn-danger">                                      
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <tbody id="listProducts">
                               
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
-                                    <th>Descrição</th>
                                     <th>Código</th>
+                                    <th>Descrição</th>
                                     <th>Status</th>
                                     <th>Tipo</th>
                                     <th>Base Aluguel</th>
@@ -63,8 +47,136 @@
             </div>
         </div>
 
+
+           
+        <!-- Product Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b>Cadastrar Produto</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formProduct">
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-3">
+                                    <label for="codigo">Código</label>
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="ex: X001">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-9">
+                                    <label for="descricao">Descrição</label>
+                                    <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição do seu produto ...">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="valorCompra">Valor de Compra</label>
+                                    <input type="text" class="form-control" id="valorCompra" name="valorCompra" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="valorAluguel">Valor de Aluguel</label>
+                                    <input type="text" class="form-control" id="valorAluguel" name="valorAluguel" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                      <option selected value="1">Disponível</option>
+                                      <option value="0">Alugado</option>
+                                      <option value="2">Manutenção</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="dtFabricacao">Data de Fabricação</label>
+                                    <input type="date" class="form-control" id="dtFabricacao" name="dtFabricacao" placeholder="000">
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="vlBaseAluguel">Valor Base Aluguel</label>
+                                    <input type="text" class="form-control" name="vlBaseAluguel" id="vlBaseAluguel" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="tipo" title="tamanho">Tipo</label>
+                                    <select class="form-control" id="tipo" name="tipo">
+                                    <option selected value="">(Escolha um)</option>
+                                      <option value="P">pequeno</option>
+                                      <option value="M">médio</option>
+                                      <option value="G">grande</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                                <div class="form-group col-lg-3">
+                                    <label for="categoria">Categoria</label>
+                                    <select class="form-control" id="categoria" name="idCategoria">
+                                        <option value="1">container</option>
+                                      <option value="2">elétrico</option>
+                                      <option value="3">mecânico</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="fornecedor">Fornecedor</label>
+                                    <select class="form-control" id="fornecedor" name="idFornecedor">
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label for="anotacoes">Anotações</label>
+                                    <textarea class="form-control" id="anotacoes" name="anotacoes" placeholder="anotações do produto ..." rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <!--Usado apenas para Editar -->
+                            <div hidden="true">
+                                <label for="idProduto">Id</label>
+                                <input type="text" id="idProduto" name="idProduto" >
+                            </div>
+
+                         </form>
+
+                         <span class="status-form float-right" style="margin-top: -1.4rem;"></span>
+                         <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                             
+                             <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             <!-- btnCreateProduct and btnEditProduct-->
+                             <input id="btnSaveProduct" type="submit" value="Cadastrar" class="btn btn-success">
+                             
+                             <!-- para desbloquear os camps para editar o procuto -->
+                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+                             
+                         </div>
+                       
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  <!-- end Product Modal -->  
+
+
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="../res/js/util.js"></script>
+    <script src="../res/js/products.js"></script>
         
 <!--
 <script>

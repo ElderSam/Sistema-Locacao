@@ -78,15 +78,15 @@ function showErrorsModal(error_list) {
 } 
 
 /* para mostrar imagem que acabou de fazer upload antes de enviar --------------------- */
-document.querySelector('#formUser #desImagePath').addEventListener('change', function(){
+document.querySelector('#desImagePath').addEventListener('change', function(){
 	
 	var file = new FileReader();
-	$('#formUser #loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
+	$('#loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
 		
 	file.onload = function() {
 	
-		document.querySelector('#formUser #image-preview').src = file.result;
-		$('#formUser #loadingImg').html('');
+		document.querySelector('#image-preview').src = file.result;
+		$('#loadingImg').html('');
 	}
 
 	file.readAsDataURL(this.files[0]);

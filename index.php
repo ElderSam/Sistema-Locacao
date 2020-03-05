@@ -17,6 +17,8 @@ $app = new Slim();
 $app->config('debug', true);
 
 require_once("users.php");
+require_once("products.php");
+require_once("products-containers.php");
 
 $app->get('/', function(){
 
@@ -25,28 +27,6 @@ $app->get('/', function(){
     $page = new Page();
 
     $page->setTpl("index");
-
-});
-
-
-$app->get('/products', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("produtos");
-
-});
-
-
-$app->get('/products/containers', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("produtos-containers");
 
 });
 
