@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06-Mar-2020 às 04:21
+-- Tempo de geração: 06-Mar-2020 às 05:06
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -151,7 +151,7 @@ CREATE TABLE `aditamentos` (
 
 CREATE TABLE `categorias` (
   `idCategoria` int(4) NOT NULL,
-  `descricao` varchar(15) NOT NULL,
+  `descCategoria` varchar(15) NOT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -159,7 +159,7 @@ CREATE TABLE `categorias` (
 -- Extraindo dados da tabela `categorias`
 --
 
-INSERT INTO `categorias` (`idCategoria`, `descricao`, `dtCadastro`) VALUES
+INSERT INTO `categorias` (`idCategoria`, `descCategoria`, `dtCadastro`) VALUES
 (1, 'containers', '2020-03-03 23:01:57'),
 (2, 'elétricos', '2020-03-05 00:17:03'),
 (3, 'mecânicos', '2020-03-05 00:17:03');

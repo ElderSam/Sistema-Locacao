@@ -70,14 +70,8 @@ class ProductController extends Generator
         if ($_POST["valorCompra"] == "") {
             $errors["#valorCompra"] = "Valor de Compra é obrigatório!";
         }
-        if ($_POST["valorAluguel"] == "") {
-            $errors["#valorAluguel"] = "Valor Aluguel é obrigatório!";
-        }
         if ($_POST["status"] == "") {
             $errors["#status"] = "Status é obrigatório!";
-        }
-        if ($_POST["vlBaseAluguel"] == "") {
-            $errors["#vlBaseAluguel"] = "Valor Base Aluguel é obrigatório!";
         }
         if (($_POST["tipo"] == "") && (!$update)) {
             $errors["#tipo"] = "Tipo é obrigatório!";
@@ -87,6 +81,18 @@ class ProductController extends Generator
         }
         if (($_POST["idFornecedor"] == "") && (!$update)) {
             $errors["#fornecedor"] = "Fornecedor é obrigatório!";
+        }
+
+        //para containers
+        if($_POST["idCategoria"] == 1){
+
+            if ($_POST["medida"] == "") {
+                $errors["#medida"] = "Medida é obrigatória!";
+            }
+            if (($_POST["tipoPorta"] == "") && (!$update)) {
+                $errors["#tipoPorta"] = "Tipo de porta é obrigatória!";
+            }
+            // ...
         }
 
         $exists = Product::searchCode($_POST["codigo"]);
@@ -234,8 +240,8 @@ class ProductController extends Generator
     public function ajax_list_products($requestData)
     {
 
-        $column_search = array("codigo", "descricao", "status", "tipo", "vlBaseAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codigo", "descricao", "status", "tipo", "vlBaseAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("codigo", "categoria", "status", "tipo", "descricao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigo", "categoria", "status", "tipo", "descricao"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $product = new Product(); //model
@@ -253,15 +259,6 @@ class ProductController extends Generator
             }else if ($product['status'] == 2){
                 $status = "Manutenção";
             }
-
-
-            if ($product['tipo'] == 'P') {
-                $tipo = "pequeno";
-            } else if ($product['tipo'] == 'M'){
-                $tipo = "médio";
-            }else if ($product['tipo'] == 'G'){
-                $tipo = "grande";
-            }
     
 
             $id = $product['idProduto'];
@@ -270,10 +267,10 @@ class ProductController extends Generator
             $row = array();
 
             $row[] = $product['codigo'];
-            $row[] = $product['descricao'];
+            $row[] = $product['descCategoria'];
             $row[] = $status;
-            $row[] = $tipo;
-            $row[] = 'R$ ' . $product['vlBaseAluguel'];
+            $row[] = $product['tipo'];
+            $row[] = $product['descricao'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadProduct($id);'>
                     <i class='fas fa-bars sm'></i>

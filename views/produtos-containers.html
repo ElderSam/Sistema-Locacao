@@ -19,9 +19,9 @@
                             
                                 <tr>
                                     <th>Código</th>
-                                    <th>Medida</th>
+                                    <th>Categoria</th>
                                     <th>Status</th>
-                                    <th>Valor Aluguel</th>
+                                    <th>Descrição</th>
                                     <th>Opções</th>
                                 </tr>
                             </thead>
@@ -46,9 +46,9 @@
                             <tfoot class="bg-dark text-white">
                                 <tr>
                                     <th>Código</th>
-                                    <th>Medida</th>
+                                    <th>Categoria</th>
                                     <th>Status</th>
-                                    <th>Valor Aluguel</th>
+                                    <th>Descrição</th>
                                     <th>Opções</th>
                                 </tr>
                             </tfoot>
@@ -77,23 +77,21 @@
                             <div class="form-row">
 
                                 <div class="form-group col-lg-3">
-                                    <label for="nome">Nome</label>
-                                    <input type="text" class="form-control" id="nome" name="nome" placeholder="nome">
+                                    <label for="codigo">Código</label>
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="codigo">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-9">
                                     <label for="descricao">Descrição</label>
                                     <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição do seu produto ...">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="valorCompra">Valor de Compra</label>
                                     <input type="text" class="form-control" id="valorCompra" name="valorCompra" placeholder="000">
-                                </div>
-
-                                <div class="form-group col-lg-3">
-                                    <label for="valorAluguel">Valor de Aluguel</label>
-                                    <input type="text" class="form-control" id="valorAluguel" name="valorAluguel" placeholder="000">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -103,47 +101,49 @@
                                       <option value="0">Alugado</option>
                                       <option value="2">Manutenção</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="dtFabricacao">Data de Fabricação</label>
                                     <input type="date" class="form-control" id="dtFabricacao" name="dtFabricacao" placeholder="000">
-                                </div>
-
-                                <div class="form-group col-lg-3">
-                                    <label for="vlBaseAluguel">Valor Base Aluguel</label>
-                                    <input type="text" class="form-control" name="vlBaseAluguel" id="vlBaseAluguel" placeholder="000">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="tipo" title="tamanho">Tipo de Container</label>
                                     <select class="form-control" id="tipo" name="tipo">
-                                      <option value="P">pequeno</option>
+                                        <option selected value="">(Escolha um)</option>
+                                        <option value="P">pequeno</option>
                                       <option value="M">médio</option>
                                       <option value="G">grande</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-3">
                                     <label for="categoria">Categoria</label>
-                                    <select class="form-control" id="categoria" name="categoria" disabled>
-                                      <option value="1">Container</option>
+                                    <select class="form-control" id="categoria" name="idCategoria">
+                                      <option selected value="1">Container</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="fornecedor">Fornecedor</label>
-                                    <select class="form-control" id="fornecedor" name="fornecedor">
-                                      <option value="">...</option>
+                                    <select class="form-control" id="fornecedor" name="idFornecedor">
+                                      <option value="1">1</option>
                                       <option value="">...</option>
                                       <option value="">...</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <!-- Campos abaixo são de CONTEINERS-->
                                 <div class="form-group col-lg-3">
                                     <label for="numContainer">Código</label>
                                     <input type="text" class="form-control"id="numContainer"  name="numContainer" placeholder="000">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -155,11 +155,13 @@
                                       <option>12M</option>
                                       <option>14M</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-6">
                                     <label for="tipoPorta">Tipo de Porta</label>
                                     <input type="text" class="form-control" id="tipoPorta" name="tipoPorta">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -182,7 +184,8 @@
                                       <option>7</option>
                                       <option>8</option>
                                     </select>
-                                  </div>
+                                    <span class="help-block"></span>  
+                                </div>
                                 
                                 <div class="form-group col-lg-3">
                                 <label for="janelasCirculares">Janelas Circulares</label>
@@ -197,7 +200,8 @@
                                     <option>7</option>
                                     <option>8</option>
                                 </select>
-                                </div>
+                                <span class="help-block"></span>    
+                            </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="exampleFormControlSelect1">Sanitários</label>
@@ -207,12 +211,14 @@
                                         <option>2</option>
                                         <option>3</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-3">
                                     <div class="custom-control custom-switch">                                                             
                                         <input type="checkbox" class="custom-control-input" id="eletrificado" name="eletrificado">
                                         <label class="custom-control-label mt-4" for="eletrificado">Eletrificado</label>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
 
@@ -223,6 +229,7 @@
                                         <option value="1">N/A</option>
                                         <option value="1">Sim</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-3">
@@ -238,6 +245,7 @@
                                         <option>7</option>
                                         <option>8</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -253,29 +261,34 @@
                                         <option>7</option>
                                         <option>8</option>
                                     </select>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-4">
                                     <div class="custom-control custom-switch">                     
                                         <input type="checkbox" class="custom-control-input" id="chuveiro" name="chuveiro">
                                         <label class="custom-control-label mt-4" for="chuveiro">Chuveiro</label>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group col-lg-4">
                                     <label for="inputEmail4">Data de Fabricação</label>
                                     <input type="date" class="form-control" id="dtFabricação" name="dtFabricação" placeholder="00/00/0000">
+                                    <span class="help-block"></span>
                                 </div>
 
 
                                 <div class="form-group col-lg-4">
                                     <label for="inputEmail4">Data de Cadastro</label>
                                     <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" placeholder="00/00/0000">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-12">
                                     <label for="anotacoes">Anotações</label>
                                     <textarea class="form-control" id="anotacoes" name="anotacoes" placeholder="anotações do produto ..." rows="3"></textarea>
+                                    <span class="help-block"></span>
                                 </div>
                             </div>
 

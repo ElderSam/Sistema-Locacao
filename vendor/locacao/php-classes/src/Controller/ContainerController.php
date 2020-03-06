@@ -2,11 +2,11 @@
 
 namespace Locacao\Controller;
 
-use \Locacao\Generator;
+use \Locacao\Controller\ProductController;
 use \Locacao\Model\User;
-use \Locacao\Model\Product;
+use \Locacao\Model\Container;
 
-class ContainerController extends Generator
+class ContainerController extends ProductController
 {
 
     //construtor
@@ -20,20 +20,20 @@ class ContainerController extends Generator
 
         User::verifyLogin();
 
-        $error = $this->verifyFields($update); //verifica os campos do formulário
+        $error = parent::verifyFields($update); //verifica os campos do formulário
         $aux = json_decode($error);
 
         if ($aux->error) {
             return $error;
         }
 
-        $user = new User(); //Model
+        $container = new Container(); //Model
 
-        $user->setData($_POST);
+        $container->setData($_POST);
 
-        if ($update) { //se for atualizar
+        /*if ($update) { //se for atualizar
 
-            $search = new User();
+            $search = new Container();
             //pega o caminho da imagem atual
             $res = $search->get((int) $_POST['idUsuario']);
             $desOldImagePath = $res['foto'];
@@ -43,71 +43,15 @@ class ContainerController extends Generator
 
         $image = $this->uploadImage($_FILES, $desOldImagePath); //salva imagem na pasta
 
-        $user->setfoto($image);
+        $container->setfoto($image);*/
 
         if ($update) { //se for atualizar
-            return $user->update();
+            return $container->update();
 
         } else { // se for cadastrar novo usuário
-            return $user->insert();
+            return $container->insert();
         }
     }
-
-
-    public function verifyFields($update = false)
-    {/*Verifica todos os campos ---------------------------*/
-
-        $errors = array();
-
-        $errors = array();
-
-        if ($_POST["codigo"] == "") {
-            $errors["#codigo"] = "Código é obrigatório!";
-        }
-        if ($_POST["medida"] == "") {
-            $errors["#medida"] = "Medida é obrigatória!";
-        }
-        if ($_POST["tipoContainer"] == "") {
-            $errors["#tipoContainer"] = "Tipo de container é obrigatório!";
-        }
-        if (($_POST["tipoPorta"] == "") && (!$update)) {
-            $errors["#tipoPorta"] = "Tipo de porta é obrigatória!";
-        }
-
-        $exists = Container::searchCodigo($_POST["codigo"]);
-        if (count($exists) > 0) { //se existe nome completo igual já registrado
-
-            if ($update) {
-                foreach ($exists as $container) {
-
-                    if (($_POST['codigo'] == $container['codigo']) && ($_POST['idContainer'] != $container['idContainer'])) {
-                        $errors["#codigo"] = "Já existe um Container com esse Código";
-                        break;
-                    }
-                }
-            } else {
-                $errors["#codigo"] = "Já existe um usuário com esse Código";
-            }
-        }
-
-
-        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
-
-            return json_encode([
-                'error' => true,
-                'error_list' => $errors
-            ]);
-        } else { //se ainda não tem erro
-
-            return json_encode([
-                'error' => false
-            ]);
-
-            /*if($this->getfoto() == ""){
-                $json["error_list"]["#desImagePath"] = "Não foi possível fazer Upload da imagem!";               
-            }*/
-        }
-    }/* --- fim verificaErros() ---------------------------*/
 
 
     /*public function uploadImage($files, $desOldImagePath = "")
@@ -201,8 +145,8 @@ class ContainerController extends Generator
     public function ajax_list_users($requestData)
     {
 
-        $column_search = array("codigo", "medida", "status", "vlAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codigo", "medida", "status", "vlAluguel"); //ordem que vai aparecer (o nome primeiro)
+        $column_search = array("codigo", "categoria", "status", "tipo", "descricao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigo", "categoria", "status", "tipo", "descricao"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $users = new User(); //model
@@ -211,22 +155,23 @@ class ContainerController extends Generator
 
         $data = array();
 
-        foreach ($datatable['data'] as $user) { //para cada registro retornado
+        foreach ($datatable['data'] as $container) { //para cada registro retornado
 
-            $id = $user['idUsuario'];
+            $id = $container['idUsuario'];
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
-            $row[] = $user['nomeUsuario'];
-            $row[] = $user['nomeCompleto'];
-            $row[] = $user['funcao'];
-            $row[] = $isAdm;
+            $row[] = $container['codigo'];
+            $row[] = $container['categoria'];
+            $row[] = $container['status'];
+            $row[] = $container['tipo'];
+            $row[] = $container['descricao'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadUser($id);'>
+                onclick='loadContainer($id);'>
                     <i class='fas fa-bars sm'></i>
                 </button>
-                <button type='button' title='excluir' onclick='deleteUser($id);'
+                <button type='button' title='excluir' onclick='deleteContainer($id);'
                     class='btn btn-danger btnDelete'>
                     <i class='fas fa-trash'></i>
                 </button>";
@@ -249,6 +194,6 @@ class ContainerController extends Generator
     public function records_total()
     {
 
-        return Product::total();
+        return Container::total();
     }
 }//end class ProductController

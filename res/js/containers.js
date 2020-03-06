@@ -1,6 +1,6 @@
 $(function() { //quando a página carrega
 
-	//carrega a tabela de Containers
+	//carrega a tabela de Products
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
 		"autoWidth": false, //largura
@@ -22,15 +22,6 @@ $(function() { //quando a página carrega
 		clearErrors();
 	});
 
-
-	$("#btnChangePassword").click(function() {
-		Swal.fire(
-			'OPS! :(',
-			'Essa função ainda não foi implementada!',
-			'info'
-		)
-	 });
-
 	 
 	 
 	/* Cadastrar ou Editar Usuario --------------------------------------------------------------*/	
@@ -40,10 +31,10 @@ $(function() { //quando a página carrega
 		let form = $('#formContainer');
 		let formData = new FormData(form[0]);
 
-		idContainer = $('#idContainer').val()
-		//onsole.log("idContainer:" + idContainer)
+		idProduto = $('#idProduto').val()
+		//console.log("idProduto:" + idProduto)
 
-		if(idContainer == 0){ //se for para cadastrar --------------------------------------------------
+		if(idProduto == 0){ //se for para cadastrar --------------------------------------------------
 
 			//console.log("você quer cadastrar")
 
@@ -67,13 +58,19 @@ $(function() { //quando a página carrega
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							'Ocorreu algum problema ao cadastrar',
 							'error'
 						)
 	
 						if(response['error_list']){
 							
 							showErrorsModal(response['error_list'])
+
+							Swal.fire(
+								'Atenção!',
+								'Por favor verifique os campos',
+								'error'
+							)
 						}
 						
 					} else {
@@ -82,11 +79,11 @@ $(function() { //quando a página carrega
 						//console.log(response)
 						Swal.fire(
 							'Sucesso!',
-							'Container cadastrado!',
+							'Produto cadastrado!',
 							'success'
 							)
 	
-						loadTableContainers();
+						loadTableProducts();
 						$('#formContainer').trigger("reset");
 						
 					}
@@ -102,11 +99,11 @@ $(function() { //quando a página carrega
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o usuario: ' + idContainer)
+			//console.log('você quer editar o usuario: ' + idProduto)
 			
 			$.ajax({
 				type: "POST",
-				url: `/products/containers/${idContainer}`, //rota para editar
+				url: `/products/containers/${idProduto}`, //rota para editar
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -125,13 +122,19 @@ $(function() { //quando a página carrega
 
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							'Ocorreu algum erro ao Editar',
 							'error'
 						);
 
 						if(response['error_list']){
 							
 							showErrorsModal(response['error_list'])
+
+							Swal.fire(
+								'Atenção!',
+								'Por favor verifique os campos',
+								'error'
+							);
 						}
 
 					} else {
@@ -139,11 +142,11 @@ $(function() { //quando a página carrega
 
 						Swal.fire(
 							'Sucesso!',
-							'Container atualizado!',
+							'Product atualizado!',
 							'success'
 						);
 
-						loadTableContainers();
+						loadTableProducts();
 						$('#formContainer').trigger("reset");
 					}
 	
@@ -164,7 +167,7 @@ $(function() { //quando a página carrega
 });
 
 
-function loadTableContainers(){ //carrega a tabela de Containers
+function loadTableProducts(){ //carrega a tabela de Containers
 
 	myTable.destroy(); //desfaz as paginações
 	
@@ -174,7 +177,7 @@ function loadTableContainers(){ //carrega a tabela de Containers
 		"processing": true, //mensagem 'processando'
 		"serverSide": true,
 		"ajax": {
-			"url": "/products/containers/list_datatables", //para chamar o método ajax_list_container
+			"url": "/products/containers/list_datatables", //para chamar o método ajax_list_products
 			"type": "POST",
 		},
 		"columnDefs": [
@@ -186,7 +189,7 @@ function loadTableContainers(){ //carrega a tabela de Containers
 
 
 //detalhes do Container
-function loadContainer(idContainer) { //carrega todos os campos do modal referente ao Container escolhido
+function loadProduct(idProduto) { //carrega todos os campos do modal referente ao Container escolhido
 	clearErrors();
 
 	$('#modalTitle').html('Detalhes do Container')
@@ -194,32 +197,31 @@ function loadContainer(idContainer) { //carrega todos os campos do modal referen
 	$('#btnSaveContainer').hide();
 	$('#btnUpdate').show();
 	
-
-	$('#senha').parent().hide();
-	$('#btnChangePassword').parent().show(); //botão para mudar senha
 	$('#dtCadastro').parent().show(); //aparece a data de cadastro (só para visualizar)
-	$('#desImagePath').parent().hide();
+	//$('#desImagePath').parent().hide();
 
 
-	$.getJSON(`/products/containers/json/${idContainer}`, function (data) {
+	$.getJSON(`/products/containers/json/${idProduto}`, function (data) {
 		//console.log(data)
-		//$("#formContainer").data("id", idContainer);
 
-		$("#formContainer #nomeCompleto").val(data.nomeCompleto).prop('disabled', true);
-		$("#formContainer #funcao").val(data.funcao).prop('disabled', true);
-		$("#formContainer #nomeUsuario").val(data.nomeUsuario).prop('disabled', true);
-		//$("#formContainer #senha").val(data.senha).prop('disabled', true);
-		$("#formContainer #email").val(data.email).prop('disabled', true);
-		$("#formContainer #administrador").val(data.administrador).prop('disabled', true);
-		$("#idContainer").val(data.idContainer);
-
-		//console.log('load View Container idContainer: ' + $("#idContainer").val())
+		$("#formContainer #codigo").val(data.codigo).prop('disabled', true);
+		$("#formContainer #descricao").val(data.descricao).prop('disabled', true);
+		$("#formContainer #valorCompra").val(data.valorCompra).prop('disabled', true);
+		$("#formContainer #status").val(data.status).prop('disabled', true);
+		$("#formContainer #dtFabricacao").val(data.dtFabricacao).prop('disabled', true);
+		$("#formContainer #tipo").val(data.tipo).prop('disabled', true);
+		$("#formContainer #anotacoes").val(data.anotacoes).prop('disabled', true);
+		$("#formContainer #idFornecedor").val(data.idFornecedor).prop('disabled', true);
+		$("#formContainer #idCategoria").val(data.idCategoria).prop('disabled', true);
+		$("#formContainer #dtCadastro").val(data.dtCadastro).prop('disabled', true);
+		$("#idProduto").val(data.idProduto);
+		//console.log('load View Container idProduto: ' + $("#idProduto").val())
 
 		dtCadastro = formatDate(data.dtCadastro)
 		//console.log('data: ' + dtCadastro)
 		$("#formContainer #dtCadastro").val(dtCadastro);
 			
-		$("#formContainer #image-preview").attr("src", data.foto); //mostra a imagem atual
+		//$("#formContainer #image-preview").attr("src", data.foto); //mostra a imagem atual
 		//$("#desmagePath").val(data.foto);
 
 		/* Atualizar Container ------------------------------------------------------------------ */
@@ -230,14 +232,17 @@ function loadContainer(idContainer) { //carrega todos os campos do modal referen
 			$('#btnSaveContainer').val('Atualizar').show();
 			$('#btnUpdate').hide();
 		
-			$('#desImagePath').parent().show();
+			//$('#desImagePath').parent().show();
 
-			$("#formContainer #nomeCompleto").prop('disabled', false);
-			$("#formContainer #funcao").prop('disabled', false);
-			$("#formContainer #nomeUsuario").prop('disabled', false);
-			//$("#formContainer #senha").prop('disabled', false);
-			$("#formContainer #email").prop('disabled', false);
-			$("#formContainer #administrador").prop('disabled', false);
+			$("#formContainer #codigo").prop('disabled', false);
+			$("#formContainer #descricao").prop('disabled', false);
+			$("#formContainer #valorCompra").prop('disabled', false);
+			$("#formContainer #status").prop('disabled', false);
+			$("#formContainer #dtFabricacao").prop('disabled', false);
+			$("#formContainer #tipo").prop('disabled', false);
+			$("#formContainer #anotacoes").prop('disabled', false);
+			$("#formContainer #idFornecedor").prop('disabled', false);
+			$("#formContainer #idCategoria").prop('disabled', false);
 				
 		}); /* Fim Atualizar Container ---------------------------------------------------------- */
 			
@@ -251,7 +256,7 @@ function loadContainer(idContainer) { //carrega todos os campos do modal referen
 
 }
 
-function deleteProduct(idContainer){
+function deleteProduct(idProduto){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -268,7 +273,7 @@ function deleteProduct(idContainer){
 
 			$.ajax({
 				type: "POST",
-				url: `/products/containers/${idContainer}/delete`,
+				url: `/products/containers/${idProduto}/delete`,
 				contentType: false,
 				processData: false,
 				/*beforeSend: function() {
@@ -282,7 +287,7 @@ function deleteProduct(idContainer){
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							'Não foi possível deletar',
 							'error'
 						)
 						
@@ -294,7 +299,7 @@ function deleteProduct(idContainer){
 							'success'
 						)
 
-						loadTableContainers();						
+						loadTableProducts();						
 					}					
 				},
 				error: function (response) {
@@ -318,32 +323,37 @@ function limparCampos(){
 	$('#btnSaveContainer').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-	$('#senha').parent().show();
-	$('#btnChangePassword').parent().hide(); //botão para mudar senha
 	$('#dtCadastro').parent().hide(); //aparece a data de cadastro (só para visualizar)
-	$('#desImagePath').parent().show();
+	//$('#desImagePath').parent().show();
 
 
-	$("#formContainer #nomeCompleto").prop('disabled', false);
-	$("#formContainer #funcao").prop('disabled', false);
-	$("#formContainer #nomeUsuario").prop('disabled', false);
-	//$("#formContainer #senha").prop('disabled', false);
-	$("#formContainer #email").prop('disabled', false);
-	$("#formContainer #administrador").prop('disabled', false);
+	$("#formContainer #codigo").prop('disabled', false);
+	$("#formContainer #descricao").prop('disabled', false);
+	$("#formContainer #valorCompra").prop('disabled', false);
+	$("#formContainer #status").prop('disabled', false);
+	$("#formContainer #dtFabricacao").prop('disabled', false);
+	$("#formContainer #tipo").prop('disabled', false);
+	$("#formContainer #anotacoes").prop('disabled', false);
+	$("#formContainer #idFornecedor").prop('disabled', false);
+	$("#formContainer #idCategoria").prop('disabled', false);
 	
 
-	$('#image-preview').attr('src', "/res/img/productsp/product-default.jpg");
-	$('#btnChangePassword').parent().hide();
+	//$('#image-preview').attr('src', "/res/img/productsp/product-default.jpg");
 	$('#dtCadastro').parent().hide();
-	$('#senha').parent().show();
 
-	$('#nomeCompleto').val('');
-	$('#funcao').val('');
-	$('#nomeUsuario').val('');
-	$('#senha').val('');
-	$('#email').val('');
-	$('#administrador').val('0');
+	$('#codigo').val('');
+	$('#descricao').val('');
+	$('#valorCompra').val('');
+	$('#status').val('0');
+	$('#dtFabricacao').val('');
+	$('#tipo').val('');
+	$('#anotacoes').val('');
+	$('#idFornecedor').val('0');
 	$('#idContainer').val('0');
+	$('#idCategoria').val('0');
+	$('#dtCadastro').val('');
+	
+	$('#idProduto').val('0');
 	//...	
 }
 

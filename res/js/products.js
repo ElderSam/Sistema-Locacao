@@ -207,10 +207,8 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 		$("#formProduct #codigo").val(data.codigo).prop('disabled', true);
 		$("#formProduct #descricao").val(data.descricao).prop('disabled', true);
 		$("#formProduct #valorCompra").val(data.valorCompra).prop('disabled', true);
-		$("#formProduct #valorAluguel").val(data.valorAluguel).prop('disabled', true);
 		$("#formProduct #status").val(data.status).prop('disabled', true);
 		$("#formProduct #dtFabricacao").val(data.dtFabricacao).prop('disabled', true);
-		$("#formProduct #vlBaseAluguel").val(data.vlBaseAluguel).prop('disabled', true);
 		$("#formProduct #tipo").val(data.tipo).prop('disabled', true);
 		$("#formProduct #anotacoes").val(data.anotacoes).prop('disabled', true);
 		$("#formProduct #idFornecedor").val(data.idFornecedor).prop('disabled', true);
@@ -239,10 +237,8 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 			$("#formProduct #codigo").prop('disabled', false);
 			$("#formProduct #descricao").prop('disabled', false);
 			$("#formProduct #valorCompra").prop('disabled', false);
-			$("#formProduct #valorAluguel").prop('disabled', false);
 			$("#formProduct #status").prop('disabled', false);
 			$("#formProduct #dtFabricacao").prop('disabled', false);
-			$("#formProduct #vlBaseAluguel").prop('disabled', false);
 			$("#formProduct #tipo").prop('disabled', false);
 			$("#formProduct #anotacoes").prop('disabled', false);
 			$("#formProduct #idFornecedor").prop('disabled', false);
@@ -322,6 +318,7 @@ function deleteProduct(idProduto){
 //limpar campos do modal para Cadastrar
 function limparCampos(){
 
+	$("#formProduct #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Produto');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveProduct').val('Cadastrar').show();
@@ -334,10 +331,8 @@ function limparCampos(){
 	$("#formProduct #codigo").prop('disabled', false);
 	$("#formProduct #descricao").prop('disabled', false);
 	$("#formProduct #valorCompra").prop('disabled', false);
-	$("#formProduct #valorAluguel").prop('disabled', false);
 	$("#formProduct #status").prop('disabled', false);
 	$("#formProduct #dtFabricacao").prop('disabled', false);
-	$("#formProduct #vlBaseAluguel").prop('disabled', false);
 	$("#formProduct #tipo").prop('disabled', false);
 	$("#formProduct #anotacoes").prop('disabled', false);
 	$("#formProduct #idFornecedor").prop('disabled', false);
@@ -350,10 +345,8 @@ function limparCampos(){
 	$('#codigo').val('');
 	$('#descricao').val('');
 	$('#valorCompra').val('');
-	$('#valorAluguel').val('');
 	$('#status').val('0');
 	$('#dtFabricacao').val('');
-	$('#vlBaseAluguel').val('');
 	$('#tipo').val('');
 	$('#anotacoes').val('');
 	$('#idFornecedor').val('0');

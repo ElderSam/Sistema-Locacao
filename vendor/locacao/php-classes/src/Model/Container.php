@@ -7,7 +7,7 @@ use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
 
-class Product extends Generator{
+class Container extends Generator{
 
     public static function listAll(){
 
@@ -23,7 +23,7 @@ class Product extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
+            $results = $sql->select("CALL sp_containers_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
                 ":codigo"=>$this->getcodigo(),
                 ":descricao"=>$this->getdescricao(),
                 ":valorCompra"=>$this->getvalorCompra(),
@@ -93,8 +93,7 @@ class Product extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM produtos a INNER JOIN Categorias b
-                    WHERE(a.idCategoria = b.idCategoria)";
+        $query = "SELECT * FROM produtos";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -168,7 +167,7 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
+        $results = $sql->select("CALL sp_containersUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
             ":idProduto"=>$this->getidProduto(),
             ":codigo"=>$this->getcodigo(),
             ":descricao"=>$this->getdescricao(),
@@ -201,7 +200,7 @@ class Product extends Generator{
         $sql = new Sql();
 
         try{
-            $sql->query("CALL sp_produtos_delete(:idProduto)", array(
+            $sql->query("CALL sp_containers_delete(:idProduto)", array(
                 ":idProduto"=>$this->getidProduto()
             ));
 

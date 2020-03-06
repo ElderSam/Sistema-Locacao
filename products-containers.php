@@ -3,7 +3,7 @@
 use \Locacao\Page;
 use \Locacao\Controller\ContainerController;
 use \Locacao\Model\User;
-use \Locacao\Model\Containers;
+use \Locacao\Model\Container;
 
 /* rota para página de produtos/containers --------------*/
 $app->get('/products/containers', function(){
@@ -21,7 +21,7 @@ $app->get('/products/containers/json', function(){
 
     User::verifyLogin();
 
-    echo Containers::listAll();
+    echo Container::listAll();
   
 });
 
