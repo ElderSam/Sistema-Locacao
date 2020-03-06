@@ -5,6 +5,7 @@ require_once("vendor/autoload.php");
 //nasmespace
 use \Slim\Slim;
 use \Locacao\Page;
+use\Locacao\Model\Client;
 use \Locacao\Model\User;
 
 session_start();
@@ -17,6 +18,7 @@ $app = new Slim();
 $app->config('debug', true);
 
 require_once("users.php");
+require_once("client.php");
 
 $app->get('/', function(){
 
@@ -27,6 +29,7 @@ $app->get('/', function(){
     $page->setTpl("index");
 
 });
+
 
 
 $app->get('/products', function(){
@@ -47,17 +50,6 @@ $app->get('/products/containers', function(){
     $page = new Page();
 
     $page->setTpl("produtos-containers");
-
-});
-
-
-$app->get('/costumers', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("clientes");
 
 });
 
