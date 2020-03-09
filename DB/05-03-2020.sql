@@ -1,9 +1,12 @@
+CREATE DATABASE IF NOT EXISTS `db_locacao`;
+use `db_locacao`;
+
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06-Mar-2020 às 05:06
+-- Tempo de geração: 05-Mar-2020 às 04:25
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -26,7 +29,7 @@ DELIMITER $$
 --
 -- Procedimentos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtosUpdate_save` (IN `pidProduto` INT, IN `pcodigo` VARCHAR(70), IN `pdescricao` VARCHAR(150), IN `pvalorCompra` FLOAT, IN `pstatus` TINYINT(4), IN `pdtFabricacao` DATE, IN `ptipo` VARCHAR(60), IN `panotacoes` VARCHAR(100), IN `pidFornecedor` INT(11), IN `pidCategoria` INT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtosUpdate_save` (IN `pidProduto` INT, IN `pcodigo` VARCHAR(70), IN `pdescricao` VARCHAR(150), IN `pvalorCompra` FLOAT, IN `pvalorAluguel` FLOAT, IN `pstatus` TINYINT(4), IN `pdtFabricacao` DATE, IN `pvlBaseAluguel` FLOAT, IN `ptipo` VARCHAR(60), IN `panotacoes` VARCHAR(100), IN `pidFornecedor` INT(11), IN `pidCategoria` INT(11))  BEGIN
   
     DECLARE vidProduto INT;
     
@@ -39,8 +42,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtosUpdate_save` (IN `pidPro
    codigo = pcodigo,
    descricao = pdescricao,
    valorCompra = pvalorCompra,
+   valorAluguel = pvalorAluguel,
    status = pstatus,
    dtFabricacao = pdtFabricacao,
+   vlBaseAluguel = pvlBaseAluguel,
    tipo = ptipo,
    anotacoes = panotacoes,
    idFornecedor = pidFornecedor,
@@ -64,12 +69,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtos_delete` (IN `pidProduto
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtos_save` (IN `pcodigo` VARCHAR(70), IN `pdescricao` VARCHAR(150), IN `pvalorCompra` FLOAT, IN `pstatus` TINYINT(4), IN `pdtFabricacao` DATE, IN `ptipo` VARCHAR(60), IN `panotacoes` VARCHAR(100), IN `pidFornecedor` INT(11), IN `pidCategoria` INT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtos_save` (IN `pcodigo` VARCHAR(70), IN `pdescricao` VARCHAR(150), IN `pvalorCompra` FLOAT, IN `pvalorAluguel` FLOAT, IN `pstatus` TINYINT(4), IN `pdtFabricacao` DATE, IN `pvlBaseAluguel` FLOAT, IN `ptipo` VARCHAR(60), IN `panotacoes` VARCHAR(100), IN `pidFornecedor` INT(11), IN `pidCategoria` INT(11))  BEGIN
   
     DECLARE vidProduto INT;
     
-  INSERT INTO produtos (codigo, descricao, valorCompra, status, dtFabricacao, tipo, anotacoes, idFornecedor, idCategoria)
-    VALUES(pcodigo, pdescricao, pvalorCompra, pstatus, pdtFabricacao, ptipo, panotacoes, pidFornecedor, pidCategoria);
+  INSERT INTO produtos (codigo, descricao, valorCompra, valorAluguel, status, dtFabricacao, vlBaseAluguel, tipo, anotacoes, idFornecedor, idCategoria)
+    VALUES(pcodigo, pdescricao, pvalorCompra, pvalorAluguel, pstatus, pdtFabricacao, pvlBaseAluguel, ptipo, panotacoes, pidFornecedor, pidCategoria);
     
     SET vidProduto = LAST_INSERT_ID();
     
@@ -150,8 +155,8 @@ CREATE TABLE `aditamentos` (
 --
 
 CREATE TABLE `categorias` (
-  `idCategoria` int(4) NOT NULL,
-  `descCategoria` varchar(15) NOT NULL,
+  `idCategoria` int(11) NOT NULL,
+  `descricao` varchar(15) NOT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -159,7 +164,7 @@ CREATE TABLE `categorias` (
 -- Extraindo dados da tabela `categorias`
 --
 
-INSERT INTO `categorias` (`idCategoria`, `descCategoria`, `dtCadastro`) VALUES
+INSERT INTO `categorias` (`idCategoria`, `descricao`, `dtCadastro`) VALUES
 (1, 'containers', '2020-03-03 23:01:57'),
 (2, 'elétricos', '2020-03-05 00:17:03'),
 (3, 'mecânicos', '2020-03-05 00:17:03');
@@ -363,8 +368,10 @@ CREATE TABLE `produtos` (
   `codigo` varchar(15) NOT NULL,
   `descricao` varchar(150) NOT NULL,
   `valorCompra` float NOT NULL,
+  `valorAluguel` float NOT NULL,
   `status` tinyint(4) NOT NULL,
   `dtFabricacao` date DEFAULT NULL,
+  `vlBaseAluguel` float NOT NULL,
   `tipo` varchar(60) NOT NULL,
   `anotacoes` varchar(100) DEFAULT NULL,
   `idFornecedor` int(11) NOT NULL,
@@ -376,43 +383,12 @@ CREATE TABLE `produtos` (
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`idProduto`, `codigo`, `descricao`, `valorCompra`, `status`, `dtFabricacao`, `tipo`, `anotacoes`, `idFornecedor`, `idCategoria`, `dtCadastro`) VALUES
-(8, 'X001', ':descricao2', 2344, 1, '2000-04-15', 'P', 'é', 1, 1, '2020-03-04 21:48:42'),
-(10, 'TESTE02', 'esse é um teste de cadastro pelo sistema', 4000, 0, '2009-03-09', 'M', 'anotação testes', 1, 1, '2020-03-04 22:05:44'),
-(11, 'A0012', 'AR-CONDICIONADO', 5753, 1, '2020-03-20', 'P', '', 1, 2, '2020-03-04 23:46:09'),
-(16, 'COD03', ':descricao', 123, 0, '2009-09-12', 'P', NULL, 1, 1, '2020-03-05 00:08:30'),
-(17, 'GE002', 'Gerador de Energia à Diesel', 5409, 0, '2000-12-01', 'M', '', 1, 2, '2020-03-05 00:09:04');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `tiposprodutos`
---
-
-CREATE TABLE `tiposprodutos` (
-  `id` int(11) NOT NULL,
-  `idCategoria` int(4) NOT NULL,
-  `subTipo1` varchar(3) NOT NULL,
-  `subTipo2` varchar(3) NOT NULL,
-  `subTipo3` varchar(3) NOT NULL,
-  `vlBaseAluguel` float NOT NULL,
-  `descricao` varchar(100) NOT NULL,
-  `dtCadastro` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Extraindo dados da tabela `tiposprodutos`
---
-
-INSERT INTO `tiposprodutos` (`id`, `idCategoria`, `subTipo1`, `subTipo2`, `subTipo3`, `vlBaseAluguel`, `descricao`, `dtCadastro`) VALUES
-(1, 1, '01', '01', '00', 150, 'container-almox-3M', '2020-03-06 00:01:32'),
-(2, 1, '01', '02', '00', 100, 'container-almox-4M', '2020-03-06 00:11:34'),
-(3, 1, '01', '03', '00', 175, 'container-almox-6M', '2020-03-06 00:14:08'),
-(4, 1, '01', '04', '00', 210, 'container-almox-12M', '2020-03-06 00:14:46'),
-(5, 1, '02', '01', '00', 170, 'container-esc-3M', '2020-03-06 00:16:09'),
-(6, 1, '02', '02', '00', 200, 'container-esc-4M', '2020-03-06 00:16:55'),
-(7, 1, '02', '03', '00', 230, 'container-esc-6M', '2020-03-06 00:17:09'),
-(8, 1, '02', '04', '00', 280, 'container-esc-12M', '2020-03-06 00:19:11');
+INSERT INTO `produtos` (`idProduto`, `codigo`, `descricao`, `valorCompra`, `valorAluguel`, `status`, `dtFabricacao`, `vlBaseAluguel`, `tipo`, `anotacoes`, `idFornecedor`, `idCategoria`, `dtCadastro`) VALUES
+(8, 'X001', ':descricao2', 2344, 450, 1, '2000-04-15', 455, 'P', 'é', 1, 1, '2020-03-04 21:48:42'),
+(10, 'TESTE02', 'esse é um teste de cadastro pelo sistema', 4000, 330, 0, '2009-03-09', 297, 'M', 'anotação testes', 1, 1, '2020-03-04 22:05:44'),
+(11, 'A0012', 'AR-CONDICIONADO', 5753, 120, 1, '2020-03-20', 233, 'P', '', 1, 2, '2020-03-04 23:46:09'),
+(16, 'COD03', ':descricao', 123, 3434, 0, '2009-09-12', 540, 'P', NULL, 1, 1, '2020-03-05 00:08:30'),
+(17, 'GE002', 'Gerador de Energia à Diesel', 5409, 540, 0, '2000-12-01', 409.34, 'M', '', 1, 2, '2020-03-05 00:09:04');
 
 -- --------------------------------------------------------
 
@@ -438,8 +414,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `senha`, `email`, `administrador`, `foto`, `dtCadastro`) VALUES
 (1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 1, '/res/img/users/1583106585_elder-profile.jpg', '2020-02-26 10:45:06'),
-(173, 'Administrador (TESTE)', 'teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
-(180, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07');
+(173, 'Administrador (TESTE)', 'teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00');
 
 --
 -- Índices para tabelas despejadas
@@ -522,13 +497,6 @@ ALTER TABLE `produtos`
   ADD KEY `fk_produto_categoria1` (`idCategoria`);
 
 --
--- Índices para tabela `tiposprodutos`
---
-ALTER TABLE `tiposprodutos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_idCategoria` (`idCategoria`) USING BTREE;
-
---
 -- Índices para tabela `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -548,7 +516,7 @@ ALTER TABLE `aditamentos`
 -- AUTO_INCREMENT de tabela `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `idCategoria` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idCategoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `clientes`
@@ -593,16 +561,10 @@ ALTER TABLE `produtos`
   MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT de tabela `tiposprodutos`
---
-ALTER TABLE `tiposprodutos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- Restrições para despejos de tabelas
@@ -658,12 +620,6 @@ ALTER TABLE `obras`
 ALTER TABLE `produtos`
   ADD CONSTRAINT `fk_produto_categoria1` FOREIGN KEY (`idCategoria`) REFERENCES `categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_produto_fornecedor1` FOREIGN KEY (`idFornecedor`) REFERENCES `fornecedores` (`idFornecedor`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Limitadores para a tabela `tiposprodutos`
---
-ALTER TABLE `tiposprodutos`
-  ADD CONSTRAINT `fk_tiposprodutos_categoria` FOREIGN KEY (`idCategoria`) REFERENCES `categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
