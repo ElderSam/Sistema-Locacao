@@ -10,24 +10,6 @@ use \Locacao\Generator;
 class Client extends Generator{
  
 
-
-    public static function verifyLogin(){
-
-        if(
-            !isset($_SESSION[User::SESSION])
-            ||
-            !$_SESSION[User::SESSION]
-            ||
-            !(int)$_SESSION[User::SESSION]["idUsuario"] > 0 //se é um usuário. obs: se for vazia, transforma em 0
-        ){
-
-            header("Location: /login");
-            exit;
-            
-        }
-    }
-
-
 // Método para listar todos os registros
     public static function listAll(){
 

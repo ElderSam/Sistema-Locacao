@@ -342,6 +342,7 @@ function limparCampos(){
 	$('#dtCadastro').parent().hide();
 	$('#senha').parent().show();
 
+	//limpa os valores dos campos
 	$('#nomeCompleto').val('');
 	$('#funcao').val('');
 	$('#nomeUsuario').val('');
