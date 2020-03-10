@@ -16,10 +16,75 @@ $(function() { //quando a página carrega
 		]
 	});
 
+	$('#categoria').change(function(){
+		//alert('você escolheu ' + $('#categoria').val())
+
+		if($('#categoria').val() != '001'){ //se não for um container
+			
+			$('#tipoPorta').parent().hide();
+			$('#forrado').parent().hide();
+			$('#janelasLaterais').parent().hide();
+			$('#janelasCirculares').parent().hide();
+			$('#eletrificado').parent().hide();
+			$('#entrada').parent().hide();
+			$('#tomadas').parent().hide();
+			$('#lampadas').parent().hide();
+			$('#chuveiro').parent().hide();
+
+		}else{
+
+			$('#tipoPorta').parent().show();
+			$('#forrado').parent().show();
+			$('#janelasLaterais').parent().show();
+			$('#janelasCirculares').parent().show();
+			$('#eletrificado').parent().show();
+			$('#entrada').parent().show();
+			$('#tomadas').parent().show();
+			$('#lampadas').parent().show();
+			$('#chuveiro').parent().show();
+		}
+
+		loadTypes($('#categoria').val());
+
+	});
+
+	//restrição - o container 3M só pode ser do tipo Almoxarifado ou Especial
+	$('#tipo1').change(function(){
+		if($('#categoria').val() == '001' && $('#tipo1').val() == '01'){ //se for container com metragem 3M
+
+			//mostra apenas duas opções
+			$('#tipo2').html(`<option value="01">01 - Almoxarifado</option>
+			<option value="07">07 - Especial</option>`) 
+		
+		}else{
+			$(`#tipo2`).html(types[2])
+
+		}
+	});
+
+	//restrição - o container Sanitário obrigatoriamente tem Lavabo
+	$('#tipo2').change(function(){
+		if($('#categoria').val() == '001' && $('#tipo2').val() == '03'){ //se for container Sanitário
+
+			//mostra apenas duas opções
+			$('#tipo3').val()
+			$('#tipo3').parent().hide()
+		
+		}else{
+			$('#tipo3').parent().show()
+
+		}
+	});
+
 	$('#btnAddProduct').click(function(){
-		limparCampos();
+		
+		clearFieldsValues();
 
 		clearErrors();
+
+		loadCategories();
+		loadSuppliers(); //Carrega fornecedores
+		
 	});
 
 	 
@@ -167,6 +232,149 @@ $(function() { //quando a página carrega
 });
 
 
+	//carrega as opções de Categoria de produto
+	function loadCategories(){
+		$.getJSON(`/products/categories/json`, function (data) { //ajax
+			
+			//console.log(data)
+			
+			let categories = `<option value="">(escolha)</option>`
+			
+			data.forEach(function(item){
+				//console.log(item)
+				categories += `<option value="${item.codCategoria}">${item.codCategoria} - ${item.descCategoria}</option>`
+			});
+
+			$('#categoria').html(categories)
+						
+
+		}).then(() => { 
+
+			//$("#productModal").modal();
+		}).fail(function () {
+			console.log("Rota não encontrada!");
+		});
+	
+	}
+
+
+	//carrega as opções de tipo 1 de produto
+	function loadTypes(codCategory){
+		//para os tipos de produto do formulário
+		types = []
+
+		for(i=1; i<=4; i++){
+			types[i] = '';
+			types[i] = `<option value="">(escolha)</option>`
+		}
+		/*$('#tipo1').html('');
+		$('#tipo2').html('');
+		$('#tipo3').html('');
+		$('#tipo4').html('');*/
+		
+		//console.log('loading types for category: ' + codCategory)
+		
+		$.getJSON(`/products/types/json/${codCategory}`, function (data) { //ajax
+			
+			
+			//console.log(data)
+
+
+			data.forEach(function(item){
+				//console.log(item)
+				types[item.ordem_tipo] += `<option value="${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+			});		
+
+			//Carrega os valores nos selects
+			for(i=1; i<=4; i++){
+				$(`#tipo${i}`).html(types[i])
+			}
+				
+			if(codCategory == '001'){
+				//console.log('você escolheu Container')
+				$('#labelType1').html('Metragem')
+				$('#labelType2').html('Modelo')
+				$('#labelType3').html('Lavabo')
+				$('#labelType4').html('Altura')
+
+				for(i=1; i<=4; i++){
+					$(`#tipo${i}`).parent().show()
+				}
+
+			}else if(codCategory == '002'){
+				//console.log('você escolheu Betoneira')
+				$('#labelType1').html('Marca')
+				$('#labelType2').html('Modelo')
+				$('#labelType3').html('Elét/Comb')
+				$('#labelType4').html('Volt')
+
+				
+				for(i=1; i<=4; i++){
+					$(`#tipo${i}`).parent().show()
+				}
+
+			}else if(codCategory == '003'){
+				//console.log('você escolheu Andaime')
+				$('#labelType1').html('Tipo')
+				$('#labelType2').html('Peça')
+				$('#labelType3').html('Metragem')
+				$('#labelType4').html('N/A')
+
+				for(i=1; i<=3; i++){
+					$(`#tipo${i}`).parent().show()
+				}
+
+				$(`#tipo4`).parent().hide()
+
+			}else if(codCategory == '004'){
+				//console.log('você escolheu Escora')
+				$('#labelType1').html('Metragem')
+				/*$('#labelType2').html('N/A')
+				$('#labelType3').html('N/A')
+				$('#labelType4').html('N/A')*/
+
+				$(`#tipo1`).parent().show()
+
+				for(i=2; i<=4; i++){
+					$(`#tipo${i}`).parent().hide()
+				}
+			}
+
+		}).then(() => { 
+
+		}).fail(function () {
+			console.log("Rota não encontrada!");
+		});
+	
+	}
+
+	//carrega as opções de Fornecedor de um produto de categoria específico
+	function loadSuppliers(){
+		$.getJSON(`/suppliers/json`, function (data) { //ajax
+			
+			//console.log(data)
+			
+			let suppliers = `<option value="">(escolha)</option>`			
+
+			data.forEach(function(item){
+				//console.log(item)
+				suppliers += `<option value="${item.codFornecedor}">${item.codFornecedor} - ${item.nome}</option>`
+			});
+
+			$('#fornecedor').html(suppliers)
+						
+
+		}).then(() => { 
+
+			//$("#productModal").modal();
+		}).fail(function () {
+			console.log("Rota não encontrada!");
+		});
+	
+	}
+
+
+
 function loadTableProducts(){ //carrega a tabela de Produtos
 
 	myTable.destroy(); //desfaz as paginações
@@ -190,7 +398,9 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 
 //detalhes do Produto
 function loadProduct(idProduto) { //carrega todos os campos do modal referente ao produto escolhido
+	clearFieldsValues();
 	clearErrors();
+	loadCategories();
 
 	$('#modalTitle').html('Detalhes do Produto')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
@@ -201,8 +411,8 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 	//$('#desImagePath').parent().hide();
 
 
-	$.getJSON(`/products/json/${idProduto}`, function (data) {
-		//console.log(data)
+	$.getJSON(`/products/json/${idProduto}`, function (data) { //ajax
+		console.log(data)
 
 		$("#formProduct #codigo").val(data.codigo).prop('disabled', true);
 		$("#formProduct #descricao").val(data.descricao).prop('disabled', true);
@@ -316,7 +526,7 @@ function deleteProduct(idProduto){
 
 
 //limpar campos do modal para Cadastrar
-function limparCampos(){
+function clearFieldsValues(){
 
 	$("#formProduct #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Produto');
@@ -345,13 +555,42 @@ function limparCampos(){
 	$('#codigo').val('');
 	$('#descricao').val('');
 	$('#valorCompra').val('');
-	$('#status').val('0');
+	$('#status').val('1');
 	$('#dtFabricacao').val('');
-	$('#tipo').val('');
+
+	$('#tipo1').html('');
+	$('#tipo2').html('');
+	$('#tipo3').html('');
+	$('#tipo4').html('');
+
+	for(i=1; i<=4; i++){
+		$(`#tipo${i}`).parent().hide()
+	}
+
 	$('#anotacoes').val('');
 	$('#idFornecedor').val('0');
 	$('#idContainer').val('0');
-	$('#idCategoria').val('0');
+
+	//campos de container
+	$('#tipoPorta').val('');
+	$('#forrado').val('');
+	$('#janelasLaterais').val('');
+	$('#janelasCirculares').val('');
+	$('#eletrificado').val('');
+	$('#entrada').val('');
+
+	$('#tipoPorta').parent().hide();
+	$('#forrado').parent().hide();
+	$('#janelasLaterais').parent().hide();
+	$('#janelasCirculares').parent().hide();
+	$('#eletrificado').parent().hide();
+	$('#entrada').parent().hide();
+	$('#tomadas').parent().hide();
+	$('#lampadas').parent().hide();
+	$('#chuveiro').parent().hide();
+	//fimr campos container
+	
+	$('#categoria').val('0');
 	$('#dtCadastro').val('');
 	
 	$('#idProduto').val('0');
