@@ -5,6 +5,8 @@ namespace Locacao\Controller;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Product;
+use \Locacao\Model\Category;
+use \Locacao\Model\Supplier;
 
 class ProductController extends Generator
 {
@@ -61,9 +63,10 @@ class ProductController extends Generator
 
         $errors = array();
 
-        if ($_POST["codigo"] == "") {
+        /*if ($_POST["codigo"] == "") {
             $errors["#codigo"] = "Código é obrigatório!";
-        }
+        }*/
+        
         if ($_POST["descricao"] == "") {
             $errors["#descricao"] = "Descrição é obrigatória!";
         }
@@ -72,27 +75,31 @@ class ProductController extends Generator
         }
         if ($_POST["status"] == "") {
             $errors["#status"] = "Status é obrigatório!";
+        }   
+
+        if (($_POST["categoria"] == "") && (!$update)) {
+            $errors["#categoria"] = "Categoria é obrigatória!";
+           
+        }else{
+            
+            if (($_POST["tipo1"] == "") && (!$update)) {
+                $errors["#tipo1"] = "tipo obrigatório!";
+            }
+            if (($_POST["tipo2"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
+                $errors["#tipo2"] = "tipo obrigatório!";
+            }
+            if (($_POST["tipo3"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
+                $errors["#tipo3"] = "tipo obrigatório!";
+            }
+            if (($_POST["tipo4"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
+                $errors["#tipo4"] = "tipo obrigatório!";
+            }
+    
         }
-        if (($_POST["tipo"] == "") && (!$update)) {
-            $errors["#tipo"] = "Tipo é obrigatório!";
-        }
-        if (($_POST["idCategoria"] == "") && (!$update)) {
-            $errors["#categoria"] = "Categoria é obrigatório!";
-        }
-        if (($_POST["idFornecedor"] == "") && (!$update)) {
+
+        if (($_POST["fornecedor"] == "") && (!$update)) {
             $errors["#fornecedor"] = "Fornecedor é obrigatório!";
-        }
 
-        //para containers
-        if($_POST["idCategoria"] == 1){
-
-            if ($_POST["medida"] == "") {
-                $errors["#medida"] = "Medida é obrigatória!";
-            }
-            if (($_POST["tipoPorta"] == "") && (!$update)) {
-                $errors["#tipoPorta"] = "Tipo de porta é obrigatória!";
-            }
-            // ...
         }
 
         $exists = Product::searchCode($_POST["codigo"]);
@@ -137,6 +144,25 @@ class ProductController extends Generator
                 'error_list' => $errors
             ]);
         } else { //se ainda não tem erro
+
+            if($_POST["categoria"] == "003"){
+                $_POST["tipo4"] = "xx";
+
+            } else if($_POST["categoria"] == "004"){
+                $_POST["tipo2"] = "xx";
+                $_POST["tipo3"] = "xx";
+                $_POST["tipo4"] = "xx";
+                
+            }
+            
+            $_POST["codigo"] = $_POST["categoria"] . "." . $_POST["tipo1"] . "." . $_POST["tipo2"] . "." . $_POST["tipo3"] . "." . $_POST["tipo4"] . "." . $_POST["fornecedor"];
+        
+            $category = new Category();
+            $_POST["categoria"] = $category->get(false, $_POST["categoria"]); //manda o codcategoria em vez do id
+
+            $supplier = new Supplier();
+            $_POST["fornecedor"] = $supplier->get(false, $_POST["fornecedor"]); //manda o codFornecedor em vez do id
+
 
             return json_encode([
                 'error' => false
@@ -240,8 +266,8 @@ class ProductController extends Generator
     public function ajax_list_products($requestData)
     {
 
-        $column_search = array("codigo", "categoria", "status", "tipo", "descricao"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codigo", "categoria", "status", "tipo", "descricao"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("codigo", "descCategoria", "status", "tipo1", "descricao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigo", "descCategoria", "status", "tipo1", "descricao"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $product = new Product(); //model
@@ -253,7 +279,7 @@ class ProductController extends Generator
         foreach ($datatable['data'] as $product) { //para cada registro retornado
 
             if ($product['status'] == 0) {
-                $status = "Indisponível";
+                $status = "Alugado";
             } else if ($product['status'] == 1){
                 $status = "Disponível";
             }else if ($product['status'] == 2){
@@ -269,7 +295,7 @@ class ProductController extends Generator
             $row[] = $product['codigo'];
             $row[] = $product['descCategoria'];
             $row[] = $status;
-            $row[] = $product['tipo'];
+            $row[] = $product['tipo1'];
             $row[] = $product['descricao'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadProduct($id);'>

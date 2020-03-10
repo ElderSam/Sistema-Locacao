@@ -2,6 +2,7 @@
 
 use \Locacao\Page;
 use \Locacao\Controller\ProductController;
+use Locacao\Model\Category;
 use \Locacao\Model\User;
 use \Locacao\Model\Product;
 
@@ -81,5 +82,23 @@ $app->post("/products/:idproduct", function($idproduct){ //update
 
 	echo $product->save($update);
 	
+});
+
+
+$app->get('/products/categories/json', function(){
+
+    User::verifyLogin();
+
+    echo Category::listAll();
+  
+});
+
+
+$app->get('/products/types/json/:codCategory', function($codCategory){
+
+    User::verifyLogin();
+
+    echo Category::listTypes($codCategory);
+  
 });
 

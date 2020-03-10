@@ -18,21 +18,37 @@ class Product extends Generator{
 
 
     public function insert(){
+
+        /*echo ":codigo " . $this->getcodigo().
+        ":descricao " . $this->getdescricao().
+        ":valorCompra " . $this->getvalorCompra().
+        ":status " . $this->getstatus().
+        ":dtFabricacao " . $this->getdtFabricacao().
+        ":tipo " . $this->gettipo().
+        ":tipo " . $this->gettipo().
+        ":tipo " . $this->gettipo().
+        ":tipo " . $this->gettipo().
+        ":anotacoes " . $this->getanotacoes().
+        ":fornecedor " . $this->getfornecedor().
+        ":categoria " . $this->getcategoria();*/
         
         $sql = new Sql();
 
         if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
+            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :anotacoes, :fornecedor, :categoria)", array(
                 ":codigo"=>$this->getcodigo(),
                 ":descricao"=>$this->getdescricao(),
                 ":valorCompra"=>$this->getvalorCompra(),
                 ":status"=>$this->getstatus(),
                 ":dtFabricacao"=>$this->getdtFabricacao(),
-                ":tipo"=>$this->gettipo(),
+                ":tipo1"=>$this->gettipo1(),
+                ":tipo2"=>$this->gettipo2(),
+                ":tipo3"=>$this->gettipo3(),
+                ":tipo4"=>$this->gettipo4(),
                 ":anotacoes"=>$this->getanotacoes(),
-                ":idFornecedor"=>$this->getidFornecedor(),
-                ":idCategoria"=>$this->getidCategoria()
+                ":fornecedor"=>$this->getfornecedor(),
+                ":categoria"=>$this->getcategoria()
             ));
 
 
@@ -93,27 +109,31 @@ class Product extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM produtos a INNER JOIN Categorias b
-                    WHERE(a.idCategoria = b.idCategoria)";
+        $query = "SELECT * FROM produtos a INNER JOIN prod_categorias b
+                    ON(a.idCategoria = b.idCategoria)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
             $first = TRUE;
 
             foreach ($column_search as $field) {
-
+                
+               
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
 
                 if ($field == "status") {
+                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
-                    if (($search == "DISPONIVEL") || ($search == "DISPONÍVEL")) {
+                    if (($search == "DISP")) {
                         $search = 1;
-                    } else if (($search == "ALUGADO")) {
+                    } else if ($search == "ALUG") {
                         $search = 0;
-                    } else if (($search == "MANUTENCAO") || ($search == "MANUTENÇÃO")) {
+                    } else if ($search == "MANU") {
                         $search = 2;
                     }
+
+                    //echo "status: ".$search;
                 }
 
                 //filtra no banco
@@ -138,6 +158,7 @@ class Product extends Generator{
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $products = new Product();
+        //echo $query;
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
             'data'=>$products->searchAll($query)
@@ -168,14 +189,17 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
+        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :anotacoes, :idFornecedor, :idCategoria)", array(
             ":idProduto"=>$this->getidProduto(),
             ":codigo"=>$this->getcodigo(),
             ":descricao"=>$this->getdescricao(),
             ":valorCompra"=>$this->getvalorCompra(),
             ":status"=>$this->getstatus(),
             ":dtFabricacao"=>$this->getdtFabricacao(),
-            ":tipo"=>$this->gettipo(),
+            ":tipo1"=>$this->gettipo1(),
+            ":tipo2"=>$this->gettipo2(),
+            ":tipo3"=>$this->gettipo3(),
+            ":tipo4"=>$this->gettipo4(),
             ":anotacoes"=>$this->getanotacoes(),
             ":idFornecedor"=>$this->getidFornecedor(),
             ":idCategoria"=>$this->getidCategoria()
@@ -219,4 +243,5 @@ class Product extends Generator{
         }
        
     }
+    
 }

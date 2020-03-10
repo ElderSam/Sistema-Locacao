@@ -20,7 +20,7 @@ $app->config('debug', true);
 require_once("users.php");
 require_once("client.php");
 require_once("products.php");
-require_once("products-containers.php");
+require_once("suppliers.php"); //fornecedores
 
 $app->get('/', function(){
 
