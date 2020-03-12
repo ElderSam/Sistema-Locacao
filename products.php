@@ -94,11 +94,19 @@ $app->get('/products/categories/json', function(){
 });
 
 
-$app->get('/products/types/json/:codCategory', function($codCategory){
+$app->get('/products/types/json/:idCategory', function($idCategory){
 
     User::verifyLogin();
 
-    echo Category::listTypes($codCategory);
+    echo Category::listTypes($idCategory);
   
 });
 
+
+$app->post('/products/showsNextNumber/:idCategory', function($idCategory){
+
+    User::verifyLogin();
+
+    echo Product::showsNextNumber($idCategory);
+  
+});

@@ -16,47 +16,30 @@ class Category extends Generator{
         return json_encode( $sql->select("SELECT * FROM prod_categorias"));
     }
 
-    public static function listTypes($codCategory){
+    public static function listTypes($idCategory){
 
         $sql = new Sql();
 
         $results = $sql->select("SELECT * FROM prod_tipos a 
         INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
-        WHERE b.codCategoria = :CODCATEGORY ORDER BY a.ordem_tipo, a.codigo",array(
-            ':CODCATEGORY'=> $codCategory
+        WHERE b.idCategoria = :IDCATEGORY ORDER BY a.ordem_tipo, a.codigo",array(
+            ':IDCATEGORY'=> $idCategory
         ));
     
         return json_encode($results);
     }
 
-    public function get($idCategoria, $codCategoria = false){
+
+    public function get($idCategoria){
 
         $sql = new Sql();
 
-        if(!$idCategoria){
-            if($codCategoria){
-
-                $results = $sql->select("SELECT * FROM prod_categorias WHERE idCategoria = :codCategoria", array(
-                    ":codCategoria"=>$codCategoria
-                ));
-
-                return $results[0]['idCategoria'];
-                 
-            }
-
-        }else{
-            $results = $sql->select("SELECT * FROM prod_categorias WHERE idCategoria = :idCategoria", array(
-                ":idCategoria"=>$idCategoria
-            ));
+        $results = $sql->select("SELECT * FROM prod_categorias WHERE idCategoria = :idCategoria", array(
+            ":idCategoria"=>$idCategoria
+        ));
 
             $this->setData($results[0]);
-        }
-
-
     }
-
-
-
     
 }
 

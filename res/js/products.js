@@ -18,13 +18,13 @@ $(function() { //quando a página carrega
 
 	$('#categoria').change(function(){
 		//alert('você escolheu ' + $('#categoria').val())
-
-		if($('#categoria').val() != '001'){ //se não for um container
+		codCategoria = $('#categoria').val().substring(2, 5);
+		if(codCategoria != '001'){ //se não for um container
 			
 			$('#tipoPorta').parent().hide();
 			$('#forrado').parent().hide();
-			$('#janelasLaterais').parent().hide();
-			$('#janelasCirculares').parent().hide();
+			$('#janelasLat').parent().hide();
+			$('#janelasCirc').parent().hide();
 			$('#eletrificado').parent().hide();
 			$('#entrada').parent().hide();
 			$('#tomadas').parent().hide();
@@ -35,26 +35,37 @@ $(function() { //quando a página carrega
 
 			$('#tipoPorta').parent().show();
 			$('#forrado').parent().show();
-			$('#janelasLaterais').parent().show();
-			$('#janelasCirculares').parent().show();
+			$('#janelasLat').parent().show();
+			$('#janelasCirc').parent().show();
 			$('#eletrificado').parent().show();
 			$('#entrada').parent().show();
 			$('#tomadas').parent().show();
 			$('#lampadas').parent().show();
 			$('#chuveiro').parent().show();
 		}
-
-		loadTypes($('#categoria').val());
+		
+		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
+		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id
+		
+		loadTypes(idCategoria);
+		showsNextNumber(idCategoria); //mostra próximo número de série da Categoria
 
 	});
 
 	//restrição - o container 3M só pode ser do tipo Almoxarifado ou Especial
 	$('#tipo1').change(function(){
-		if($('#categoria').val() == '001' && $('#tipo1').val() == '01'){ //se for container com metragem 3M
+
+		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
+		codCategoria = $('#categoria').val().substring((tam-3),tam); //tira os quatro últimos caracteres e pega o id
+		//console.log(codCategoria)
+		
+		tam = $('#tipo1').val().length
+		codtipo1 = $('#tipo1').val().substring((tam-2),tam); 
+
+		if(codCategoria == '001' && codtipo1 == '01'){ //se for container com metragem 3M
 
 			//mostra apenas duas opções
-			$('#tipo2').html(`<option value="01">01 - Almoxarifado</option>
-			<option value="07">07 - Especial</option>`) 
+			$('#tipo2').html(tipo2para3M) 
 		
 		}else{
 			$(`#tipo2`).html(types[2])
@@ -64,7 +75,14 @@ $(function() { //quando a página carrega
 
 	//restrição - o container Sanitário obrigatoriamente tem Lavabo
 	$('#tipo2').change(function(){
-		if($('#categoria').val() == '001' && $('#tipo2').val() == '03'){ //se for container Sanitário
+
+		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
+		codCategoria = $('#categoria').val().substring((tam-3),tam); //tira os quatro últimos caracteres e pega o id
+		
+		tam = $('#tipo2').val().length
+		codtipo2 = $('#tipo2').val().substring((tam-2),tam); 
+
+		if(codCategoria == '001' && codtipo2 == '03'){ //se for container Sanitário
 
 			//mostra apenas duas opções
 			$('#tipo3').val()
@@ -76,7 +94,7 @@ $(function() { //quando a página carrega
 		}
 	});
 
-	$('#btnAddProduct').click(function(){
+	$('#btnAddProduct').click(function(){ //quando escolho a opção para criar novo, abrindo um modal
 		
 		clearFieldsValues();
 
@@ -89,8 +107,8 @@ $(function() { //quando a página carrega
 
 	 
 	 
-	/* Cadastrar ou Editar Usuario --------------------------------------------------------------*/	
-	$("#btnSaveProduct").click(function(e) { //quando enviar o formulário de Usuarios
+	/* Cadastrar ou Editar Produto --------------------------------------------------------------*/	
+	$("#btnSaveProduct").click(function(e) { //quando enviar o formulário de Produto
 		e.preventDefault();
 		
 		let form = $('#formProduct');
@@ -164,7 +182,7 @@ $(function() { //quando a página carrega
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o usuario: ' + idProduto)
+			//console.log('você quer editar o produto: ' + idProduto)
 			
 			$.ajax({
 				type: "POST",
@@ -242,7 +260,7 @@ $(function() { //quando a página carrega
 			
 			data.forEach(function(item){
 				//console.log(item)
-				categories += `<option value="${item.codCategoria}">${item.codCategoria} - ${item.descCategoria}</option>`
+				categories += `<option value="${item.idCategoria}-${item.codCategoria}">${item.codCategoria} - ${item.descCategoria}</option>`
 			});
 
 			$('#categoria').html(categories)
@@ -257,9 +275,9 @@ $(function() { //quando a página carrega
 	
 	}
 
-
+	let tipo2para3M
 	//carrega as opções de tipo 1 de produto
-	function loadTypes(codCategory){
+	function loadTypes(idCategory){
 		//para os tipos de produto do formulário
 		types = []
 
@@ -272,25 +290,35 @@ $(function() { //quando a página carrega
 		$('#tipo3').html('');
 		$('#tipo4').html('');*/
 		
-		//console.log('loading types for category: ' + codCategory)
+		//console.log('loading types for category: ' + idCategory)
 		
-		$.getJSON(`/products/types/json/${codCategory}`, function (data) { //ajax
-			
-			
-			//console.log(data)
+		tipo2para3M = '<option value="">(escolha)</option>'
 
+		$.getJSON(`/products/types/json/${idCategory}`, function (data) { //ajax
+						
+			//console.log(data)
 
 			data.forEach(function(item){
 				//console.log(item)
-				types[item.ordem_tipo] += `<option value="${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+				types[item.ordem_tipo] += `<option value="${item.id}-${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+
+				//Guarda opção única para quando eu escolher o tipo 1 - 3M
+				if(item.ordem_tipo == 2){
+					if((item.codigo == '01') || (item.codigo == '07')){ //aceita almoxarifado (01) e especial (07)
+						tipo2para3M +=  `<option value="${item.id}-${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+					}
+
+				}
 			});		
+
+
 
 			//Carrega os valores nos selects
 			for(i=1; i<=4; i++){
 				$(`#tipo${i}`).html(types[i])
 			}
 				
-			if(codCategory == '001'){
+			if(idCategory == '1'){
 				//console.log('você escolheu Container')
 				$('#labelType1').html('Metragem')
 				$('#labelType2').html('Modelo')
@@ -301,7 +329,7 @@ $(function() { //quando a página carrega
 					$(`#tipo${i}`).parent().show()
 				}
 
-			}else if(codCategory == '002'){
+			}else if(idCategory == '2'){
 				//console.log('você escolheu Betoneira')
 				$('#labelType1').html('Marca')
 				$('#labelType2').html('Modelo')
@@ -313,7 +341,7 @@ $(function() { //quando a página carrega
 					$(`#tipo${i}`).parent().show()
 				}
 
-			}else if(codCategory == '003'){
+			}else if(idCategory == '3'){
 				//console.log('você escolheu Andaime')
 				$('#labelType1').html('Tipo')
 				$('#labelType2').html('Peça')
@@ -326,7 +354,7 @@ $(function() { //quando a página carrega
 
 				$(`#tipo4`).parent().hide()
 
-			}else if(codCategory == '004'){
+			}else if(idCategory == '4'){
 				//console.log('você escolheu Escora')
 				$('#labelType1').html('Metragem')
 				/*$('#labelType2').html('N/A')
@@ -358,7 +386,7 @@ $(function() { //quando a página carrega
 
 			data.forEach(function(item){
 				//console.log(item)
-				suppliers += `<option value="${item.codFornecedor}">${item.codFornecedor} - ${item.nome}</option>`
+				suppliers += `<option value="${item.idFornecedor}-${item.codFornecedor}">${item.codFornecedor} - ${item.nome}</option>`
 			});
 
 			$('#fornecedor').html(suppliers)
@@ -373,6 +401,25 @@ $(function() { //quando a página carrega
 	
 	}
 
+	function showsNextNumber(idCategory){ //mostra o próximo número de série relacionado à categoria
+		$.ajax({
+			type: "POST",
+			url: `/products/showsNextNumber/${idCategory}`,
+			contentType: false,
+			processData: false,
+			
+			success: function (response) {
+		
+				console.log('próximo número de série: ' + response)
+				$('#numSerie').val(response)						
+									
+			},
+			error: function (response) {
+
+				console.log(`Erro! Mensagem: ${response}`);		
+			}
+		});	
+	}
 
 
 function loadTableProducts(){ //carrega a tabela de Produtos
@@ -444,7 +491,7 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 		
 			//$('#desImagePath').parent().show();
 
-			$("#formProduct #codigo").prop('disabled', false);
+			//$("#formProduct #codigo").prop('disabled', true);
 			$("#formProduct #descricao").prop('disabled', false);
 			$("#formProduct #valorCompra").prop('disabled', false);
 			$("#formProduct #status").prop('disabled', false);
@@ -473,8 +520,8 @@ function deleteProduct(idProduto){
 		text: "Você não será capaz de reverter isso!",
 		icon: 'warning',
 		showCancelButton: true,
-		confirmButtonColor: '#3085d6',
-		cancelButtonColor: '#d33',
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
 		confirmButtonText: 'Sim, apagar!'
 
 	}).then((result) => {
@@ -528,7 +575,7 @@ function deleteProduct(idProduto){
 //limpar campos do modal para Cadastrar
 function clearFieldsValues(){
 
-	$("#formProduct #codigo").prop('disabled', true)
+	//$("#formProduct #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Produto');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveProduct').val('Cadastrar').show();
@@ -538,7 +585,7 @@ function clearFieldsValues(){
 	//$('#desImagePath').parent().show();
 
 
-	$("#formProduct #codigo").prop('disabled', false);
+	//$("#formProduct #codigo").prop('disabled', true);
 	$("#formProduct #descricao").prop('disabled', false);
 	$("#formProduct #valorCompra").prop('disabled', false);
 	$("#formProduct #status").prop('disabled', false);
@@ -574,15 +621,15 @@ function clearFieldsValues(){
 	//campos de container
 	$('#tipoPorta').val('');
 	$('#forrado').val('');
-	$('#janelasLaterais').val('');
-	$('#janelasCirculares').val('');
+	$('#janelasLat').val('');
+	$('#janelasCirc').val('');
 	$('#eletrificado').val('');
 	$('#entrada').val('');
 
 	$('#tipoPorta').parent().hide();
 	$('#forrado').parent().hide();
-	$('#janelasLaterais').parent().hide();
-	$('#janelasCirculares').parent().hide();
+	$('#janelasLat').parent().hide();
+	$('#janelasCirc').parent().hide();
 	$('#eletrificado').parent().hide();
 	$('#entrada').parent().hide();
 	$('#tomadas').parent().hide();

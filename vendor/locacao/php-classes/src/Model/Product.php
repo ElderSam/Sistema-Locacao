@@ -24,10 +24,11 @@ class Product extends Generator{
         ":valorCompra " . $this->getvalorCompra().
         ":status " . $this->getstatus().
         ":dtFabricacao " . $this->getdtFabricacao().
-        ":tipo " . $this->gettipo().
-        ":tipo " . $this->gettipo().
-        ":tipo " . $this->gettipo().
-        ":tipo " . $this->gettipo().
+                ":tipo1 " . $this->gettipo1().
+                ":tipo2 " . $this->gettipo2().
+                ":tipo3 " . $this->gettipo3().
+                ":tipo4 " . $this->gettipo4().
+                ":numSerie " . $this->getnumSerie().
         ":anotacoes " . $this->getanotacoes().
         ":fornecedor " . $this->getfornecedor().
         ":categoria " . $this->getcategoria();*/
@@ -36,7 +37,7 @@ class Product extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :anotacoes, :fornecedor, :categoria)", array(
+            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :fornecedor, :categoria)", array(
                 ":codigo"=>$this->getcodigo(),
                 ":descricao"=>$this->getdescricao(),
                 ":valorCompra"=>$this->getvalorCompra(),
@@ -46,11 +47,11 @@ class Product extends Generator{
                 ":tipo2"=>$this->gettipo2(),
                 ":tipo3"=>$this->gettipo3(),
                 ":tipo4"=>$this->gettipo4(),
+                ":numSerie"=>$this->getnumSerie(),
                 ":anotacoes"=>$this->getanotacoes(),
                 ":fornecedor"=>$this->getfornecedor(),
                 ":categoria"=>$this->getcategoria()
             ));
-
 
             if(count($results) > 0){
 
@@ -189,7 +190,7 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :anotacoes, :idFornecedor, :idCategoria)", array(
+        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :idFornecedor, :idCategoria)", array(
             ":idProduto"=>$this->getidProduto(),
             ":codigo"=>$this->getcodigo(),
             ":descricao"=>$this->getdescricao(),
@@ -200,6 +201,7 @@ class Product extends Generator{
             ":tipo2"=>$this->gettipo2(),
             ":tipo3"=>$this->gettipo3(),
             ":tipo4"=>$this->gettipo4(),
+            ":numSerie"=>$this->getnumSerie(),
             ":anotacoes"=>$this->getanotacoes(),
             ":idFornecedor"=>$this->getidFornecedor(),
             ":idCategoria"=>$this->getidCategoria()
@@ -242,6 +244,29 @@ class Product extends Generator{
 
         }
        
+    }
+
+    public static function showsNextNumber($idCategoria){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT MAX(numSerie) FROM produtos WHERE idCategoria = :idCategoria", array(
+            ":idCategoria"=>$idCategoria
+        ));
+        $nextNumber = 1 + $results[0]['MAX(numSerie)'];
+       
+        if($nextNumber < 10){
+            $nextNumber = "000". $nextNumber;
+
+        }else if($nextNumber < 100){
+            $nextNumber = "00". $nextNumber;
+            
+        }else if($nextNumber < 1000){
+            $nextNumber = "0". $nextNumber;
+        }
+        
+        return $nextNumber; //retorna o próximo número de série da categoria
+
     }
     
 }

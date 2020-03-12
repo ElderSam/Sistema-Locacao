@@ -17,25 +17,47 @@ class Container extends Generator{
     }
 
 
-    public function insert(){
-        
+    public function insert($idProduto){
+
+        $this->setidProduto($idProduto);
+    
         $sql = new Sql();
 
-        if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
+        echo "forrado: " . $this->getforrado('1') ."eletr: " . 
+        $this->geteletrificado('1') ."chuv: " . 
+        $this->getchuveiro('1');
+
+        /*echo ":idProduto " . $this->getidProduto().
+  
+        ":tipoPorta " . $this->gettipoPorta().
+        ":janelasLat " . $this->getjanelasLat().
+        ":janelasCirc " . $this->getjanelasCirc().
+        ":forrado " . $this->getforrado().
+        ":eletrificado " . $this->geteletrificado().
+        ":tomadas " . $this->gettomadas().
+        ":lampadas " . $this->getlampadas().
+        ":entradasAC " . $this->getentradasAC().
+        ":sanitarios " . $this->getsanitarios().
+        ":chuveiro " . $this->getchuveiro();*/
+
+        if(($this->gettipoPorta() != "")){
            
-            $results = $sql->select("CALL sp_containers_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo, :anotacoes, :idFornecedor, :idCategoria)", array(
-                ":codigo"=>$this->getcodigo(),
-                ":descricao"=>$this->getdescricao(),
-                ":valorCompra"=>$this->getvalorCompra(),
-                ":status"=>$this->getstatus(),
-                ":dtFabricacao"=>$this->getdtFabricacao(),
-                ":tipo"=>$this->gettipo(),
-                ":anotacoes"=>$this->getanotacoes(),
-                ":idFornecedor"=>$this->getidFornecedor(),
-                ":idCategoria"=>$this->getidCategoria()
+            $results = $sql->select("CALL sp_prod_containers_save(:idProduto, :tipoPorta, :janelasLat, :janelasCirc, 
+            :forrado, :eletrificado, :tomadas, :lampadas, :entradasAC, :sanitarios, :chuveiro)", array(
+                ":idProduto"=>$this->getidProduto(),
+                ":tipoPorta"=>$this->gettipoPorta(),
+                ":janelasLat"=>$this->getjanelasLat(),
+                ":janelasCirc"=>$this->getjanelasCirc(),
+                ":forrado"=>$this->getforrado(),
+                ":eletrificado"=>$this->geteletrificado(),
+                ":tomadas"=>$this->gettomadas(),
+                ":lampadas"=>$this->getlampadas(),
+                ":entradasAC"=>$this->getentradasAC(),
+                ":sanitarios"=>$this->getsanitarios(),
+                ":chuveiro"=>$this->getchuveiro()
             ));
 
-
+            print_r($results);
             if(count($results) > 0){
 
                 $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
@@ -45,7 +67,7 @@ class Container extends Generator{
             }else{
                 return json_encode([
                     "error"=>true,
-                    "msg"=>"Erro ao inserir Produto!"
+                    "msg"=>"Erro ao inserir Container!"
                     ]);
             }
        

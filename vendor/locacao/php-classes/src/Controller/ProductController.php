@@ -5,6 +5,7 @@ namespace Locacao\Controller;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Product;
+use \Locacao\Model\Container;
 use \Locacao\Model\Category;
 use \Locacao\Model\Supplier;
 
@@ -51,7 +52,24 @@ class ProductController extends Generator
             return $product->update();
 
         } else { // se for cadastrar novo Produto
-            return $product->insert();
+            $res = $product->insert();
+            print_r($res);
+            if($this->getcodCategory() == '001'){ //se for um container
+                               
+                $container = new Container();
+                $aux = json_decode($res);
+                //print_r($aux);
+                $idProduto = $aux->idProduto;
+               
+                //echo "id: " . $idProduto . "<br>";
+                $container->setData($_POST);
+                $res2 = $container->insert($idProduto);
+                return $res2;
+
+            }else{
+                return $res;
+            }
+            
         }
     }
 
@@ -81,17 +99,27 @@ class ProductController extends Generator
             $errors["#categoria"] = "Categoria é obrigatória!";
            
         }else{
+
+            
+            $this->setcodCategory(substr($_POST["categoria"], -3)); //do antepenúltimo caracter até o final
             
             if (($_POST["tipo1"] == "") && (!$update)) {
                 $errors["#tipo1"] = "tipo obrigatório!";
             }
-            if (($_POST["tipo2"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
+            if (($_POST["tipo2"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
                 $errors["#tipo2"] = "tipo obrigatório!";
             }
-            if (($_POST["tipo3"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
-                $errors["#tipo3"] = "tipo obrigatório!";
+            if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
+
+                $codTipo2 = substr($_POST["tipo2"], -2);
+
+                if(($codTipo2 != "03")){ //se não escolheu tipo 2 sanitário
+    
+                    $errors["#tipo3"] = "tipo obrigatório!";
+                }
+                
             }
-            if (($_POST["tipo4"] == "") && ($_POST["categoria"] != "004") && (!$update)) {
+            if (($_POST["tipo4"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
                 $errors["#tipo4"] = "tipo obrigatório!";
             }
     
@@ -102,20 +130,16 @@ class ProductController extends Generator
 
         }
 
-        $exists = Product::searchCode($_POST["codigo"]);
-        if (count($exists) > 0) { //se existe codigo completo igual já registrado
+        if(empty($_POST["forrado"])){
+            $_POST["forrado"] = 0;
+        }
 
-            if ($update) {
-                foreach ($exists as $product) {
+        if(empty($_POST["eletrificado"])){
+            $_POST["eletrificado"] = 0;
+        }
 
-                    if (($_POST['codigo'] == $product['codigo']) && ($_POST['idProduto'] != $product['idProduto'])) {
-                        $errors["#codigo"] = "Já existe um Produto com esse Código";
-                        break;
-                    }
-                }
-            } else {
-                $errors["#codigo"] = "Já existe um produto com esse Código";
-            }
+        if(empty($_POST["chuveiro"])){
+            $_POST["chuveiro"] = 0;
         }
 
         $exists = 0;
@@ -135,8 +159,6 @@ class ProductController extends Generator
             }
         }
 
-
-
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
 
             return json_encode([
@@ -145,24 +167,13 @@ class ProductController extends Generator
             ]);
         } else { //se ainda não tem erro
 
-            if($_POST["categoria"] == "003"){
-                $_POST["tipo4"] = "xx";
-
-            } else if($_POST["categoria"] == "004"){
-                $_POST["tipo2"] = "xx";
-                $_POST["tipo3"] = "xx";
-                $_POST["tipo4"] = "xx";
-                
-            }
-            
-            $_POST["codigo"] = $_POST["categoria"] . "." . $_POST["tipo1"] . "." . $_POST["tipo2"] . "." . $_POST["tipo3"] . "." . $_POST["tipo4"] . "." . $_POST["fornecedor"];
-        
-            $category = new Category();
+            $this->createCode();
+         /*   $category = new Category();
             $_POST["categoria"] = $category->get(false, $_POST["categoria"]); //manda o codcategoria em vez do id
 
             $supplier = new Supplier();
             $_POST["fornecedor"] = $supplier->get(false, $_POST["fornecedor"]); //manda o codFornecedor em vez do id
-
+*/
 
             return json_encode([
                 'error' => false
@@ -174,6 +185,67 @@ class ProductController extends Generator
         }
     }/* --- fim verificaErros() ---------------------------*/
 
+    public function createCode(){
+      
+        
+        $_POST["categoria"] = substr($_POST["categoria"], 0, -4); //pega o id (tirando os quatro últimos caracteres)
+      
+        //echo "id: " . $_POST["categoria"]. ", codigo: ". $this->getcodCategory() . "<br>";
+        
+
+        /*---------------------- Tipos ------------------------------------------------*/
+        if(($this->getcodCategory() == "001") || ($this->getcodCategory() == "002")){
+            $qtdTipos = 4;
+
+        }else if($this->getcodCategory() == "003"){
+            $qtdTipos = 3;
+            $_POST["tipo4"] = NULL;
+
+        } else if($this->getcodCategory() == "004"){
+            $qtdTipos = 1;
+            $_POST["tipo2"] = NULL;
+            $_POST["tipo3"] = NULL;
+            $_POST["tipo4"] = NULL;
+            
+        }
+        
+
+        $arrTipos = array("", $_POST["tipo1"], $_POST["tipo2"], $_POST["tipo3"], $_POST["tipo4"]);
+
+        $codTipos = '';
+
+        for($i=1; $i<=$qtdTipos; $i++){
+            
+            if($arrTipos[$i] == NULL){
+                $codTipos .= "xx.";
+
+            }else{ 
+                
+                $codTipos .= substr($arrTipos[$i], -2) . "."; //do penúltimo caracter até o final
+                $auxTipo = 'tipo' . $i;
+                $_POST[$auxTipo] = substr($arrTipos[$i], 0, -3); //pega o id (tirando os três últimos caracteres)
+                
+                //echo "pos $auxTipo ". $_POST[$auxTipo] ."<br>";
+
+            }
+        }
+       
+        $codFornecedor = substr($_POST["fornecedor"], -3); //pega do antepenúltimo caracter até o final
+        $_POST["fornecedor"] = substr($_POST["fornecedor"], 0, -4); //pega o id (tirando os quatro últimos caracteres)
+        //echo 'id: '. $_POST["fornecedor"]. ", cod: " . $codFornecedor;
+
+
+        $_POST["codigo"] = $this->getcodCategory() . "." . $codTipos . $codFornecedor . "-" . $_POST["numSerie"];
+        //echo $_POST["codigo"];
+        
+        /*----------------------fim de Tipos ------------------------------------------------*/
+
+
+        
+        //fornecedortem que ter 4 caracteres
+        
+    
+    }
 
     /*public function uploadImage($files, $desOldImagePath = "")
     {

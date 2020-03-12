@@ -19,30 +19,15 @@ class Supplier extends Generator{
     }
 
     
-    public function get($idFornecedor, $codFornecedor = false){
+    public function get($idFornecedor){
 
         $sql = new Sql();
 
-        if(!$idFornecedor){
-            if($codFornecedor){
+        $results = $sql->select("SELECT * FROM fornecedores WHERE idFornecedor = :idFornecedor", array(
+            ":idFornecedor"=>$idFornecedor
+        ));
 
-                $results = $sql->select("SELECT * FROM fornecedores WHERE codFornecedor = :codFornecedor", array(
-                    ":codFornecedor"=>$codFornecedor
-                ));
-
-                return $results[0]['idFornecedor'];
-            }
-
-        }else{
-            $results = $sql->select("SELECT * FROM fornecedores WHERE idFornecedor = :idFornecedor", array(
-                ":idFornecedor"=>$idFornecedor
-            ));
-
-            $this->setData($results[0]);
-        }
-
-
-
+        $this->setData($results[0]);
 
     }
     
