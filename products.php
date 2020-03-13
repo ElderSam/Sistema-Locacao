@@ -42,11 +42,9 @@ $app->post("/products/:idproduct/delete", function($idproduct){
     
     User::verifyLogin();
 
-    $product = new Product();
+    $product = new ProductController();
 
-	$product->get((int)$idproduct); //carrega o usuário, para ter certeza que ainda existe no banco
-
-	echo $product->delete();
+    echo $product->delete($idproduct);
 
 });
 
@@ -58,7 +56,7 @@ $app->get("/products/json/:idproduct", function($idproduct){
 
 	$product->get((int)$idproduct);
 
-	echo json_encode($product->getValues());
+	echo $product->loadProduct((int)$idproduct);
 
 });
 

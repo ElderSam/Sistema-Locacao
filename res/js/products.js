@@ -17,33 +17,8 @@ $(function() { //quando a página carrega
 	});
 
 	$('#categoria').change(function(){
-		//alert('você escolheu ' + $('#categoria').val())
-		codCategoria = $('#categoria').val().substring(2, 5);
-		if(codCategoria != '001'){ //se não for um container
-			
-			$('#tipoPorta').parent().hide();
-			$('#forrado').parent().hide();
-			$('#janelasLat').parent().hide();
-			$('#janelasCirc').parent().hide();
-			$('#eletrificado').parent().hide();
-			$('#entrada').parent().hide();
-			$('#tomadas').parent().hide();
-			$('#lampadas').parent().hide();
-			$('#chuveiro').parent().hide();
-
-		}else{
-
-			$('#tipoPorta').parent().show();
-			$('#forrado').parent().show();
-			$('#janelasLat').parent().show();
-			$('#janelasCirc').parent().show();
-			$('#eletrificado').parent().show();
-			$('#entrada').parent().show();
-			$('#tomadas').parent().show();
-			$('#lampadas').parent().show();
-			$('#chuveiro').parent().show();
-		}
-		
+		loadContainer();
+						
 		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
 		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id
 		
@@ -199,13 +174,13 @@ $(function() { //quando a página carrega
 					clearErrors();
 
 					if (JSON.parse(response).error) {
-						console.log('erro ao editar Produto!')
+						console.log('erro ao atualizar Produto!')
 
 						response = JSON.parse(response)
 
 						Swal.fire(
 							'Erro!',
-							'Ocorreu algum erro ao Editar',
+							'Ocorreu algum erro ao Atualizar',
 							'error'
 						);
 
@@ -225,7 +200,7 @@ $(function() { //quando a página carrega
 
 						Swal.fire(
 							'Sucesso!',
-							'Product atualizado!',
+							'Produto atualizado!',
 							'success'
 						);
 
@@ -251,7 +226,7 @@ $(function() { //quando a página carrega
 
 
 	//carrega as opções de Categoria de produto
-	function loadCategories(){
+	async function loadCategories(category = false, callback, container = false){
 		$.getJSON(`/products/categories/json`, function (data) { //ajax
 			
 			//console.log(data)
@@ -267,17 +242,29 @@ $(function() { //quando a página carrega
 						
 
 		}).then(() => { 
-
+			
+			if(category){
+				$("#formProduct #categoria").val(category[0]+'-'+category[1]).prop('disabled', true);
+				console.log('categoria: ' + category[0]+'-'+category[1])
+				
+				if(container){
+					callback(container)
+				}
+				
+				return $("#formProduct #categoria").val()
+			}
+		
 			//$("#productModal").modal();
 		}).fail(function () {
-			console.log("Rota não encontrada!");
+			console.log("Rota não encontrada! (/products/categories/json)");
+			return false
 		});
 	
 	}
 
 	let tipo2para3M
 	//carrega as opções de tipo 1 de produto
-	function loadTypes(idCategory){
+	function loadTypes(idCategory, tipos = false){
 		//para os tipos de produto do formulário
 		types = []
 
@@ -300,12 +287,12 @@ $(function() { //quando a página carrega
 
 			data.forEach(function(item){
 				//console.log(item)
-				types[item.ordem_tipo] += `<option value="${item.id}-${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+				types[item.ordem_tipo] += `<option value="${item.id}-${item.codTipo}">${item.codTipo} - ${item.descTipo}</option>`
 
 				//Guarda opção única para quando eu escolher o tipo 1 - 3M
 				if(item.ordem_tipo == 2){
-					if((item.codigo == '01') || (item.codigo == '07')){ //aceita almoxarifado (01) e especial (07)
-						tipo2para3M +=  `<option value="${item.id}-${item.codigo}">${item.codigo} - ${item.descricao}</option>`
+					if((item.codTipo == '01') || (item.codTipo == '07')){ //aceita almoxarifado (01) e especial (07)
+						tipo2para3M +=  `<option value="${item.id}-${item.codTipo}">${item.codTipo} - ${item.descTipo}</option>`
 					}
 
 				}
@@ -320,10 +307,10 @@ $(function() { //quando a página carrega
 				
 			if(idCategory == '1'){
 				//console.log('você escolheu Container')
-				$('#labelType1').html('Metragem')
-				$('#labelType2').html('Modelo')
-				$('#labelType3').html('Lavabo')
-				$('#labelType4').html('Altura')
+				$('#labelType1').html('Metragem (tipo1)')
+				$('#labelType2').html('Modelo (tipo2)')
+				$('#labelType3').html('Lavabo (tipo3)')
+				$('#labelType4').html('Altura (tipo4)')
 
 				for(i=1; i<=4; i++){
 					$(`#tipo${i}`).parent().show()
@@ -331,10 +318,10 @@ $(function() { //quando a página carrega
 
 			}else if(idCategory == '2'){
 				//console.log('você escolheu Betoneira')
-				$('#labelType1').html('Marca')
-				$('#labelType2').html('Modelo')
-				$('#labelType3').html('Elét/Comb')
-				$('#labelType4').html('Volt')
+				$('#labelType1').html('Marca (tipo1)')
+				$('#labelType2').html('Modelo (tipo2)')
+				$('#labelType3').html('Elét/Comb (tipo3)')
+				$('#labelType4').html('Volt (tipo4)')
 
 				
 				for(i=1; i<=4; i++){
@@ -343,10 +330,10 @@ $(function() { //quando a página carrega
 
 			}else if(idCategory == '3'){
 				//console.log('você escolheu Andaime')
-				$('#labelType1').html('Tipo')
-				$('#labelType2').html('Peça')
-				$('#labelType3').html('Metragem')
-				$('#labelType4').html('N/A')
+				$('#labelType1').html('Tipo (tipo1)')
+				$('#labelType2').html('Peça (tipo2)')
+				$('#labelType3').html('Metragem (tipo3)')
+				$('#labelType4').html('N/A (tipo4)')
 
 				for(i=1; i<=3; i++){
 					$(`#tipo${i}`).parent().show()
@@ -356,7 +343,7 @@ $(function() { //quando a página carrega
 
 			}else if(idCategory == '4'){
 				//console.log('você escolheu Escora')
-				$('#labelType1').html('Metragem')
+				$('#labelType1').html('Metragem (tipo1)')
 				/*$('#labelType2').html('N/A')
 				$('#labelType3').html('N/A')
 				$('#labelType4').html('N/A')*/
@@ -369,15 +356,37 @@ $(function() { //quando a página carrega
 			}
 
 		}).then(() => { 
+			console.log('carregou todos os tipos')
 
+			if(tipos){
+				console.log('setting values in types')
+				
+				tipo1 = tipos[0]['id']+'-'+tipos[0]['codTipo']
+				tipo2 = tipos[1]['id']+'-'+tipos[1]['codTipo']
+				tipo3 = tipos[2]['id']+'-'+tipos[2]['codTipo']
+				tipo4 = tipos[3]['id']+'-'+tipos[3]['codTipo']
+		
+				console.log('tipo1: '+ tipo1)
+				console.log('tipo2: '+ tipo2)
+				console.log('tipo3: '+ tipo3)
+				console.log('tipo4: '+ tipo4)
+	
+				$("#formProduct #tipo1").val(tipo1).prop('disabled', true);
+				$("#formProduct #tipo2").val(tipo2).prop('disabled', true);
+				$("#formProduct #tipo3").val(tipo3).prop('disabled', true);
+				$("#formProduct #tipo4").val(tipo4).prop('disabled', true);
+				
+			}
+
+			
 		}).fail(function () {
-			console.log("Rota não encontrada!");
+			console.log("Rota não encontrada! (/products/types/json/:idCategory)");
 		});
 	
 	}
 
 	//carrega as opções de Fornecedor de um produto de categoria específico
-	function loadSuppliers(){
+	function loadSuppliers(fornecedor = false){
 		$.getJSON(`/suppliers/json`, function (data) { //ajax
 			
 			//console.log(data)
@@ -393,11 +402,81 @@ $(function() { //quando a página carrega
 						
 
 		}).then(() => { 
+			
+			if(fornecedor){ //se já tem fornecedor escolhido (para modal Atualizar)
+				$("#formProduct #fornecedor").val(fornecedor[0]+'-'+fornecedor[1]).prop('disabled', true);
+
+			}
 
 			//$("#productModal").modal();
 		}).fail(function () {
-			console.log("Rota não encontrada!");
+			console.log("Rota não encontrada! (/suppliers/json)");
 		});
+	
+	}
+
+	function loadContainer(container = false){
+		//alert('você escolheu ' + $('#categoria').val())
+
+		let codCategoria = $('#categoria').val().substring(2, 5);
+		if(codCategoria != '001'){ //se não for um container
+			
+			$('#tipoPorta').parent().hide();
+			$('#forrado').parent().hide();
+			$('#janelasLat').parent().hide();
+			$('#janelasCirc').parent().hide();			
+			$('#sanitarios').parent().hide();
+			$('#eletrificado').parent().hide();
+			$('#entradasAC').parent().hide();
+			$('#tomadas').parent().hide();
+			$('#lampadas').parent().hide();
+			$('#chuveiro').parent().hide();
+
+		}else{
+
+			$('#tipoPorta').parent().show();
+			$('#forrado').parent().show();
+			$('#janelasLat').parent().show();
+			$('#janelasCirc').parent().show();			
+			$('#sanitarios').parent().show();
+			$('#eletrificado').parent().show();
+			$('#entradasAC').parent().show();
+			$('#tomadas').parent().show();
+			$('#lampadas').parent().show();
+			$('#chuveiro').parent().show();
+
+			
+			if(container){
+				container = container[0]
+				console.log('tipoporta: ' + container.tipoPorta)
+				$('#tipoPorta').val(container.tipoPorta).prop('disabled', true);		
+				$('#janelasLat').val(container.janelasLat).prop('disabled', true);
+				$('#janelasCirc').val(container.janelasCirc).prop('disabled', true);			
+				$('#sanitarios').val(container.sanitarios).prop('disabled', true);
+				$('#entradasAC').val(container.entradasAC).prop('disabled', true);
+				$('#tomadas').val(container.tomadas).prop('disabled', true);
+				$('#lampadas').val(container.lampadas).prop('disabled', true);
+				
+				if(container.forrado == 1){
+					$('#forrado').prop('checked', true);
+				}
+	
+				if(container.eletrificado == 1){
+					$('#eletrificado').prop('checked', true);
+				}
+				
+				if(container.chuveiro == 1){
+					$('#chuveiro').prop('checked', true);
+				}
+	
+				$('#forrado').prop('disabled', true);
+				$('#eletrificado').prop('disabled', true);
+				$('#chuveiro').prop('disabled', true);
+		
+
+				return true;
+			}
+		}
 	
 	}
 
@@ -447,39 +526,48 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 function loadProduct(idProduto) { //carrega todos os campos do modal referente ao produto escolhido
 	clearFieldsValues();
 	clearErrors();
-	loadCategories();
 
 	$('#modalTitle').html('Detalhes do Produto')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveProduct').hide();
 	$('#btnUpdate').show();
-	
-	$('#dtCadastro').parent().show(); //aparece a data de cadastro (só para visualizar)
-	//$('#desImagePath').parent().hide();
-
 
 	$.getJSON(`/products/json/${idProduto}`, function (data) { //ajax
 		console.log(data)
 
-		$("#formProduct #codigo").val(data.codigo).prop('disabled', true);
-		$("#formProduct #descricao").val(data.descricao).prop('disabled', true);
-		$("#formProduct #valorCompra").val(data.valorCompra).prop('disabled', true);
-		$("#formProduct #status").val(data.status).prop('disabled', true);
-		$("#formProduct #dtFabricacao").val(data.dtFabricacao).prop('disabled', true);
-		$("#formProduct #tipo").val(data.tipo).prop('disabled', true);
-		$("#formProduct #anotacoes").val(data.anotacoes).prop('disabled', true);
-		$("#formProduct #idFornecedor").val(data.idFornecedor).prop('disabled', true);
-		$("#formProduct #idCategoria").val(data.idCategoria).prop('disabled', true);
-		$("#formProduct #dtCadastro").val(data.dtCadastro).prop('disabled', true);
-		$("#idProduto").val(data.idProduto);
+		produto = data[0]
+		tipos = data[1]
+		container = data[2]
+
+		$("#idProduto").val(produto.idProduto);
 		//console.log('load View Produto idProduto: ' + $("#idProduto").val())
 
-		dtCadastro = formatDate(data.dtCadastro)
-		//console.log('data: ' + dtCadastro)
-		$("#formProduct #dtCadastro").val(dtCadastro);
-			
-		//$("#formProduct #image-preview").attr("src", data.foto); //mostra a imagem atual
-		//$("#desmagePath").val(data.foto);
+		$("#formProduct #codigo").val(produto.codigo).prop('disabled', true);
+		$("#formProduct #numSerie").val(produto.numSerie).prop('disabled', true);
+		$("#formProduct #descricao").val(produto.descricao).prop('disabled', true);
+		$("#formProduct #valorCompra").val(produto.valorCompra).prop('disabled', true);
+		$("#formProduct #status").val(produto.status).prop('disabled', true);
+		$("#formProduct #dtFabricacao").val(produto.dtFabricacao).prop('disabled', true);
+		$("#formProduct #anotacoes").val(produto.anotacoes).prop('disabled', true);
+		
+	
+		//loadCategories([produto.idCategoria, produto.codCategoria]);
+		async function sleep (forHowLong) {
+			function timeout(ms) {
+			  return new Promise(resolve => setTimeout(resolve, ms));
+			}
+			await timeout(forHowLong);
+		  }
+
+		//carrega categorias, seleciona uma e em seguida carrega valores nos campos de Container
+		loadCategories([produto.idCategoria, produto.codCategoria], loadContainer, container);
+
+
+
+		loadTypes(produto.idCategoria, tipos)
+
+		fornecedor = [produto.idFornecedor, produto.codFornecedor]
+		loadSuppliers(fornecedor);
 
 		/* Atualizar Produto ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function(){ //se eu quiser atualizar o Produto atual
@@ -492,14 +580,32 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 			//$('#desImagePath').parent().show();
 
 			//$("#formProduct #codigo").prop('disabled', true);
+			
+			$("#formProduct #numSerie").prop('disabled', false);
 			$("#formProduct #descricao").prop('disabled', false);
 			$("#formProduct #valorCompra").prop('disabled', false);
 			$("#formProduct #status").prop('disabled', false);
 			$("#formProduct #dtFabricacao").prop('disabled', false);
-			$("#formProduct #tipo").prop('disabled', false);
+			$("#formProduct #tipo1").prop('disabled', false);
+			$("#formProduct #tipo2").prop('disabled', false);
+			$("#formProduct #tipo3").prop('disabled', false);
+			$("#formProduct #tipo4").prop('disabled', false);
 			$("#formProduct #anotacoes").prop('disabled', false);
-			$("#formProduct #idFornecedor").prop('disabled', false);
-			$("#formProduct #idCategoria").prop('disabled', false);
+			$("#formProduct #fornecedor").prop('disabled', false);
+			$("#formProduct #categoria").prop('disabled', false);
+
+			//campos de container
+			$('#tipoPorta').prop('disabled', false);		
+			$('#janelasLat').prop('disabled', false);
+			$('#janelasCirc').prop('disabled', false);			
+			$('#sanitarios').prop('disabled', false);
+			$('#entradasAC').prop('disabled', false);
+			$('#tomadas').prop('disabled', false);
+			$('#lampadas').prop('disabled', false);
+			$('#forrado').prop('disabled', false);
+			$('#eletrificado').prop('disabled', false);
+			$('#chuveiro').prop('disabled', false);
+			
 				
 		}); /* Fim Atualizar Produto ---------------------------------------------------------- */
 			
@@ -508,7 +614,7 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 
 		$("#productModal").modal();
 	}).fail(function () {
-		console.log("Rota não encontrada!");
+		console.log("Rota não encontrada! (/products/json/:idProduto)");
 	});
 
 }
@@ -586,20 +692,38 @@ function clearFieldsValues(){
 
 
 	//$("#formProduct #codigo").prop('disabled', true);
+	$("#formProduct #numSerie").prop('disabled', false);
 	$("#formProduct #descricao").prop('disabled', false);
 	$("#formProduct #valorCompra").prop('disabled', false);
 	$("#formProduct #status").prop('disabled', false);
 	$("#formProduct #dtFabricacao").prop('disabled', false);
-	$("#formProduct #tipo").prop('disabled', false);
+	$("#formProduct #tipo1").prop('disabled', false);
+	$("#formProduct #tipo2").prop('disabled', false);
+	$("#formProduct #tipo3").prop('disabled', false);
+	$("#formProduct #tipo4").prop('disabled', false);
 	$("#formProduct #anotacoes").prop('disabled', false);
-	$("#formProduct #idFornecedor").prop('disabled', false);
-	$("#formProduct #idCategoria").prop('disabled', false);
+	$("#formProduct #fornecedor").prop('disabled', false);
+	$("#formProduct #categoria").prop('disabled', false);
+
+	$('#tipoPorta').prop('disabled', false);
+	$('#janelasLat').prop('disabled', false);
+	$('#janelasCirc').prop('disabled', false);
+	$('#sanitarios').prop('disabled', false);
+	$('#tomadas').prop('disabled', false);
+	$('#lampadas').prop('disabled', false);
+	//$('#eletrificado').attr("checked", false);
+	$('#entradasAC').prop('disabled', false);
+	$('#forrado').prop('disabled', false);
+	$('#eletrificado').prop('disabled', false);
+	$('#chuveiro').prop('disabled', false);
+
 	
 
 	//$('#image-preview').attr('src', "/res/img/productsp/product-default.jpg");
 	$('#dtCadastro').parent().hide();
 
 	$('#codigo').val('');
+	$('#numSerie').val('');
 	$('#descricao').val('');
 	$('#valorCompra').val('');
 	$('#status').val('1');
@@ -615,26 +739,35 @@ function clearFieldsValues(){
 	}
 
 	$('#anotacoes').val('');
-	$('#idFornecedor').val('0');
+	$('#fornecedor').val('0');
 	$('#idContainer').val('0');
 
 	//campos de container
 	$('#tipoPorta').val('');
-	$('#forrado').val('');
 	$('#janelasLat').val('');
 	$('#janelasCirc').val('');
-	$('#eletrificado').val('');
-	$('#entrada').val('');
+	$('#sanitarios').val('');
+	$('#tomadas').val('');
+	$('#lampadas').val('');
+	//$('#eletrificado').attr("checked", false);
+	$('#entradasAC').val('');
+	$('#forrado').prop('checked', false);
+	$('#eletrificado').prop('checked', false);
+	$('#chuveiro').prop('checked', false);
+	
 
 	$('#tipoPorta').parent().hide();
 	$('#forrado').parent().hide();
 	$('#janelasLat').parent().hide();
 	$('#janelasCirc').parent().hide();
+	$('#sanitarios').parent().hide();
 	$('#eletrificado').parent().hide();
-	$('#entrada').parent().hide();
+	$('#entradasAC').parent().hide();
 	$('#tomadas').parent().hide();
 	$('#lampadas').parent().hide();
 	$('#chuveiro').parent().hide();
+	
+
 	//fimr campos container
 	
 	$('#categoria').val('0');

@@ -18,20 +18,6 @@ class Product extends Generator{
 
 
     public function insert(){
-
-        /*echo ":codigo " . $this->getcodigo().
-        ":descricao " . $this->getdescricao().
-        ":valorCompra " . $this->getvalorCompra().
-        ":status " . $this->getstatus().
-        ":dtFabricacao " . $this->getdtFabricacao().
-                ":tipo1 " . $this->gettipo1().
-                ":tipo2 " . $this->gettipo2().
-                ":tipo3 " . $this->gettipo3().
-                ":tipo4 " . $this->gettipo4().
-                ":numSerie " . $this->getnumSerie().
-        ":anotacoes " . $this->getanotacoes().
-        ":fornecedor " . $this->getfornecedor().
-        ":categoria " . $this->getcategoria();*/
         
         $sql = new Sql();
 
@@ -79,11 +65,54 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM produtos WHERE idProduto = :idProduto", array(
+        $results = $sql->select("SELECT * FROM produtos
+        WHERE idProduto = :idProduto", array(
             ":idProduto"=>$idproduct
         ));
 
-        $this->setData($results[0]);
+        if(count($results) > 0){
+
+            $this->setData($results[0]);
+        }
+    }
+
+    public function loadProduct($idproduct){
+
+        $sql = new Sql();
+ 
+        //dados das tabelas: produtos, categorias e fornecedores
+        $res1 = $sql->select("SELECT a.idProduto, a.codigo, a.descricao, a.valorCompra, a.status,
+        a.dtFabricacao, a.numSerie, a.anotacoes, b.idCategoria, b.codCategoria, c.idFornecedor, c.codFornecedor, c.nome 
+        FROM produtos a INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
+        INNER JOIN fornecedores c ON(a.idFornecedor = c.idFornecedor)
+            WHERE a.idProduto = :idProduto", array(
+            ":idProduto"=>$idproduct
+        ));
+
+
+        if(count($res1) > 0){
+
+        //dados das tabela tipos de produtos
+        $res2 = $sql->select("SELECT b.id, b.descTipo, b.ordem_tipo, b.codTipo
+        FROM produtos a RIGHT JOIN prod_tipos b ON(a.tipo1 = b.id OR a.tipo2 = b.id OR a.tipo3 = b.id OR a.tipo4 = b.id)
+        WHERE idProduto = :idProduto
+        ORDER BY b.ordem_tipo, b.codTipo", array(
+            ":idProduto"=>$idproduct
+        ));
+
+
+        $res3 = $sql->select("SELECT * FROM prod_containers 
+        WHERE idProduto = :idProduto", array(
+            ":idProduto"=>$idproduct
+        ));
+
+
+            return json_encode([
+                $res1[0], //produto
+                $res2, //tipos
+                $res3 //container (se não for container, vai reotornar um array vazio)
+            ]);
+        }
     }
 
     public static function searchCode($code){ //search if name already exists
@@ -110,8 +139,9 @@ class Product extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM produtos a INNER JOIN prod_categorias b
-                    ON(a.idCategoria = b.idCategoria)";
+        $query = "SELECT a.idProduto, a.codigo, a.descricao, a.status, b.descCategoria, c.descTipo as tipo1 FROM produtos a 
+                INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
+                INNER JOIN prod_tipos c ON(a.tipo1 = c.id)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -137,12 +167,27 @@ class Product extends Generator{
                     //echo "status: ".$search;
                 }
 
+                if ($field == "tipo1") {
+                  
+                    if (($search == "3M")) {
+                        $search = 1;
+                    } else if ($search == "4M") {
+                        $search = 2;
+                    } else if ($search == "6M") {
+                        $search = 3;
+                    } else if ($search == "12M") {
+                        $search = 4;
+                    }
+
+                    //echo "tipo1: ".$search;
+                }
+
                 //filtra no banco
                 if ($first) {
-                    $query .= " WHERE ($field LIKE '$search%'"; //primeiro caso
+                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
                     $first = FALSE;
                 } else {
-                    $query .= " OR $field LIKE '$search%'";
+                    $query .= " OR $field LIKE '%$search%'";
                 }
             } //fim do foreach
             if (!$first) {
@@ -187,10 +232,11 @@ class Product extends Generator{
     
 
     public function update(){
-
+        
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :idFornecedor, :idCategoria)", array(
+        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao,
+                                :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :fornecedor, :categoria)", array(
             ":idProduto"=>$this->getidProduto(),
             ":codigo"=>$this->getcodigo(),
             ":descricao"=>$this->getdescricao(),
@@ -203,8 +249,8 @@ class Product extends Generator{
             ":tipo4"=>$this->gettipo4(),
             ":numSerie"=>$this->getnumSerie(),
             ":anotacoes"=>$this->getanotacoes(),
-            ":idFornecedor"=>$this->getidFornecedor(),
-            ":idCategoria"=>$this->getidCategoria()
+            ":fornecedor"=>$this->getfornecedor(),
+            ":categoria"=>$this->getcategoria()
         ));
 
         if(count($results) > 0){
@@ -224,6 +270,7 @@ class Product extends Generator{
 
     public function delete(){
 
+       
         $sql = new Sql();
 
         try{
@@ -231,13 +278,22 @@ class Product extends Generator{
                 ":idProduto"=>$this->getidProduto()
             ));
 
-            echo json_encode([
-                "error"=>false,
-            ]);
+            if($this->get($this->getidProduto())){
+
+                return json_encode([
+                    "error"=>true,
+                    "msg"=>'Erro ao excluir produto'
+                ]);
+
+            }else{
+                return json_encode([
+                    "error"=>false,
+                ]);
+            }
 
         }catch(Exception $e){
 
-            echo json_encode([
+            return json_encode([
                 "error"=>true,
                 "msg"=>$e->getMessage()
             ]);

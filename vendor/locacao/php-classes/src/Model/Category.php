@@ -17,12 +17,12 @@ class Category extends Generator{
     }
 
     public static function listTypes($idCategory){
-
+        
         $sql = new Sql();
 
         $results = $sql->select("SELECT * FROM prod_tipos a 
         INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
-        WHERE b.idCategoria = :IDCATEGORY ORDER BY a.ordem_tipo, a.codigo",array(
+        WHERE b.idCategoria = :IDCATEGORY ORDER BY a.ordem_tipo, a.codTipo",array(
             ':IDCATEGORY'=> $idCategory
         ));
     

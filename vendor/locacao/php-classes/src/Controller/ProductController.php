@@ -49,22 +49,61 @@ class ProductController extends Generator
         //$product->setfoto($image);
 
         if ($update) { //se for atualizar
-            return $product->update();
+            $upd =  $product->update();
+
+            if($this->getcodCategory() == '001'){ //se for um container
+                
+                $aux = json_decode($upd);
+
+                if(isset($aux->error) && ($aux->error == true)){
+                    return $upd;
+
+                }else{
+
+                    $container = new Container();
+                    $aux = json_decode($upd);
+                    //print_r($aux);
+                    $idProduto = $aux->idProduto;
+                   
+                    //echo "id: " . $idProduto . "<br>";
+                    $container->setData($_POST);
+                    $upd2 = $container->update();               
+
+                    $upd = json_decode($upd);
+                    $upd2 = json_decode($upd2);
+                 
+                    return json_encode([
+                        "produto"=>$upd,
+                        "container"=>$upd2
+                    ]);
+                }
+
+
+            }else{
+                return $upd;
+            }
 
         } else { // se for cadastrar novo Produto
             $res = $product->insert();
-            print_r($res);
+            //print_r($res);
             if($this->getcodCategory() == '001'){ //se for um container
-                               
-                $container = new Container();
+                
                 $aux = json_decode($res);
-                //print_r($aux);
-                $idProduto = $aux->idProduto;
-               
-                //echo "id: " . $idProduto . "<br>";
-                $container->setData($_POST);
-                $res2 = $container->insert($idProduto);
-                return $res2;
+
+                if(isset($aux->error) && ($aux->error == true)){
+                    return $res;
+
+                }else{
+                    $container = new Container();
+                    $aux = json_decode($res);
+                    //print_r($aux);
+                    $idProduto = $aux->idProduto;
+                
+                    //echo "id: " . $idProduto . "<br>";
+                    $container->setData($_POST);
+                    $res2 = $container->insert($idProduto);
+                    return $res2;
+                }
 
             }else{
                 return $res;
@@ -78,12 +117,6 @@ class ProductController extends Generator
     {/*Verifica todos os campos ---------------------------*/
 
         $errors = array();
-
-        $errors = array();
-
-        /*if ($_POST["codigo"] == "") {
-            $errors["#codigo"] = "Código é obrigatório!";
-        }*/
         
         if ($_POST["descricao"] == "") {
             $errors["#descricao"] = "Descrição é obrigatória!";
@@ -106,9 +139,11 @@ class ProductController extends Generator
             if (($_POST["tipo1"] == "") && (!$update)) {
                 $errors["#tipo1"] = "tipo obrigatório!";
             }
+
             if (($_POST["tipo2"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
                 $errors["#tipo2"] = "tipo obrigatório!";
             }
+
             if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
 
                 $codTipo2 = substr($_POST["tipo2"], -2);
@@ -119,8 +154,41 @@ class ProductController extends Generator
                 }
                 
             }
-            if (($_POST["tipo4"] == "") && ($this->getcodCategory() != "004") && (!$update)) {
+
+            if (($_POST["tipo4"] == "") && (($this->getcodCategory() != "003") || ($this->getcodCategory() != "004")) && (!$update)) {
                 $errors["#tipo4"] = "tipo obrigatório!";
+            }
+
+            //testes para Container
+            if($this->getcodCategory() == '001'){
+                if ($_POST["tipoPorta"] == "") {
+                    $errors["#tipoPorta"] = "Tipo de porta é obrigatório!";
+                }  
+
+
+                if (!isset($_POST["janelasLat"]) || ($_POST["janelasLat"] == "")) {
+                    $errors["#janelasLat"] = "campo obrigatório!";
+                }  
+
+                if (!isset($_POST["janelasCirc"]) || ($_POST["janelasCirc"] == "")) {
+                    $errors["#janelasCirc"] = "campo obrigatório!";
+                }  
+
+                if (!isset($_POST["sanitarios"]) || ($_POST["sanitarios"] == "")) {
+                    $errors["#sanitarios"] = "Tipo de porta é obrigatório!";
+                }  
+
+                /*if (!isset($_POST["entradasAC"]) || ($_POST["entradasAC"] == "")) {
+                    $errors["#entradasAC"] = "campo obrigatório!";
+                }  */
+
+                if (!isset($_POST["tomadas"]) || ($_POST["tomadas"] == "")) {
+                    $errors["#tomadas"] = "campo obrigatório!";
+                }  
+
+                if (!isset($_POST["lampadas"]) || ($_POST["lampadas"] == "")) {
+                    $errors["#lampadas"] = "campo obrigatório!";
+                }  
             }
     
         }
@@ -397,5 +465,34 @@ class ProductController extends Generator
     {
 
         return Product::total();
+    }
+
+
+
+    public function delete($idproduct){
+
+        $container = new Container();
+
+        $container->get((int)$idproduct);
+
+        $id = $container->getidProduto();
+        
+        if(isset($id)){ //se for um container
+            
+           $res = $container->delete();
+
+           if(json_decode($res)->error){
+
+                return $res;
+           }
+        }
+       
+        $product = new Product();
+
+        $product->get((int)$idproduct); //carrega o usuário, para ter certeza que ainda existe no banco
+       
+        return $product->delete();
+        
+        
     }
 }//end class ProductController

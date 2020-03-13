@@ -18,12 +18,12 @@
                             <thead class="bg-dark text-white">
                             
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Categoria</th>
-                                    <th class="text-center">Status</th>
-                                    <th>Tipo_1</th>
+                                    <th title="categ.t1.t2.t3.t4.forn-numSerie">Código</th>
+                                    <th title="container/betoneira/andaime/escora">Categoria</th>
+                                    <th title="dispoível/alugado/manutenção" class="text-center">Status</th>
+                                    <th title="(metragem, marca ou tipo)">Tipo_1</th>
                                     <th>Descrição</th>
-                                    <th>Opções</th>
+                                    <th title="ver/editar/excluir">Opções</th>
                                 </tr>
                             </thead>
                             <tbody id="listProducts">
@@ -78,7 +78,7 @@
 
                                 <div class="form-group col-lg-6">
                                     <label for="descricao">Descrição</label>
-                                    <input type="text" class="form-control" id="descricao" name="descricao" maxlength="150" placeholder="Descrição do seu produto ...">
+                                    <input type="text" class="form-control" id="descricao" name="descricao" maxlength="150" placeholder="tipo2-tipo3-tipo4">
                                     <span class="help-block"></span>
                                 </div>
 
@@ -167,9 +167,8 @@
                                 </div>
 
                                 <div class="form-group col-lg-3 mt-3">
-                                    <div class="custom-control custom-switch ml-4">                                       
-                                        <input type="checkbox" value="1" class="custom-control-input" id="forrado" name="forrado">
-                                        <input hidden="true" type="checkbox" value="0" class="" name="forrado">
+                                    <div class="custom-control custom-switch ml-4"> 
+                                        <input id="forrado" type="checkbox" name="forrado" value="1" class="custom-control-input">
                                         <label class="custom-control-label mt-4" for="forrado">Forrado</label>
                                     </div>
                                 </div>
@@ -177,15 +176,15 @@
                                 <div class="form-group col-lg-3">
                                     <label for="janelasLat">Janelas Laterais</label>
                                     <select class="form-control" id="janelasLat" name="janelasLat">
-                                      <option>0</option>
-                                      <option>1</option>
-                                      <option>2</option>
-                                      <option>3</option>
-                                      <option>4</option>
-                                      <option>5</option>
-                                      <option>6</option>
-                                      <option>7</option>
-                                      <option>8</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
                                     </select>
                                     <span class="help-block"></span>  
                                 </div>
@@ -193,15 +192,15 @@
                                 <div class="form-group col-lg-3">
                                 <label for="janelasCirc">Janelas Circulares</label>
                                 <select class="form-control" id="janelasCirc" name="janelasCirc">
-                                    <option>0</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
                                 </select>
                                 <span class="help-block"></span>    
                             </div>
@@ -209,16 +208,16 @@
                                 <div class="form-group col-lg-3">
                                     <label for="sanitarios">Sanitários</label>
                                     <select class="form-control" id="sanitarios" name="sanitarios">
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-3 mt-3">
-                                    <div class="custom-control custom-switch ml-4">                                                             
+                                    <div class="custom-control custom-switch ml-4">                     
                                         <input type="checkbox" value="1" class="custom-control-input" id="eletrificado" name="eletrificado">
                                         <label class="custom-control-label mt-4" for="eletrificado">Eletrificado</label>
                                         <span class="help-block"></span>
@@ -237,16 +236,16 @@
                                 
                                 <div class="form-group col-lg-3">
                                     <label for="tomadas">Tomadas</label>
-                                    <select class="form-control" id="tomadas" name="tomada">
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
+                                    <select class="form-control" id="tomadas" name="tomadas">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
@@ -254,15 +253,15 @@
                                 <div class="form-group col-lg-3">
                                     <label for="lampadas">Lampadas</label>
                                     <select class="form-control" id="lampadas" name="lampadas">
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
