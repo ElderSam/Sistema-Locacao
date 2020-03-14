@@ -361,20 +361,30 @@ $(function() { //quando a página carrega
 			if(tipos){
 				console.log('setting values in types')
 				
-				tipo1 = tipos[0]['id']+'-'+tipos[0]['codTipo']
-				tipo2 = tipos[1]['id']+'-'+tipos[1]['codTipo']
-				tipo3 = tipos[2]['id']+'-'+tipos[2]['codTipo']
-				tipo4 = tipos[3]['id']+'-'+tipos[3]['codTipo']
-		
-				console.log('tipo1: '+ tipo1)
-				console.log('tipo2: '+ tipo2)
-				console.log('tipo3: '+ tipo3)
-				console.log('tipo4: '+ tipo4)
+
+				for(i=1; i<=4; i++){
+					campo = i
+
+					if(tipos[i-1] != undefined){
+						if(tipos[i-1]['ordem_tipo'] != campo){ //se não tiver esse campo setado
+							$(`#formProduct #tipo${campo}`).val('').parent().hide()
+							campo++
+						}
 	
-				$("#formProduct #tipo1").val(tipo1).prop('disabled', true);
-				$("#formProduct #tipo2").val(tipo2).prop('disabled', true);
-				$("#formProduct #tipo3").val(tipo3).prop('disabled', true);
-				$("#formProduct #tipo4").val(tipo4).prop('disabled', true);
+						tipo = tipos[i-1]['id']+'-'+tipos[i-1]['codTipo']
+						console.log(`tipo${campo}: ${tipo}`)
+						$(`#formProduct #tipo${campo}`).val(tipo).prop('disabled', true);
+	
+						if(campo == 4){
+							break;
+						}
+
+					}else{
+						$(`#formProduct #tipo${campo}`).val('').parent().hide()
+					}
+				
+			
+				}
 				
 			}
 

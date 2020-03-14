@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 13-Mar-2020 às 22:15
+-- Tempo de geração: 14-Mar-2020 às 03:27
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -379,9 +379,9 @@ CREATE TABLE `produtos` (
   `status` tinyint(4) NOT NULL,
   `dtFabricacao` date DEFAULT NULL,
   `tipo1` int(11) NOT NULL,
-  `tipo2` int(11) NOT NULL,
-  `tipo3` int(11) NOT NULL,
-  `tipo4` int(11) NOT NULL,
+  `tipo2` int(11) DEFAULT NULL,
+  `tipo3` int(11) DEFAULT NULL,
+  `tipo4` int(11) DEFAULT NULL,
   `numSerie` varchar(4) NOT NULL,
   `anotacoes` varchar(100) DEFAULT NULL,
   `idFornecedor` int(11) NOT NULL,
@@ -395,7 +395,11 @@ CREATE TABLE `produtos` (
 
 INSERT INTO `produtos` (`idProduto`, `codigo`, `descricao`, `valorCompra`, `status`, `dtFabricacao`, `tipo1`, `tipo2`, `tipo3`, `tipo4`, `numSerie`, `anotacoes`, `idFornecedor`, `idCategoria`, `dtCadastro`) VALUES
 (108, '001.04.02.02.02.001-0001', 'ESC s/lavabo HC - 1', 5344.98, 1, '2020-03-13', 4, 6, 13, 15, '0001', 'teste container', 1, 1, '2020-03-13 09:04:37'),
-(109, '001.01.01.02.01.001-0002', 'ALMOX s/lavabo DC - 1', 6770.98, 1, '0000-00-00', 1, 5, 13, 14, '0002', 'teste 2', 1, 1, '2020-03-13 17:30:58');
+(109, '001.01.03.xx.01.001-0002', 'ALMOX s/lavabo DC - 1', 6770.98, 1, '0000-00-00', 1, 7, NULL, 14, '0002', 'teste 2', 1, 1, '2020-03-13 17:30:58'),
+(122, '001.02.03.xx.01.001-0003', 'ALMOX c/lavabo DC - 01', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 20:50:06'),
+(123, '001.02.03.01.01.001-0003', 'SAN DC - 01', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 20:50:53'),
+(124, '001.02.03.01.01.001-0003', 'SAN DC - 02', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:20:04'),
+(125, '001.02.03.xx.01.001-0003', 'SAN DC - 03', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:22:16');
 
 -- --------------------------------------------------------
 
@@ -448,7 +452,11 @@ CREATE TABLE `prod_containers` (
 
 INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelasLat`, `janelasCirc`, `forrado`, `eletrificado`, `tomadas`, `lampadas`, `entradasAC`, `sanitarios`, `chuveiro`, `dtCadastro`) VALUES
 (22, 108, 'porta marítima', 1, 0, 1, 1, 1, 2, 1, 0, 0, '2020-03-13 09:04:37'),
-(23, 109, 'marítima', 1, 0, 1, 0, 0, 0, 0, 0, 0, '2020-03-13 17:32:54');
+(23, 109, 'marítima', 1, 0, 1, 0, 0, 0, 0, 0, 0, '2020-03-13 17:32:54'),
+(24, 122, 'porta de correr', 0, 0, 0, 1, 0, 2, 1, 3, 1, '2020-03-13 20:50:07'),
+(25, 123, 'porta de correr', 0, 0, 0, 1, 0, 2, 1, 3, 1, '2020-03-13 20:50:53'),
+(26, 124, 'porta de correr', 0, 0, 0, 1, 0, 2, 1, 3, 1, '2020-03-13 21:20:04'),
+(27, 125, 'porta de correr', 0, 0, 0, 1, 0, 2, 1, 3, 1, '2020-03-13 21:22:16');
 
 -- --------------------------------------------------------
 
@@ -660,7 +668,7 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- AUTO_INCREMENT de tabela `prod_categorias`
@@ -672,7 +680,7 @@ ALTER TABLE `prod_categorias`
 -- AUTO_INCREMENT de tabela `prod_containers`
 --
 ALTER TABLE `prod_containers`
-  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de tabela `prod_tipos`

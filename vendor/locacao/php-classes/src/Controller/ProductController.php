@@ -87,7 +87,7 @@ class ProductController extends Generator
             $res = $product->insert();
             //print_r($res);
             if($this->getcodCategory() == '001'){ //se for um container
-                
+
                 $aux = json_decode($res);
 
                 if(isset($aux->error) && ($aux->error == true)){
@@ -264,6 +264,11 @@ class ProductController extends Generator
         /*---------------------- Tipos ------------------------------------------------*/
         if(($this->getcodCategory() == "001") || ($this->getcodCategory() == "002")){
             $qtdTipos = 4;
+
+            if(($this->getcodCategory() == "001") && ($_POST["tipo2"] = "7-03")){ //se for container sanitário
+                $_POST["tipo3"] = NULL; 
+            }
+
 
         }else if($this->getcodCategory() == "003"){
             $qtdTipos = 3;
