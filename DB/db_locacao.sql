@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 14-Mar-2020 às 03:27
+-- Tempo de geração: 17-Mar-2020 às 02:07
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -131,6 +131,51 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_containers_save` (IN `pidPr
 
     SET vidContainer = LAST_INSERT_ID();
     SELECT * FROM prod_containers WHERE idContainer = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_tiposUpdate_save` (IN `pid` INT, IN `pdescTipo` VARCHAR(100), IN `pidCategoria` INT(4), IN `pordem_tipo` INT(1), IN `pcodTipo` VARCHAR(2))  BEGIN
+  
+    DECLARE vid INT;
+    
+    SELECT id INTO vid
+    FROM prod_tipos
+    WHERE id = pid;
+
+    UPDATE prod_tipos
+    SET
+        descTipo = pdescTipo, 
+        idCategoria = pidCategoria,
+        ordem_tipo = pordem_tipo,
+        codTipo = pcodTipo
+    WHERE id = vid;
+    
+    SELECT * FROM prod_tipos WHERE id = pid;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_tipos_delete` (IN `pid` INT)  BEGIN
+  
+    DECLARE vid INT;
+    
+  SELECT id INTO vid
+    FROM prod_tipos
+    WHERE id = pid;
+    
+    DELETE FROM prod_tipos WHERE id = pid;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_tipos_save` (IN `pdescTipo` VARCHAR(100), IN `pidCategoria` INT(4), IN `pordem_tipo` INT(1), IN `pcodTipo` VARCHAR(2))  BEGIN
+  
+    DECLARE vid INT;
+    
+  INSERT INTO prod_tipos (descTipo, idCategoria, ordem_tipo, codTipo)
+    VALUES(pdescTipo, pidCategoria, pordem_tipo, pcodTipo);
+    
+    SET vid = LAST_INSERT_ID();
+    
+    SELECT * FROM prod_tipos WHERE id = LAST_INSERT_ID();
     
 END$$
 
@@ -382,7 +427,7 @@ CREATE TABLE `produtos` (
   `tipo2` int(11) DEFAULT NULL,
   `tipo3` int(11) DEFAULT NULL,
   `tipo4` int(11) DEFAULT NULL,
-  `numSerie` varchar(4) NOT NULL,
+  `numSerie` varchar(4) DEFAULT NULL,
   `anotacoes` varchar(100) DEFAULT NULL,
   `idFornecedor` int(11) NOT NULL,
   `idCategoria` int(11) NOT NULL,
@@ -396,10 +441,15 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`idProduto`, `codigo`, `descricao`, `valorCompra`, `status`, `dtFabricacao`, `tipo1`, `tipo2`, `tipo3`, `tipo4`, `numSerie`, `anotacoes`, `idFornecedor`, `idCategoria`, `dtCadastro`) VALUES
 (108, '001.04.02.02.02.001-0001', 'ESC s/lavabo HC - 1', 5344.98, 1, '2020-03-13', 4, 6, 13, 15, '0001', 'teste container', 1, 1, '2020-03-13 09:04:37'),
 (109, '001.01.03.xx.01.001-0002', 'ALMOX s/lavabo DC - 1', 6770.98, 1, '0000-00-00', 1, 7, NULL, 14, '0002', 'teste 2', 1, 1, '2020-03-13 17:30:58'),
-(122, '001.02.03.xx.01.001-0003', 'ALMOX c/lavabo DC - 01', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 20:50:06'),
-(123, '001.02.03.01.01.001-0003', 'SAN DC - 01', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 20:50:53'),
-(124, '001.02.03.01.01.001-0003', 'SAN DC - 02', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:20:04'),
-(125, '001.02.03.xx.01.001-0003', 'SAN DC - 03', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:22:16');
+(122, '001.03.03.xx.02.001-0003', 'SAN HC - 01', 12340.7, 1, '2020-03-13', 3, 7, NULL, 15, '0003', 'TESTE', 1, 1, '2020-03-13 20:50:06'),
+(123, '001.03.04.02.01.001-0004', 'GUA s/lavabo DC - 01', 9000, 0, '2020-03-13', 3, 8, 13, 14, '0004', 'TESTE', 1, 1, '2020-03-13 20:50:53'),
+(124, '001.02.03.01.01.001-0005', 'SAN DC - 02', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:20:04'),
+(125, '001.02.03.xx.01.001-0006', 'SAN DC - 03', 12340.7, 1, '2020-03-13', 2, 7, NULL, 14, '0003', 'TESTE', 1, 1, '2020-03-13 21:22:16'),
+(129, '002.01.01.02.xx.001-0001', 'BET COMB', 4545, 1, '0000-00-00', 16, 17, 19, NULL, '0001', 'TESTE', 1, 2, '2020-03-14 16:54:11'),
+(130, '002.01.01.02.xx.001-0001', 'BET COMB - 2', 4545, 1, '0000-00-00', 16, 17, 19, NULL, '0001', 'TESTE', 1, 2, '2020-03-14 16:55:04'),
+(132, '003.01.12.03.001-xxxx', 'Escada com guarda copo 2,00m', 3400.99, 1, '2020-03-16', 30, 44, 47, NULL, NULL, 'teste', 1, 3, '2020-03-16 16:43:43'),
+(133, '003.01.07.02.001-xxxx', 'Barra de ligação 1,50m', 255, 1, '0000-00-00', 30, 39, 46, NULL, NULL, 'teste', 1, 3, '2020-03-16 19:18:19'),
+(134, '003.02.xx.xx.001-xxxx', 'Fachadeiro 1', 453, 1, '0000-00-00', 31, NULL, NULL, NULL, NULL, '', 1, 3, '2020-03-16 19:30:42');
 
 -- --------------------------------------------------------
 
@@ -492,7 +542,38 @@ INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTip
 (12, 'com lavabo', 1, 3, '01', '2020-03-09 10:26:42'),
 (13, 'sem lavabo', 1, 3, '02', '2020-03-09 10:26:55'),
 (14, 'DC', 1, 4, '01', '2020-03-09 10:27:17'),
-(15, 'HC', 1, 4, '02', '2020-03-09 10:27:28');
+(15, 'HC', 1, 4, '02', '2020-03-09 10:27:28'),
+(16, 'MARCA X', 2, 1, '01', '2020-03-14 10:17:07'),
+(17, 'MODELO X', 2, 2, '01', '2020-03-14 10:17:44'),
+(18, 'Elétrica', 2, 3, '01', '2020-03-14 10:34:38'),
+(19, 'Combustão', 2, 3, '02', '2020-03-14 15:07:35'),
+(21, '110V', 2, 4, '01', '2020-03-16 14:23:30'),
+(22, '220V', 2, 4, '02', '2020-03-16 14:25:23'),
+(23, '380V', 2, 4, '03', '2020-03-16 14:25:38'),
+(24, '110V/220V', 2, 4, '04', '2020-03-16 14:27:03'),
+(30, 'Tubular', 3, 1, '01', '2020-03-16 14:46:56'),
+(31, 'Fachadeiro', 3, 1, '02', '2020-03-16 14:47:38'),
+(32, 'Multidirecional', 3, 1, '03', '2020-03-16 14:48:18'),
+(33, 'Painel', 3, 2, '01', '2020-03-16 15:48:23'),
+(34, 'Trava diagonal', 3, 2, '02', '2020-03-16 15:49:13'),
+(35, 'Plataforma', 3, 2, '03', '2020-03-16 15:49:29'),
+(36, 'Guarda corpo com porta', 3, 2, '04', '2020-03-16 15:49:49'),
+(37, 'Guarda corpo sem porta', 3, 2, '05', '2020-03-16 15:50:09'),
+(38, 'Rodapé', 3, 2, '06', '2020-03-16 15:50:45'),
+(39, 'Barra de ligação', 3, 2, '07', '2020-03-16 15:51:23'),
+(40, 'Sapata regulável', 3, 2, '08', '2020-03-16 15:51:34'),
+(41, 'Sapata fixa', 3, 2, '09', '2020-03-16 15:51:44'),
+(42, 'Rodízio com trava', 3, 2, '10', '2020-03-16 15:52:06'),
+(43, 'Escada sem guarda corpo', 3, 2, '11', '2020-03-16 15:53:11'),
+(44, 'Escada com guarda copo', 3, 2, '12', '2020-03-16 16:00:55'),
+(45, '1,00m', 3, 3, '01', '2020-03-16 16:01:16'),
+(46, '1,50m', 3, 3, '02', '2020-03-16 16:01:28'),
+(47, '2,00m', 3, 3, '03', '2020-03-16 16:01:39'),
+(48, '2,20m a 3,30m', 4, 1, '01', '2020-03-16 22:05:49'),
+(49, '2,20m a 3,80m', 4, 1, '02', '2020-03-16 22:06:06'),
+(50, '2,30m a 4,00m', 4, 1, '03', '2020-03-16 22:06:19'),
+(51, '3,00m a 4,50m', 4, 1, '04', '2020-03-16 22:06:32'),
+(52, '3,00m a 5,10m', 4, 1, '05', '2020-03-16 22:06:45');
 
 -- --------------------------------------------------------
 
@@ -668,7 +749,7 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT de tabela `prod_categorias`
@@ -686,7 +767,7 @@ ALTER TABLE `prod_containers`
 -- AUTO_INCREMENT de tabela `prod_tipos`
 --
 ALTER TABLE `prod_tipos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
