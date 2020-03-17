@@ -20,7 +20,6 @@ class Product extends Generator{
     public function insert(){
         
         $sql = new Sql();
-        print_r($_POST);
 
         if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
            

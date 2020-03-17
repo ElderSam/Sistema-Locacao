@@ -23,7 +23,13 @@ $(function() { //quando a página carrega
 		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id
 		
 		loadTypes(idCategoria);
-		showsNextNumber(idCategoria); //mostra próximo número de série da Categoria
+		//console.log('idCategoria: ' + idCategoria)
+		if(idCategoria == 3 || idCategoria == 4){ //se for Andamie ou Escora
+			$('#numSerie').val('xxxx').parent().hide()
+		}else{
+			showsNextNumber(idCategoria); //mostra próximo número de série da Categoria
+
+		}
 
 	});
 
@@ -37,13 +43,24 @@ $(function() { //quando a página carrega
 		tam = $('#tipo1').val().length
 		codtipo1 = $('#tipo1').val().substring((tam-2),tam); 
 
-		if(codCategoria == '001' && codtipo1 == '01'){ //se for container com metragem 3M
+		if((codCategoria == '001' && codtipo1 == '01')){ //se for container com metragem 3M
 
 			//mostra apenas duas opções
 			$('#tipo2').html(tipo2para3M) 
 		
+		}else if((codCategoria == '003' && (codtipo1 == '02' || codtipo1 == '03'))){ //se for Andaime Fachadeiro ou Multidirecional
+					//mostra apenas uma opção (tipo1)
+					$('#tipo2').val('')
+					$('#tipo2').parent().hide()
+					$('#tipo3').val('')
+					$('#tipo3').parent().hide()
+
 		}else{
 			$(`#tipo2`).html(types[2])
+			//console.log('help: ' + types[2])
+
+			$('#tipo2').parent().show()
+			$('#tipo3').parent().show()
 
 		}
 	});
@@ -57,15 +74,22 @@ $(function() { //quando a página carrega
 		tam = $('#tipo2').val().length
 		codtipo2 = $('#tipo2').val().substring((tam-2),tam); 
 
-		if(codCategoria == '001' && codtipo2 == '03'){ //se for container Sanitário
+		if((codCategoria == '001' && codtipo2 == '03') || (codCategoria == '003' && (codtipo2 >= '08' && codtipo2 <= '10'))){ //se for container Sanitário ou Andaime Sapata ou Rodízio
 
 			//mostra apenas duas opções
-			$('#tipo3').val()
+			$('#tipo3').val('')
 			$('#tipo3').parent().hide()
 		
 		}else{
 			$('#tipo3').parent().show()
 
+		}
+	});
+
+	//restrição - a Betoneira com tipo 2 Combustão não tem tipo4
+	$('#tipo3').change(function(){
+		if($('#tipo3').val() == "19-02"){ //se escolheu Categoria Betoneira, e o tipo 3 for Combustão (id 19)
+			$('#tipo4').parent().hide();
 		}
 	});
 
@@ -245,7 +269,6 @@ $(function() { //quando a página carrega
 			
 			if(category){
 				$("#formProduct #categoria").val(category[0]+'-'+category[1]).prop('disabled', true);
-				console.log('categoria: ' + category[0]+'-'+category[1])
 				
 				if(container){
 					callback(container)
@@ -356,10 +379,10 @@ $(function() { //quando a página carrega
 			}
 
 		}).then(() => { 
-			console.log('carregou todos os tipos')
+			//console.log('carregou todos os tipos')
 
 			if(tipos){
-				console.log('setting values in types')
+				//console.log('setting values in types')
 				
 
 				for(i=1; i<=4; i++){
@@ -372,7 +395,7 @@ $(function() { //quando a página carrega
 						}
 	
 						tipo = tipos[i-1]['id']+'-'+tipos[i-1]['codTipo']
-						console.log(`tipo${campo}: ${tipo}`)
+						//console.log(`tipo${campo}: ${tipo}`)
 						$(`#formProduct #tipo${campo}`).val(tipo).prop('disabled', true);
 	
 						if(campo == 4){
@@ -381,11 +404,9 @@ $(function() { //quando a página carrega
 
 					}else{
 						$(`#formProduct #tipo${campo}`).val('').parent().hide()
-					}
-				
+					}				
 			
-				}
-				
+				}				
 			}
 
 			
@@ -458,7 +479,7 @@ $(function() { //quando a página carrega
 			
 			if(container){
 				container = container[0]
-				console.log('tipoporta: ' + container.tipoPorta)
+				//console.log('tipoporta: ' + container.tipoPorta)
 				$('#tipoPorta').val(container.tipoPorta).prop('disabled', true);		
 				$('#janelasLat').val(container.janelasLat).prop('disabled', true);
 				$('#janelasCirc').val(container.janelasCirc).prop('disabled', true);			
@@ -499,7 +520,7 @@ $(function() { //quando a página carrega
 			
 			success: function (response) {
 		
-				console.log('próximo número de série: ' + response)
+				//console.log('próximo número de série: ' + response)
 				$('#numSerie').val(response)						
 									
 			},
@@ -543,7 +564,7 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 	$('#btnUpdate').show();
 
 	$.getJSON(`/products/json/${idProduto}`, function (data) { //ajax
-		console.log(data)
+		//console.log(data)
 
 		produto = data[0]
 		tipos = data[1]
@@ -560,14 +581,6 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 		$("#formProduct #dtFabricacao").val(produto.dtFabricacao).prop('disabled', true);
 		$("#formProduct #anotacoes").val(produto.anotacoes).prop('disabled', true);
 		
-	
-		//loadCategories([produto.idCategoria, produto.codCategoria]);
-		async function sleep (forHowLong) {
-			function timeout(ms) {
-			  return new Promise(resolve => setTimeout(resolve, ms));
-			}
-			await timeout(forHowLong);
-		  }
 
 		//carrega categorias, seleciona uma e em seguida carrega valores nos campos de Container
 		loadCategories([produto.idCategoria, produto.codCategoria], loadContainer, container);
