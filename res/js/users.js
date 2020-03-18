@@ -258,8 +258,8 @@ function deleteUser(idUsuario){
 		text: "Você não será capaz de reverter isso!",
 		icon: 'warning',
 		showCancelButton: true,
-		confirmButtonColor: '#3085d6',
-		cancelButtonColor: '#d33',
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
 		confirmButtonText: 'Sim, apagar!'
 
 	}).then((result) => {
@@ -268,12 +268,16 @@ function deleteUser(idUsuario){
 
 			$.ajax({
 				type: "POST",
-				url: `/users/${idUsuario}/delete`,
+				url: `/users/${5656}/delete`,
 				contentType: false,
 				processData: false,
-				/*beforeSend: function() {
-					//...
-				},*/
+				beforeSend: function() {
+					
+					$('.swal2-content').hide()
+					$('.swal2-actions').hide()
+					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+				
+				},
 				success: function (response) {
 		
 					if (JSON.parse(response).error) {
@@ -282,7 +286,7 @@ function deleteUser(idUsuario){
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							'Não foi possível excluir',
 							'error'
 						)
 						
@@ -298,6 +302,11 @@ function deleteUser(idUsuario){
 					}					
 				},
 				error: function (response) {
+					Swal.fire(
+						'Erro!',
+						'Não foi possível excluir',
+						'error'
+					)
 
 					console.log(`Erro! Mensagem: ${response}`);		
 				}

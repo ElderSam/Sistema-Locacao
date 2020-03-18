@@ -13,6 +13,38 @@
         <link href="/res/plugins/dataTables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
         <script src="/res/plugins/font-awesome/all.min.js"></script>
         <script src="/res/plugins/swal/sweetalert2.all.min.js"></script>
+        <style>
+
+           @media(max-width: 600px){ /*para telas de celular*/
+
+           /* referente às tabelas */
+            #layoutSidenav{
+                margin-right: -1rem;
+           }
+            .container-fluid{
+                margin-left: -1rem;
+                padding-right: -5rem;
+            }
+
+            .card-body{
+                padding: 0;
+                margin-right: 0rem;
+            }
+
+            .table-responsive{
+               margin-right: -5rem;
+            }
+           }
+
+           @media(min-width: 900px){
+                .tabela_menor{
+                    width: 70%;
+                }
+            }
+
+
+
+        </style>
     </head>
    
     <body class="sb-nav-fixed">

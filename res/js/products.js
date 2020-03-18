@@ -9,6 +9,7 @@ $(function() { //quando a página carrega
 		"ajax": {
 			"url": "/products/list_datatables", //chama a rota para carregar os dados 
 			"type": "POST",
+
 		},
 		"columnDefs": [
 			{ targets: "no-sort", orderable: false }, //para não ordenar
@@ -660,11 +661,13 @@ function deleteProduct(idProduto){
 			$.ajax({
 				type: "POST",
 				url: `/products/${idProduto}/delete`,
-				contentType: false,
-				processData: false,
-				/*beforeSend: function() {
-					//...
-				},*/
+				beforeSend: function() {
+					
+					$('.swal2-content').hide()
+					$('.swal2-actions').hide()
+					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+				
+				},
 				success: function (response) {
 		
 					if (JSON.parse(response).error) {
@@ -673,7 +676,7 @@ function deleteProduct(idProduto){
 						
 						Swal.fire(
 							'Erro!',
-							'Não foi possível deletar',
+							'Não foi possível excluir',
 							'error'
 						)
 						
@@ -689,7 +692,11 @@ function deleteProduct(idProduto){
 					}					
 				},
 				error: function (response) {
-
+					Swal.fire(
+						'Erro!',
+						'Não foi possível excluir',
+						'error'
+					)
 					console.log(`Erro! Mensagem: ${response}`);		
 				}
 			});		

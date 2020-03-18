@@ -314,9 +314,13 @@ function deleteProdType(id){
 				url: `/prod-types/${id}/delete`,
 				contentType: false,
 				processData: false,
-				/*beforeSend: function() {
-					//...
-				},*/
+				beforeSend: function() {
+					
+					$('.swal2-content').hide()
+					$('.swal2-actions').hide()
+					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+				
+				},
 				success: function (response) {
 		
 					if (JSON.parse(response).error) {
@@ -325,7 +329,7 @@ function deleteProdType(id){
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							'Não foi possível excluir',
 							'error'
 						)
 						
@@ -341,6 +345,11 @@ function deleteProdType(id){
 					}					
 				},
 				error: function (response) {
+					Swal.fire(
+						'Erro!',
+						'Não foi possível excluir',
+						'error'
+					)
 
 					console.log(`Erro! Mensagem: ${response}`);		
 				}
