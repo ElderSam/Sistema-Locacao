@@ -50,7 +50,7 @@ class Supplier extends Generator{
             }else{
                 return json_encode([
                     "error"=>true,
-                    "msg"=>"Erro ao inserir Produto!"
+                    "msg"=>"Erro ao inserir Fornecedor!"
                     ]);
             }
        
@@ -78,63 +78,13 @@ class Supplier extends Generator{
         }
     }
 
-    
-    public function loadProduct($idproduct){
-
-        $sql = new Sql();
  
-        //dados das tabelas: fornecedores, categorias e fornecedores
-        $res1 = $sql->select("SELECT a.idProduto, a.codigo, a.descricao, a.valorCompra, a.status,
-        a.dtFabricacao, a.numSerie, a.anotacoes, b.idCategoria, b.codCategoria, c.idFornecedor, c.codFornecedor, c.nome 
-        FROM fornecedores a INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
-        INNER JOIN fornecedores c ON(a.idFornecedor = c.idFornecedor)
-            WHERE a.idProduto = :idProduto", array(
-            ":idProduto"=>$idproduct
-        ));
-
-
-        if(count($res1) > 0){
-
-        //dados das tabela tipos de fornecedores
-        $res2 = $sql->select("SELECT b.id, b.descTipo, b.ordem_tipo, b.codTipo
-        FROM fornecedores a RIGHT JOIN prod_tipos b ON(a.tipo1 = b.id OR a.tipo2 = b.id OR a.tipo3 = b.id OR a.tipo4 = b.id)
-        WHERE idProduto = :idProduto
-        ORDER BY b.ordem_tipo, b.codTipo", array(
-            ":idProduto"=>$idproduct
-        ));
-
-
-        $res3 = $sql->select("SELECT * FROM prod_containers 
-        WHERE idProduto = :idProduto", array(
-            ":idProduto"=>$idproduct
-        ));
-
-
-            return json_encode([
-                $res1[0], //produto
-                $res2, //tipos
-                $res3 //container (se não for container, vai reotornar um array vazio)
-            ]);
-        }
-    }
-
-    public static function searchCode($code){ //search if name already exists
+    public static function searchName($nome){ //search if name or desc already exists
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores WHERE (codigo = :codigo)", array(
-            ":codigo"=>$code
-        ));
-
-        return $results;
-    }
-
-    public static function searchDesc($desc){ //search if name or desc already exists
-
-        $sql = new Sql();
-
-        $results = $sql->select("SELECT * FROM fornecedores WHERE (descricao = :descricao)", array(
-            ":descricao"=>$desc
+        $results = $sql->select("SELECT * FROM fornecedores WHERE (nome = :nome)", array(
+            ":nome"=>$nome
         ));
 
         return $results;
@@ -202,11 +152,11 @@ class Supplier extends Generator{
         $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
-        $products = new Product();
+        $suppliers = new Supplier();
         //echo $query;
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$products->searchAll($query)
+            'data'=>$suppliers->searchAll($query)
         );
     }
 
@@ -261,7 +211,7 @@ class Supplier extends Generator{
         }else{
             return json_encode([
                 "error"=>true,
-                "msg"=>"Erro ao atualizar Produto!"
+                "msg"=>"Erro ao atualizar Fornecedor!"
                 ]);
         }
 
@@ -281,7 +231,7 @@ class Supplier extends Generator{
 
                 return json_encode([
                     "error"=>true,
-                    "msg"=>'Erro ao excluir produto'
+                    "msg"=>'Erro ao excluir Fornecedor'
                 ]);
 
             }else{

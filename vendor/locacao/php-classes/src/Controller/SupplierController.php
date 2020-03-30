@@ -67,7 +67,7 @@ class SupplierController extends Generator
                     $upd = json_decode($upd);
                  
                     return json_encode([
-                        "produto"=>$upd
+                        "Fornecedor"=>$upd
                     ]);
                 }
 
@@ -76,7 +76,7 @@ class SupplierController extends Generator
                 return $upd;
             }
 
-        } else { // se for cadastrar novo Produto
+        } else { // se for cadastrar novo Fornecedor
             $res = $supplier->insert();
             //print_r($res);
             if($this->getcodCategory() == '001'){ //se for um container
@@ -149,19 +149,19 @@ class SupplierController extends Generator
         }
 
         $exists = 0;
-        $exists = Supplier::searchDesc($_POST["nome"]);
+        $exists = Supplier::searchName($_POST["nome"]);
         if (count($exists) > 0) { //se existe nome completo igual já registrado
 
             if ($update) {
                 foreach ($exists as $supplier) {
 
                     if (($_POST['nome'] == $supplier['nome']) && ($_POST['idFornecedor'] != $supplier['idFornecedor'])) {
-                        $errors["#nome"] = "Já existe um Produto com essa Descrição";
+                        $errors["#nome"] = "Já existe um Fornecedor com essa Descrição";
                         break;
                     }
                 }
             } else {
-                $errors["#descricao"] = "Já existe um produto com essa Descrição";
+                $errors["#descricao"] = "Já existe um Fornecedor com essa Descrição";
             }
         }
 
@@ -191,12 +191,12 @@ class SupplierController extends Generator
 
         if ($desOldImagePath == "" && $files["desImagePath"]["name"] == "") { //Não subiu imagem e não tem antiga
             //echo "<br>SEM IMAGEM<br>";
-            $this->desImagePath = "/res/img/products/product-default.jpg";
+            $this->desImagePath = "/res/img/suppliers/supplier-default.jpg";
             return $this->desImagePath;
         } elseif ($files["desImagePath"]["name"] != "") { //se subiu imagem nova
             //echo "nome_imagem " . $files["desImagePath"]["name"] . "<br>";
 
-            if ($desOldImagePath != "/res/img/products/product-default.jpg" && $desOldImagePath != "") { //se vai substituir imagem antiga    
+            if ($desOldImagePath != "/res/img/suppliers/supplier-default.jpg" && $desOldImagePath != "") { //se vai substituir imagem antiga    
                 //echo " tem que APAGAR! desOldImagePath: " . $desOldImagePath . "<br>";    
                 unlink($desOldImagePath);
             }
@@ -208,7 +208,7 @@ class SupplierController extends Generator
         }
 
 
-        $target_dir = "res/img/products/";
+        $target_dir = "res/img/suppliers/";
         $newName = time() . "_" . basename($files["desImagePath"]["name"]);
         $target_file = $target_dir . $newName;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -345,4 +345,4 @@ class SupplierController extends Generator
         
         
     }
-}//end class ProductController
+}//end class SupplierController
