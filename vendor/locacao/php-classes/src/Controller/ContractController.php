@@ -29,6 +29,18 @@ class ContractController extends Generator
 
         $contract = new Contract(); //Model
 
+        if(!isset($_POST['idContrato'])){ //se for um orçamento
+
+            $_POST['idContrato'] = $_POST['idOrcamento']; //muda para a classe model reconhecer
+            
+            if($_POST['status'] == 1){ //se o status for Aprovado
+                date_default_timezone_set('America/Sao_Paulo');
+                $_POST['dtAprovacao'] = date('y-m-d');
+            }
+
+        }
+
+        
         $contract->setData($_POST);
 
 
@@ -95,6 +107,18 @@ class ContractController extends Generator
             $errors["#valorAluguel"] = "Valor Aluguel é obrigatório!";
         } 
 
+        if($update){
+            
+            if ($_POST["dtInicio"] == "") {
+                $errors["#dtInicio"] = "data obrigatória!";
+
+            }
+
+            if ($_POST["dtFim"] == "") {
+                $errors["#dtFim"] = "data obrigatória!";
+            }
+        }
+
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
 
             return json_encode([
@@ -132,7 +156,7 @@ class ContractController extends Generator
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
 
-        $datatable = $contract->get_datatable($requestData, $column_search, $column_order);
+        $datatable = $contract->get_datatable_budgets($requestData, $column_search, $column_order);
 
         $data = array();
 
@@ -141,11 +165,9 @@ class ContractController extends Generator
             if ($contract['statusOrcamento'] == 0) {
                 $statusOrcamento = "Pendente";
 
-            } else if ($contract['statusOrcamento'] == 1){
-                $statusOrcamento = "Aprovado";
-
-            }else{
+            } else if ($contract['statusOrcamento'] == 2){
                 $statusOrcamento = "Arquivado";
+
             }
 
             $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
@@ -156,7 +178,7 @@ class ContractController extends Generator
             $row = array();
 
             $row[] = $contract['codContrato'];
-            $row[] = $contract['dtEmissao'];
+            $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
             $row[] = $statusOrcamento;
             $row[] = $obraCliente;
             $row[] = 'R$ '.$contract['valorAluguel'];
@@ -184,6 +206,68 @@ class ContractController extends Generator
 
     }
 
+    
+    // lista todos os Orçamentos
+    public function ajax_list_contracts($requestData)
+    {
+
+        $column_search = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+
+        //faz a pesquisa no banco de dados
+        $contract = new Contract(); //model
+
+        $datatable = $contract->get_datatable_contracts($requestData, $column_search, $column_order);
+
+        $data = array();
+
+        foreach ($datatable['data'] as $contract) { //para cada registro retornado
+
+            if ($contract['statusOrcamento'] == 1) {
+                $statusOrcamento = "Aprovado";
+
+            }else if ($contract['statusOrcamento'] == 3){
+                $statusOrcamento = "Em andamento";
+
+            }else if ($contract['statusOrcamento'] == 4){
+                $statusOrcamento = "<strong style='color: red'>Vencido</strong>";
+
+            }else if ($contract['statusOrcamento'] == 5){
+                $statusOrcamento = "Encerrado";
+
+            }
+
+            $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
+
+            $id = $contract['idContrato'];
+
+            // Ler e criar o array de dados ---------------------
+            $row = array();
+
+            $row[] = $contract['codContrato'];
+            $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
+            $row[] = $statusOrcamento;
+            $row[] = $obraCliente;
+            $row[] = 'R$ '.$contract['valorAluguel'];
+            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+                onclick='loadContract($id);'>
+                    <i class='fas fa-bars sm'></i>
+                </button>";
+
+            $data[] = $row;
+        } //
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json = array(
+            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => $this->records_total(),  //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => $datatable['totalFiltered'], //Total de registros quando houver pesquisa
+            "data" => $data,  //Array de dados completo dos dados retornados da tabela 
+        );
+
+        return json_encode($json); //enviar dados como formato json
+
+    }
 
 
     public function records_total()

@@ -89,13 +89,14 @@ class Contract extends Generator{
         return $results;
     }
 
-    public function get_datatable($requestData, $column_search, $column_order){
+    public function get_datatable_budgets($requestData, $column_search, $column_order){
         
         $query = "SELECT * FROM contratos";
 
         $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
-        INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)";
+        INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
+        WHERE a.statusOrcamento IN (0, 2)"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -117,21 +118,6 @@ class Contract extends Generator{
                     }
 
                     //echo "status: ".$search;
-                }
-
-                if ($field == "tipo1") {
-                  
-                    if (($search == "3M")) {
-                        $search = 1;
-                    } else if ($search == "4M") {
-                        $search = 2;
-                    } else if ($search == "6M") {
-                        $search = 3;
-                    } else if ($search == "12M") {
-                        $search = 4;
-                    }
-
-                    //echo "tipo1: ".$search;
                 }
 
                 //filtra no banco
@@ -162,6 +148,68 @@ class Contract extends Generator{
             'data'=>$suppliers->searchAll($query)
         );
     }
+
+    public function get_datatable_contracts($requestData, $column_search, $column_order){
+        
+        $query = "SELECT * FROM contratos";
+
+        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
+        INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
+        INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
+        WHERE a.statusOrcamento IN (1, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
+
+        if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
+
+            $first = TRUE;
+
+            foreach ($column_search as $field) {
+                
+               
+                $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
+
+
+                if ($field == "status") {
+                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
+
+                    if (($search == "ATIV")) {
+                        $search = 1;
+                    } else if ($search == "INAT") {
+                        $search = 0;
+                    }
+
+                    //echo "status: ".$search;
+                }
+
+
+                //filtra no banco
+                if ($first) {
+                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
+                    $first = FALSE;
+                } else {
+                    $query .= " OR $field LIKE '%$search%'";
+                }
+            } //fim do foreach
+            if (!$first) {
+                $query .= ")"; //termina o WHERE e a query
+            }
+
+        }
+        
+        $res = $this->searchAll($query);
+        $this->setTotalFiltered(count($res));
+
+        //ordenar o resultado
+        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
+        
+        $suppliers = new Supplier();
+        //echo $query;
+        return array(
+            'totalFiltered'=>$this->getTotalFiltered(),
+            'data'=>$suppliers->searchAll($query)
+        );
+    }
+
 
     public function searchAll($query){ //pesquisa genérica (para todos os campos). Recebe uma query
 

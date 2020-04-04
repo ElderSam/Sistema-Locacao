@@ -175,7 +175,7 @@ $(function() { //quando a página carrega
 
 
 	function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
-		console.log('shows next number')
+		//console.log('shows next number')
 		$.ajax({
 			type: "POST",
 			url: `/budgets/showsNextNumber`,
@@ -216,7 +216,10 @@ function loadTableBudgets(){ //carrega a tabela de Orçamentos
 	});
 }
 
-function loadFieldsBudget(){
+function loadFieldsBudget(idOrcamento){
+
+	//console.log(`loading all fields of budget (id = ${idOrcamento}`)
+
 	$.getJSON(`/budgets/json/${idOrcamento}`, function (data) { //ajax
 		console.log(data)
 
@@ -265,9 +268,11 @@ function loadFieldsBudget(){
 }
 
 //detalhes do Orcamento
-function loadBudget(idOrcamento) { //carrega todos os campos do modal referente ao Orcamento escolhido
+function loadBudget(idBudget) { //carrega todos os campos do modal referente ao Orcamento escolhido
 	
-	loadConstructinos(loadFieldsBudget, idBudget);
+	//console.log('loading budgets')
+	
+	loadConstructions(loadFieldsBudget, idBudget); //carrega as obras e em seguida, todos os campos de orçamento/contrato
 
 	clearFieldsValues();
 	clearErrors();
@@ -276,8 +281,6 @@ function loadBudget(idOrcamento) { //carrega todos os campos do modal referente 
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveBudget').hide();
 	$('#btnUpdate').show();
-
-
 
 }
 
@@ -349,11 +352,14 @@ function deleteBudget(idOrcamento){
 //carrega as opções de Obras para colocar no Orçamento
 function loadConstructions(callback, idBudget = false){
 
-	$("#obra_idObra").html(`<option value="">(escolha)</option>`);
+	//console.log('loading constructions')
 
-	$.getJSON(`/budgets/constructions/json`, function (data) { //ajax
+	$("#obra_idObra").html(`<option value="">(escolha)</option>`);
+	$("#obra_idObra").html(`<option value="1">obra teste 1</option>`);
+
+	/*$.getJSON(`/budgets/constructions/json`, function (data) { //ajax
 		
-		//console.log(data)
+		console.log(data)
 		
 		let constructions = `<option value="">(escolha)</option>`
 		
@@ -365,18 +371,18 @@ function loadConstructions(callback, idBudget = false){
 		$('#obra_idObra').html(constructions)
 					
 
-	}).then(() => { 
+	}).then(() => { */
 		
 		
 		if(idBudget){
-			callback(idBudget)
+			callback(idBudget) //executa a função loadFieldsBudget()
 		}
-	
+/*	
 	
 	}).fail(function () {
 		console.log("Rota não encontrada! (/budgets/constructions/json)");
 		return false
-	});
+	});*/
 
 }
 
@@ -410,13 +416,14 @@ function clearFieldsValues(){
 	$('#custoEntrega').val('');
 	$('#custoRetirada').val('');
 
-	$('#notas').html('');
-	$('#valorAluguel').html('');
+	$('#notas').val('');
+	$('#valorAluguel').val('0');
+	$('#valorAluguel').val('');
 
 	$('#idOrcamento').val('0');
 	
 }
-
+/*
 function formatDate(dateX){ //format Date to input in Form
     var data = new Date(dateX),
         dia  = data.getDate().toString(),
@@ -426,5 +433,5 @@ function formatDate(dateX){ //format Date to input in Form
         anoF = data.getFullYear();
 	//return diaF+"/"+mesF+"/"+anoF;
 	return anoF+"-"+mesF+"-"+diaF;
-}
+}*/
 

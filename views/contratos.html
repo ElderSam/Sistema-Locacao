@@ -1,14 +1,15 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
-            <h1 class="mt-4">Orçamentos</h1>
+            <h1 class="mt-4">Contratos</h1>
             <ol class="breadcrumb mb-4 justify-content-between">
-                <li class="breadcrumb-item active">home/Orçamentos</li>
+                <li class="breadcrumb-item active">home/Contratos</li>
 
                 <!-- Button trigger modal -->
-                <button id="btnAddBudget" type="button" class="btn btn-success" data-toggle="modal" data-target="#BudgetModal">
-                    Novo Orçamento
-                </button>           
+                
+                <a type="button" class="btn btn-info" href="/budgets">
+                    Ver Orçamentos
+                </a>           
             </ol>
 
             <div class="card mb-4">
@@ -26,7 +27,7 @@
                                     <th>Opções</th>
                                 </tr>
                             </thead>
-                            <tbody id="listBudgets">
+                            <tbody id="listContracts">
                               
                             </tbody>
                             <tfoot class="bg-dark text-white">
@@ -47,19 +48,19 @@
         </div>
 
            
-        <!-- Budget Modal------------------------------------------------------------------------------->
-        <div class="modal fade" id="BudgetModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
+        <!-- Contract Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="ContractModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Orçamento</b></h3>
+                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Contratos</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form id="formBudget">
+                        <form id="formContract">
                             <div class="form-row">
                     
                                 <div class="form-group col-lg-3">
@@ -86,17 +87,18 @@
                                 <div class="form-group col-lg-3">
                                     <label for="status">Status</label>
                                     <select class="form-control" id="status" name="status">
-                                        <option selected value="0">Pendente</option>
-                                        <option value="1">Aprovado</option>      
-                                        <option value="2">Arquivado</option>                          
+                                        <option selected value="1">Aprovado</option>
+                                        <option selected value="3">Em andamento</option>
+                                        <option value="4">Vencido</option>      
+                                        <option value="5">Encerrado</option>                          
                                     </select>
                                     <span class="help-block"></span>
                                 </div>
 
-                                <!--div class="form-group col-lg-3">
+                                <div class="form-group col-lg-3">
                                     <label for="dtAprovacao">Data de Aprovação</label>
                                     <input type="date" class="form-control" id="dtAprovacao" name="dtAprovacao" disabled>
-                                </div-->
+                                </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="custoEntrega">Custo Entrega</label>
@@ -113,11 +115,13 @@
                                 <div class="form-group col-lg-3">
                                     <label for="dtInicio">Data de Início</label>
                                     <input type="date" class="form-control" id="dtInicio" name="dtInicio" disabled>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="dtFim">Data de Encerramento</label>
                                     <input type="date" class="form-control" id="dtFim" name="dtFim" disabled>
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
@@ -135,8 +139,8 @@
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
-                                <label for="idOrcamento">Id</label>
-                                <input type="text" id="idOrcamento" name="idOrcamento" >
+                                <label for="idContrato">Id</label>
+                                <input type="text" id="idContrato" name="idContrato" >
                             </div>
 
                          </form>
@@ -146,8 +150,8 @@
                          <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
                              
                              <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                             <!-- btnCreateBudget and btnEditBudget-->
-                             <input id="btnSaveBudget" type="submit" value="Cadastrar" class="btn btn-success">
+                             <!-- btnCreateContract and btnEditContract-->
+                             <input id="btnSaveContract" type="submit" value="Cadastrar" class="btn btn-success">
                              
                              <!-- para desbloquear os camps para editar o procuto -->
                              <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
@@ -159,18 +163,18 @@
                 </div>
 
             </div>
-        </div>  <!-- end Budget Modal -->  
+        </div>  <!-- end Contract Modal -->  
 
 
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="../res/js/util.js"></script>
-    <script src="../res/js/budgets.js"></script>
+    <script src="../res/js/contracts.js"></script>
         
 <!--
 <script>
 	$(document).ready(function() {
 
-  	$("#linkOrcamentos").addClass("active"); 
+  	$("#linkContratos").addClass("active"); 
 	
 });
 
@@ -180,5 +184,5 @@
 
 
     <!--script>
-        $("#linkOrcamentos").addClass("active"); 
+        $("#linkContratos").addClass("active"); 
     </script-->

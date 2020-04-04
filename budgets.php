@@ -3,7 +3,9 @@
 use \Locacao\Page;
 use \Locacao\Controller\ContractController;
 use \Locacao\Model\Contract;
+use \Locacao\Model\User\Construction;
 use \Locacao\Model\User;
+
 
 /* rota para página de orcamentos --------------*/
 
@@ -94,3 +96,10 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 	
 });
 
+$app->get('/budgets/constructions/json', function(){
+
+    User::verifyLogin();
+
+   //echo Construction::listAll();
+  
+});

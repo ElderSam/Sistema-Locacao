@@ -20,6 +20,7 @@ require_once("users.php");
 require_once("products.php");
 require_once("prod-types.php");
 require_once("suppliers.php"); //fornecedores
+require_once("contracts.php"); //orçamentos
 require_once("budgets.php"); //orçamentos
 
 $app->get('/', function(){
