@@ -14,7 +14,6 @@ class ContractController extends Generator
     {
     }
 
-
     public function save($update = false) //Add a new Contract or Update
     {
         
@@ -40,7 +39,6 @@ class ContractController extends Generator
 
         }
 
-        
         $contract->setData($_POST);
 
 
@@ -50,26 +48,10 @@ class ContractController extends Generator
 
 
         } else { // se for cadastrar novo Fornecedor
-            $res = $contract->insert();
-            
-            if($this->getcodCategory() == '001'){ //se for um container
-
-                $aux = json_decode($res);
-
-                if(isset($aux->error) && ($aux->error == true)){
-                    return $res;
-
-                }else{
-                    $aux = json_decode($res);
-                    //print_r($aux);
-                    $idContrato = $aux->idContrato;
-                
-                    //echo "id: " . $idContrato . "<br>";
-                }
-
-            }else{
-                return $res;
-            }
+             
+            $res = $contract->insert();        
+           
+            return $res;
             
         }
     }
@@ -107,7 +89,7 @@ class ContractController extends Generator
             $errors["#valorAluguel"] = "Valor Aluguel é obrigatório!";
         } 
 
-        if($update){
+        if(($update) && isset($_POST["idContrato"])){ //se for atualizar um Contrato
             
             if ($_POST["dtInicio"] == "") {
                 $errors["#dtInicio"] = "data obrigatória!";
@@ -147,11 +129,11 @@ class ContractController extends Generator
     */
 
     // lista todos os Orçamentos
-    public function ajax_list_budgets($requestData)
+    public function ajax_list_budgets($requestData) //carrega tabela de orçamentos
     {
 
-        $column_search = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -162,11 +144,17 @@ class ContractController extends Generator
 
         foreach ($datatable['data'] as $contract) { //para cada registro retornado
 
-            if ($contract['statusOrcamento'] == 0) {
-                $statusOrcamento = "Pendente";
+            $statusOrcamento = '';
+            $color = '';
 
-            } else if ($contract['statusOrcamento'] == 2){
+            if ($contract['statusOrcamento'] == 0) {
                 $statusOrcamento = "Arquivado";
+                $color = 'grey';
+
+            } else if ($contract['statusOrcamento'] == 1){
+                $statusOrcamento = "Pendente";
+                $color = 'orange';
+
 
             }
 
@@ -177,9 +165,9 @@ class ContractController extends Generator
             // Ler e criar o array de dados ---------------------
             $row = array();
 
+            $row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
-            $row[] = $statusOrcamento;
             $row[] = $obraCliente;
             $row[] = 'R$ '.$contract['valorAluguel'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
@@ -208,11 +196,11 @@ class ContractController extends Generator
 
     
     // lista todos os Orçamentos
-    public function ajax_list_contracts($requestData)
+    public function ajax_list_contracts($requestData) //carrega tabela de contratos
     {
 
-        $column_search = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codContrato", "dtEmissao", "statusOrcamento", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -222,18 +210,25 @@ class ContractController extends Generator
         $data = array();
 
         foreach ($datatable['data'] as $contract) { //para cada registro retornado
-
-            if ($contract['statusOrcamento'] == 1) {
-                $statusOrcamento = "Aprovado";
+            
+            $statusOrcamento = '';
+            $color = '';
+            
+            if ($contract['statusOrcamento'] == 2){
+                $statusOrcamento = "Vencido";
+                $color = 'red';
 
             }else if ($contract['statusOrcamento'] == 3){
-                $statusOrcamento = "Em andamento";
+                $statusOrcamento = "Aprovado";
+                $color = 'orange';
 
             }else if ($contract['statusOrcamento'] == 4){
-                $statusOrcamento = "<strong style='color: red'>Vencido</strong>";
+                $statusOrcamento = "Em vigência";
+                $color = 'green';
 
             }else if ($contract['statusOrcamento'] == 5){
                 $statusOrcamento = "Encerrado";
+                $color = 'grey';
 
             }
 
@@ -244,9 +239,9 @@ class ContractController extends Generator
             // Ler e criar o array de dados ---------------------
             $row = array();
 
+            $row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
-            $row[] = $statusOrcamento;
             $row[] = $obraCliente;
             $row[] = 'R$ '.$contract['valorAluguel'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
@@ -281,7 +276,7 @@ class ContractController extends Generator
     public function delete($idcontract){
        
         $contract = new Contract();
-        echo "id: " . $idcontract;
+        //echo "id: " . $idcontract;
         $contract->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
        
         return $contract->delete();

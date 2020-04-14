@@ -18,6 +18,15 @@ $app->get('/budgets', function(){
   
 });
 
+$app->get('/budgets/new', function(){
+
+    User::verifyLogin();
+	
+	$page = new Page();
+	$page->setTpl("orcamento_salvar");
+  
+});
+
 $app->get('/budgets/json', function(){
 
     User::verifyLogin();
@@ -76,7 +85,7 @@ $app->get("/budgets/json/:idbudget", function($idbudget){
 
 /* rota para criar contrato (salva no banco) -----------*/
 $app->post("/budgets/create", function(){
-
+	
 	$contract = new ContractController();
 	echo $contract->save();
 

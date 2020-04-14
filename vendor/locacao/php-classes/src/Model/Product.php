@@ -115,15 +115,20 @@ class Product extends Generator{
         }
     }
 
-    public static function searchCode($code){ //search if name already exists
+    public static function getByCode($code){ //pega o produto que está disponível a partir do código
 
         $sql = new Sql();
+        
+        $query = "SELECT a.idProduto, a.codigo, a.descricao, b.descCategoria, c.descTipo as tipo1 FROM produtos a 
+        INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
+        INNER JOIN prod_tipos c ON(a.tipo1 = c.id)
+        WHERE (codigo = :codigo AND status = 1)";
 
-        $results = $sql->select("SELECT * FROM produtos WHERE (codigo = :codigo)", array(
+        $results = $sql->select($query, array(
             ":codigo"=>$code
         ));
 
-        return $results;
+        return json_encode($results[0]);
     }
 
     public static function searchDesc($desc){ //search if name or desc already exists

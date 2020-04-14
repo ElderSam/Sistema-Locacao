@@ -21,12 +21,23 @@ class Contract extends Generator{
     public function insert(){
         
         $sql = new Sql();
-        
+       /* echo "<br>codContrato " . $this->getcodigo() .
+        "<br>obra_idObra " . $this->getobra_idObra() .
+        "<br>dtEmissao " . $this->getdtEmissao() .
+        "<br>dtAprovacao " . $this->getdtAprovacao() .
+        "<br>custoEntrega " . $this->getcustoEntrega() .
+        "<br>custoRetirada " . $this->getcustoRetirada() .
+        "<br>notas " . $this->getnotas() .
+        "<br>valorAluguel " . $this->getvalorAluguel() .
+        "<br>dtInicio " . $this->getdtInicio() .
+        "<br>dtFim " . $this->getdtFim() .
+        "<br>statusOrcamento " . $this->getstatus();*/
+
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
             $results = $sql->select("CALL sp_contratos_save(:codContrato, :obra_idObra, :dtEmissao, :dtAprovacao, :custoEntrega, :custoRetirada, :notas, :valorAluguel, :dtInicio, :dtFim, :statusOrcamento)", array(
                 ":codContrato"=>$this->getcodigo(),
-                ":obra_idObra"=>$this->getobra_idObra(),
+                ":obra_idObra"=>1,
                 ":dtEmissao"=>$this->getdtEmissao(),
                 ":dtAprovacao"=>$this->getdtAprovacao(),
                 ":custoEntrega"=>$this->getcustoEntrega(),
@@ -96,7 +107,7 @@ class Contract extends Generator{
         $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
         INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
-        WHERE a.statusOrcamento IN (0, 2)"; //pega orçamentos pendentes e arquivados
+        WHERE a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -137,8 +148,10 @@ class Contract extends Generator{
         $res = $this->searchAll($query);
         $this->setTotalFiltered(count($res));
 
+        //echo 'ordena por: ' . $column_order[$requestData['order'][2]['column']];
+       
         //ordenar o resultado
-        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        $query .= " ORDER BY statusOrcamento " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $suppliers = new Supplier();
@@ -156,7 +169,7 @@ class Contract extends Generator{
         $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
         INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
-        WHERE a.statusOrcamento IN (1, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
+        WHERE a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 

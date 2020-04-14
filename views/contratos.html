@@ -19,9 +19,9 @@
                             <thead class="bg-dark text-white">
                             
                                 <tr>
+                                    <th>Status</th>
                                     <th>Cod</th>
                                     <th>Dt Emissão</th>
-                                    <th>Status</th>
                                     <th>Obra - Cliente</th>
                                     <th>Valor Aluguel</th>
                                     <th>Opções</th>
@@ -32,9 +32,9 @@
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
+                                    <th>Status</th>
                                     <th>Cod</th>
                                     <th>Dt Emissão</th>
-                                    <th>Status</th>
                                     <th>Obra - Cliente</th>
                                     <th>Valor Aluguel</th>
                                     <th>Opções</th>
@@ -70,6 +70,14 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
+                                    <label for="idCliente">Cliente</label>
+                                    <select class="form-control" id="idCliente" name="idCliente">
+                                                           
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
                                     <label for="obra_idObra">Obra</label>
                                     <select class="form-control" id="obra_idObra" name="obra_idObra">
                                                            
@@ -83,13 +91,14 @@
                                     <input type="date" class="form-control" id="dtEmissao" name="dtEmissao">
                                 </div>
 
-                                                                
+ 
+                                
                                 <div class="form-group col-lg-3">
                                     <label for="status">Status</label>
                                     <select class="form-control" id="status" name="status">
-                                        <option selected value="1">Aprovado</option>
-                                        <option selected value="3">Em andamento</option>
-                                        <option value="4">Vencido</option>      
+                                        <option value="2">Vencido</option>
+                                        <option value="3">Aprovado</option>
+                                        <option value="4">Em vigência</option>      
                                         <option value="5">Encerrado</option>                          
                                     </select>
                                     <span class="help-block"></span>
