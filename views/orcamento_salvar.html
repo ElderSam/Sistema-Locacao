@@ -46,9 +46,9 @@
                             <div class="form-group col-lg-3">
                                 <label for="status">Status</label>
                                 <select class="form-control" id="status" name="status">
-                                    <option selected value="0">Reservado</option>
-                                    <option value="1">Alugado</option>      
-                                    <option value="2">Encerrado</option>                          
+                                    <option selected value="0">Pendente</option>
+                                    <option value="3">Aprovado</option>  
+                                    <option value="1">Arquivado</option>                        
                                 </select>
                                 <span class="help-block"></span>
                             </div>
@@ -68,11 +68,13 @@
                             <div class="form-group col-lg-3">
                                 <label for="dtInicio">Data de Início</label>
                                 <input type="date" class="form-control" id="dtInicio" name="dtInicio" disabled>
+                                <span class="help-block"></span>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="dtFim">Data de Encerramento</label>
                                 <input type="date" class="form-control" id="dtFim" name="dtFim" disabled>
+                                <span class="help-block"></span>
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -88,7 +90,7 @@
                             
                         </div>
 
-                        <fieldset id="formProdutos" class="ml-2"> <!--  hidden="true" -->
+                        <fieldset id="formProdutos" class="ml-2" hidden="true"> 
                             <legend>Lista de Produtos no Aluguel:</legend>       
                                             
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#productModal">
@@ -131,7 +133,7 @@
                         <!--Usado apenas para Editar -->
                         <div hidden="true">
                             <label for="idOrcamento">Id</label>
-                            <input type="text" id="idOrcamento" name="idOrcamento" >
+                            <input type="text" id="idOrcamento" name="idOrcamento">
                         </div>
 
                     </form>
@@ -166,7 +168,7 @@
                     <div class="modal-body">
                         <form id="formRent">
                             <div class="form-row">
-                           
+            
                                 <div class="form-group col-lg-3">
                                     <label for="codeProduct">Código</label>
                                     <input type="text" class="form-control" id="codeProduct" name="codeProduct" placeholder="x.xx.xx.xx.xxx">
@@ -206,11 +208,13 @@
                                 <div class="form-group col-lg-3">
                                     <label for="dtInicio">Data de Início</label>
                                     <input type="date" class="form-control" id="dtInicio" name="dtInicio">
+                                    <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
                                     <label for="dtFinal">Data Final</label>
                                     <input type="date" class="form-control" id="dtFinal" name="dtFinal">
+                                    <span class="help-block"></span>
                                 </div>
                                 
                                 <div class="form-group col-lg-3">
@@ -229,6 +233,11 @@
                                     <label for="observacao">Obervação: </label>
                                     <textarea class="form-control" id="observacao" name="observacao" placeholder="anotações do produto (máximo de 300 caracteres)" maxlength="300" rows="3"></textarea>
                                 </div>
+                            </div>
+
+                            <div hidden="true">
+                                <label for="fk_idOrcamento">Id</label>
+                                <input type="text" id="fk_idOrcamento" name="contrato_idContrato">
                             </div>
 
                             <!--Usado apenas para Editar -->

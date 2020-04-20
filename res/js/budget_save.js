@@ -18,7 +18,7 @@ $(function(){
 		//await loadTableProducts(); //carrega lista de produtos para colocar no Carrinho
 	}*/
 
-    $("#btnSaveRent").click(function(e){
+    $("#btnSaveRent").click(function(e){ //salva o aluguel (az reserva do produto para alugar)
         e.preventDefault();
 
         let form = $('#formRent'); //formulário de aluguel do produto
@@ -65,16 +65,15 @@ $(function(){
 								'error'
 							)
                         }
-                        
-                        
+                                        
 						
 					} else { // Se cadastrou com sucesso
-
+						alert('help')
 						//$('#BudgetModal').modal('hide');
                         
                         res = JSON.parse(response)
                         console.log("id do novo orçamento: " + res.idContrato)
-                        $('#idOrcamento').val(res.idContrato)
+                       // $('#idOrcamento').val(res.idContrato)
                         
                         $('#formProdutos').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
 
@@ -97,6 +96,28 @@ $(function(){
 					console.log(`Erro! Mensagem: ${response}`);
 	
 				}
+			}).then( response => {
+
+				console.log('nova locação/aluguel: ' + response)
+				
+				product = ''
+
+				product += `<tr id="${response.produto_idProduto}">`
+		
+				product += `<td>${response.codigo}</td>
+						<td>${response.descCategoria}</td>
+						<td>${response.tipo1} ${response.descricao}</td>
+						<td><input type="number" name="vlAluguel_${response.produto_idProduto}"></td>
+						<td><input type="text" name="obs_${response.produto_idProduto}"></td>
+						<td>
+							<button type='button' title='remover' onclick='removeProduct(${response.produto_idProduto});'
+								class='btn btn-danger btnDelete'>
+								<i class='fas fa-trash'></i>
+							</button>
+						</td>
+						</tr>`
+
+				$('#cart').append(product)
 			});
 
         }
@@ -160,7 +181,7 @@ $(function(){
                         
                         res = JSON.parse(response)
                         console.log("id do novo orçamento: " + res.idContrato)
-                        $('#idOrcamento').val(res.idContrato)
+                        $('#fk_idOrcamento').val(res.idContrato)
                         
                         $('#formProdutos').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
 
@@ -168,8 +189,7 @@ $(function(){
 							'Sucesso!',
 							'Primeira parte do Orçamento cadastrada!',
 							'success'
-                            )
-                        
+                            )                        
 	
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
@@ -274,7 +294,8 @@ function searchProduct(){
 
 		$.getJSON(`/products/addToContract/${code}`, function (data) { //ajax
 		
-            console.log(data)        
+            console.log(data)     
+            $('#produto_idProduto').val(data.idProduto)   
             
             $('#produto').css('border', '1px solid black')
             $('#produtoAdicionado').html(`<strong style="color: green;">Produto Adicionado!</strong>`)
@@ -284,30 +305,11 @@ function searchProduct(){
 
             $('#prodCodigo').html(`<strong>Código:</strong> ${data.codigo}`)
             $('#prodDescricao').html(`<strong>Descrição:</strong> ${data.descCategoria} - ${data.tipo1} ${data.descricao}`)
-			/*product = ''
-
-			product += `<tr id="${data.idProduto}">`
-	
-			product += `<td>${data.codigo}</td>
-						<td>${data.descCategoria}</td>
-						<td>${data.tipo1} ${data.descricao}</td>
-						<td><input type="number" name="vlAluguel_${data.idProduto}"></td>
-						<td><input type="text" name="obs_${data.idProduto}"></td>
-						<td>
-							<button type='button' title='remover' onclick='removeProduct(${data.idProduto});'
-								class='btn btn-danger btnDelete'>
-								<i class='fas fa-trash'></i>
-							</button>
-						</td>
-						</tr>`*/
 					
 	
 		}).then(() => {
 			
-			//$('#cart').append(product)
 			$('#codeProduct').val('');
-
-			
 				
 		}).fail(function () {
 			console.log("Rota não encontrada! (/budgets/constructions/json)");
