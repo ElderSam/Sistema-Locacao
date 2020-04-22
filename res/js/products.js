@@ -18,7 +18,7 @@ $(function() { //quando a página carrega
 	});
 
 	$('#categoria').change(function(){
-		loadContainer();
+		//loadContainer();
 						
 		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
 		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id
@@ -28,7 +28,7 @@ $(function() { //quando a página carrega
 		if(idCategoria == 3 || idCategoria == 4){ //se for Andamie ou Escora
 			$('#numSerie').val('xxxx').parent().hide()
 		}else{
-			showsNextNumber(idCategoria); //mostra próximo número de série da Categoria
+			//showsNextNumber(idCategoria); //mostra próximo número de série da Categoria
 
 		}
 
@@ -49,7 +49,7 @@ $(function() { //quando a página carrega
 			//mostra apenas duas opções
 			$('#tipo2').html(tipo2para3M) 
 		
-		}else if((codCategoria == '003' && (codtipo1 == '02' || codtipo1 == '03'))){ //se for Andaime Fachadeiro ou Multidirecional
+		}else if((codCategoria == '003' && (codtipo1 == '02' || codtipo1 == '03')) || (codCategoria == '004')){ //se for (Andaime Fachadeiro ou Multidirecional) ou for Escora
 					//mostra apenas uma opção (tipo1)
 					$('#tipo2').val('')
 					$('#tipo2').parent().hide()
@@ -101,7 +101,6 @@ $(function() { //quando a página carrega
 		clearErrors();
 
 		loadCategories();
-		loadSuppliers(); //Carrega fornecedores
 		
 	});
 
@@ -114,10 +113,10 @@ $(function() { //quando a página carrega
 		let form = $('#formProduct');
 		let formData = new FormData(form[0]);
 
-		idProduto = $('#idProduto').val()
-		//console.log("idProduto:" + idProduto)
+		idProduto_gen = $('#idProduto_gen').val()
+		//console.log("idProduto_gen:" + idProduto_gen)
 
-		if(idProduto == 0){ //se for para cadastrar --------------------------------------------------
+		if(idProduto_gen == 0){ //se for para cadastrar --------------------------------------------------
 
 			//console.log("você quer cadastrar")
 
@@ -130,7 +129,7 @@ $(function() { //quando a página carrega
 				beforeSend: function() {
 					clearErrors();
 					$("#btnSaveProduct").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
+					
 				},
 				success: function (response) {
 					clearErrors();
@@ -141,7 +140,7 @@ $(function() { //quando a página carrega
 						
 						Swal.fire(
 							'Erro!',
-							'Ocorreu algum problema ao cadastrar',
+							response.msg,
 							'error'
 						)
 	
@@ -182,11 +181,11 @@ $(function() { //quando a página carrega
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o produto: ' + idProduto)
+			//console.log('você quer editar o produto: ' + idProduto_gen)
 			
 			$.ajax({
 				type: "POST",
-				url: `/products/${idProduto}`, //rota para editar
+				url: `/products/${idProduto_gen}`, //rota para editar
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -205,7 +204,7 @@ $(function() { //quando a página carrega
 
 						Swal.fire(
 							'Erro!',
-							'Ocorreu algum erro ao Atualizar',
+							response.msg,
 							'error'
 						);
 
@@ -251,7 +250,7 @@ $(function() { //quando a página carrega
 
 
 	//carrega as opções de Categoria de produto
-	async function loadCategories(category = false, callback, container = false){
+	async function loadCategories(category = false){
 		$.getJSON(`/products/categories/json`, function (data) { //ajax
 			
 			//console.log(data)
@@ -270,10 +269,6 @@ $(function() { //quando a página carrega
 			
 			if(category){
 				$("#formProduct #categoria").val(category[0]+'-'+category[1]).prop('disabled', true);
-				
-				if(container){
-					callback(container)
-				}
 				
 				return $("#formProduct #categoria").val()
 			}
@@ -373,6 +368,8 @@ $(function() { //quando a página carrega
 				$('#labelType4').html('N/A')*/
 
 				$(`#tipo1`).parent().show()
+				$(`#tipo2`).parent().hide()
+				$(`#tipo3`).parent().hide()
 
 				for(i=2; i<=4; i++){
 					$(`#tipo${i}`).parent().hide()
@@ -417,121 +414,6 @@ $(function() { //quando a página carrega
 	
 	}
 
-	//carrega as opções de Fornecedor de um produto de categoria específico
-	function loadSuppliers(fornecedor = false){
-		$.getJSON(`/suppliers/json`, function (data) { //ajax
-			
-			//console.log(data)
-			
-			let suppliers = `<option value="">(escolha)</option>`			
-
-			data.forEach(function(item){
-				//console.log(item)
-				suppliers += `<option value="${item.idFornecedor}-${item.codFornecedor}">${item.codFornecedor} - ${item.nome}</option>`
-			});
-
-			$('#fornecedor').html(suppliers)
-						
-
-		}).then(() => { 
-			
-			if(fornecedor){ //se já tem fornecedor escolhido (para modal Atualizar)
-				$("#formProduct #fornecedor").val(fornecedor[0]+'-'+fornecedor[1]).prop('disabled', true);
-
-			}
-
-			//$("#productModal").modal();
-		}).fail(function () {
-			console.log("Rota não encontrada! (/suppliers/json)");
-		});
-	
-	}
-
-	function loadContainer(container = false){
-		//alert('você escolheu ' + $('#categoria').val())
-
-		let codCategoria = $('#categoria').val().substring(2, 5);
-		if(codCategoria != '001'){ //se não for um container
-			
-			$('#tipoPorta').parent().hide();
-			$('#forrado').parent().hide();
-			$('#janelasLat').parent().hide();
-			$('#janelasCirc').parent().hide();			
-			$('#sanitarios').parent().hide();
-			$('#eletrificado').parent().hide();
-			$('#entradasAC').parent().hide();
-			$('#tomadas').parent().hide();
-			$('#lampadas').parent().hide();
-			$('#chuveiro').parent().hide();
-
-		}else{
-
-			$('#tipoPorta').parent().show();
-			$('#forrado').parent().show();
-			$('#janelasLat').parent().show();
-			$('#janelasCirc').parent().show();			
-			$('#sanitarios').parent().show();
-			$('#eletrificado').parent().show();
-			$('#entradasAC').parent().show();
-			$('#tomadas').parent().show();
-			$('#lampadas').parent().show();
-			$('#chuveiro').parent().show();
-
-			
-			if(container){
-				container = container[0]
-				//console.log('tipoporta: ' + container.tipoPorta)
-				$('#tipoPorta').val(container.tipoPorta).prop('disabled', true);		
-				$('#janelasLat').val(container.janelasLat).prop('disabled', true);
-				$('#janelasCirc').val(container.janelasCirc).prop('disabled', true);			
-				$('#sanitarios').val(container.sanitarios).prop('disabled', true);
-				$('#entradasAC').val(container.entradasAC).prop('disabled', true);
-				$('#tomadas').val(container.tomadas).prop('disabled', true);
-				$('#lampadas').val(container.lampadas).prop('disabled', true);
-				
-				if(container.forrado == 1){
-					$('#forrado').prop('checked', true);
-				}
-	
-				if(container.eletrificado == 1){
-					$('#eletrificado').prop('checked', true);
-				}
-				
-				if(container.chuveiro == 1){
-					$('#chuveiro').prop('checked', true);
-				}
-	
-				$('#forrado').prop('disabled', true);
-				$('#eletrificado').prop('disabled', true);
-				$('#chuveiro').prop('disabled', true);
-		
-
-				return true;
-			}
-		}
-	
-	}
-
-	function showsNextNumber(idCategory){ //mostra o próximo número de série relacionado à categoria
-		$.ajax({
-			type: "POST",
-			url: `/products/showsNextNumber/${idCategory}`,
-			contentType: false,
-			processData: false,
-			
-			success: function (response) {
-		
-				//console.log('próximo número de série: ' + response)
-				$('#numSerie').val(response)						
-									
-			},
-			error: function (response) {
-
-				console.log(`Erro! Mensagem: ${response}`);		
-			}
-		});	
-	}
-
 
 function loadTableProducts(){ //carrega a tabela de Produtos
 
@@ -555,7 +437,7 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 
 
 //detalhes do Produto
-function loadProduct(idProduto) { //carrega todos os campos do modal referente ao produto escolhido
+function loadProduct(idProduto_gen) { //carrega todos os campos do modal referente ao produto escolhido
 	clearFieldsValues();
 	clearErrors();
 
@@ -564,34 +446,30 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 	$('#btnSaveProduct').hide();
 	$('#btnUpdate').show();
 
-	$.getJSON(`/products/json/${idProduto}`, function (data) { //ajax
-		//console.log(data)
+	$.getJSON(`/products/json/${idProduto_gen}`, function (data) { //ajax
+		console.log(data)
 
 		produto = data[0]
 		tipos = data[1]
-		container = data[2]
 
-		$("#idProduto").val(produto.idProduto);
-		//console.log('load View Produto idProduto: ' + $("#idProduto").val())
+		$("#idProduto_gen").val(produto.idProduto_gen);
+		//console.log('load View Produto idProduto_gen: ' + $("#idProduto_gen").val())
 
-		$("#formProduct #codigo").val(produto.codigo).prop('disabled', true);
+		$("#formProduct #codigoGen").val(produto.codigoGen).prop('disabled', true);
 		$("#formProduct #numSerie").val(produto.numSerie).prop('disabled', true);
-		$("#formProduct #descricao").val(produto.descricao).prop('disabled', true);
-		$("#formProduct #valorCompra").val(produto.valorCompra).prop('disabled', true);
+		$("#formProduct #descricao").val(produto.descricao) /*.prop('disabled', true);*/
+		$("#formProduct #vlBaseAluguel").val(produto.vlBaseAluguel).prop('disabled', true);
 		$("#formProduct #status").val(produto.status).prop('disabled', true);
 		$("#formProduct #dtFabricacao").val(produto.dtFabricacao).prop('disabled', true);
 		$("#formProduct #anotacoes").val(produto.anotacoes).prop('disabled', true);
 		
 
 		//carrega categorias, seleciona uma e em seguida carrega valores nos campos de Container
-		loadCategories([produto.idCategoria, produto.codCategoria], loadContainer, container);
+		loadCategories([produto.idCategoria, produto.codCategoria]);
 
 
 
 		loadTypes(produto.idCategoria, tipos)
-
-		fornecedor = [produto.idFornecedor, produto.codFornecedor]
-		loadSuppliers(fornecedor);
 
 		/* Atualizar Produto ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function(){ //se eu quiser atualizar o Produto atual
@@ -603,11 +481,11 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 		
 			//$('#desImagePath').parent().show();
 
-			//$("#formProduct #codigo").prop('disabled', true);
+			//$("#formProduct #codigoGen").prop('disabled', true);
 			
 			$("#formProduct #numSerie").prop('disabled', false);
-			$("#formProduct #descricao").prop('disabled', false);
-			$("#formProduct #valorCompra").prop('disabled', false);
+			//$("#formProduct #descricao").prop('disabled', false);
+			$("#formProduct #vlBaseAluguel").prop('disabled', false);
 			$("#formProduct #status").prop('disabled', false);
 			$("#formProduct #dtFabricacao").prop('disabled', false);
 			$("#formProduct #tipo1").prop('disabled', false);
@@ -638,12 +516,12 @@ function loadProduct(idProduto) { //carrega todos os campos do modal referente a
 
 		$("#productModal").modal();
 	}).fail(function () {
-		console.log("Rota não encontrada! (/products/json/:idProduto)");
+		console.log("Rota não encontrada! (/products/json/:idProduto_gen)");
 	});
 
 }
 
-function deleteProduct(idProduto){
+function deleteProduct(idProduto_gen){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -660,7 +538,7 @@ function deleteProduct(idProduto){
 
 			$.ajax({
 				type: "POST",
-				url: `/products/${idProduto}/delete`,
+				url: `/products/${idProduto_gen}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()
@@ -675,8 +553,8 @@ function deleteProduct(idProduto){
 						response = JSON.parse(response)
 						
 						Swal.fire(
-							'Erro!',
-							'Não foi possível excluir',
+							'Atenção!',
+							response.msg,
 							'error'
 						)
 						
@@ -711,7 +589,7 @@ function deleteProduct(idProduto){
 //limpar campos do modal para Cadastrar
 function clearFieldsValues(){
 
-	//$("#formProduct #codigo").prop('disabled', true)
+	//$("#formProduct #codigoGen").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Produto');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveProduct').val('Cadastrar').show();
@@ -721,10 +599,10 @@ function clearFieldsValues(){
 	//$('#desImagePath').parent().show();
 
 
-	//$("#formProduct #codigo").prop('disabled', true);
+	//$("#formProduct #codigoGen").prop('disabled', true);
 	$("#formProduct #numSerie").prop('disabled', false);
-	$("#formProduct #descricao").prop('disabled', false);
-	$("#formProduct #valorCompra").prop('disabled', false);
+	//$("#formProduct #descricao").prop('disabled', false);
+	$("#formProduct #vlBaseAluguel").prop('disabled', false);
 	$("#formProduct #status").prop('disabled', false);
 	$("#formProduct #dtFabricacao").prop('disabled', false);
 	$("#formProduct #tipo1").prop('disabled', false);
@@ -752,10 +630,10 @@ function clearFieldsValues(){
 	//$('#image-preview').attr('src', "/res/img/productsp/product-default.jpg");
 	$('#dtCadastro').parent().hide();
 
-	$('#codigo').val('');
+	$('#codigoGen').val('');
 	$('#numSerie').val('');
 	$('#descricao').val('');
-	$('#valorCompra').val('');
+	$('#vlBaseAluguel').val('');
 	$('#status').val('1');
 	$('#dtFabricacao').val('');
 
@@ -803,7 +681,7 @@ function clearFieldsValues(){
 	$('#categoria').val('0');
 	$('#dtCadastro').val('');
 	
-	$('#idProduto').val('0');
+	$('#idProduto_gen').val('0');
 	//...	
 }
 

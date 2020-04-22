@@ -13,7 +13,7 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        return json_encode( $sql->select("SELECT * FROM produtos ORDER BY codigo"));
+        return json_encode( $sql->select("SELECT * FROM produtos_gen ORDER BY codigoGen"));
     }
 
 
@@ -21,21 +21,17 @@ class Product extends Generator{
         
         $sql = new Sql();
 
-        if(($this->getcodigo() != "") && ($this->getdescricao() != "") && ($this->getstatus() != "")){
-           
-            $results = $sql->select("CALL sp_produtos_save(:codigo, :descricao, :valorCompra, :status, :dtFabricacao, :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :fornecedor, :categoria)", array(
-                ":codigo"=>$this->getcodigo(),
+        if(($this->getcodigoGen() != "") && ($this->getcategoria() != "")){  
+
+            //insere
+           $results = $sql->select("CALL sp_produtos_gen_save(:codigoGen, :descricao, :vlBaseAluguel, :tipo1, :tipo2, :tipo3, :tipo4, :categoria)", array(
+                ":codigoGen"=>$this->getcodigoGen(),
                 ":descricao"=>$this->getdescricao(),
-                ":valorCompra"=>$this->getvalorCompra(),
-                ":status"=>$this->getstatus(),
-                ":dtFabricacao"=>$this->getdtFabricacao(),
+                ":vlBaseAluguel"=>$this->getvlBaseAluguel(),
                 ":tipo1"=>$this->gettipo1(),
                 ":tipo2"=>$this->gettipo2(),
                 ":tipo3"=>$this->gettipo3(),
                 ":tipo4"=>$this->gettipo4(),
-                ":numSerie"=>$this->getnumSerie(),
-                ":anotacoes"=>$this->getanotacoes(),
-                ":fornecedor"=>$this->getfornecedor(),
                 ":categoria"=>$this->getcategoria()
             ));
 
@@ -56,7 +52,7 @@ class Product extends Generator{
 
             return json_encode([
 				'error' => true,
-				"msg" => "Campos incompletos!"
+				"msg" => "Campos Incompletos!"
 			]);
         }
     }
@@ -65,9 +61,9 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM produtos
-        WHERE idProduto = :idProduto", array(
-            ":idProduto"=>$idproduct
+        $results = $sql->select("SELECT * FROM produtos_gen
+        WHERE idProduto_gen = :idProduto_gen", array(
+            ":idProduto_gen"=>$idproduct
         ));
 
         if(count($results) > 0){
@@ -80,30 +76,29 @@ class Product extends Generator{
 
         $sql = new Sql();
  
-        //dados das tabelas: produtos, categorias e fornecedores
-        $res1 = $sql->select("SELECT a.idProduto, a.codigo, a.descricao, a.valorCompra, a.status,
-        a.dtFabricacao, a.numSerie, a.anotacoes, b.idCategoria, b.codCategoria, c.idFornecedor, c.codFornecedor, c.nome 
-        FROM produtos a INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
-        INNER JOIN fornecedores c ON(a.idFornecedor = c.idFornecedor)
-            WHERE a.idProduto = :idProduto", array(
-            ":idProduto"=>$idproduct
+        //dados das tabelas: produtos_gen, categorias
+        $res1 = $sql->select("SELECT a.idProduto_gen, a.codigoGen, a.descricao, a.vlBaseAluguel,
+        b.idCategoria, b.codCategoria 
+        FROM produtos_gen a INNER JOIN prod_categorias b ON(a.idCategoria = b.idCategoria)
+            WHERE a.idProduto_gen = :idProduto_gen", array(
+            ":idProduto_gen"=>$idproduct
         ));
 
 
         if(count($res1) > 0){
 
-        //dados das tabela tipos de produtos
+        //dados das tabela tipos de produtos_gen
         $res2 = $sql->select("SELECT b.id, b.descTipo, b.ordem_tipo, b.codTipo
-        FROM produtos a RIGHT JOIN prod_tipos b ON(a.tipo1 = b.id OR a.tipo2 = b.id OR a.tipo3 = b.id OR a.tipo4 = b.id)
-        WHERE idProduto = :idProduto
+        FROM produtos_gen a RIGHT JOIN prod_tipos b ON(a.tipo1 = b.id OR a.tipo2 = b.id OR a.tipo3 = b.id OR a.tipo4 = b.id)
+        WHERE idProduto_gen = :idProduto_gen
         ORDER BY b.ordem_tipo, b.codTipo", array(
-            ":idProduto"=>$idproduct
+            ":idProduto_gen"=>$idproduct
         ));
 
 
         $res3 = $sql->select("SELECT * FROM prod_containers 
-        WHERE idProduto = :idProduto", array(
-            ":idProduto"=>$idproduct
+        WHERE idProduto_gen = :idProduto_gen", array(
+            ":idProduto_gen"=>$idproduct
         ));
 
 
@@ -115,28 +110,28 @@ class Product extends Generator{
         }
     }
 
-    public static function getByCode($code){ //pega o produto que está disponível a partir do código
+    public static function getByCode($code){ //pega o produto a partir do código
 
         $sql = new Sql();
         
-        $query = "SELECT a.idProduto, a.codigo, a.descricao, b.descCategoria, c.descTipo as tipo1 FROM produtos a 
+        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao, b.descCategoria, c.descTipo as tipo1 FROM produtos_gen a 
         INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
         INNER JOIN prod_tipos c ON(a.tipo1 = c.id)
-        WHERE (codigo = :codigo AND status = 1)";
+        WHERE (codigoGen = :codigoGen)";
 
         $results = $sql->select($query, array(
-            ":codigo"=>$code
+            ":codigoGen"=>$code
         ));
 
         return json_encode($results[0]);
     }
 
-    public static function searchDesc($desc){ //search if name or desc already exists
+    public static function searchCode($code){ //search if name or desc already exists
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM produtos WHERE (descricao = :descricao)", array(
-            ":descricao"=>$desc
+        $results = $sql->select("SELECT * FROM produtos_gen WHERE (codigoGen = :codigoGen)", array(
+            ":codigoGen"=>$code
         ));
 
         return $results;
@@ -144,9 +139,9 @@ class Product extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT a.idProduto, a.codigo, a.descricao, a.status, b.descCategoria, c.descTipo as tipo1 FROM produtos a 
-                INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
-                INNER JOIN prod_tipos c ON(a.tipo1 = c.id)";
+        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao, b.descCategoria, count(c.idProduto_esp) as qtd FROM produtos_gen a
+            INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
+            LEFT JOIN produtos_esp as c ON(a.idProduto_gen = c.idProduto_gen)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -157,22 +152,7 @@ class Product extends Generator{
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-
-                if ($field == "status") {
-                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
-
-                    if (($search == "DISP")) {
-                        $search = 1;
-                    } else if ($search == "ALUG") {
-                        $search = 0;
-                    } else if ($search == "MANU") {
-                        $search = 2;
-                    }
-
-                    //echo "status: ".$search;
-                }
-
-                if ($field == "tipo1") {
+                /*if ($field == "tipo1") {
                   
                     if (($search == "3M")) {
                         $search = 1;
@@ -185,7 +165,7 @@ class Product extends Generator{
                     }
 
                     //echo "tipo1: ".$search;
-                }
+                }*/
 
                 //filtra no banco
                 if ($first) {
@@ -200,16 +180,18 @@ class Product extends Generator{
             }
 
         }
-        
+
+        $query .= " GROUP BY a.idProduto_gen";
+
         $res = $this->searchAll($query);
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
         $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
-        "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
+        " LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $products = new Product();
-        //echo $query;
+       
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
             'data'=>$products->searchAll($query)
@@ -230,7 +212,7 @@ class Product extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM produtos");
+        $results = $sql->select("SELECT * FROM produtos_gen");
 
         return count($results);		
 	}
@@ -240,21 +222,16 @@ class Product extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_produtosUpdate_save(:idProduto, :codigo, :descricao, :valorCompra, :status, :dtFabricacao,
-                                :tipo1, :tipo2, :tipo3, :tipo4, :numSerie, :anotacoes, :fornecedor, :categoria)", array(
-            ":idProduto"=>$this->getidProduto(),
-            ":codigo"=>$this->getcodigo(),
+        $results = $sql->select("CALL sp_produtos_genUpdate_save(:idProduto_gen, :codigoGen, :descricao, :vlBaseAluguel,
+                                :tipo1, :tipo2, :tipo3, :tipo4, :categoria)", array(
+            ":idProduto_gen"=>$this->getidProduto_gen(),
+            ":codigoGen"=>$this->getcodigoGen(),
             ":descricao"=>$this->getdescricao(),
-            ":valorCompra"=>$this->getvalorCompra(),
-            ":status"=>$this->getstatus(),
-            ":dtFabricacao"=>$this->getdtFabricacao(),
+            ":vlBaseAluguel"=>$this->getvlBaseAluguel(),
             ":tipo1"=>$this->gettipo1(),
             ":tipo2"=>$this->gettipo2(),
             ":tipo3"=>$this->gettipo3(),
             ":tipo4"=>$this->gettipo4(),
-            ":numSerie"=>$this->getnumSerie(),
-            ":anotacoes"=>$this->getanotacoes(),
-            ":fornecedor"=>$this->getfornecedor(),
             ":categoria"=>$this->getcategoria()
         ));
 
@@ -274,60 +251,82 @@ class Product extends Generator{
     }
 
     public function delete(){
-
        
         $sql = new Sql();
 
-        try{
-            $sql->query("CALL sp_produtos_delete(:idProduto)", array(
-                ":idProduto"=>$this->getidProduto()
-            ));
+        $dependentes = $sql->select("SELECT * FROM produtos_esp WHERE idProduto_gen = :idProduto_gen", array(
+            ":idProduto_gen"=>$this->getidProduto_gen()
+        ));
 
-            if($this->get($this->getidProduto())){
+        if(count($dependentes) > 0){ //se tiver produtos específicos dependentes
 
-                return json_encode([
-                    "error"=>true,
-                    "msg"=>'Erro ao excluir produto'
-                ]);
-
-            }else{
-                return json_encode([
-                    "error"=>false,
-                ]);
-            }
-
-        }catch(Exception $e){
+            $qtd = count($dependentes);
 
             return json_encode([
                 "error"=>true,
-                "msg"=>$e->getMessage()
+                "msg"=>"Não pode excluir, pois possui $qtd produtos específicos dependentes"
             ]);
 
+        }else{
+            
+            try{ //tente excluir
+                $sql->query("CALL sp_produtos_gen_delete(:idProduto_gen)", array(
+                    ":idProduto_gen"=>$this->getidProduto_gen()
+                ));
+
+                if($this->get($this->getidProduto_gen())){
+
+                    return json_encode([
+                        "error"=>true,
+                        "msg"=>'Erro ao excluir produto'
+                    ]);
+
+                }else{
+                    return json_encode([
+                        "error"=>false,
+                    ]);
+                }
+
+            }catch(Exception $e){
+
+                return json_encode([
+                    "error"=>true,
+                    "msg"=>$e->getMessage()
+                ]);
+
+            }
         }
+
        
     }
 
-    public static function showsNextNumber($idCategoria){
+    public function createDescription(){
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT MAX(numSerie) FROM produtos WHERE idCategoria = :idCategoria", array(
-            ":idCategoria"=>$idCategoria
-        ));
-        $nextNumber = 1 + $results[0]['MAX(numSerie)'];
-       
-        if($nextNumber < 10){
-            $nextNumber = "000". $nextNumber;
+        $busca = $sql->select("SELECT * FROM prod_tipos WHERE idCategoria = :categoria AND 
+        ((ordem_tipo = 1 AND id = :tipo1)
+        OR (ordem_tipo = 2 AND id = :tipo2)
+        OR (ordem_tipo = 3 AND id = :tipo3)
+        OR (ordem_tipo = 4 AND id = :tipo4))", array(
+            ":categoria"=>$this->getcategoria(),
+            ":tipo1"=>$this->gettipo1(),
+            ":tipo2"=>$this->gettipo2(),
+            ":tipo3"=>$this->gettipo3(),
+            ":tipo4"=>$this->gettipo4()
+        ));  
 
-        }else if($nextNumber < 100){
-            $nextNumber = "00". $nextNumber;
+        $descricao = $busca[0]['descTipo'];
+
+        for($i=1; $i<4; $i++){
+            if(isset($busca[$i])){ //se essa posição do array existe
+                $descricao .= ' '. $busca[$i]['descTipo'];
+            }
             
-        }else if($nextNumber < 1000){
-            $nextNumber = "0". $nextNumber;
         }
-        
-        return $nextNumber; //retorna o próximo número de série da categoria
 
+        $this->setdescricao($descricao);
+    
     }
     
 }

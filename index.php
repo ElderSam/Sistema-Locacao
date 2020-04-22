@@ -17,7 +17,8 @@ $app = new Slim();
 $app->config('debug', true);
 
 require_once("users.php");
-require_once("products.php");
+require_once("products.php"); //produtos genéricos
+require_once("products_esp.php"); //produtos específicos
 require_once("prod-types.php");
 require_once("suppliers.php"); //fornecedores
 require_once("budgets.php"); //orçamentos

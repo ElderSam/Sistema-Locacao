@@ -23,8 +23,8 @@ class Container extends Generator{
     
         $sql = new Sql();
 
-        if(($this->gettipoPorta() != "")){
-           
+        if(($this->gettipoPorta() != "")){   
+
             $results = $sql->select("CALL sp_prod_containers_save(:idProduto, :tipoPorta, :janelasLat, :janelasCirc, 
             :forrado, :eletrificado, :tomadas, :lampadas, :entradasAC, :sanitarios, :chuveiro)", array(
                 ":idProduto"=>$this->getidProduto(),
@@ -40,7 +40,6 @@ class Container extends Generator{
                 ":chuveiro"=>$this->getchuveiro()
             ));
 
-            //print_r($results);
             if(count($results) > 0){
 
                 $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
@@ -102,7 +101,7 @@ class Container extends Generator{
 
         $results = $sql->select("CALL sp_prod_containersUpdate_save(:idProduto, :tipoPorta, :janelasLat, :janelasCirc, 
         :forrado, :eletrificado, :tomadas, :lampadas, :entradasAC, :sanitarios, :chuveiro)", array(
-            ":idProduto"=>$this->getidProduto(),
+            ":idProduto"=>$this->getidProduto_esp(),
             ":tipoPorta"=>$this->gettipoPorta(),
             ":janelasLat"=>$this->getjanelasLat(),
             ":janelasCirc"=>$this->getjanelasCirc(),

@@ -20,7 +20,7 @@ class ProductController extends Generator
 
     public function save($update = false) //Add a new Product or Update
     {
-        
+
         User::verifyLogin();
         
         $error = $this->verifyFields($update); //verifica os campos do formulário
@@ -33,20 +33,7 @@ class ProductController extends Generator
         $product = new Product(); //Model
 
         $product->setData($_POST);
-
-      /*  if ($update) { //se for atualizar
-
-            $search = new Product();
-            //pega o caminho da imagem atual
-            $res = $search->get((int) $_POST['idProduto']);
-            $desOldImagePath = $res['foto'];
-        }else{
-            $desOldImagePath = "";
-        }*/
-
-       // $image = $this->uploadImage($_FILES, $desOldImagePath); //salva imagem na pasta
-
-        //$product->setfoto($image);
+        $product->createDescription();
 
         if ($update) { //se for atualizar
             
@@ -64,9 +51,9 @@ class ProductController extends Generator
                     $container = new Container();
                     $aux = json_decode($upd);
                     //print_r($aux);
-                    $idProduto = $aux->idProduto;
+                    $idProduto_gen = $aux->idProduto_gen;
                    
-                    //echo "id: " . $idProduto . "<br>";
+                    //echo "id: " . $idProduto_gen . "<br>";
                     $container->setData($_POST);
                     $upd2 = $container->update();               
 
@@ -85,31 +72,10 @@ class ProductController extends Generator
             }
 
         } else { // se for cadastrar novo Produto
-            $res = $product->insert();
-            //print_r($res);
-            if($this->getcodCategory() == '001'){ //se for um container
-
-                $aux = json_decode($res);
-
-                if(isset($aux->error) && ($aux->error == true)){
-                    return $res;
-
-                }else{
-                    $container = new Container();
-                    $aux = json_decode($res);
-                    //print_r($aux);
-                    $idProduto = $aux->idProduto;
-                
-                    //echo "id: " . $idProduto . "<br>";
-                    $container->setData($_POST);
-                    $res2 = $container->insert($idProduto);
-                    return $res2;
-                }
-
-            }else{
-                return $res;
-            }
             
+            $res = $product->insert();
+
+            return $res;      
         }
     }
 
@@ -119,15 +85,13 @@ class ProductController extends Generator
 
         $errors = array();
         
-        if ($_POST["descricao"] == "") {
+        /*if ($_POST["descricao"] == "") {
             $errors["#descricao"] = "Descrição é obrigatória!";
+        }*/
+
+        if ($_POST["vlBaseAluguel"] == "") {
+            $errors["#vlBaseAluguel"] = "Valor de Aluguel é obrigatório!";
         }
-        if ($_POST["valorCompra"] == "") {
-            $errors["#valorCompra"] = "Valor de Compra é obrigatório!";
-        }
-        if ($_POST["status"] == "") {
-            $errors["#status"] = "Status é obrigatório!";
-        }   
 
         if (($_POST["categoria"] == "")) {
             $errors["#categoria"] = "Categoria é obrigatória!";
@@ -140,7 +104,7 @@ class ProductController extends Generator
                 $errors["#tipo1"] = "tipo 1 é obrigatório!";
             }
 
-            if (($_POST["tipo2"] == "") && ($this->getcodCategory() != "004")) {
+            if (($_POST["tipo2"] == "") && ($this->getcodCategory() != "004")) { //Se não for uma Escora, mas tiver tipo2
                 
                 if($this->getcodCategory() == "003"){ //se for Andaime
 
@@ -161,7 +125,8 @@ class ProductController extends Generator
                     $errors["#tipo2"] = "tipo 2 é obrigatório!";
                 }
                 
-            }else{ //se for Categoria Escora (cod 004)
+            }else if($this->getcodCategory() == "004"){ //se for Categoria Escora (cod 004)
+  
                 $_POST["tipo4"] = NULL;
             }
             
@@ -190,53 +155,21 @@ class ProductController extends Generator
                 
             }
 
-            if (($this->getcodCategory() == "003") || ($this->getcodCategory() == "004")) {
+            
+
+            if (($this->getcodCategory() == "003") || ($this->getcodCategory() == "004")) { //se for Andaime ou Escora
                 $_POST["tipo4"] = NULL;
                 
             }else if(($_POST["tipo4"] == "") && ($this->getcodCategory() == "002") && ($_POST["tipo3"] == "19-02")){ //se for Betoneira com tipo3 Combustão, então não tem tipo4
                 $_POST["tipo4"] = NULL;
                 
             }else{
-                $errors["#tipo4"] = "tipo 4 é obrigatório!";
-            }
 
-            //testes para Container
-            if($this->getcodCategory() == '001'){
-                if ($_POST["tipoPorta"] == "") {
-                    $errors["#tipoPorta"] = "Tipo de porta é obrigatório!";
-                }  
-
-
-                if (!isset($_POST["janelasLat"]) || ($_POST["janelasLat"] == "")) {
-                    $errors["#janelasLat"] = "campo obrigatório!";
-                }  
-
-                if (!isset($_POST["janelasCirc"]) || ($_POST["janelasCirc"] == "")) {
-                    $errors["#janelasCirc"] = "campo obrigatório!";
-                }  
-
-                if (!isset($_POST["sanitarios"]) || ($_POST["sanitarios"] == "")) {
-                    $errors["#sanitarios"] = "Tipo de porta é obrigatório!";
-                }  
-
-                /*if (!isset($_POST["entradasAC"]) || ($_POST["entradasAC"] == "")) {
-                    $errors["#entradasAC"] = "campo obrigatório!";
-                }  */
-
-                if (!isset($_POST["tomadas"]) || ($_POST["tomadas"] == "")) {
-                    $errors["#tomadas"] = "campo obrigatório!";
-                }  
-
-                if (!isset($_POST["lampadas"]) || ($_POST["lampadas"] == "")) {
-                    $errors["#lampadas"] = "campo obrigatório!";
-                }  
+                if ($_POST["tipo4"] == "") {
+                    $errors["#tipo4"] = "tipo 4 é obrigatório!";
+                }
             }
     
-        }
-
-        if (($_POST["fornecedor"] == "")) {
-            $errors["#fornecedor"] = "Fornecedor é obrigatório!";
-
         }
 
         if(empty($_POST["forrado"])){
@@ -249,23 +182,6 @@ class ProductController extends Generator
 
         if(empty($_POST["chuveiro"])){
             $_POST["chuveiro"] = 0;
-        }
-
-        $exists = 0;
-        $exists = Product::searchDesc($_POST["descricao"]);
-        if (count($exists) > 0) { //se existe descricao completo igual já registrado
-
-            if ($update) {
-                foreach ($exists as $product) {
-
-                    if (($_POST['descricao'] == $product['descricao']) && ($_POST['idProduto'] != $product['idProduto'])) {
-                        $errors["#descricao"] = "Já existe um Produto com essa Descrição";
-                        break;
-                    }
-                }
-            } else {
-                $errors["#descricao"] = "Já existe um produto com essa Descrição";
-            }
         }
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
@@ -282,7 +198,34 @@ class ProductController extends Generator
 
             $supplier = new Supplier();
             $_POST["fornecedor"] = $supplier->get(false, $_POST["fornecedor"]); //manda o codFornecedor em vez do id
-*/
+            */
+
+            $exists = 0;
+            $exists = Product::searchCode($_POST["codigoGen"]);
+            if (count($exists) > 0) { //se existe codigoGen completo igual já registrado
+
+                if ($update) {
+                    foreach ($exists as $product) {
+
+                        if (($_POST['codigoGen'] == $product['codigoGen']) && ($_POST['idProduto_gen'] != $product['idProduto_gen'])) {
+                            /*$errors["#codigoGen"] = "Já existe um Produto com essa Descrição";
+                            break; */
+
+                            return json_encode([
+                                'error' => true,
+                                'msg'=> "Já existe um Produto com o código " . $_POST['codigoGen']
+                            ]);
+                            
+                        }
+                    }
+                } else {
+                    //$errors["#codigoGen"] = "Já existe um produto com essa Descrição";
+                    return json_encode([
+                        'error' => true,
+                        'msg'=> "Já existe um Produto com o código " . $_POST['codigoGen']
+                    ]);
+                }
+            }
 
             return json_encode([
                 'error' => false
@@ -299,12 +242,14 @@ class ProductController extends Generator
         
         $_POST["categoria"] = substr($_POST["categoria"], 0, -4); //pega o id (tirando os quatro últimos caracteres)
       
-        //echo "id: " . $_POST["categoria"]. ", codigo: ". $this->getcodCategory() . "<br>";
+        //echo "id: " . $_POST["categoria"]. ", codigoGen: ". $this->getcodCategory() . "<br>";
         
 
         /*---------------------- Tipos ------------------------------------------------*/
+        $qtdTipos = 4;
+
         if(($this->getcodCategory() == "001") || ($this->getcodCategory() == "002")){
-            $qtdTipos = 4;
+            //$qtdTipos = 4;
 
             if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for container sanitário
                 $_POST["tipo3"] = NULL; 
@@ -313,11 +258,11 @@ class ProductController extends Generator
 
 
         }else if($this->getcodCategory() == "003"){
-            $qtdTipos = 3;
+            //$qtdTipos = 3;
             $_POST["tipo4"] = NULL;
 
         } else if($this->getcodCategory() == "004"){
-            $qtdTipos = 1;
+            //$qtdTipos = 1;
             $_POST["tipo2"] = NULL;
             $_POST["tipo3"] = NULL;
             $_POST["tipo4"] = NULL;
@@ -332,11 +277,13 @@ class ProductController extends Generator
         for($i=1; $i<=$qtdTipos; $i++){
             
             if($arrTipos[$i] == NULL){
-                $codTipos .= "xx.";
+                $codTipos .= ".xx";
+
+                //echo $codTipos;
 
             }else{ 
                 
-                $codTipos .= substr($arrTipos[$i], -2) . "."; //do penúltimo caracter até o final
+                $codTipos .= "." . substr($arrTipos[$i], -2); //do penúltimo caracter até o final
                 $auxTipo = 'tipo' . $i;
                 $_POST[$auxTipo] = substr($arrTipos[$i], 0, -3); //pega o id (tirando os três últimos caracteres)
                 
@@ -344,106 +291,15 @@ class ProductController extends Generator
 
             }
         }
-       
-        $codFornecedor = substr($_POST["fornecedor"], -3); //pega do antepenúltimo caracter até o final
-        $_POST["fornecedor"] = substr($_POST["fornecedor"], 0, -4); //pega o id (tirando os quatro últimos caracteres)
-        //echo 'id: '. $_POST["fornecedor"]. ", cod: " . $codFornecedor;
 
-        if(($this->getcodCategory() == 3) || ($this->getcodCategory() == 4)){ //Andaimes e Escoras não tem número de série (número de inventário)
-            $_POST["numSerie"] = NULL;
-            $numSerie = "xxxx";
-
-        }else{
-          
-            $numSerie = $_POST["numSerie"];
-        }
-
-        $_POST["codigo"] = $this->getcodCategory() . "." . $codTipos . $codFornecedor . "-" . $numSerie;
-        //echo $_POST["codigo"];
+        $_POST["codigoGen"] = $this->getcodCategory() . $codTipos;
+        //echo 'código: ' . $_POST["codigoGen"];
         
         /*----------------------fim de Tipos ------------------------------------------------*/
-
-
         
         //fornecedortem que ter 4 caracteres
-        
-    
+         
     }
-
-    /*public function uploadImage($files, $desOldImagePath = "")
-    {
-
-        //print_r($files);
-
-        if ($desOldImagePath == "" && $files["desImagePath"]["name"] == "") { //Não subiu imagem e não tem antiga
-            //echo "<br>SEM IMAGEM<br>";
-            $this->desImagePath = "/res/img/products/product-default.jpg";
-            return $this->desImagePath;
-        } elseif ($files["desImagePath"]["name"] != "") { //se subiu imagem nova
-            //echo "nome_imagem " . $files["desImagePath"]["name"] . "<br>";
-
-            if ($desOldImagePath != "/res/img/products/product-default.jpg" && $desOldImagePath != "") { //se vai substituir imagem antiga    
-                //echo " tem que APAGAR! desOldImagePath: " . $desOldImagePath . "<br>";    
-                unlink($desOldImagePath);
-            }
-        } elseif ($desOldImagePath != "" && $files["desImagePath"]["name"] == "") { //se não subiu, mas tem imagem antiga
-
-            //echo "<br> já tem imagem antiga! <br>";
-
-            return $desOldImagePath;
-        }
-
-
-        $target_dir = "res/img/products/";
-        $newName = time() . "_" . basename($files["desImagePath"]["name"]);
-        $target_file = $target_dir . $newName;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        //echo "<br>target_file: " . $target_file . "<br>imageFileType " . $imageFileType;
-
-        if (getimagesize($files["desImagePath"]["tmp_name"]) === false) {
-            return json_encode([
-                'error' => true,
-                "message" => "Arquivo não é uma imagem válida!"
-            ]);
-            //exit;
-        }
-
-        if (file_exists($target_file)) {
-            return json_encode([
-                'error' => true,
-                "message" => "Imagem já existente em nosso banco de dados!"
-            ]);
-            //exit;
-        }
-
-        if ($files["desImagePath"]["size"] > 5 * 1024 * 1024) {
-            return json_encode([
-                'error' => true,
-                "message" => "Imagem muito grande. Insira uma imagem de até 5MB!"
-            ]);
-            //exit;
-        }
-
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-            return json_encode([
-                'error' => true,
-                "message" => "Tipo de imagem incorreto, somente JPG, JPEG, PNG e GIF!"
-            ]);
-            //exit;
-        }
-
-        if (move_uploaded_file($files["desImagePath"]["tmp_name"], $target_file)) { //se subiu a imagem
-            $this->desImagePath = "/" . $target_file;
-
-            return $this->desImagePath;
-        } else {
-            return json_encode([
-                'error' => true,
-                "message" => "Erro ao transferir imagem!"
-            ]);
-            //exit;
-        }
-    }*/ /*-------------end uploadDesImagePath() ---------------------------------------------------------*/
 
 
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
@@ -461,8 +317,8 @@ class ProductController extends Generator
     public function ajax_list_products($requestData)
     {
 
-        $column_search = array("codigo", "descCategoria", "status", "tipo1", "descricao"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codigo", "descCategoria", "status", "tipo1", "descricao"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("codigoGen", "descCategoria", "descricao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigoGen", "descCategoria", "descricao"); //ordem que vai aparecer (o codigoGen primeiro)
 
         //faz a pesquisa no banco de dados
         $product = new Product(); //model
@@ -473,26 +329,29 @@ class ProductController extends Generator
 
         foreach ($datatable['data'] as $product) { //para cada registro retornado
 
-            if ($product['status'] == 0) {
+            /*if ($product['status'] == 0) {
                 $status = "Alugado";
             } else if ($product['status'] == 1){
                 $status = "Disponível";
             }else if ($product['status'] == 2){
                 $status = "Manutenção";
-            }
+            }*/
     
 
-            $id = $product['idProduto'];
+            $id = $product['idProduto_gen'];
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
-            $row[] = $product['codigo'];
+            $row[] = $product['codigoGen'];
             $row[] = $product['descCategoria'];
-            $row[] = $status;
-            $row[] = $product['tipo1'];
             $row[] = $product['descricao'];
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+            $row[] = $product['qtd'];
+            $row[] = "<a type='button' title='ver produtos específicos' class='btn btn-success'
+                href='/products_esp/$id'>
+                    <i class='fas fa-plus-square'></i>
+                </a>
+                <button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadProduct($id);'>
                     <i class='fas fa-bars sm'></i>
                 </button>
@@ -502,7 +361,7 @@ class ProductController extends Generator
                 </button>";
 
             $data[] = $row;
-        } //
+        }
 
         //Cria o array de informações a serem retornadas para o Javascript
         $json = array(
@@ -530,7 +389,7 @@ class ProductController extends Generator
 
         $container->get((int)$idproduct);
 
-        $id = $container->getidProduto();
+        $id = $container->getidProduto_gen();
         
         if(isset($id)){ //se for um container
             
