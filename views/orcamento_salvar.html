@@ -1,0 +1,286 @@
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <!--h1 class="mt-4">Orçamentos</h1>
+            <ol class="breadcrumb mb-4 justify-content-between">
+                <li class="breadcrumb-item active">home/Orçamentos</li>
+
+               
+                <a id="btnAddBudget" href="/budgets/new" class="btn btn-success">
+                    Novo Orçamento
+                </a>           
+            </ol-->
+
+
+            <!-- Budget ------------------------------------------------------------------------------->
+            <div>   
+    
+                <div>
+                    <br>
+                    <h3><b id="title">Cadastrar Orçamento</b></h3>
+                </div>
+
+                <div>
+                    <form id="formBudget">
+                        <div class="form-row">
+                
+                            <div class="form-group col-lg-3">
+                                <label for="codigo">Código</label>
+                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="3">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="obra_idObra">Obra</label>
+                                <select class="form-control" id="obra_idObra" name="obra_idObra">
+                                                    
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dtEmissao">Data de Emissão</label>
+                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao">
+                            </div>
+                            
+                            <div class="form-group col-lg-3">
+                                <label for="status">Status</label>
+                                <select class="form-control" id="status" name="status">
+                                    <option selected value="0">Pendente</option>
+                                    <option value="3">Aprovado</option>  
+                                    <option value="1">Arquivado</option>                        
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="custoEntrega">Custo Entrega</label>
+                                <input type="number" class="form-control" id="custoEntrega" name="custoEntrega" placeholder="000" maxlength="3">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="custoRetirada">Custo Retirada</label>
+                                <input type="number" class="form-control" id="custoRetirada" name="custoRetirada" placeholder="000" maxlength="3">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dtInicio">Data de Início</label>
+                                <input type="date" class="form-control" id="dtInicio" name="dtInicio" disabled>
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dtFim">Data de Encerramento</label>
+                                <input type="date" class="form-control" id="dtFim" name="dtFim" disabled>
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="valorAluguel">Valor Aluguel (total)</label>
+                                <input type="number" class="form-control" id="valorAluguel" name="valorAluguel" placeholder="000" maxlength="3">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <label for="dtFim">Notas:</label>
+                                <textarea class="form-group col-lg-12" id="notas" name="notas" maxlength="100" placeholder="anotações ..."></textarea>
+                            </div>
+                            
+                        </div>
+
+                        <fieldset id="formProdutos" class="ml-2" hidden="true"> 
+                            <legend>Lista de Produtos no Aluguel:</legend>       
+                                            
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#productModal">
+                                Buscar
+                            </button> <br>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="dataTable" cellspacing="0">
+                                    <thead>
+                                    
+                                        <tr>
+                                            <th>Cod.</th>
+                                            <th>Categoria</th>
+                                            <th>Desc.</th>
+                                            <th>Aluguel</th>
+                                            <th>OBS:</th>
+                                            <th>Opções</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cart">
+                                    
+                                    </tbody>
+                                    <!--tfoot>
+                                        <tr>
+                                            <th>Cod.</th>
+                                            <th>Categoria</th>
+                                            <th>Desc.</th>
+                                            <th>Aluguel</th>
+                                            <th>OBS:</th>
+                                            <th>Opções</th>
+                                        </tr>
+                                    </tfoot-->
+        
+                                </table>
+                            </div>
+
+                        </fieldset>
+
+
+                        <!--Usado apenas para Editar -->
+                        <div hidden="true">
+                            <label for="idOrcamento">Id</label>
+                            <input type="text" id="idOrcamento" name="idOrcamento">
+                        </div>
+
+                    </form>
+
+                    <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                    
+                    <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                        
+                        <a href="/budgets" class="btn btn-danger text-white">Voltar</a>
+                        <!-- btnCreateBudget and btnEditBudget-->
+                        <input id="btnSaveBudget" type="submit" value="Continuar" class="btn btn-success">
+                        
+                        <!-- para desbloquear os camps para editar o procuto -->
+                        <!--input id="btnUpdate" type="button" value="Editar" class="btn btn-primary"-->
+                        
+                    </div>                
+                </div>               
+            </div>  <!-- end Budget -->  
+
+
+        <!-- Product Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b id="modalTitle">Adicionar Produto ao Orçamento</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formRent">
+                            <div class="form-row">
+            
+                                <div class="form-group col-lg-3">
+                                    <label for="codeProduct">Código</label>
+                                    <input type="text" class="form-control" id="codeProduct" name="codeProduct" placeholder="xxx.xx.xx.xx.xx">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-2 mt-4 pt-2">
+                                    <button id="btnAddProduct" type="button" class="btn btn-success">
+                                        Adicionar
+                                    </button>
+                                </div>
+                                <br>
+                                <div id="produto" class="form-group col-lg-12">
+                                    <input id="produto_idProduto_gen" name="produto_idProduto_gen" hidden="true">
+                                    <div id="produtoAdicionado"></div>
+                                    <div id="prodCodigo"></div>
+                                    <div id="prodDescricao"></div>
+                                </div>
+                                
+                                <br>
+                                <div class="form-group col-lg-3">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="0">Alugado</option>
+                                      <option value="1" selected>Disponível</option>     
+                                      <option value="2">Manutenção</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="vlAluguel">Valor Aluguel (unitário)</label>
+                                    <input type="number" class="form-control" name="vlAluguel" id="vlAluguel" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+                               
+                                <div class="form-group col-lg-3">
+                                    <label for="qtd">Quantidade</label>
+                                    <input type="number" class="form-control" name="qtd" id="qtd" placeholder="0">
+                                    <span class="help-block"></span>
+                                </div>
+                                <br>
+                                
+                                <div class="form-group col-lg-3">
+                                    <label for="custoEntrega">Custo de Entrega</label>
+                                    <input type="number" class="form-control" name="custoEntrega" id="custoEntrega" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="custoRetirada">Custo de Retirada</label>
+                                    <input type="number" class="form-control" name="custoRetirada" id="custoRetirada" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="dtInicio">Data de Início</label>
+                                    <input type="date" class="form-control" id="dtInicio" name="dtInicio">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="dtFinal">Data Final</label>
+                                    <input type="date" class="form-control" id="dtFinal" name="dtFinal">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label for="observacao">Obervação: </label>
+                                    <textarea class="form-control" id="observacao" name="observacao" placeholder="anotações do produto (máximo de 300 caracteres)" maxlength="300" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <div hidden="true">
+                                <label for="fk_idOrcamento">Id</label>
+                                <input type="text" id="fk_idOrcamento" name="contrato_idContrato">
+                            </div>
+
+                            <!--Usado apenas para Editar -->
+                            <div hidden="true">
+                                <label for="idHistoricoAluguel">Id</label>
+                                <input type="text" id="idHistoricoAluguel" name="idHistoricoAluguel">
+                            </div>
+
+                         </form>
+
+                         <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                         
+                        <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                             
+                             <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             <!-- btnCreateProduct and btnEditProduct-->
+                             <input id="btnSaveRent" type="submit" value="Cadastrar" class="btn btn-success">
+                             
+                             <!-- para desbloquear os camps para editar o procuto -->
+                             <!--input id="btnUpdate" type="button" value="Editar" class="btn btn-primary"-->
+                             
+                         </div>
+                       
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  <!-- end Product Modal -->  
+
+
+
+        </div>
+
+        
+    <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+    <script src="../res/js/util.js"></script>
+    <script src="../res/js/budget_save.js"></script>
+      

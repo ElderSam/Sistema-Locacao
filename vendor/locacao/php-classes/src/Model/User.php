@@ -18,30 +18,45 @@ class User extends Generator{
     public static function login($login, $password){
 
         $sql = new Sql();
-        
+        $error = false;
+
         $results = $sql->select("SELECT * FROM usuarios WHERE nomeUsuario = :LOGIN", array(
             ":LOGIN"=>$login 
         ));
 
         if(count($results) === 0) //se não encontrou o login
         {
-            throw new \Exception("Usuário inexistente ou senha inválida.");
+            $error = true;
+            //throw new \Exception("Usuário inexistente ou senha inválida.");
+        }else{
+            
+            $data = $results[0];
+
+            if(password_verify($password, $data["senha"]) === true){ //se a senha digitada é equivalente ao Hash do banco
+                
+                $user = new User();
+    
+                $user->setData($data);
+    
+                $_SESSION[User::SESSION] = $user->getValues();
+                
+                //return $user;
+                return json_encode([
+                    "error"=>false
+                ]);
+                
+            }else {
+                $error = true;
+                //throw new \Exception("Usuário inexistente ou senha inválida.");
+            }
         }
 
-        $data = $results[0];
-
-        if(password_verify($password, $data["senha"]) === true){ //se a senha digitada é equivalente ao Hash do banco
+        if($error){
             
-            $user = new User();
-
-            $user->setData($data);
-
-            $_SESSION[User::SESSION] = $user->getValues();
-            
-            return $user;
-            
-        }else {
-            throw new \Exception("Usuário inexistente ou senha inválida.");
+            return json_encode([
+                "error"=>true,
+                "msg"=>"Usuário inexistente ou senha inválida!"
+            ]);
         }
 
     }
@@ -256,13 +271,13 @@ class User extends Generator{
                 ":idUsuario"=>$this->getidUsuario()
             ));
 
-            echo json_encode([
+            return json_encode([
                 "error"=>false,
             ]);
 
         }catch(Exception $e){
 
-            echo json_encode([
+            return json_encode([
                 "error"=>true,
                 "msg"=>$e->getMessage()
             ]);

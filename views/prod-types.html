@@ -1,0 +1,145 @@
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <h2 class="mt-4">Tipos de Produto</h2>
+            <ol class="breadcrumb mb-4 justify-content-between">
+                <li class="breadcrumb-item active">Início/Tipos de Produto</li>
+                <!-- Button trigger modal -->
+                <button id="btnAddProdType" type="button" class="btn btn-success" data-toggle="modal" data-target="#prodTypeModal">
+                    Novo Tipo
+                </button>
+            </ol>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive tabela_menor">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="bg-dark text-white">
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Ordem tipo</th>
+                                    <th>Cod.</th>
+                                    <th>Descrição</th>
+                                    <th>Opções</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listProdTypes">
+
+
+                            </tbody>
+                            <tfoot class="bg-dark text-white">
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Ordem tipo</th>
+                                    <th>Cod.</th>
+                                    <th>Descrição</th>
+                                    <th>Opções</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- fim container-fluid-->
+
+
+
+
+        <!-- ProdType Modal -------------------------------------------->
+        <div class="modal fade" id="prodTypeModal" tabindex="-1" role="dialog" aria-labelledby="Cadastrar Tipo de Produto" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Tipo de Produto</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formProdType">
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-2">
+                                    <label for="codTipo">Código</label>
+                                    <input type="text" class="form-control" name="codTipo" id="codTipo"
+                                        maxlength="2" placeholder="xx" required="">
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                                <div class="form-group col-lg-10">
+                                    <label for="descTipo">Descrição</label>
+                                    <input type="text" class="form-control" name="descTipo" id="descTipo"
+                                    maxlength="50" placeholder="Descrição" required="">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="idCategoria">Categoria</label>
+                                    <select id="idCategoria" name="idCategoria" class="form-control" required="">
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                                <div class="form-group col-lg-6">
+                                    <label for="ordem_tipo">Ordem do Tipo</label>
+                                    <select id="ordem_tipo" name="ordem_tipo" class="form-control" required="">
+                                    <option value="1">tipo 1</option>
+                                    <option value="2">tipo 2</option>
+                                    <option value="3">tipo 3</option>
+                                    <option value="4">tipo 4</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <!--Aparece apenas para Editar -->
+                                <div class="form-group col-lg-6">
+                                    <label for="dtCadastro">Data de Cadastro</label>
+                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
+                                </div>
+                                
+                                <!--Aparece apenas para Editar -->
+                                <div hidden="true">
+                                    <label for="id">Id</label>
+                                    <input type="text" id="id" name="id">
+                                </div>
+                            </div>
+                           
+                        </form>
+
+                        <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                        <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                            
+                            <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <!-- btnCreateProdType and btnEditProdType-->
+                            <input id="btnSaveProdType" type="submit" value="Cadastrar" class="btn btn-success">
+                            
+                            <!-- para desbloquear os camps para editar o usuário -->
+                            <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- End ProdType Modal --------------------------------------------->
+
+ 
+<script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+            
+<script src="../res/js/util.js"></script>
+<script src="../res/js/prod-types.js"></script>
+ <!--
+<script>
+	$(document).ready(function() {
+
+  	$("#linkProdTypes").addClass("active"); 
+
+	$('#example').DataTable();
+	
+});
+
+</script>
+-->

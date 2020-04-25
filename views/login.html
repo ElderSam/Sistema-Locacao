@@ -8,7 +8,9 @@
         <meta name="author" content="" />
         <title>Sistema Locação</title>
         <link href="/res/css/styles.css" rel="stylesheet" />
+        <link href="/res/css/my_style.css" rel="stylesheet" />
         <script src="/res/plugins/font-awesome/all.min.js"></script>
+        <script src="/res/plugins/swal/sweetalert2.all.min.js"></script>
     </head>
     <body class="bg-secondary">
         <div id="layoutAuthentication">
@@ -20,23 +22,28 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                     <div class="card-body">
-                                        <form action="/login" method="post">
+                                        <form id="formLogin">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="login">Usuário</label>
                                                 <input class="form-control py-4" id="login" name="login" type="text" placeholder="Coloque seu nome de usuário" required="true"/>
+                                                <span class="help-block"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="small mb-1" for="password">Senha</label>
                                                 <input class="form-control py-4" id="password" name="password" type="password" placeholder="Sua senha" required="true"/>
+                                                <span class="help-block"></span>
                                             </div>
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox"><input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
                                                     <label class="custom-control-label" for="rememberPasswordCheck">Relembrar senha</label>
                                                 </div>
                                             </div>
+
+                                            <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                        
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="password.html">Esqueci minha senha</a>
-                                                <button type="submit" class="btn btn-primary">Entrar</button></div>
+                                                <button id="btnLogin" type="submit" class="btn btn-primary">Entrar</button></div>
                                         </form>
                                     </div>
                                 </div>
@@ -62,7 +69,9 @@
         </div--> <!-- end layoutAuthentication -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
+
+       
+        <script src="../res/js/login.js"></script>
     </body>
 </html>
 

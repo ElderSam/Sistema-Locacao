@@ -7,38 +7,36 @@ use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
 
-class Supplier extends Generator{
+class Rent extends Generator{
 
     public static function listAll(){
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores ORDER BY nome");
+        $results = $sql->select("SELECT * FROM historicoalugueis ORDER BY nome");
     
         return json_encode($results);
     }
 
     public function insert(){
+    
         
         $sql = new Sql();
+        
+        //print_r($_POST);
 
-        if(($this->getcodigo() != "") && ($this->getnome() != "") && ($this->getstatus() != "")){
+        if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_fornecedores_save(:codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
-                ":codFornecedor"=>$this->getcodigo(),
-                ":nome"=>$this->getnome(),
-                ":telefone1"=>$this->gettelefone1(),
-                ":telefone2"=>$this->gettelefone2(),
-                ":email1"=>$this->getemail1(),
-                ":email2"=>$this->getemail2(),
-                ":endereco"=>$this->getendereco(),
-                ":numero"=>$this->getnumero(),
-                ":bairro"=>$this->getbairro(),
-                ":cidade"=>$this->getcidade(),
-                ":complemento"=>$this->getcomplemento(),
-                ":uf"=>$this->getuf(),
-                ":cep"=>$this->getcep(),
-                ":status"=>$this->getstatus()
+            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+                ":contrato_idContrato"=>$this->getcontrato_idContrato(),
+                ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
+                ":status"=>$this->getstatus(),
+                ":vlAluguel"=>$this->getvlAluguel(),
+                ":dtInicio"=>$this->getdtInicio(),
+                ":dtFinal"=>$this->getdtFinal(),
+                ":custoEntrega"=>$this->getcustoEntrega(),
+                ":custoRetirada"=>$this->getcustoRetirada(),
+                ":observacao"=>$this->getobservacao()
             ));
 
             if(count($results) > 0){
@@ -50,7 +48,7 @@ class Supplier extends Generator{
             }else{
                 return json_encode([
                     "error"=>true,
-                    "msg"=>"Erro ao inserir Fornecedor!"
+                    "msg"=>"Erro ao inserir Aluguel!"
                     ]);
             }
        
@@ -68,7 +66,7 @@ class Supplier extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores WHERE idFornecedor = :idFornecedor", array(
+        $results = $sql->select("SELECT * FROM historicoalugueis WHERE idFornecedor = :idFornecedor", array(
             ":idFornecedor"=>$idFornecedor
         ));
 
@@ -83,7 +81,7 @@ class Supplier extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores WHERE (nome = :nome)", array(
+        $results = $sql->select("SELECT * FROM historicoalugueis WHERE (nome = :nome)", array(
             ":nome"=>$nome
         ));
 
@@ -92,7 +90,7 @@ class Supplier extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM fornecedores";
+        $query = "SELECT * FROM historicoalugueis";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -104,7 +102,7 @@ class Supplier extends Generator{
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
 
-                if ($field == "status") {
+                /*if ($field == "status") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
                     if (($search == "ATIV")) {
@@ -114,22 +112,9 @@ class Supplier extends Generator{
                     }
 
                     //echo "status: ".$search;
-                }
+                }*/
 
-                if ($field == "tipo1") {
-                  
-                    if (($search == "3M")) {
-                        $search = 1;
-                    } else if ($search == "4M") {
-                        $search = 2;
-                    } else if ($search == "6M") {
-                        $search = 3;
-                    } else if ($search == "12M") {
-                        $search = 4;
-                    }
 
-                    //echo "tipo1: ".$search;
-                }
 
                 //filtra no banco
                 if ($first) {
@@ -152,11 +137,11 @@ class Supplier extends Generator{
         $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
-        $suppliers = new Supplier();
+        $rents = new Rent();
         //echo $query;
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$suppliers->searchAll($query)
+            'data'=>$rents->searchAll($query)
         );
     }
 
@@ -174,7 +159,7 @@ class Supplier extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores");
+        $results = $sql->select("SELECT * FROM historicoalugueis");
 
         return count($results);		
 	}
@@ -184,7 +169,7 @@ class Supplier extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_fornecedoresUpdate_save(:idFornecedor, :codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
+        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idFornecedor, :codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
             ":idFornecedor"=>$this->getidFornecedor(),
             ":codFornecedor"=>$this->getcodigo(),
             ":nome"=>$this->getnome(),
@@ -211,7 +196,7 @@ class Supplier extends Generator{
         }else{
             return json_encode([
                 "error"=>true,
-                "msg"=>"Erro ao atualizar Fornecedor!"
+                "msg"=>"Erro ao atualizar Aluguel!"
                 ]);
         }
 
@@ -223,7 +208,7 @@ class Supplier extends Generator{
 
         try{
 
-            $sql->query("CALL sp_fornecedores_delete(:idFornecedor)", array(
+            $sql->query("CALL sp_historicoalugueis_delete(:idFornecedor)", array(
                 ":idFornecedor"=>$this->getidFornecedor()
             ));
 
@@ -231,7 +216,7 @@ class Supplier extends Generator{
 
                 return json_encode([
                     "error"=>true,
-                    "msg"=>'Erro ao excluir Fornecedor'
+                    "msg"=>"Erro ao excluir Aluguel"
                 ]);
 
             }else{
@@ -250,25 +235,6 @@ class Supplier extends Generator{
 
         }
        
-    }
-
-    public static function showsNextNumber(){
-
-        $sql = new Sql();
-
-        $results = $sql->select("SELECT MAX(codFornecedor) FROM fornecedores");
-        $nextNumber = 1 + $results[0]['MAX(codFornecedor)'];
-       
-        if($nextNumber < 10){
-            $nextNumber = "00". $nextNumber;
-
-        }else if($nextNumber < 100){
-            $nextNumber = "0". $nextNumber;
-            
-        }
-        
-        return $nextNumber; //retorna o próximo número de série da categoria
-
     }
     
 }
