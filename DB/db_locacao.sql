@@ -1,12 +1,9 @@
-CREATE DATABASE IF NOT EXISTS db_locacao;
-USE db_locacao;
-
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25-Abr-2020 às 18:55
+-- Tempo de geração: 25-Abr-2020 às 22:45
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -29,6 +26,65 @@ DELIMITER $$
 --
 -- Procedimentos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  BEGIN
+  
+    DECLARE vidCliente INT;
+    
+    SELECT idCliente INTO vidCliente
+    FROM clientes
+    WHERE idCliente = pidCliente;
+
+    UPDATE clientes
+    SET
+        nome = pnome, 
+        status = pstatus,
+        telefone1 = ptelefone1,
+        telefone2 = ptelefone2,
+        email1 = pemail1,
+        email2 = pemail2,
+        endereco = pendereco,
+        complemento = pcomplemento,
+        cidade = pcidade,
+        bairro = pbairro,
+        numero = pnumero,
+        uf = puf,
+        cep = pcep,
+        cpf = pcpf,
+        rg = prg,
+        cnpj = pcnpj,
+        ie = pie,
+        tipoCliente = ptipoCliente
+    WHERE idCliente = vidCliente;
+    
+    SELECT * FROM clientes WHERE idCliente = pidCliente;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_delete` (IN `pidCliente` INT)  BEGIN
+  
+    DECLARE vidCliente INT;
+    
+  SELECT idCliente INTO vidCliente
+    FROM clientes
+    WHERE idCliente = pidCliente;
+    
+    DELETE FROM clientes WHERE idCliente = pidCliente;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(45), `pstatus` TINYINT, `ptelefone1` VARCHAR(15), `ptelefone2` VARCHAR(15), `pemail1` VARCHAR(45), `pemail2` VARCHAR(45), `pendereco` VARCHAR(45), `pcomplemento` VARCHAR(150), `pcidade` VARCHAR(25), `pbairro` VARCHAR(25), `pnumero` INT(11), `puf` CHAR(2), `pcep` VARCHAR(45), `pcpf` VARCHAR(45), `prg` VARCHAR(45), `pcnpj` VARCHAR(45), `pie` VARCHAR(45), `ptipoCliente` VARCHAR(45))  BEGIN
+
+    DECLARE vidCliente INT;
+    
+  INSERT INTO clientes (nome, status, telefone1, telefone2, email1, email2, endereco, complemento, cidade, bairro, numero, uf, cep, cpf, rg, cnpj, ie, tipoCliente)
+    VALUES(pnome, pstatus, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pcpf, prg, pcnpj, pie, ptipoCliente);
+    
+    SET vidCliente = LAST_INSERT_ID();
+    
+    SELECT * FROM clientes WHERE idcliente = LAST_INSERT_ID();
+    
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `pdtAprovacao` DATETIME, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pnotas` VARCHAR(100), IN `pvalorAluguel` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATETIME, IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
@@ -390,6 +446,54 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_tipos_save` (IN `pdescTipo`
     
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pidResp` INT, IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+  
+    DECLARE vidResp INT;
+    
+    SELECT idResp INTO vidResp
+    FROM resp_obras
+    WHERE idResp = pidResp;
+
+    UPDATE resp_obras
+    SET
+        respObra = prespObra, 
+        telefone1 = ptelefone1,
+        telefone2 = ptelefone2,
+        telefone3 = ptelefone3,
+        email1 = pemail1,
+        email2 = pemail2,
+        anotacoes = panotacoes,
+        id_fk_cliente = pid_fk_cliente
+    WHERE idResp = vidResp;
+    
+    SELECT * FROM resp_obras WHERE idResp = pidResp;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_delete` (IN `pidResp` INT)  BEGIN
+  
+    DECLARE vidResp INT;
+    
+  SELECT idResp INTO vidResp
+    FROM resp_obras
+    WHERE idResp = pidResp;
+    
+    DELETE FROM resp_obras WHERE idResp = pidResp;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+DECLARE vidResp INT;
+    
+  INSERT INTO resp_obras (respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
+    VALUES(prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
+    
+    SET vidResp = LAST_INSERT_ID();
+    
+    SELECT * FROM resp_obras WHERE idResp = LAST_INSERT_ID();
+    
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuariosUpdate_save` (IN `pidUsuario` INT, IN `pnomeCompleto` VARCHAR(60), IN `pfuncao` VARCHAR(45), IN `pnomeUsuario` VARCHAR(45), IN `pemail` VARCHAR(45), IN `padministrador` TINYINT, IN `pfoto` VARCHAR(100))  BEGIN
   
     DECLARE vidUsuario INT;
@@ -437,127 +541,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuarios_save` (`pnomeCompleto` 
     
 END$$
 
---Procedures de Clientes
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(45), `pstatus` TINYINT, `ptelefone1` VARCHAR(15), `ptelefone2` VARCHAR(15), `pemail1` VARCHAR(45), `pemail2` VARCHAR(45), `pendereco` VARCHAR(45), `pcomplemento` VARCHAR(150), `pcidade` VARCHAR(25), `pbairro` VARCHAR(25), `pnumero` INT(11), `puf` CHAR(2), `pcep` VARCHAR(45), `pcpf` VARCHAR(45), `prg` VARCHAR(45), `pcnpj` VARCHAR(45), `pie` VARCHAR(45), `ptipoCliente` VARCHAR(45)) 
-BEGIN
-
-    DECLARE vidCliente INT;
-    
-  INSERT INTO clientes (nome, status, telefone1, telefone2, email1, email2, endereco, complemento, cidade, bairro, numero, uf, cep, cpf, rg, cnpj, ie, tipoCliente)
-    VALUES(pnome, pstatus, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pcpf, prg, pcnpj, pie, ptipoCliente);
-    
-    SET vidCliente = LAST_INSERT_ID();
-    
-    SELECT * FROM clientes WHERE idcliente = LAST_INSERT_ID();
-    
-END$$
 DELIMITER ;
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  
-BEGIN
-  
-    DECLARE vidCliente INT;
-    
-    SELECT idCliente INTO vidCliente
-    FROM clientes
-    WHERE idCliente = pidCliente;
-
-    UPDATE clientes
-    SET
-        nome = pnome, 
-        status = pstatus,
-        telefone1 = ptelefone1,
-        telefone2 = ptelefone2,
-        email1 = pemail1,
-        email2 = pemail2,
-        endereco = pendereco,
-        complemento = pcomplemento,
-        cidade = pcidade,
-        bairro = pbairro,
-        numero = pnumero,
-        uf = puf,
-        cep = pcep,
-        cpf = pcpf,
-        rg = prg,
-        cnpj = pcnpj,
-        ie = pie,
-        tipoCliente = ptipoCliente
-    WHERE idCliente = vidCliente;
-    
-    SELECT * FROM clientes WHERE idCliente = pidCliente;
-    
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_delete` (IN `pidCliente` INT)  BEGIN
-  
-    DECLARE vidCliente INT;
-    
-  SELECT idCliente INTO vidCliente
-    FROM clientes
-    WHERE idCliente = pidCliente;
-    
-    DELETE FROM clientes WHERE idCliente = pidCliente;
-    
-END$$
-
---Procedures dos resposáveis pelas Obras --------------------------------------------------------
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pidResp` INT, IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15),  IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  
-BEGIN
-  
-    DECLARE vidResp INT;
-    
-    SELECT idResp INTO vidResp
-    FROM resp_obras
-    WHERE idResp = pidResp;
-
-    UPDATE resp_obras
-    SET
-        respObra = prespObra, 
-        telefone1 = ptelefone1,
-        telefone2 = ptelefone2,
-        telefone3 = ptelefone3,
-        email1 = pemail1,
-        email2 = pemail2,
-        anotacoes = panotacoes,
-        id_fk_cliente = pid_fk_cliente
-    WHERE idResp = vidResp;
-    
-    SELECT * FROM resp_obras WHERE idResp = pidResp;
-    
-END$$
-
-DELIMITER ;
-
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15),  IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
-  
-    DECLARE vidResp INT;
-    
-  INSERT INTO resp_obras (respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
-    VALUES(prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
-    
-    SET vidResp = LAST_INSERT_ID();
-    
-    SELECT * FROM resp_obras WHERE idResp = LAST_INSERT_ID();
-    
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_delete` (IN `pidResp` INT)  BEGIN
-  
-    DECLARE vidResp INT;
-    
-  SELECT idResp INTO vidResp
-    FROM resp_obras
-    WHERE idResp = pidResp;
-    
-    DELETE FROM resp_obras WHERE idResp = pidResp;
-    
-END$$
-
+-- --------------------------------------------------------
 
 --
 -- Estrutura da tabela `aditamentos`
@@ -582,20 +568,19 @@ CREATE TABLE `aditamentos` (
 
 CREATE TABLE `clientes` (
   `idCliente` int(11) NOT NULL,
-  `nome` varchar(45) NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `telefone1` varchar(15) NOT NULL,
+  `nome` varchar(45) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `telefone1` varchar(15) DEFAULT NULL,
   `telefone2` varchar(15) DEFAULT NULL,
-  `email1` varchar(45) NOT NULL,
+  `email1` varchar(45) DEFAULT NULL,
   `email2` varchar(45) DEFAULT NULL,
-  `endereco` varchar(45) NOT NULL,
-  `tipoEndereco` varchar(45) NOT NULL,
+  `endereco` varchar(45) DEFAULT NULL,
   `complemento` varchar(150) DEFAULT NULL,
-  `cidade` varchar(25) NOT NULL,
-  `bairro` varchar(20) NOT NULL,
-  `numero` int(11) NOT NULL,
-  `uf` char(2) NOT NULL,
-  `cep` varchar(45) NOT NULL,
+  `cidade` varchar(25) DEFAULT NULL,
+  `bairro` varchar(20) DEFAULT NULL,
+  `numero` int(11) DEFAULT NULL,
+  `uf` char(2) DEFAULT NULL,
+  `cep` varchar(45) DEFAULT NULL,
   `cpf` varchar(45) DEFAULT NULL,
   `rg` varchar(45) DEFAULT NULL,
   `cnpj` varchar(45) DEFAULT NULL,
@@ -605,25 +590,14 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Estrutura da tabela `resObras`
+-- Extraindo dados da tabela `clientes`
 --
 
-CREATE TABLE `resp_obras`(
-  `respObra` varchar(45) NOT NULL,
-  `telefone1` varchar(15) NOT NULL,
-  `telefone2` varchar(15) DEFAULT NULL,
-  `telefone3` varchar(15) DEFAULT NULL,
-  `email1` varchar(45) NOT NULL,
-  `email2` varchar(45) DEFAULT NULL,
-  `anotacoes` varchar(100) DEFAULT NULL,
-  `dtCadastro` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---
--- Estrutura da tabela `containers`
---
-
-INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `tipoEndereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
-(1, 'CLIENTE TESTE 1', 1, '19 99999999', NULL, 'teste@teste.com', NULL, 'TESTE', 'barracao', NULL, 'Limeira', 'Centro', 123, 'SP', '0396356', NULL, NULL, '3243423423423', NULL, '?????', '2020-03-31 22:13:56');
+INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
+(33, 'Construtora Guilhermina', 1, '(19) 5454-54545', '(54) 5454-54545', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Jorge Salibe Sobrinho', '', 'Limeira', 'Parque das Nações', 454, 'BA', '13481-659', '', '', '53.252.352/5252-55', '423432423523532', 'J', '2020-04-04 19:07:05'),
+(34, 'Construtora do Matheusss', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', 'sdffsfsfdsfdsfsgsghrjjnffjf', 'Limeira', 'Jardim Botânicokjs', 424, 'AM', '13481-659', '', '', '86.867.867/8868-86', '425454543453', 'J', '2020-04-04 21:33:41'),
+(35, 'Construtela', 1, '(19) 9438-74384', '(19) 5379-8537', 'construtela_exemplo@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Thereza de Oliveira Lima ', 'Este é um exemplo de cliente', 'Piracicaba', 'Campos do Conde', 232, 'RN', '31737-361', '', '', '09.804.980/2804-34', '3283748983248', 'J', '2020-04-25 08:08:03'),
+(36, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02');
 
 -- --------------------------------------------------------
 
@@ -646,66 +620,6 @@ CREATE TABLE `contratos` (
   `statusOrcamento` tinyint(4) NOT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Extraindo dados da tabela `contratos`
---
-
-INSERT INTO `contratos` (`idContrato`, `codContrato`, `obra_idObra`, `dtEmissao`, `dtAprovacao`, `custoEntrega`, `custoRetirada`, `notas`, `valorAluguel`, `dtInicio`, `dtFim`, `statusOrcamento`, `dtCadastro`) VALUES
-(1, '1', 1, '2020-04-03', '0000-00-00', 500, 300, '', 3500, '2019-03-05', '2020-03-04', 2, '2020-03-31 22:27:25'),
-(3, '2', 1, '2020-03-31', '2020-03-31', 200, 100, '', 4500, '2020-04-03', '2020-05-03', 4, '2020-03-31 23:04:24'),
-(5, '3', 1, '2020-03-05', '2020-04-04', 456, 3453, '', 1556, '2020-04-04', '2021-04-03', 5, '2020-04-03 23:00:12'),
-(6, '4', 1, '2020-02-01', '2020-04-03', 502, 362, '', 15200.8, '2020-04-03', '2020-04-04', 5, '2020-04-03 23:11:40'),
-(7, '5', 1, '2020-03-28', '0000-00-00', 566.2, 350.99, '', 1500.99, '2020-02-12', '2020-02-11', 4, '2020-04-03 23:15:05'),
-(8, '6', 1, '2020-04-03', NULL, 526, 362.66, 'Cliente negativado no SERASA', 3500.45, NULL, NULL, 2, '2020-04-03 23:23:38'),
-(9, '7', 1, '2020-04-04', '2020-04-04', 500, 200, 'teste', 13000, NULL, NULL, 1, '2020-04-04 21:22:26'),
-(10, '8', 1, '2020-04-03', '2020-04-04', 500, 200, '', 2000, NULL, NULL, 1, '2020-04-04 21:22:54'),
-(11, '9', 1, '2020-04-03', '0000-00-00', 200, 50, '', 5000, '2020-04-04', '2021-04-03', 3, '2020-04-04 21:24:52'),
-(34, '10', 1, '2200-04-11', NULL, 234, 23423, '', 2342, NULL, NULL, 0, '2020-04-14 16:20:06'),
-(35, '10', 1, '2020-04-17', NULL, 500, 450, '', 5000, NULL, NULL, 0, '2020-04-17 10:23:51'),
-(36, '10', 1, '2020-04-17', NULL, 500, 450, '', 5000, NULL, NULL, 0, '2020-04-17 10:24:01'),
-(37, '10', 1, '2020-07-14', NULL, 200, 500, '', 600, NULL, NULL, 0, '2020-04-17 10:29:25'),
-(38, '10', 1, '0000-00-00', NULL, 2342, 234, '', 234, NULL, NULL, 0, '2020-04-17 10:35:20'),
-(39, '10', 1, '2020-04-20', NULL, 345, 3453, '', 4353, NULL, NULL, 0, '2020-04-17 10:37:55'),
-(40, '10', 1, '2020-07-14', NULL, 234, 234, '', 234, NULL, NULL, 0, '2020-04-17 10:39:23'),
-(41, '10', 1, '2020-04-17', NULL, 535, 234324, '', 234, NULL, NULL, 0, '2020-04-17 10:40:34'),
-(42, '10', 1, '2020-04-17', NULL, 500, 200, '', 3000, NULL, NULL, 0, '2020-04-17 11:10:12'),
-(43, '10', 1, '2020-04-17', NULL, 500, 450, '', 2000, NULL, NULL, 0, '2020-04-17 18:46:32'),
-(44, '10', 1, '2020-04-23', '2020-04-17', 200, 200, '', 565, NULL, NULL, 1, '2020-04-17 18:48:04'),
-(45, '10', 1, '2020-04-17', NULL, 500, 400, '', 2000, NULL, NULL, 0, '2020-04-17 18:51:01'),
-(46, '10', 1, '2020-07-14', NULL, 500, 200, '', 500, NULL, NULL, 0, '2020-04-17 19:00:49'),
-(47, '10', 1, '2020-07-14', NULL, 500, 200, '', 500, NULL, NULL, 0, '2020-04-17 19:11:38'),
-(48, '10', 1, '2020-07-14', NULL, 800, 100, '', 400, NULL, NULL, 0, '2020-04-19 23:20:23'),
-(49, '10', 1, '2020-04-22', NULL, 520, 436.88, 'cadastro teste', 2500.99, NULL, NULL, 0, '2020-04-22 15:26:36'),
-(50, '10', 1, '2020-04-22', NULL, 520, 450, 'cadastro teste', 5200, NULL, NULL, 0, '2020-04-22 15:46:05'),
-(51, '10', 1, '2020-04-22', NULL, 445, 400, 'cadastro ', 5000, NULL, NULL, 0, '2020-04-22 15:47:39'),
-(52, '10', 1, '2020-12-22', NULL, 234, 234, '', 25, NULL, NULL, 3, '2020-04-22 15:50:56'),
-(53, '10', 1, '2020-12-22', NULL, -1, 234, '234', 234, NULL, NULL, 3, '2020-04-22 15:52:47'),
-(54, '10', 1, '2020-11-22', NULL, 32423, 2342, '', 2342, NULL, NULL, 0, '2020-04-22 15:53:37'),
-(55, '10', 1, '2020-12-31', NULL, 43, 234, '', 234, NULL, NULL, 3, '2020-04-22 16:00:55'),
-(56, '10', 1, '2020-12-31', NULL, 345, 34234, '23432', 2342, NULL, NULL, 0, '2020-04-22 16:02:23'),
-(57, '10', 1, '2020-12-22', NULL, 800, 400, '', 5400, NULL, NULL, 0, '2020-04-22 16:18:19'),
-(58, '10', 1, '2020-04-22', NULL, 500, 400, '', 200, NULL, NULL, 0, '2020-04-22 16:21:06'),
-(59, '10', 1, '2020-12-31', NULL, 2453, 345, '', 345, NULL, NULL, 0, '2020-04-22 16:34:33'),
-(60, '10', 1, '2322-02-22', NULL, 2342, 234, '', 234, NULL, NULL, 0, '2020-04-22 16:38:40'),
-(61, '10', 1, '2020-12-31', NULL, 345, 345, '', 345, NULL, NULL, 0, '2020-04-22 16:43:36'),
-(62, '10', 1, '2020-04-22', NULL, 5, 500, '', 50, NULL, NULL, 0, '2020-04-22 16:45:51'),
-(63, '10', 1, '2020-12-31', NULL, 453, 345, '345', 345, NULL, NULL, 0, '2020-04-22 16:48:26'),
-(64, '10', 1, '0234-04-23', NULL, 345, 3453, '', 34535, NULL, NULL, 0, '2020-04-22 16:48:52'),
-(65, '10', 1, '2020-12-31', NULL, 345, 345, '45', 345, NULL, NULL, 0, '2020-04-22 16:53:50'),
-(66, '10', 1, '2020-12-23', NULL, -1, -1, '23423', -1, NULL, NULL, 3, '2020-04-22 16:54:05'),
-(67, '10', 1, '3232-02-23', NULL, 200, 234, '', 234, NULL, NULL, 0, '2020-04-22 17:07:41'),
-(68, '10', 1, '2020-04-22', NULL, 520, 400, '', 15000, NULL, NULL, 0, '2020-04-22 23:27:22'),
-(69, '10', 1, '2020-04-22', NULL, 520, 460, '120', 500, NULL, NULL, 0, '2020-04-22 23:30:45'),
-(70, '10', 1, '2020-04-22', NULL, 520, 460, '120', 500, NULL, NULL, 0, '2020-04-22 23:30:56'),
-(71, '10', 1, '2020-04-25', NULL, 500, 400, '', 3000, NULL, NULL, 0, '2020-04-25 07:52:07'),
-(72, '10', 1, '2020-04-25', NULL, 500, 350, '', 23434, NULL, NULL, 0, '2020-04-25 08:05:34'),
-(73, '10', 1, '2020-04-25', NULL, 500, 400, '', 2343, NULL, NULL, 0, '2020-04-25 08:07:21'),
-(74, '10', 1, '2020-12-31', NULL, 23423, 23422, '', 34, NULL, NULL, 0, '2020-04-25 08:09:06'),
-(75, '10', 1, '2020-12-31', NULL, 234, 2342, '', 23423, NULL, NULL, 0, '2020-04-25 08:10:39'),
-(76, '10', 1, '2020-11-22', NULL, -1, -1, '', -1, NULL, NULL, 3, '2020-04-25 08:12:02'),
-(77, '10', 1, '2020-12-31', NULL, 3453, 345, '', 3453, NULL, NULL, 0, '2020-04-25 08:20:21'),
-(78, '10', 1, '2020-12-31', NULL, 500, 500, '', 500, NULL, NULL, 0, '2020-04-25 08:43:13');
 
 -- --------------------------------------------------------
 
@@ -790,19 +704,6 @@ CREATE TABLE `historicoalugueis` (
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Extraindo dados da tabela `historicoalugueis`
---
-
-INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(10, 56, 180, 1, 345, '2020-12-31', '0000-00-00', 3453, 32452, '234', '2020-04-22 16:04:40'),
-(11, 56, 180, 1, 345, '2020-12-31', '0000-00-00', 3453, 32452, '234', '2020-04-22 16:06:41'),
-(12, 58, 180, 1, 5000, '0000-00-00', '0000-00-00', 230.88, 150, '', '2020-04-22 16:24:24'),
-(13, 64, 180, 1, 500, '0000-00-00', '0000-00-00', 0, 0, '', '2020-04-22 16:52:01'),
-(14, 66, 180, 1, 2345, '0000-00-00', '0000-00-00', 0, 0, '', '2020-04-22 16:54:31'),
-(15, 76, 187, 1, 15470, '2020-04-25', '2021-04-24', 234, 234, '', '2020-04-25 08:14:12'),
-(16, 77, 187, 1, 15470, '0000-00-00', '0000-00-00', 0, 0, '', '2020-04-25 08:20:35');
-
 -- --------------------------------------------------------
 
 --
@@ -820,16 +721,10 @@ CREATE TABLE `obras` (
   `uf` char(2) NOT NULL,
   `cep` varchar(45) NOT NULL,
   `endereco` varchar(45) NOT NULL,
-  `cliente_idCliente` int(11) NOT NULL,
-  `dtCadastro` datetime DEFAULT current_timestamp()
+  `id_fk_resp` int(11) NOT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp(),
+  `id_fk_cliente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Extraindo dados da tabela `obras`
---
-
-INSERT INTO `obras` (`idObra`, `codObra`, `respObra`, `telefone1`, `telefone2`, `email1`, `email2`, `complemento`, `tipoEndereco`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `cliente_idCliente`, `dtCadastro`) VALUES
-(1, 1, 'TESTE', '342445', NULL, 'teste@teste', NULL, NULL, '??', 'Limeira', 'Vila Dona Rosa', 50, 'SP', '324252532', 'RUA X', 1, '2020-03-31 22:15:21');
 
 -- --------------------------------------------------------
 
@@ -1021,6 +916,37 @@ INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTip
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `resp_obras`
+--
+
+CREATE TABLE `resp_obras` (
+  `idResp` int(11) NOT NULL,
+  `respObra` varchar(45) DEFAULT NULL,
+  `telefone1` varchar(15) DEFAULT NULL,
+  `telefone2` varchar(15) DEFAULT NULL,
+  `telefone3` varchar(15) DEFAULT NULL,
+  `email1` varchar(45) DEFAULT NULL,
+  `email2` varchar(45) DEFAULT NULL,
+  `anotacoes` varchar(150) DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp(),
+  `id_fk_cliente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `resp_obras`
+--
+
+INSERT INTO `resp_obras` (`idResp`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`, `id_fk_cliente`) VALUES
+(3, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56', 34),
+(5, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50', 34),
+(7, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39', 34),
+(10, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41', 35),
+(12, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14', 35),
+(13, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11', 33);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `usuarios`
 --
 
@@ -1096,7 +1022,8 @@ ALTER TABLE `historicoalugueis`
 --
 ALTER TABLE `obras`
   ADD PRIMARY KEY (`idObra`),
-  ADD KEY `fk_obra_cliente1` (`cliente_idCliente`);
+  ADD KEY `fk_obra_cliente1` (`id_fk_resp`),
+  ADD KEY `id_fk_cliente` (`id_fk_cliente`);
 
 --
 -- Índices para tabela `produtos_esp`
@@ -1138,6 +1065,13 @@ ALTER TABLE `prod_tipos`
   ADD KEY `fk_idCategoria` (`idCategoria`) USING BTREE;
 
 --
+-- Índices para tabela `resp_obras`
+--
+ALTER TABLE `resp_obras`
+  ADD PRIMARY KEY (`idResp`),
+  ADD KEY `id_fkcliente` (`id_fk_cliente`);
+
+--
 -- Índices para tabela `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -1150,11 +1084,6 @@ ALTER TABLE `usuarios`
 --
 -- AUTO_INCREMENT de tabela `aditamentos`
 --
-
-ALTER TABLE `usuarios`
-   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT;
-
-
 ALTER TABLE `aditamentos`
   MODIFY `idAditamento` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -1162,7 +1091,7 @@ ALTER TABLE `aditamentos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de tabela `contratos`
@@ -1192,7 +1121,7 @@ ALTER TABLE `historicoalugueis`
 -- AUTO_INCREMENT de tabela `obras`
 --
 ALTER TABLE `obras`
-  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_esp`
@@ -1225,6 +1154,12 @@ ALTER TABLE `prod_tipos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
+-- AUTO_INCREMENT de tabela `resp_obras`
+--
+ALTER TABLE `resp_obras`
+  MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -1233,12 +1168,6 @@ ALTER TABLE `usuarios`
 --
 -- Restrições para despejos de tabelas
 --
-
---
--- Limitadores para a tabela `aditamentos`
---
-ALTER TABLE `aditamentos`
-  ADD CONSTRAINT `fk_aditamento_contrato1` FOREIGN KEY (`contrato_idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `contratos`
@@ -1263,7 +1192,9 @@ ALTER TABLE `historicoalugueis`
 -- Limitadores para a tabela `obras`
 --
 ALTER TABLE `obras`
-  ADD CONSTRAINT `fk_obra_cliente1` FOREIGN KEY (`cliente_idCliente`) REFERENCES `clientes` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_obra_cliente1` FOREIGN KEY (`id_fk_resp`) REFERENCES `clientes` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `id_fk_cliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`),
+  ADD CONSTRAINT `id_fkresp` FOREIGN KEY (`id_fk_resp`) REFERENCES `resp_obras` (`idResp`);
 
 --
 -- Limitadores para a tabela `produtos_esp`
@@ -1293,6 +1224,12 @@ ALTER TABLE `prod_containers`
 --
 ALTER TABLE `prod_tipos`
   ADD CONSTRAINT `fk_tiposprodutos_categoria` FOREIGN KEY (`idCategoria`) REFERENCES `prod_categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `resp_obras`
+--
+ALTER TABLE `resp_obras`
+  ADD CONSTRAINT `id_fkcliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
