@@ -1,4 +1,4 @@
-CREATE database db_locacao;
+CREATE DATABASE IF NOT EXISTS db_locacao;
 USE db_locacao;
 
 -- phpMyAdmin SQL Dump
