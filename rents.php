@@ -72,6 +72,7 @@ $app->get("/rents/addToContract/:codRent", function($codRent){
 /* rota para criar usuário (salva no banco) -----------*/
 $app->post("/rents/create", function(){
 
+    
 	$rent = new RentController();
 	echo $rent->save();
 

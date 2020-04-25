@@ -109,12 +109,3 @@ $app->get('/products/types/json/:idCategory', function($idCategory){
     echo Category::listTypes($idCategory);
   
 });
-
-
-$app->post('/products/showsNextNumber/:idCategory', function($idCategory){
-
-    User::verifyLogin();
-
-    echo Product::showsNextNumber($idCategory);
-  
-});

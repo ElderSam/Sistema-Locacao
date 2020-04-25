@@ -15,6 +15,7 @@ class RentController extends Generator
     }
 
 
+
     public function save($update = false) //Add a new Rent or Update
     {
         
@@ -60,7 +61,7 @@ class RentController extends Generator
                 $errors["#contrato"] = "Contrato é obrigatório!";
         }
 
-        if ($_POST["produto_idProduto"] == "") {
+        if ($_POST["produto_idProduto_gen"] == "") {
             $errors["#codeProduct"] = "Produto é obrigatório!";
         }
 

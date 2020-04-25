@@ -78,7 +78,7 @@
                             </div>
 
                             <div class="form-group col-lg-3">
-                                <label for="valorAluguel">Valor Aluguel</label>
+                                <label for="valorAluguel">Valor Aluguel (total)</label>
                                 <input type="number" class="form-control" id="valorAluguel" name="valorAluguel" placeholder="000" maxlength="3">
                                 <span class="help-block"></span>
                             </div>
@@ -98,7 +98,7 @@
                             </button> <br>
                             
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover" cellspacing="0">
+                                <table class="table table-bordered table-hover" id="dataTable" cellspacing="0">
                                     <thead>
                                     
                                         <tr>
@@ -107,7 +107,7 @@
                                             <th>Desc.</th>
                                             <th>Aluguel</th>
                                             <th>OBS:</th>
-                                            <th>Remover</th>
+                                            <th>Opções</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cart">
@@ -120,7 +120,7 @@
                                             <th>Desc.</th>
                                             <th>Aluguel</th>
                                             <th>OBS:</th>
-                                            <th>Remover</th>
+                                            <th>Opções</th>
                                         </tr>
                                     </tfoot-->
         
@@ -159,7 +159,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Produto</b></h3>
+                        <h3 class="modal-title"><b id="modalTitle">Adicionar Produto ao Orçamento</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
@@ -171,7 +171,7 @@
             
                                 <div class="form-group col-lg-3">
                                     <label for="codeProduct">Código</label>
-                                    <input type="text" class="form-control" id="codeProduct" name="codeProduct" placeholder="x.xx.xx.xx.xxx">
+                                    <input type="text" class="form-control" id="codeProduct" name="codeProduct" placeholder="xxx.xx.xx.xx.xx">
                                     <span class="help-block"></span>
                                 </div>
 
@@ -182,7 +182,7 @@
                                 </div>
                                 <br>
                                 <div id="produto" class="form-group col-lg-12">
-                                    <input id="produto_idProduto" name="produto_idProduto" hidden="true">
+                                    <input id="produto_idProduto_gen" name="produto_idProduto_gen" hidden="true">
                                     <div id="produtoAdicionado"></div>
                                     <div id="prodCodigo"></div>
                                     <div id="prodDescricao"></div>
@@ -200,8 +200,27 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label for="vlAluguel">Valor Aluguel</label>
-                                    <input type="text" class="form-control" name="vlAluguel" id="vlAluguel" placeholder="000">
+                                    <label for="vlAluguel">Valor Aluguel (unitário)</label>
+                                    <input type="number" class="form-control" name="vlAluguel" id="vlAluguel" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+                               
+                                <div class="form-group col-lg-3">
+                                    <label for="qtd">Quantidade</label>
+                                    <input type="number" class="form-control" name="qtd" id="qtd" placeholder="0">
+                                    <span class="help-block"></span>
+                                </div>
+                                <br>
+                                
+                                <div class="form-group col-lg-3">
+                                    <label for="custoEntrega">Custo de Entrega</label>
+                                    <input type="number" class="form-control" name="custoEntrega" id="custoEntrega" placeholder="000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="custoRetirada">Custo de Retirada</label>
+                                    <input type="number" class="form-control" name="custoRetirada" id="custoRetirada" placeholder="000">
                                     <span class="help-block"></span>
                                 </div>
 
@@ -216,19 +235,7 @@
                                     <input type="date" class="form-control" id="dtFinal" name="dtFinal">
                                     <span class="help-block"></span>
                                 </div>
-                                
-                                <div class="form-group col-lg-3">
-                                    <label for="custoEntrega">Custo de Entrega</label>
-                                    <input type="text" class="form-control" name="custoEntrega" id="custoEntrega" placeholder="000">
-                                    <span class="help-block"></span>
-                                </div>
 
-                                <div class="form-group col-lg-3">
-                                    <label for="custoRetirada">Custo de Retirada</label>
-                                    <input type="text" class="form-control" name="custoRetirada" id="custoRetirada" placeholder="000">
-                                    <span class="help-block"></span>
-                                </div>
-                                     
                                 <div class="form-group col-lg-12">
                                     <label for="observacao">Obervação: </label>
                                     <textarea class="form-control" id="observacao" name="observacao" placeholder="anotações do produto (máximo de 300 caracteres)" maxlength="300" rows="3"></textarea>

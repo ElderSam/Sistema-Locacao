@@ -1,5 +1,22 @@
 $(function(){
 
+	//carrega a tabela de Budgets
+	myTable = $("#dataTable").DataTable({ 
+		"oLanguage": DATATABLE_PTBR, //tradução
+		"autoWidth": false, //largura
+		"processing": true, //mensagem 'processando'
+		"serverSide": false, 
+		/*"ajax": {
+			"url": `/budgets/cart_list_datatables/${...}`, //chama a rota para carregar os dados 
+			"type": "POST",
+
+		},*/
+		"columnDefs": [
+			{ targets: "no-sort", orderable: false }, //para não ordenar
+			{ targets: "text-center", className: "text-center" },
+		]
+	});
+	
     showsNextNumber();
 
 	/*$("#btnAddBudget").click(function(){
@@ -68,7 +85,7 @@ $(function(){
                                         
 						
 					} else { // Se cadastrou com sucesso
-						alert('help')
+						
 						//$('#BudgetModal').modal('hide');
                         
                         res = JSON.parse(response)
@@ -79,12 +96,12 @@ $(function(){
 
 						Swal.fire(
 							'Sucesso!',
-							'Primeira parte do Orçamento cadastrada!',
+							'Produto adicionado no orçamento!',
 							'success'
                             )
                         
 	
-						//loadTableBudgets();
+						//loadTableBudget();
 						//$('#formBudget').trigger("reset");
 						
 					}
@@ -98,17 +115,22 @@ $(function(){
 				}
 			}).then( response => {
 
-				console.log('nova locação/aluguel: ' + response)
+				console.log('nova locação/aluguel: ')
+				response = JSON.parse(response)
+				console.log(response)
+
+				loadTableBudget()
 				
-				product = ''
+				/*product = ''
 
 				product += `<tr id="${response.produto_idProduto}">`
 		
-				product += `<td>${response.codigo}</td>
+				
+				product += `<td>${response.codigoGen}</td>
 						<td>${response.descCategoria}</td>
 						<td>${response.tipo1} ${response.descricao}</td>
-						<td><input type="number" name="vlAluguel_${response.produto_idProduto}"></td>
-						<td><input type="text" name="obs_${response.produto_idProduto}"></td>
+						<td>${response.vlAluguel}</td>
+						<td>${response.observacao}</td>
 						<td>
 							<button type='button' title='remover' onclick='removeProduct(${response.produto_idProduto});'
 								class='btn btn-danger btnDelete'>
@@ -117,12 +139,34 @@ $(function(){
 						</td>
 						</tr>`
 
-				$('#cart').append(product)
+				$('#cart').append(product)*/
 			});
 
         }
 
-    });
+	});
+	
+	function loadTableBudget(){ //carrega a tabela dos produtos adicionados ao orçamento atual
+		
+		id = $('#fk_idOrcamento').val();
+
+		myTable.destroy(); //desfaz as paginações
+		
+		myTable = $("#dataTable").DataTable({ 
+			"oLanguage": DATATABLE_PTBR,
+			"autoWidth": false, //largura
+			"processing": true, //mensagem 'processando'
+			"serverSide": true,
+			"ajax": {
+				"url": `/budgets/cart_list_datatables/${id}`, //para chamar o método ajax_list_budget
+				"type": "POST",
+			},
+			"columnDefs": [
+				{ targets: "no-sort", orderable: false }, //para não ordenar
+				{ targets: "text-center", className: "text-center" },
+			]
+		});
+	}
     	 
 	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/	
 	$("#btnSaveBudget").click(function(e) { //quando enviar o formulário de Orcamento
@@ -283,36 +327,58 @@ $(function(){
 
 
 function searchProduct(){
-
+	console.log('searchProduct:')
 
 	if(($('#codeProduct').val() != undefined) && ($('#codeProduct').val() != "")){
 
 		code = $('#codeProduct').val();
-        alert('code ' + code);
 
         $('#btnAddProduct').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
 
-		$.getJSON(`/products/addToContract/${code}`, function (data) { //ajax
-		
-            console.log(data)     
-            $('#produto_idProduto').val(data.idProduto)   
-            
-            $('#produto').css('border', '1px solid black')
-            $('#produtoAdicionado').html(`<strong style="color: green;">Produto Adicionado!</strong>`)
-
-            $('#btnAddProduct').html('Adicionar');
-            
-
-            $('#prodCodigo').html(`<strong>Código:</strong> ${data.codigo}`)
-            $('#prodDescricao').html(`<strong>Descrição:</strong> ${data.descCategoria} - ${data.tipo1} ${data.descricao}`)
-					
-	
-		}).then(() => {
+		$.getJSON(`/products/addToContract/${code}`, function (response) { //ajax
 			
-			$('#codeProduct').val('');
+			console.log(response)  
+	
+		
+			if (response.error) {
+				console.log('erro ao adicionar produto ao orçamento!')
+				
+				Swal.fire(
+					'Erro!',
+					response.msg,
+					'error'
+				)
+				
+			} else {					
+								
+				Swal.fire(
+					'Adicionado!',
+					'Produto adicionado ao Orçamento!',
+					'success'
+				)
+
+				$('#produto_idProduto_gen').val(response.idProduto_gen)   
+            
+				$('#produto').css('border', '1px solid black')
+				$('#produtoAdicionado').html(`<strong style="color: green;">Produto Adicionado!</strong>`)
+	
+				$('#prodCodigo').html(`<strong>Código:</strong> ${response.codigoGen}`)
+				$('#prodDescricao').html(`<strong>Descrição:</strong> ${response.descCategoria} - ${response.descricao}`)
+						
+				$('#codeProduct').val('');	
+				console.log(response.vlBaseAluguel)
+
+				$('#vlAluguel').val(response.vlBaseAluguel)	
+			}					
+		
+
+		}).then(() => {
+
+			$('#btnAddProduct').html('Adicionar');
+        
 				
 		}).fail(function () {
-			console.log("Rota não encontrada! (/budgets/constructions/json)");
+			console.log(`Rota não encontrada! (/products/addToContract/${code})`);
 			return false
 		});
 	}
@@ -465,7 +531,7 @@ function deleteBudget(idOrcamento){
 							'success'
 						)
 
-						loadTableBudgets();						
+						loadTableBudget();						
 					}					
 				},
 				error: function (response) {

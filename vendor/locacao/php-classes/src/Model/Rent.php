@@ -19,16 +19,17 @@ class Rent extends Generator{
     }
 
     public function insert(){
+    
         
         $sql = new Sql();
         
         //print_r($_POST);
 
-        if(($this->getproduto_idProduto() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
+        if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :contrato_idProduto, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
                 ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-                ":contrato_idProduto"=>$this->getproduto_idProduto(),
+                ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
                 ":status"=>$this->getstatus(),
                 ":vlAluguel"=>$this->getvlAluguel(),
                 ":dtInicio"=>$this->getdtInicio(),

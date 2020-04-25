@@ -110,20 +110,30 @@ class Product extends Generator{
         }
     }
 
-    public static function getByCode($code){ //pega o produto a partir do código
+    public static function getByCode($code){ //pega o produto genérico a partir do código
 
         $sql = new Sql();
         
-        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao, b.descCategoria, c.descTipo as tipo1 FROM produtos_gen a 
+        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao, a.vlBaseAluguel, b.descCategoria FROM produtos_gen a 
         INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
-        INNER JOIN prod_tipos c ON(a.tipo1 = c.id)
         WHERE (codigoGen = :codigoGen)";
 
         $results = $sql->select($query, array(
             ":codigoGen"=>$code
         ));
 
-        return json_encode($results[0]);
+        if(count($results) > 0){
+            return json_encode($results[0]);
+            
+        }else{
+
+            return json_encode([
+                'error'=>true,
+                'msg'=>'código inválido!'
+            ]);
+        }
+
+       
     }
 
     public static function searchCode($code){ //search if name or desc already exists
