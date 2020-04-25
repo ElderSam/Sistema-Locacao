@@ -1,3 +1,6 @@
+CREATE database db_locacao;
+USE db_locacao;
+
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
@@ -98,9 +101,127 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuarios_save` (`pnomeCompleto` 
     
 END$$
 
+--Procedures de Clientes
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(45), `pstatus` TINYINT, `ptelefone1` VARCHAR(15), `ptelefone2` VARCHAR(15), `pemail1` VARCHAR(45), `pemail2` VARCHAR(45), `pendereco` VARCHAR(45), `pcomplemento` VARCHAR(150), `pcidade` VARCHAR(25), `pbairro` VARCHAR(25), `pnumero` INT(11), `puf` CHAR(2), `pcep` VARCHAR(45), `pcpf` VARCHAR(45), `prg` VARCHAR(45), `pcnpj` VARCHAR(45), `pie` VARCHAR(45), `ptipoCliente` VARCHAR(45)) 
+BEGIN
+
+    DECLARE vidCliente INT;
+    
+  INSERT INTO clientes (nome, status, telefone1, telefone2, email1, email2, endereco, complemento, cidade, bairro, numero, uf, cep, cpf, rg, cnpj, ie, tipoCliente)
+    VALUES(pnome, pstatus, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pcpf, prg, pcnpj, pie, ptipoCliente);
+    
+    SET vidCliente = LAST_INSERT_ID();
+    
+    SELECT * FROM clientes WHERE idcliente = LAST_INSERT_ID();
+    
+END$$
 DELIMITER ;
 
--- --------------------------------------------------------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  
+BEGIN
+  
+    DECLARE vidCliente INT;
+    
+    SELECT idCliente INTO vidCliente
+    FROM clientes
+    WHERE idCliente = pidCliente;
+
+    UPDATE clientes
+    SET
+        nome = pnome, 
+        status = pstatus,
+        telefone1 = ptelefone1,
+        telefone2 = ptelefone2,
+        email1 = pemail1,
+        email2 = pemail2,
+        endereco = pendereco,
+        complemento = pcomplemento,
+        cidade = pcidade,
+        bairro = pbairro,
+        numero = pnumero,
+        uf = puf,
+        cep = pcep,
+        cpf = pcpf,
+        rg = prg,
+        cnpj = pcnpj,
+        ie = pie,
+        tipoCliente = ptipoCliente
+    WHERE idCliente = vidCliente;
+    
+    SELECT * FROM clientes WHERE idCliente = pidCliente;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_delete` (IN `pidCliente` INT)  BEGIN
+  
+    DECLARE vidCliente INT;
+    
+  SELECT idCliente INTO vidCliente
+    FROM clientes
+    WHERE idCliente = pidCliente;
+    
+    DELETE FROM clientes WHERE idCliente = pidCliente;
+    
+END$$
+
+--Procedures dos resposáveis pelas Obras --------------------------------------------------------
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pidResp` INT, IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15),  IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  
+BEGIN
+  
+    DECLARE vidResp INT;
+    
+    SELECT idResp INTO vidResp
+    FROM resp_obras
+    WHERE idResp = pidResp;
+
+    UPDATE resp_obras
+    SET
+        respObra = prespObra, 
+        telefone1 = ptelefone1,
+        telefone2 = ptelefone2,
+        telefone3 = ptelefone3,
+        email1 = pemail1,
+        email2 = pemail2,
+        anotacoes = panotacoes,
+        id_fk_cliente = pid_fk_cliente
+    WHERE idResp = vidResp;
+    
+    SELECT * FROM resp_obras WHERE idResp = pidResp;
+    
+END$$
+
+DELIMITER ;
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15),  IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+  
+    DECLARE vidResp INT;
+    
+  INSERT INTO resp_obras (respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
+    VALUES(prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
+    
+    SET vidResp = LAST_INSERT_ID();
+    
+    SELECT * FROM resp_obras WHERE idResp = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_delete` (IN `pidResp` INT)  BEGIN
+  
+    DECLARE vidResp INT;
+    
+  SELECT idResp INTO vidResp
+    FROM resp_obras
+    WHERE idResp = pidResp;
+    
+    DELETE FROM resp_obras WHERE idResp = pidResp;
+    
+END$$
+
 
 --
 -- Estrutura da tabela `aditamentos`
@@ -149,6 +270,20 @@ CREATE TABLE `clientes` (
 
 -- --------------------------------------------------------
 
+--
+-- Estrutura da tabela `resObras`
+--
+
+CREATE TABLE `resp_obras`(
+  `respObra` varchar(45) NOT NULL,
+  `telefone1` varchar(15) NOT NULL,
+  `telefone2` varchar(15) DEFAULT NULL,
+  `telefone3` varchar(15) DEFAULT NULL,
+  `email1` varchar(45) NOT NULL,
+  `email2` varchar(45) DEFAULT NULL,
+  `anotacoes` varchar(100) DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Estrutura da tabela `containers`
 --
@@ -289,11 +424,6 @@ CREATE TABLE `historicoaluguel` (
 CREATE TABLE `obras` (
   `idObra` int(11) NOT NULL,
   `codObra` int(11) NOT NULL,
-  `respObra` varchar(45) NOT NULL,
-  `telefone1` varchar(15) NOT NULL,
-  `telefone2` varchar(15) DEFAULT NULL,
-  `email1` varchar(45) NOT NULL,
-  `email2` varchar(45) DEFAULT NULL,
   `complemento` varchar(150) DEFAULT NULL,
   `tipoEndereco` varchar(45) NOT NULL,
   `cidade` varchar(15) NOT NULL,
@@ -528,6 +658,11 @@ ALTER TABLE `usuarios`
 --
 -- AUTO_INCREMENT de tabela `aditamentos`
 --
+
+ALTER TABLE `usuarios`
+   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT;
+
+
 ALTER TABLE `aditamentos`
   MODIFY `idAditamento` int(11) NOT NULL AUTO_INCREMENT;
 

@@ -5,7 +5,7 @@ require_once("vendor/autoload.php");
 //nasmespace
 use \Slim\Slim;
 use \Locacao\Page;
-use\Locacao\Model\Client;
+use\Locacao\Model\Costumer;
 use \Locacao\Model\User;
 
 session_start();
@@ -17,8 +17,9 @@ $app = new Slim();
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', true);
 
+require_once("reposibleWorks.php");
 require_once("users.php");
-require_once("client.php");
+require_once("costumers.php"); //Clientes
 require_once("products.php");
 require_once("suppliers.php"); //fornecedores
 
@@ -32,6 +33,15 @@ $app->get('/', function(){
 
 });
 
+/* rota para página de Clientes --------------*/
+$app->get('/costumers', function(){
+	
+    User::verifyLogin();
+	
+	$page = new Page();
+	$page->setTpl("clientes");
+
+});
 
 
 $app->get('/products', function(){
