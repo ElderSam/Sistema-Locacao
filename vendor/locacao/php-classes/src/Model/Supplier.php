@@ -24,9 +24,10 @@ class Supplier extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getnome() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_fornecedores_save(:codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
+            $results = $sql->select("CALL sp_fornecedores_save(:codFornecedor, :nome, :cnpj, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
                 ":codFornecedor"=>$this->getcodigo(),
                 ":nome"=>$this->getnome(),
+                ":cnpj"=>$this->getcnpj(),
                 ":telefone1"=>$this->gettelefone1(),
                 ":telefone2"=>$this->gettelefone2(),
                 ":email1"=>$this->getemail1(),
@@ -174,9 +175,9 @@ class Supplier extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM fornecedores");
-
-        return count($results);		
+        $results = $sql->select("SELECT count(idFornecedor) FROM fornecedores");
+        
+        return $results[0]['count(idFornecedor)'];		
 	}
     
 
@@ -184,10 +185,11 @@ class Supplier extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_fornecedoresUpdate_save(:idFornecedor, :codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
+        $results = $sql->select("CALL sp_fornecedoresUpdate_save(:idFornecedor, :codFornecedor, :nome, :cnpj, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
             ":idFornecedor"=>$this->getidFornecedor(),
             ":codFornecedor"=>$this->getcodigo(),
             ":nome"=>$this->getnome(),
+            ":cnpj"=>$this->getcnpj(),
             ":telefone1"=>$this->gettelefone1(),
             ":telefone2"=>$this->gettelefone2(),
             ":email1"=>$this->getemail1(),

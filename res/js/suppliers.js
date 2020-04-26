@@ -1,21 +1,8 @@
+var myTable = null
+
 $(function() { //quando a página carrega
 
-	//carrega a tabela de suppliers
-	myTable = $("#dataTable").DataTable({ 
-		"oLanguage": DATATABLE_PTBR, //tradução
-		"autoWidth": false, //largura
-		"processing": true, //mensagem 'processando'
-		"serverSide": true, 
-		"ajax": {
-			"url": "/suppliers/list_datatables", //chama a rota para carregar os dados 
-			"type": "POST",
-
-		},
-		"columnDefs": [
-			{ targets: "no-sort", orderable: false }, //para não ordenar
-			{ targets: "text-center", className: "text-center" },
-		]
-	});
+	loadTableSuppliers()
 
 	$("#btnAddSupplier").click(function(){
 		let i = 0
@@ -27,10 +14,20 @@ $(function() { //quando a página carrega
 		
 	});
 
+	//adiciona as máscaras
+	$("#telefone1, #telefone2").mask("(00) 0000-00009", {placeholder:"(00)0000-0000"});
+	$("#cnpj").mask("99.999.999/9999-99", {placeholder:"00.000.00/0000-00"});
+	$("#cep").mask("99.999-999", {placeholder:"00.000-000"}); 
+
 	 
 	/* Cadastrar ou Editar Fornecedor --------------------------------------------------------------*/	
 	$("#btnSaveSupplier").click(function(e) { //quando enviar o formulário de Fornecedor
 		e.preventDefault();
+
+	$("#telefone1, #telefone2").unmask();
+	$("#cnpj").unmask();
+	$("#cep").unmask(); 
+	
 		
 		let form = $('#formSupplier');
 		let formData = new FormData(form[0]);
@@ -51,6 +48,11 @@ $(function() { //quando a página carrega
 				beforeSend: function() {
 					clearErrors();
 					$("#btnSaveSupplier").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					
+					//adiciona as máscaras
+					$("#telefone1, #telefone2").mask("(00) 0000-00009", {placeholder:"(00)0000-0000"});
+					$("#cnpj").mask("99.999.999/9999-99", {placeholder:"00.000.00/0000-00"});
+					$("#cep").mask("99.999-999", {placeholder:"00.000-000"}); 
 				
 				},
 				success: function (response) {
@@ -171,6 +173,13 @@ $(function() { //quando a página carrega
 
 });
 
+function mascaraTelefone(value){
+    value = value.replace(/\D/g,"");                  //Remove tudo o que não é dígito
+    value = value.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+    value = value.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+    value = value.substr(0, 15);
+    return value;
+}
 
 	function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
 		console.log('shows next number')
@@ -196,22 +205,73 @@ $(function() { //quando a página carrega
 
 function loadTableSuppliers(){ //carrega a tabela de Fornecedores
 
-	myTable.destroy(); //desfaz as paginações
-	
+	if(myTable != null){
+		myTable.destroy(); //desfaz as paginações
+	}
+
+		//carrega a tabela de suppliers
+	//function 
 	myTable = $("#dataTable").DataTable({ 
-		"oLanguage": DATATABLE_PTBR,
+		"oLanguage": DATATABLE_PTBR, //tradução
 		"autoWidth": false, //largura
 		"processing": true, //mensagem 'processando'
-		"serverSide": true,
+		"serverSide": true, 
 		"ajax": {
-			"url": "/suppliers/list_datatables", //para chamar o método ajax_list_suppliers
+			"url": "/suppliers/list_datatables", //chama a rota para carregar os dados 
 			"type": "POST",
+			dataSrc: function (json) {
+				
+				rows = [];
+
+				json.data.forEach(element => {
+					//console.log(element)
+
+					row = []
+
+					//Essa variavel você pode apresentar
+					var telFormatado = mascaraTelefone(element.telefone1);
+
+					//row['id'] = element.id
+					row['codFornecedor'] = element.codFornecedor
+					row['nome'] = element.nome
+					row['status'] = element.status
+					row['telefone1'] = telFormatado
+					row['cidade'] = element.cidade
+					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+					onclick='loadSupplier(${element.id});'>
+						<i class='fas fa-bars sm'></i>
+					</button>
+					<button type='button' title='excluir' onclick='deleteSupplier(${element.id});'
+						class='btn btn-danger btnDelete'>
+						<i class='fas fa-trash'></i>
+					</button>`
+
+					rows.push(row)
+				
+				});
+				
+				return rows;
+			},
+
+
 		},
+		"columns": [
+			{ "data": "codFornecedor" },
+			{ "data": "nome" },
+			{ "data": "status" },
+			{ "data": "telefone1" },
+			{ "data": "cidade" },
+			{ "data": "options" },
+			        
+		],
 		"columnDefs": [
 			{ targets: "no-sort", orderable: false }, //para não ordenar
 			{ targets: "text-center", className: "text-center" },
 		]
 	});
+
+
+	
 }
 
 
@@ -233,8 +293,16 @@ function loadSupplier(idFornecedor) { //carrega todos os campos do modal referen
 
 		$("#formSupplier #codigo").val(data.codFornecedor).prop('disabled', true);
 		$("#formSupplier #nome").val(data.nome).prop('disabled', true);
-		$("#formSupplier #telefone1").val(data.telefone1).prop('disabled', true);
-		$("#formSupplier #telefone2").val(data.telefone2).prop('disabled', true);
+		
+		$("#formSupplier #cnpj").val(data.cnpj).prop('disabled', true)
+		$("#formSupplier #cnpj").mask("99.999.999/9999-99");
+
+		telefone1 = mascaraTelefone(data.telefone1)
+		telefone2 = mascaraTelefone(data.telefone2)
+
+		$("#formSupplier #telefone1").val(telefone1).prop('disabled', true);
+		$("#formSupplier #telefone2").val(telefone2).prop('disabled', true);
+		
 		$("#formSupplier #email1").val(data.email1).prop('disabled', true);
 		$("#formSupplier #email2").val(data.email2).prop('disabled', true);
 
@@ -243,6 +311,8 @@ function loadSupplier(idFornecedor) { //carrega todos os campos do modal referen
 		$("#formSupplier #bairro").val(data.bairro).prop('disabled', true);
 		$("#formSupplier #complemento").val(data.complemento).prop('disabled', true);
 		$("#formSupplier #cep").val(data.cep).prop('disabled', true);
+		$("#formSupplier #cep").mask("99.999-999"); 
+	
 		$("#formSupplier #cidade").val(data.cidade).prop('disabled', true);
 		$("#formSupplier #status").val(data.status).prop('disabled', true);
 		$("#formSupplier #uf").val(data.uf).prop('disabled', true);
@@ -260,6 +330,7 @@ function loadSupplier(idFornecedor) { //carrega todos os campos do modal referen
 			$("#formSupplier #codigo").prop('disabled', false);
 			
 			$("#formSupplier #nome").prop('disabled', false);
+			$("#formSupplier #cnpj").prop('disabled', false);
 			$("#formSupplier #telefone1").prop('disabled', false);
 			$("#formSupplier #telefone2").prop('disabled', false);
 			$("#formSupplier #email1").prop('disabled', false);
@@ -366,6 +437,7 @@ function clearFieldsValues(){
 
 	$("#formSupplier #codigo").prop('disabled', false);
 	$("#formSupplier #nome").prop('disabled', false);
+	$("#formSupplier #cnpj").prop('disabled', false);
 	$("#formSupplier #telefone1").prop('disabled', false);
 	$("#formSupplier #telefone2").prop('disabled', false);
 	$("#formSupplier #email1").prop('disabled', false);
@@ -383,6 +455,7 @@ function clearFieldsValues(){
 
 	$('#codigo').val('');
 	$('#nome').val('');
+	$('#cnpj').val('');
 	$('#telefone1').val('');
 	$('#telefone2').val('');
 	$('#email1').val('');

@@ -296,12 +296,20 @@ class SupplierController extends Generator
             $id = $supplier['idFornecedor'];
 
             // Ler e criar o array de dados ---------------------
-            $row = array();
+            
+            $row = [
+                "id"=>$id,
+                "codFornecedor"=>$supplier['codFornecedor'],
+                "nome"=>$supplier['nome'],
+                "status"=>$status,
+                "telefone1"=>$supplier['telefone1'],
+                "cidade"=>$supplier['cidade'],            
+            ];
 
-            $row[] = $supplier['codFornecedor'];
+           /* $row[] = $supplier['codFornecedor'];
             $row[] = $supplier['nome'];
             $row[] = $status;
-            $row[] = $supplier['telefone1'];
+            $row[] = "<p class='telefone'>".$supplier['telefone1']."</p>";
             $row[] = $supplier['cidade'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadSupplier($id);'>
@@ -310,7 +318,7 @@ class SupplierController extends Generator
                 <button type='button' title='excluir' onclick='deleteSupplier($id);'
                     class='btn btn-danger btnDelete'>
                     <i class='fas fa-trash'></i>
-                </button>";
+                </button>";*/
 
             $data[] = $row;
         } //
