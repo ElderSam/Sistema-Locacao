@@ -99,9 +99,9 @@ $app->get('/login', function(){
 $app->post('/login', function(){
 
     
-    User::login($_POST["login"], $_POST["password"]); //autentifica usuário
+    echo User::login($_POST["login"], $_POST["password"]); //autentifica usuário
 
-    header("Location: /"); //vai para página inicial
+    //header("Location: /"); //vai para página inicial
     exit;
 });
 

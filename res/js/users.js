@@ -268,7 +268,7 @@ function deleteUser(idUsuario){
 
 			$.ajax({
 				type: "POST",
-				url: `/users/${5656}/delete`,
+				url: `/users/${idUsuario}/delete`,
 				contentType: false,
 				processData: false,
 				beforeSend: function() {

@@ -23,7 +23,6 @@ $("#btnLogin").click(function(e) {
             success: function (response) {
 
                 clearErrors();
-                console.log(response)
         
                 if (JSON.parse(response).error) {
                     console.log('erro ao se logar!')
@@ -31,7 +30,7 @@ $("#btnLogin").click(function(e) {
                     
                     Swal.fire(
                         'Atenção!',
-                        'Campos incorretos',
+                        'usuário e/ou senha incorretos!',
                         'error'
                     )
                 
