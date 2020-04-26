@@ -155,13 +155,14 @@ class SupplierController extends Generator
             if ($update) {
                 foreach ($exists as $supplier) {
 
+          
                     if (($_POST['nome'] == $supplier['nome']) && ($_POST['idFornecedor'] != $supplier['idFornecedor'])) {
                         $errors["#nome"] = "Já existe um Fornecedor com essa Descrição";
                         break;
                     }
                 }
             } else {
-                $errors["#descricao"] = "Já existe um Fornecedor com essa Descrição";
+                $errors["#nome"] = "Já existe um Fornecedor com essa Descrição";
             }
         }
 

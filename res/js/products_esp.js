@@ -72,15 +72,13 @@ $(function() { //quando a página carrega
 	$("#btnSaveProduct").click(function(e) { //quando enviar o formulário de Produto
 		e.preventDefault();
 
-		$('#categoria').prop('disabled', false)
+		$('#categoria').prop('disabled', false) //estou mandando a categoria no formulário, pois é considerada no Controller
 
 		let form = $('#formProduct');
 		let formData = new FormData(form[0]);
 
 		idProduto_esp = $('#idProduto_esp').val()
 		//console.log("idProduto_esp:" + idProduto_esp)
-
-		
 
 		if(idProduto_esp == 0){ //se for para cadastrar --------------------------------------------------
 
@@ -211,6 +209,8 @@ $(function() { //quando a página carrega
 				}
 			});
 		}	
+
+		$('#categoria').prop('disabled', true)
 
 		return false;
 	});

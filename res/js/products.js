@@ -185,7 +185,7 @@ $(function() { //quando a página carrega
 			
 			$.ajax({
 				type: "POST",
-				url: `/products/${idProduto_gen}`, //rota para editar
+				url: `/products/${idProduto_gen}`, //rota para editar (update)
 				data: formData,
 				contentType: false,
 				processData: false,
