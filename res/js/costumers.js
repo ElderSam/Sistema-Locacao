@@ -41,14 +41,16 @@ $(function() { //quando a página carrega
 	$("#btnSaveCostumer").click(function(e) { //quando enviar o formulário de Clientes
 
 		e.preventDefault();
-		
+
+		$("#formCostumer #codigo").prop('disabled', false);
+
 		let form = $('#formCostumer');
 
 		//A interface FormData fornece uma maneira fácil de construir um conjunto de pares chave/valor representando campos
 	 // de um elemento form
 		let formData = new FormData(form[0]);
 
-		idCostumer = $('#codigo').val()
+		idCostumer = $('#idCliente').val()
 
 		if((idCostumer == 0) || (idCostumer == undefined)){ //Se for para cadastrar --------------------------------------------------
 
@@ -165,7 +167,7 @@ $(function() { //quando a página carrega
 				}
 			});
 		}	
-
+		$("#formCostumer #codigo").prop('disabled', true);
 		return false;
 	});
 
@@ -202,14 +204,35 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveCostumer').hide();
 	$('#btnUpdate').show();
-	
+
+/*
+	if($("#tipoCliente option:selected").val() == 'F'){
+		$("#labelCnpj").hide();
+		$("#cnpj").hide();
+		$("#labelIe").hide();
+		$("#ie").hide();
+		$("#labelCpf").show();
+		$("#cpf").show();
+		$("#labelRg").show();
+		$("#rg").show();
+	}else{
+		$("#labelCnpj").show();
+		$("#cnpj").show();
+		$("#labelIe").show();
+		$("#ie").show();
+		$("#labelCpf").hide();
+		$("#cpf").hide();
+		$("#labelRg").hide();
+		$("#rg").hide();
+	}
+*/
 	$('#dtCadastro').parent().show(); //aparece a data de cadastro (só para visualizar)
 
 
 	$.getJSON(`/costumers/json/${idCliente}`, function (data) {
-		console.log(data);
 
-		$("#formCostumer #codigo").val(data.idCliente);
+		$("#formCostumer #idCliente").val(data.idCliente);
+		$("#formCostumer #codigo").val(data.codigo).prop('disabled', true);
 		$("#formCostumer #nome").val(data.nome).prop('disabled', true);
 		$("#formCostumer #status").val(data.status).prop('disabled', true);
 		$("#formCostumer #tipoCliente").val(data.tipoCliente).prop('disabled', true);
@@ -229,6 +252,7 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 		$("#formCostumer #numero").val(data.numero).prop('disabled', true);
 		$("#formCostumer #complemento").val(data.complemento).prop('disabled', true);
 	
+		exibir_ocultar();
 		/*
 		if(data.tipoCliente == "J"){
 			$("#formCostumer #ie").val(data.ie).prop('disabled', true);
@@ -247,18 +271,18 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 		dtCadastro = formatDate(data.dtCadastro)
 		//console.log('data: ' + dtCadastro)
 		$("#formCostumer #dtCadastro").val(dtCadastro);
-		$('#formCostumer #divCodigo').hide();
+	
 
 		/* Atualizar Cliente ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function(){ //se eu quiser atualizar o Cliente atual
 
-			$('#formCostumer #divCodigo').hide();
+		
 			$('#modalTitle').html('Editar Cliente');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
 			$('#btnSaveCostumer').val('Atualizar').show();
 			$('#btnUpdate').hide();
 
-	
+		$("#formCostumer #codigo").prop('disabled', true);
 		$("#formCostumer #nome").prop('disabled', false);
 		$("#formCostumer #status").prop('disabled', false);
 		$("#formCostumer #tipoCliente").prop('disabled', false);
@@ -289,6 +313,28 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 	});
 
 }
+
+function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
+	console.log('shows next number')
+	$.ajax({
+		type: "POST",
+		url: `/costumers/showsNextNumber`,
+		contentType: false,
+		processData: false,
+		
+		success: function (response) {
+	
+			//console.log('próximo código de fornecedor: ' + response)
+			$('#codigo').val(response)						
+								
+		},
+		error: function (response) {
+
+			console.log(`Erro! Mensagem: ${response}`);		
+		}
+	});	
+}
+
 
 function deleteCostumer(idCliente){
 
@@ -321,7 +367,7 @@ function deleteCostumer(idCliente){
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							response.msg,
 							'error'
 						)
 						
@@ -351,7 +397,6 @@ function deleteCostumer(idCliente){
 
 //limpar campos do modal para Cadastrar
 function limparCampos(){
-	$('#formCostumer #divCodigo').hide();
 	$('#modalTitle').html('Cadastrar Cliente');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveCostumer').val('Cadastrar').show();
@@ -380,6 +425,7 @@ function limparCampos(){
 	$("#formCostumer #complemento").prop('disabled', false);
 
 
+	$('#idCliente').val(0);
 	$('#codigo').val('');
 	$('#nome').val('');
 	$('#status').val('0');

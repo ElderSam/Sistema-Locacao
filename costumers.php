@@ -15,6 +15,14 @@ $app->get('/costumers/json', function(){
   
 });
 
+/* rota que mostra o próximo código de fornecedor */
+$app->post('/costumer/showsNextNumber', function(){
+
+    User::verifyLogin();
+
+    echo Costumer::showsNextNumber();
+  
+});
 
 $app->post('/costumers/list_datatables', function(){ //Ira listar os Clientes
 

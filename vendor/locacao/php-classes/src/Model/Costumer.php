@@ -53,13 +53,24 @@ class Costumer extends Generator{
 
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
+                $val = strtoupper($search);
 
                 if ($field == "status") {
 
-                    if ($search == "SIM") {
-                        $search = 1;
-                    } else if (($search == "NãO") || ($search == "NÃO") || ($search == "NAO")) {
+                    if ($search == $val) {
                         $search = 0;
+                    } else if (($search == $val)) {
+                        $search = 1;
+                    }
+                }
+
+
+                if ($field == "tipoCliente") {
+                    
+                    if (($val == "FISICA") || ($val == "FíSICA") || ($val == "FÍSICA")) {
+                        $val = "F";
+                    } else if (($val == "JURIDICA") || ($val == "JURíDICA") || ($val == "JURÍDICA")) {
+                        $search = "J";
                     }
                 }
 
@@ -108,7 +119,8 @@ class Costumer extends Generator{
 
         if(($this->getnome() != "") && ($this->getstatus() != "") && ($this->gettipoCliente () != "")){
            
-            $results = $sql->select("CALL sp_clientes_save(:nome, :status, :telefone1, :telefone2, :email1, :email2, :endereco, :complemento, :cidade, :bairro, :numero, :uf, :cep, :cpf, :rg, :cnpj, :ie, :tipoCliente)", array(
+            $results = $sql->select("CALL sp_clientes_save(:codigo, :nome, :status, :telefone1, :telefone2, :email1, :email2, :endereco, :complemento, :cidade, :bairro, :numero, :uf, :cep, :cpf, :rg, :cnpj, :ie, :tipoCliente)", array(
+                ":codigo"=>$this->getcodigo(),
                 ":nome"=>$this->getnome(),
                 ":status"=>$this->getstatus(),
                 ":telefone1"=>$this->gettelefone1(),
@@ -165,10 +177,12 @@ class Costumer extends Generator{
 
     public function update(){
 
+
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_clientesUpdate_save(:idCliente, :nome, :status, :telefone1, :telefone2, :email1, :email2, :endereco, :complemento, :cidade, :bairro, :numero, :uf, :cep, :cpf, :rg, :cnpj, :ie, :tipoCliente)", array(
-            ":idCliente"=>$this->getcodigo(),
+        $results = $sql->select("CALL sp_clientesUpdate_save(:idCliente, :codigo, :nome, :status, :telefone1, :telefone2, :email1, :email2, :endereco, :complemento, :cidade, :bairro, :numero, :uf, :cep, :cpf, :rg, :cnpj, :ie, :tipoCliente)", array(
+            ":idCliente"=>$this->getidCliente(),
+            ":codigo"=>$this->getcodigo(),
             ":nome"=>$this->getnome(),
             ":status"=>$this->getstatus(),
             ":telefone1"=>$this->gettelefone1(),
@@ -204,10 +218,41 @@ class Costumer extends Generator{
 
     }
 
+    public static function showsNextNumber(){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT MAX(codigo) FROM clientes");
+        $nextNumber = 1 + $results[0]['MAX(codigo)'];
+       
+        if($nextNumber < 10){
+            $nextNumber = "00". $nextNumber;
+
+        }else if($nextNumber < 100){
+            $nextNumber = "0". $nextNumber;
+            
+        }
+        
+        return $nextNumber; //retorna o próximo número de série da categoria
+
+    }
+
     public function delete(){
 
         $sql = new Sql();
 
+      $results = $sql->select("SELECT idResp FROM resp_obras WHERE id_fk_cliente = :idCliente ", array(
+            ":idCliente"=>$this->getidCliente()
+        ));        
+
+        if(count($results) > 0){
+            
+            echo json_encode([
+                "error"=>true,
+                "msg"=>"Você não pode excluir, pois este cliente tem Responsáveis de Obra"
+            ]);
+        }else{
+            
         try{
             $sql->query("CALL sp_clientes_delete(:idCliente)", array(
                 ":idCliente"=>$this->getidCliente()
@@ -223,6 +268,8 @@ class Costumer extends Generator{
                 "error"=>true,
                 "msg"=>$e->getMessage()
             ]);
+
+        }
 
         }
        

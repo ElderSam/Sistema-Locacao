@@ -61,17 +61,19 @@
                         <form id="formCostumer">
                             <div class="form-row">
 
-                                <div id="divCodigo">
-                                    <div class="form-group col-md-3">
-                                        <label id="labelCodigo" for="codigo">Código</label>
-                                        <input type="text" class="form-control" name="codigo" id="codigo" placeholder="000">
-                                    </div>
-                                    <div class="form-group col-md-7"></div>
-                                    <div class="form-group col-md-2"></div>
+                                <div hidden="true">
+                                    <label for="idCliente">Id</label>
+                                    <input type="text" name="idCliente" id="idCliente">
                                 </div>
+                              
+                                <div class="form-group col-md-2">
+                                    <label id="labelCodigo" for="codigo">Código</label>
+                                    <input type="text" class="form-control" name="codigo" id="codigo" placeholder="000">
+                                </div>
+                                
 
-                                <div class="form-group col-md-6">
-                                    <label for="nome">Nome da Empresa</label>
+                                <div class="form-group col-md-4">
+                                    <label for="nome">Nome da Empresa *</label>
                                     <input type="text" class="form-control" name="nome" id="nome"
                                         placeholder="Nome Completo">
                                 </div>

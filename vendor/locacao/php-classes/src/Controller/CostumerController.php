@@ -44,9 +44,9 @@ class CostumerController extends Generator
             }
 
             if ($costumer['tipoCliente'] == "F") {
-                $tipoCliente = "Físico";
+                $tipoCliente = "Física";
             } else {
-                $tipoCliente = "Jurídico";
+                $tipoCliente = "Jurídica";
             }
 
             $id = $costumer['idCliente'];
@@ -119,6 +119,10 @@ class CostumerController extends Generator
     public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
 
+        if ($_POST["nome"] == "") {
+            $errors["#nome"] = "Nome do cliente é obrigatório";
+        }
+
         $errors = array();
         if($_POST["email1"] != ""){
             if($this->validaEmail($_POST["email1"]) == false){ //se o e-mail estiver correto
@@ -142,6 +146,7 @@ class CostumerController extends Generator
         if (count($exists) > 0) { //se existe cliente igual já registrado
 
             if ($update) {
+             
                 foreach ($exists as $company) {
 
                     //Ver se o nome que foi retornado é igual ao que está sendo enviado, descosiderando o registro que o mesmo ID
