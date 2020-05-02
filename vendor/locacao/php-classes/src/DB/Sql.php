@@ -4,20 +4,29 @@ namespace Locacao\DB;
 
 class Sql {
 
-	const HOSTNAME = "127.0.0.1";
-	const USERNAME = "root";
-	const PASSWORD = "";
-	const DBNAME = "db_locacao";
-
+	const DBNAME = "id12706030_db_locacao";
+	const HOSTNAME = "localhost";
+	
 	private $conn;
 
 	public function __construct()
 	{
 
+		if($_SERVER['REMOTE_ADDR'] == '::1'){ //se estiver no Localhost
+			
+			$username = "root";
+			$password = "";
+
+		}else{ //se estiver em um servidor online
+
+			$username = "id12706030_admin";
+			$password = "+!h{IC*7}JhPc^2n";
+		}
+
 		$this->conn = new \PDO(
 			"mysql:dbname=".Sql::DBNAME.";host=".Sql::HOSTNAME, 
-			Sql::USERNAME,
-			Sql::PASSWORD
+			$username,
+			$password
 		);
 
 	}
