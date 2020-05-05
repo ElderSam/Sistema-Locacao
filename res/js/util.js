@@ -97,3 +97,25 @@ function loadingImg(message="") { //para mostrar animação de carregando (círc
 	return "<i class='fa fa-circle-o-notch fa-spin'></i>&nbsp;" + message
 }
 
+function paraMoedaReal(valor){ //transforma número no formato moeda real (brasileira) com 2 casas decimais
+	return (valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }); // Formato BRL + 2 casas decimais. ex: R$ 1.234,50
+}
+
+
+//arredondamento com precisão em JavaScript
+/*function roundNumber(num, places){
+	if (!("" + num).includes("e")) {
+		return +(Math.round(num + "e+" + places)  + "e-" + places);
+	} else {
+		let arr = ("" + num).split("e");
+		let sig = ""
+		if (+arr[1] + places > 0) {
+			sig = "+";
+		}
+
+		return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + places)) + "e-" + places);
+	}
+}
+*/
+//console.log(round(1.005, 2)); // 1.01
+

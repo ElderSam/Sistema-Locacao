@@ -36,7 +36,7 @@ $app->post('/rents/list_datatables', function(){ //ajax list datatables
 	
 });
 
-/* rota para deletar usuário --------------------------*/
+/* rota para deletar aluguel --------------------------*/
 $app->post("/rents/:idrent/delete", function($idrent){
     
     User::verifyLogin();
@@ -69,7 +69,7 @@ $app->get("/rents/addToContract/:codRent", function($codRent){
 
 });
 
-/* rota para criar usuário (salva no banco) -----------*/
+/* rota para criar aluguel (salva no banco) -----------*/
 $app->post("/rents/create", function(){
 
     
@@ -79,7 +79,7 @@ $app->post("/rents/create", function(){
 });
 
 
-/* rota para atualizar usuário --------------------------*/
+/* rota para atualizar aluguel --------------------------*/
 $app->post("/rents/:idrent", function($idrent){ //update
 	
     User::verifyLogin();

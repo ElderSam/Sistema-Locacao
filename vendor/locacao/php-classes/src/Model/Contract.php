@@ -21,31 +21,35 @@ class Contract extends Generator{
     public function insert(){
         
         $sql = new Sql();
-       /* echo "<br>codContrato " . $this->getcodigo() .
+        /*echo "<br>codContrato " . $this->getcodigo() .
         "<br>obra_idObra " . $this->getobra_idObra() .
         "<br>dtEmissao " . $this->getdtEmissao() .
+        "<br>solicitante " . $this->getsolicitante() .
+        "<br>telefone " . $this->gettelefone() .
+        "<br>email " . $this->getemail() .
         "<br>dtAprovacao " . $this->getdtAprovacao() .
-        "<br>custoEntrega " . $this->getcustoEntrega() .
-        "<br>custoRetirada " . $this->getcustoRetirada() .
         "<br>notas " . $this->getnotas() .
-        "<br>valorAluguel " . $this->getvalorAluguel() .
+        "<br>valorTotal " . $this->getvalorTotal() .
         "<br>dtInicio " . $this->getdtInicio() .
-        "<br>dtFim " . $this->getdtFim() .
+        "<br>prazoDuracao " . $this->getprazoDuracao() .
         "<br>statusOrcamento " . $this->getstatus();*/
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_contratos_save(:codContrato, :obra_idObra, :dtEmissao, :dtAprovacao, :custoEntrega, :custoRetirada, :notas, :valorAluguel, :dtInicio, :dtFim, :statusOrcamento)", array(
+            $results = $sql->select("CALL sp_contratos_save(:codContrato, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
                 ":codContrato"=>$this->getcodigo(),
-                ":obra_idObra"=>1,
+                ":obra_idObra"=>$this->getobra_idObra(),
                 ":dtEmissao"=>$this->getdtEmissao(),
+                ":solicitante"=>$this->getsolicitante(),
+                ":telefone"=>$this->gettelefone(),
+                ":email"=>$this->getemail(),
                 ":dtAprovacao"=>$this->getdtAprovacao(),
-                ":custoEntrega"=>$this->getcustoEntrega(),
-                ":custoRetirada"=>$this->getcustoRetirada(),
+                /*":custoEntrega"=>$this->getcustoEntrega(),
+                ":custoRetirada"=>$this->getcustoRetirada(),*/
                 ":notas"=>$this->getnotas(),
-                ":valorAluguel"=>$this->getvalorAluguel(),
+                ":valorTotal"=>$this->getvalorTotal(),
                 ":dtInicio"=>$this->getdtInicio(),
-                ":dtFim"=>$this->getdtFim(),
+                ":prazoDuracao"=>$this->getprazoDuracao(),
                 ":statusOrcamento"=>$this->getstatus()
             ));
 
@@ -104,7 +108,7 @@ class Contract extends Generator{
         
         $query = "SELECT * FROM contratos";
 
-        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
+        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
         INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
         WHERE a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
@@ -166,7 +170,7 @@ class Contract extends Generator{
         
         $query = "SELECT * FROM contratos";
 
-        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorAluguel, b.codObra, c.nome FROM contratos a 
+        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
         INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
         WHERE a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
@@ -248,18 +252,21 @@ class Contract extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :obra_idObra, :dtEmissao, :dtAprovacao, :custoEntrega, :custoRetirada, :notas, :valorAluguel, :dtInicio, :dtFim, :statusOrcamento)", array(
+        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
             ":idContrato"=>$this->getidContrato(),
             ":codContrato"=>$this->getcodigo(),
             ":obra_idObra"=>$this->getobra_idObra(),
             ":dtEmissao"=>$this->getdtEmissao(),
             ":dtAprovacao"=>$this->getdtAprovacao(),
-            ":custoEntrega"=>$this->getcustoEntrega(),
-            ":custoRetirada"=>$this->getcustoRetirada(),
+            ":solicitante"=>$this->getsolicitante(),
+            ":telefone"=>$this->gettelefone(),
+            ":email"=>$this->getemail(),
+            /*":custoEntrega"=>$this->getcustoEntrega(),
+            ":custoRetirada"=>$this->getcustoRetirada(),*/
             ":notas"=>$this->getnotas(),
-            ":valorAluguel"=>$this->getvalorAluguel(),
+            ":valorTotal"=>$this->getvalorTotal(),
             ":dtInicio"=>$this->getdtInicio(),
-            ":dtFim"=>$this->getdtFim(),
+            ":prazoDuracao"=>$this->getprazoDuracao(),
             ":statusOrcamento"=>$this->getstatus()
         ));
 
@@ -317,7 +324,14 @@ class Contract extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT MAX(codContrato) FROM contratos");
+        /*$hoje = date('d/m/Y'); //pega a data atual
+        echo $hoje . "<br>";*/
+
+        $ano = date('Y'); //pega o ano atual
+        
+        $results = $sql->select("SELECT MAX(codContrato) FROM contratos WHERE YEAR(dtCadastro) =:ano", array(
+            'ano'=>$ano
+        ));
         $nextNumber = 1 + $results[0]['MAX(codContrato)'];
        
        /* if($nextNumber < 10){
@@ -328,7 +342,7 @@ class Contract extends Generator{
             
         }*/
         
-        return $nextNumber; //retorna o próximo número de série da categoria
+        return $nextNumber . "/" . $ano; //retorna o próximo número de série da categoria
 
     }
     

@@ -26,6 +26,7 @@ require_once("prod-types.php");
 require_once("suppliers.php"); //fornecedores
 require_once("budgets.php"); //orçamentos
 require_once("contracts.php"); //contratos
+require_once("contract_itens.php"); //itens de contrato
 require_once("rents.php"); //alugueis
 
 $app->get('/', function(){

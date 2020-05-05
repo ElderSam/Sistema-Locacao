@@ -60,7 +60,7 @@ $app->get("/products/json/:idproduct", function($idproduct){
 
 });
 
-$app->get("/products/addToContract/:codeProd", function($codeProd){
+/*$app->get("/products/addToContract/:codeProd", function($codeProd){
 	
     User::verifyLogin();
 
@@ -68,7 +68,7 @@ $app->get("/products/addToContract/:codeProd", function($codeProd){
 
 	echo $product->getByCode($codeProd);
 
-});
+});*/
 
 /* rota para criar usuário (salva no banco) -----------*/
 $app->post("/products/create", function(){

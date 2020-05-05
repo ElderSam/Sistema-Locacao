@@ -8,7 +8,6 @@ use \Locacao\Model\Contract;
 
 class ContractController extends Generator
 {
-
     //construtor
     public function __construct()
     {
@@ -48,7 +47,7 @@ class ContractController extends Generator
 
 
         } else { // se for cadastrar novo Fornecedor
-             
+            
             $res = $contract->insert();        
            
             return $res;
@@ -59,7 +58,7 @@ class ContractController extends Generator
 
     public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
-       // print_r($_POST);
+       //print_r($_POST);
 
         $errors = array();
 
@@ -67,27 +66,49 @@ class ContractController extends Generator
             $errors["#codigo"] = "Código é obrigatório!";
         }
 
+        if ($_POST["idCliente"] == "") {
+            $errors["#idCliente"] = "Cliente é obrigatório!";
+        }
+
+
+        if ($_POST["obra_idObra"] == "") {
+            $errors["#obra_idObra"] = "Obra é obrigatória!";
+        }
+
+
         if ($_POST["dtEmissao"] == "") {
             $errors["#dtEmissao"] = "Data de Emissão é obrigatória!";
         }
+
+        if ($_POST["solicitante"] == "") {
+            $errors["#solicitante"] = "Nome do solicitante é obrigatório!";
+        }
                 
+        if($_POST["email"] != "" && $this->validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
+            $errors["#email"] = "E-mail Incorreto!";
+        }
+
         if ($_POST["status"] == "") {
             $errors["#status"] = "Status é obrigatório!";
         }
+
+        if ($_POST["referencia"] == "") {
+            $errors["#referencia"] = "Referência é obrigatória!";
+        }
         
-        if ($_POST["custoEntrega"] == "") {
+        /*if ($_POST["custoEntrega"] == "") {
             $errors["#custoEntrega"] = "Custo Entrega é obrigatório!";
         }
 
 
         if ($_POST["custoRetirada"] == "") {
             $errors["#custoRetirada"] = "Custo Retiratda é obrigatório!";
-        }
+        }*/
 
         
-        if ($_POST["valorAluguel"] == "") {
-            $errors["#valorAluguel"] = "Valor Aluguel é obrigatório!";
-        } 
+        /*if ($_POST["valorTotal"] == "") {
+            $errors["#valorTotal"] = "Valor Total é obrigatório!";
+        } */
 
         if(($update) && isset($_POST["idContrato"])){ //se for atualizar um Contrato
             
@@ -96,8 +117,8 @@ class ContractController extends Generator
 
             }
 
-            if ($_POST["dtFim"] == "") {
-                $errors["#dtFim"] = "data obrigatória!";
+            if ($_POST["prazoDuracao"] == "") {
+                $errors["#prazoDuracao"] = "Prazo é obrigatório!";
             }
         }
 
@@ -116,6 +137,22 @@ class ContractController extends Generator
         }
     }/* --- fim verificaErros() ---------------------------*/
 
+    public function validaEmail($email)
+    {
+        //verifica se e-mail esta no formato correto de escrita
+        if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
+            return false;
+        } else {
+            //Valida o dominio
+            $dominio = explode('@', $email);
+            if (!checkdnsrr($dominio[1], 'A')) {
+                return false;
+            } else {
+                return true;
+            } // Retorno true para indicar que o e-mail é valido
+        }
+    }
+    
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
 
     /* CAMPOS VIA POST (Para trabalhar como DataTables)
@@ -132,8 +169,8 @@ class ContractController extends Generator
     public function ajax_list_budgets($requestData) //carrega tabela de orçamentos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorTotal"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorTotal"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -169,7 +206,7 @@ class ContractController extends Generator
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
             $row[] = $obraCliente;
-            $row[] = 'R$ '.$contract['valorAluguel'];
+            $row[] = 'R$ '.$contract['valorTotal'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadBudget($id);'>
                     <i class='fas fa-bars sm'></i>
@@ -199,8 +236,8 @@ class ContractController extends Generator
     public function ajax_list_contracts($requestData) //carrega tabela de contratos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorTotal"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorTotal"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -243,7 +280,7 @@ class ContractController extends Generator
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
             $row[] = $obraCliente;
-            $row[] = 'R$ '.$contract['valorAluguel'];
+            $row[] = 'R$ '.$contract['valorTotal'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadContract($id);'>
                     <i class='fas fa-bars sm'></i>

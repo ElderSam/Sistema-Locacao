@@ -7,34 +7,30 @@ use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
 
-class Rent extends Generator{
+class ContractItem extends Generator{
 
     public static function listAll(){
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis ORDER BY nome");
+        $results = $sql->select("SELECT * FROM contrato_itens ORDER BY nome");
     
         return json_encode($results);
     }
 
     public function insert(){
-    
         
         $sql = new Sql();
         
         //print_r($_POST);
 
-        if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
+        if(($this->getidProduto_gen() != "") && ($this->getidContrato() != "")){
            
-            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
-                ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-                ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
-                ":status"=>$this->getstatus(),
+            $results = $sql->select("CALL sp_contrato_itens_save(:idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :observacao)", array(
+                ":idContrato"=>$this->getidContrato(),
+                ":idProduto_gen"=>$this->getidProduto_gen(),
                 ":vlAluguel"=>$this->getvlAluguel(),
-                ":periodoAluguel"=>$this->getperiodoAluguel(),
-                ":dtInicio"=>$this->getdtInicio(),
-                ":dtFinal"=>$this->getdtFinal(),
+                ":quantidade"=>$this->getquantidade(),
                 ":custoEntrega"=>$this->getcustoEntrega(),
                 ":custoRetirada"=>$this->getcustoRetirada(),
                 ":observacao"=>$this->getobservacao()
@@ -67,7 +63,7 @@ class Rent extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis WHERE idFornecedor = :idFornecedor", array(
+        $results = $sql->select("SELECT * FROM contrato_itens WHERE idFornecedor = :idFornecedor", array(
             ":idFornecedor"=>$idFornecedor
         ));
 
@@ -82,16 +78,18 @@ class Rent extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis WHERE (nome = :nome)", array(
+        $results = $sql->select("SELECT * FROM contrato_itens WHERE (nome = :nome)", array(
             ":nome"=>$nome
         ));
 
         return $results;
     }
 
-    public function get_datatable($requestData, $column_search, $column_order){
+    public function get_datatable($requestData, $column_search, $column_order, $idContrato){
         
-        $query = "SELECT * FROM historicoalugueis";
+        $query = "SELECT a.*, b.descricao, c.descCategoria, c.periodoLocacao FROM `contrato_itens` a
+            INNER JOIN produtos_gen b ON (a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON (b.idCategoria = c.idCategoria)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -102,24 +100,9 @@ class Rent extends Generator{
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-
-                /*if ($field == "status") {
-                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
-
-                    if (($search == "ATIV")) {
-                        $search = 1;
-                    } else if ($search == "INAT") {
-                        $search = 0;
-                    }
-
-                    //echo "status: ".$search;
-                }*/
-
-
-
                 //filtra no banco
                 if ($first) {
-                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
+                    $query .= " WHERE (a.idContrato = $idContrato AND $field LIKE '%$search%'"; //primeiro caso
                     $first = FALSE;
                 } else {
                     $query .= " OR $field LIKE '%$search%'";
@@ -129,20 +112,27 @@ class Rent extends Generator{
                 $query .= ")"; //termina o WHERE e a query
             }
 
+        }else{ //se não pesquisou nada
+            $query .= "WHERE (a.idContrato = $idContrato)";
         }
+
+        // WHERE a.idContrato = $idContrato
+        //echo "query: " . $query;
         
         $res = $this->searchAll($query);
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
-        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        $query .= " ORDER BY a.idItem " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
-        $rents = new Rent();
+        //echo "<br>query: " . $query;
+
+        $contractItens = new ContractItem();
         //echo $query;
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$rents->searchAll($query)
+            'data'=>$contractItens->searchAll($query)
         );
     }
 
@@ -160,7 +150,7 @@ class Rent extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis");
+        $results = $sql->select("SELECT * FROM contrato_itens");
 
         return count($results);		
 	}
@@ -170,11 +160,11 @@ class Rent extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
-            ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-            ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
-            ":status"=>$this->getstatus(),
+        $results = $sql->select("CALL sp_contrato_itensUpdate_save(:idHistoricoAluguel, :idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :observacao)", array(
+            ":idContrato"=>$this->getidContrato(),
+            ":idProduto_gen"=>$this->getidProduto_gen(),
             ":vlAluguel"=>$this->getvlAluguel(),
+            ":quantidade"=>$this->getquantidade(),
             ":periodoAluguel"=>$this->getperiodoAluguel(),
             ":dtInicio"=>$this->getdtInicio(),
             ":dtFinal"=>$this->getdtFinal(),
@@ -204,7 +194,7 @@ class Rent extends Generator{
 
         try{
 
-            $sql->query("CALL sp_historicoalugueis_delete(:idFornecedor)", array(
+            $sql->query("CALL sp_contrato_itens_delete(:idFornecedor)", array(
                 ":idFornecedor"=>$this->getidFornecedor()
             ));
 
@@ -231,6 +221,33 @@ class Rent extends Generator{
 
         }
        
+    }
+
+    public static function productAlreadyAdded($idContract, $codeProd){ //verifica se o código passado já existe na lista de itens (produtos) do orçamento/contrato
+        
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM contrato_itens a
+            INNER JOIN produtos_gen b ON(a.idProduto_gen = b.idProduto_gen) 
+            WHERE (a.idContrato = :idContract AND b.codigoGen = :codeProd)", array(
+                ':idContract'=>$idContract,
+                ':codeProd'=>$codeProd
+            ));
+
+        if(count($results) > 0){
+            
+            return json_encode([
+                "error"=>true,
+                "msg"=>"O produto com este código já foi adicionado à lista"
+            ]);
+
+        }else{
+            return json_encode([
+                "error"=>false
+            ]);
+        }
+    
+        return json_encode($results);
     }
     
 }
