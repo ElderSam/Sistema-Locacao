@@ -106,11 +106,9 @@ class Contract extends Generator{
 
     public function get_datatable_budgets($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM contratos";
-
         $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
-        INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
-        INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
+        INNER JOIN obras b ON(a.obra_idObra = b.idObra)
+        INNER JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
@@ -143,6 +141,7 @@ class Contract extends Generator{
                     $query .= " OR $field LIKE '%$search%'";
                 }
             } //fim do foreach
+            
             if (!$first) {
                 $query .= ")"; //termina o WHERE e a query
             }
@@ -167,12 +166,10 @@ class Contract extends Generator{
     }
 
     public function get_datatable_contracts($requestData, $column_search, $column_order){
-        
-        $query = "SELECT * FROM contratos";
 
         $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
         INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
-        INNER JOIN clientes c ON(b.cliente_idCliente = c.idCliente)
+        INNER JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
@@ -180,10 +177,8 @@ class Contract extends Generator{
             $first = TRUE;
 
             foreach ($column_search as $field) {
-                
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
-
 
                 if ($field == "status") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres

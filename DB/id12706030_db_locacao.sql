@@ -1,3 +1,5 @@
+create database if not exists id12706030_db_locacao;
+use id12706030_db_locacao;
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
