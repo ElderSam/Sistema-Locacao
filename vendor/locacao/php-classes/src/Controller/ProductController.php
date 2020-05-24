@@ -145,21 +145,17 @@ class ProductController extends Generator
 
                     }else{
                         $errors["#tipo3"] = "tipo 3 é obrigatório!";
-
                     }
                     
                     
                 }else if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for um Container Sanitário
                     $_POST["tipo3"] = NULL;
-                    
+
                 }else{
                    
                     $errors["#tipo3"] = "tipo 3 é obrigatório!";
-                }
-                
-            }
-
-            
+                }                
+            }            
 
             if (($this->getcodCategory() == "003") || ($this->getcodCategory() == "004")) { //se for Andaime ou Escora
                 $_POST["tipo4"] = NULL;
@@ -167,6 +163,9 @@ class ProductController extends Generator
             }else if(($_POST["tipo4"] == "") && ($this->getcodCategory() == "002") && ($_POST["tipo3"] == "19-02")){ //se for Betoneira com tipo3 Combustão, então não tem tipo4
                 $_POST["tipo4"] = NULL;
                 
+            }else if($this->getcodCategory() == "005"){ //se for um Ar-condicionado
+                    $_POST["tipo4"] = NULL;
+                    
             }else{
 
                 if ($_POST["tipo4"] == "") {

@@ -1,9 +1,11 @@
+create database if not exists id12706030_db_locacao;
+use id12706030_db_locacao;
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25-Abr-2020 às 22:45
+-- Tempo de geração: 05-Maio-2020 às 23:05
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.3.12
 
@@ -19,7 +21,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `db_locacao`
+-- Banco de dados: `id12706030_db_locacao`
 --
 
 DELIMITER $$
@@ -85,7 +87,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `pdtAprovacao` DATETIME, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pnotas` VARCHAR(100), IN `pvalorAluguel` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATETIME, IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -98,13 +100,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       idContrato = pidContrato,
       codContrato = pcodContrato,
       dtEmissao = pdtEmissao,
+      solicitante = psolicitante,
+      telefone = ptelefone,
+      email = pemail,
       dtAprovacao = pdtAprovacao,
-      custoEntrega = pcustoEntrega,
-      custoRetirada = pcustoRetirada,
       notas = pnotas,
-      valorAluguel = pvalorAluguel,
+      valorTotal = pvalorTotal,
       dtInicio = pdtInicio,
-      dtFim = pdtFim,
+      prazoDuracao = pprazoDuracao,
       statusOrcamento = pstatusOrcamento,
       codContrato = pcodContrato,
       obra_idObra = pobra_idObra
@@ -127,12 +130,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `pdtAprovacao` DATETIME, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pnotas` VARCHAR(100), IN `pvalorAluguel` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATETIME, IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, obra_idObra, dtEmissao, dtAprovacao, custoEntrega, custoRetirada, notas, valorAluguel, dtInicio, dtFim, statusOrcamento)
-    VALUES(pcodContrato, pobra_idObra, pdtEmissao, pdtAprovacao, pcustoEntrega, pcustoRetirada, pnotas, pvalorAluguel, pdtInicio, pdtFim, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
+    VALUES(pcodContrato, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -140,7 +143,58 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrat
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedoresUpdate_save` (IN `pidFornecedor` INT, IN `pcodFornecedor` VARCHAR(3), IN `pnome` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pnumero` VARCHAR(45), IN `pbairro` VARCHAR(45), IN `pcidade` VARCHAR(45), IN `pcomplemento` VARCHAR(100), IN `puf` VARCHAR(45), IN `pcep` CHAR(2), IN `pstatus` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itensUpdate_save` (IN `pidItem` INT(11), IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `quantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+  
+    DECLARE vidItem INT;
+    
+    SELECT idItem INTO vidItem
+    FROM contrato_itens
+    WHERE idItem = pidItem;
+
+    UPDATE contrato_itens
+    SET
+      idItem = pidItem,
+      idContrato = pidContrato,
+      idProduto_gen = pidProduto_gen,
+      vlAluguel = pvlAluguel,
+      quantidade = pquantidade,
+      custoEntrega = pcustoEntrega,
+      custoRetirada = pcustoRetirada,
+      observacao = pobservacao
+
+    
+    WHERE idItem = vidItem;
+    
+    SELECT * FROM contrato_itens WHERE idItem = pidItem;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_delete` (IN `pidItem` INT)  BEGIN
+  
+    DECLARE vidItem INT;
+    
+  SELECT idItem INTO vidItem
+    FROM contrato_itens
+    WHERE idItem = pidItem;
+    
+    DELETE FROM contrato_itens WHERE idItem = pidItem;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `pquantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+  
+    DECLARE vidItem INT;
+    
+  INSERT INTO contrato_itens (idContrato, idProduto_gen, vlAluguel, quantidade, custoEntrega, custoRetirada, observacao)
+    VALUES(pidContrato, pidProduto_gen, pvlAluguel, pquantidade, pcustoEntrega, pcustoRetirada, pobservacao);
+    
+    SET vidItem = LAST_INSERT_ID();
+    
+    SELECT * FROM contrato_itens WHERE idItem = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedoresUpdate_save` (IN `pidFornecedor` INT, IN `pcodFornecedor` VARCHAR(3), IN `pnome` VARCHAR(45), IN `pcnpj` VARCHAR(16), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pnumero` VARCHAR(45), IN `pbairro` VARCHAR(45), IN `pcidade` VARCHAR(45), IN `pcomplemento` VARCHAR(100), IN `puf` VARCHAR(45), IN `pcep` CHAR(2), IN `pstatus` TINYINT(4))  BEGIN
   
     DECLARE vidFornecedor INT;
     
@@ -152,6 +206,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedoresUpdate_save` (IN `pi
     SET
         codFornecedor = pcodFornecedor,
         nome = pnome,
+        cnpj = pcnpj,
         telefone1 = ptelefone1,
         telefone2 = ptelefone2,
         email1 = pemail1,
@@ -183,12 +238,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_delete` (IN `pidFor
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_save` (IN `pcodFornecedor` VARCHAR(3), IN `pnome` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pnumero` VARCHAR(45), IN `pbairro` VARCHAR(45), IN `pcidade` VARCHAR(45), IN `pcomplemento` VARCHAR(100), IN `puf` VARCHAR(45), IN `pcep` CHAR(2), IN `pstatus` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_save` (IN `pcodFornecedor` VARCHAR(3), IN `pnome` VARCHAR(45), IN `pcnpj` VARCHAR(16), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pnumero` VARCHAR(45), IN `pbairro` VARCHAR(45), IN `pcidade` VARCHAR(45), IN `pcomplemento` VARCHAR(100), IN `puf` VARCHAR(45), IN `pcep` CHAR(2), IN `pstatus` TINYINT(4))  BEGIN
   
     DECLARE vidFornecedor INT;
     
-  INSERT INTO fornecedores (codFornecedor, nome, telefone1, telefone2, email1, email2, endereco, numero, bairro, cidade, complemento, uf, cep, status)
-    VALUES(pcodFornecedor, pnome, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pnumero, pbairro, pcidade, pcomplemento, puf, pcep, pstatus);
+  INSERT INTO fornecedores (codFornecedor, nome, cnpj, telefone1, telefone2, email1, email2, endereco, numero, bairro, cidade, complemento, uf, cep, status)
+    VALUES(pcodFornecedor, pnome, pcnpj, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pnumero, pbairro, pcidade, pcomplemento, puf, pcep, pstatus);
     
     SET vidFornecedor = LAST_INSERT_ID();
     
@@ -597,7 +652,9 @@ INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`,
 (33, 'Construtora Guilhermina', 1, '(19) 5454-54545', '(54) 5454-54545', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Jorge Salibe Sobrinho', '', 'Limeira', 'Parque das Nações', 454, 'BA', '13481-659', '', '', '53.252.352/5252-55', '423432423523532', 'J', '2020-04-04 19:07:05'),
 (34, 'Construtora do Matheusss', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', 'sdffsfsfdsfdsfsgsghrjjnffjf', 'Limeira', 'Jardim Botânicokjs', 424, 'AM', '13481-659', '', '', '86.867.867/8868-86', '425454543453', 'J', '2020-04-04 21:33:41'),
 (35, 'Construtela', 1, '(19) 9438-74384', '(19) 5379-8537', 'construtela_exemplo@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Thereza de Oliveira Lima ', 'Este é um exemplo de cliente', 'Piracicaba', 'Campos do Conde', 232, 'RN', '31737-361', '', '', '09.804.980/2804-34', '3283748983248', 'J', '2020-04-25 08:08:03'),
-(36, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02');
+(36, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02'),
+(37, 'CONSTRUTOR TESTE', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:30'),
+(38, 'CLIENTE TESET', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:50');
 
 -- --------------------------------------------------------
 
@@ -610,16 +667,238 @@ CREATE TABLE `contratos` (
   `codContrato` varchar(11) NOT NULL,
   `obra_idObra` int(11) NOT NULL,
   `dtEmissao` date NOT NULL,
+  `solicitante` varchar(50) NOT NULL,
+  `telefone` varchar(15) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
   `dtAprovacao` date DEFAULT NULL,
-  `custoEntrega` float NOT NULL,
-  `custoRetirada` float NOT NULL,
-  `notas` varchar(100) DEFAULT NULL,
-  `valorAluguel` float NOT NULL,
   `dtInicio` date DEFAULT NULL,
-  `dtFim` date DEFAULT NULL,
+  `prazoDuracao` varchar(40) DEFAULT NULL,
   `statusOrcamento` tinyint(4) NOT NULL,
+  `valorTotal` float DEFAULT NULL,
+  `notas` varchar(100) DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `contratos`
+--
+
+INSERT INTO `contratos` (`idContrato`, `codContrato`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
+(87, '1', 1, '2020-12-31', '', NULL, NULL, NULL, NULL, NULL, 0, 999, '', '2020-05-02 13:44:03'),
+(88, '2', 1, '2020-12-31', '', NULL, NULL, NULL, NULL, NULL, 0, 32452, '', '2020-05-02 13:46:42'),
+(90, '3', 1, '2020-12-31', '', NULL, NULL, NULL, NULL, NULL, 0, 800, '', '2020-05-02 13:50:24'),
+(91, '4', 1, '2020-12-31', 'Elder', '19 99999999', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 3456, '', '2020-05-02 14:28:11'),
+(92, '5', 1, '2020-12-31', 'elder', '19999999999', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 345, '', '2020-05-02 14:40:42'),
+(94, '6', 1, '2020-12-31', '500', '19888000000', '5656@gmail.com', NULL, NULL, NULL, 0, 435, '', '2020-05-02 15:22:12'),
+(95, '7', 1, '2020-12-31', '4353', '32423423423', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 3242, '', '2020-05-02 15:24:21'),
+(96, '8', 1, '2020-12-31', 'rwr', '23435566545', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 3, 324, '', '2020-05-02 15:55:07'),
+(97, '9', 1, '2020-12-31', '453', '34534543453', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 3, -1345, '', '2020-05-02 16:10:51'),
+(98, '10', 1, '2020-12-31', '234', '45435343543', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 23452, '', '2020-05-02 16:12:21'),
+(99, '10', 1, '2020-11-01', '2345', '45435343534', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 3, 2453, '', '2020-05-02 16:14:51'),
+(100, '10', 1, '2020-12-31', '4353', '45345433534', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 345, '', '2020-05-02 16:21:22'),
+(101, '10', 1, '2020-12-31', '34535', '35345344534', '', NULL, NULL, NULL, 0, 345345, '', '2020-05-02 16:25:47'),
+(102, '10', 1, '2020-12-31', 'fsf', '', '', NULL, NULL, NULL, 0, 345, '', '2020-05-02 16:28:06'),
+(103, '10', 1, '2020-12-31', 'fwef', '', '', NULL, NULL, NULL, 0, -13453, '', '2020-05-02 16:32:37'),
+(104, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 345, '', '2020-05-02 16:41:44'),
+(105, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 3453, '', '2020-05-02 16:44:21'),
+(106, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 345, '', '2020-05-02 16:58:03'),
+(107, '10', 1, '2020-12-31', '3523', '', '', NULL, NULL, NULL, 0, 345, '', '2020-05-02 17:03:20'),
+(108, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 345, '', '2020-05-02 17:04:56'),
+(109, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 3453, '', '2020-05-02 21:23:52'),
+(110, '10', 1, '2020-12-31', 'elder', '23423434232', '234234@gmail.com', NULL, NULL, NULL, 0, 3434, '', '2020-05-03 20:00:56'),
+(111, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 20:14:42'),
+(112, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 20:15:01'),
+(113, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 20:21:09'),
+(114, '10', 1, '2020-12-31', 'eder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 20:27:05'),
+(115, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 20:36:22'),
+(116, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 21:05:17'),
+(117, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 21:08:07'),
+(118, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 21:11:31'),
+(119, '10', 1, '2020-12-31', 'fds', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 22:53:31'),
+(120, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 22:55:26'),
+(121, '10', 1, '2020-12-31', '23', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 23:00:07'),
+(122, '10', 1, '2020-12-31', 'TESF', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 23:08:18'),
+(123, '10', 1, '2020-12-31', '32', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 23:11:14'),
+(124, '10', 1, '2020-12-31', 'tes', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 23:26:02'),
+(125, '10', 1, '2020-12-31', 'gse', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-03 23:28:12'),
+(126, '10', 1, '2020-12-31', 'elder', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:08:37'),
+(127, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:21:48'),
+(128, '10', 1, '2020-12-31', 'tets', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:23:57'),
+(129, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:26:33'),
+(130, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:29:37'),
+(131, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:32:26'),
+(132, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:33:59'),
+(133, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:35:23'),
+(134, '10', 1, '2020-12-31', 'test', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:36:17'),
+(135, '10', 1, '2020-12-31', 'test', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:36:56'),
+(136, '10', 1, '2020-12-31', 'et', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:38:44'),
+(137, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:40:33'),
+(138, '10', 1, '2020-12-31', 'test', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:45:21'),
+(139, '10', 1, '2020-12-31', 'test', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:50:49'),
+(140, '10', 1, '2020-12-31', 'rt', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:53:04'),
+(141, '10', 1, '2020-12-31', '245', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:55:30'),
+(142, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:56:27'),
+(143, '10', 1, '2020-02-02', '23', '', 'eldersamuel98@gmail.com', NULL, NULL, NULL, 0, 0, '', '2020-05-05 08:58:57'),
+(144, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 09:28:03'),
+(145, '10', 1, '2020-07-05', '23', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 09:31:50'),
+(146, '10', 1, '2020-12-31', '4353', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 09:32:53'),
+(147, '10', 1, '2020-12-31', 'te', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 09:34:19'),
+(148, '10', 1, '2020-12-31', 'dsf', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:24:37'),
+(149, '10', 1, '2020-12-31', '45', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:25:47'),
+(150, '10', 1, '0423-03-24', '3243', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:43:40'),
+(151, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:51:12'),
+(152, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:54:46'),
+(153, '10', 1, '2020-12-31', '43', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 10:57:34'),
+(154, '10', 1, '2020-03-03', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:02:30'),
+(155, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:05:42'),
+(156, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:09:01'),
+(157, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:09:16'),
+(158, '10', 1, '2020-12-31', '435', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:10:27'),
+(159, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:12:04'),
+(160, '10', 1, '2020-12-31', '435', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 11:12:50'),
+(161, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:04:04'),
+(162, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:11:39'),
+(163, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:23:20'),
+(164, '10', 1, '2020-12-31', '435', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:33:33'),
+(165, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:37:09'),
+(166, '10', 1, '2020-12-31', '43', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:38:36'),
+(167, '10', 1, '2020-12-31', '435', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:43:58'),
+(168, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:44:23'),
+(169, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:46:32'),
+(170, '10', 1, '2020-12-31', '345345', '34', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:50:36'),
+(171, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:54:24'),
+(172, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:55:03'),
+(173, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 14:57:31'),
+(174, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 15:24:10'),
+(175, '10', 1, '2020-12-31', '43', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 15:32:40'),
+(176, '10', 1, '2020-12-31', '34', '33', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 15:40:52'),
+(177, '10', 1, '2020-12-31', '4532', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 15:42:03'),
+(178, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 15:57:46'),
+(179, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:04:38'),
+(180, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:06:31'),
+(181, '10', 1, '2020-12-31', '324', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:08:55'),
+(182, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:10:51'),
+(183, '10', 1, '2020-12-31', '324', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:48:21'),
+(184, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:51:47'),
+(185, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:55:29'),
+(186, '10', 1, '2020-12-31', '324', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 16:57:53'),
+(187, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:09:51'),
+(188, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:13:02'),
+(189, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:15:28'),
+(190, '10', 1, '2020-12-31', '324', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:18:56'),
+(191, '10', 1, '2020-12-31', '234', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:20:43'),
+(192, '10', 1, '2020-12-31', '32', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:24:51'),
+(193, '10', 1, '2020-12-31', '32', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-05 17:28:16'),
+(194, '10', 1, '2020-12-31', '324', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:32:34'),
+(195, '10', 1, '2020-12-31', '43', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:33:39'),
+(196, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:43:27'),
+(197, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:46:38'),
+(198, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:48:46'),
+(199, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:49:35'),
+(200, '10', 1, '2020-12-31', '435', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:51:24'),
+(201, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:52:04'),
+(202, '10', 1, '2020-12-31', '34', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 17:56:20'),
+(203, '10', 1, '2020-12-31', '345', '', '', NULL, NULL, NULL, 0, 0, '', '2020-05-05 18:02:21');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `contrato_itens`
+--
+
+CREATE TABLE `contrato_itens` (
+  `idItem` int(11) NOT NULL,
+  `idContrato` int(11) NOT NULL,
+  `idProduto_gen` int(11) NOT NULL,
+  `vlAluguel` float NOT NULL,
+  `quantidade` varchar(4) NOT NULL,
+  `custoEntrega` float DEFAULT NULL,
+  `custoRetirada` float DEFAULT NULL,
+  `observacao` text DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `contrato_itens`
+--
+
+INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
+(1, 115, 180, 450, '1', 0, 0, '', '2020-05-03 20:38:23'),
+(2, 115, 180, 450, '1', 0, 0, '', '2020-05-03 20:38:36'),
+(3, 115, 180, 450, '1', 0, 0, '', '2020-05-03 20:47:06'),
+(4, 115, 180, 450, '1', 0, 0, '', '2020-05-03 20:47:27'),
+(5, 118, 187, 15470, '2', 0, 0, '', '2020-05-03 21:12:56'),
+(6, 120, 180, 450, '1', 200, 200, '', '2020-05-03 22:55:44'),
+(7, 121, 180, 4502, '2', 200, 200, '', '2020-05-03 23:00:23'),
+(8, 122, 180, 450, '34', 200, 200, '', '2020-05-03 23:09:06'),
+(9, 123, 180, 450, '2', 200, 200, '', '2020-05-03 23:11:56'),
+(10, 124, 180, 450, '3', 300, 300, '', '2020-05-03 23:26:28'),
+(11, 125, 180, 450, '2', 200, 200, '', '2020-05-03 23:28:31'),
+(12, 126, 180, 450, '3', 200, 200, '', '2020-05-05 08:09:07'),
+(13, 126, 187, 15470, '2', 500, 500, '', '2020-05-05 08:11:08'),
+(14, 127, 187, 15470, '3', 250, 250, '', '2020-05-05 08:22:04'),
+(15, 128, 187, 15470, '2', 200, 200, '', '2020-05-05 08:24:11'),
+(16, 129, 187, 15470, '1', 140, 140, '', '2020-05-05 08:26:49'),
+(17, 130, 187, 15470, '2', 230, 230, '', '2020-05-05 08:29:51'),
+(18, 131, 187, 15470, '3', 560, 560, '', '2020-05-05 08:32:58'),
+(19, 132, 187, 15470, '3', 304, 304, '', '2020-05-05 08:34:11'),
+(20, 133, 187, 15470, '3', 340, 450, '', '2020-05-05 08:35:33'),
+(21, 134, 187, 15470, '3', 3454, 45, '', '2020-05-05 08:36:27'),
+(22, 135, 187, 15470, '3', 340, 4560, '', '2020-05-05 08:37:08'),
+(23, 136, 180, 450, '3', 34, 34, '', '2020-05-05 08:39:06'),
+(24, 137, 180, 450, '3', 450, 450, '', '2020-05-05 08:40:57'),
+(25, 138, 181, 234, '3', 400, 400, '', '2020-05-05 08:45:43'),
+(26, 139, 191, 200, '45', 230, 340, '', '2020-05-05 08:51:12'),
+(27, 140, 191, 200, '23', 345, 435, '', '2020-05-05 08:53:28'),
+(28, 141, 191, 200, '34', 34, 342, '', '2020-05-05 08:55:41'),
+(29, 142, 191, 200, '4', 3433, 34, '', '2020-05-05 08:56:40'),
+(30, 143, 191, 200, '45', 34, 34, '', '2020-05-05 09:00:28'),
+(31, 144, 190, 125.66, '3', 334, 34, '', '2020-05-05 09:28:19'),
+(32, 145, 190, 125.66, '3', 3, 3, '', '2020-05-05 09:32:12'),
+(33, 146, 190, 125.66, '34', 34, 34, '', '2020-05-05 09:33:05'),
+(34, 147, 190, 125.66, '34', 34, 345, '', '2020-05-05 09:34:33'),
+(35, 148, 190, 125.66, '34', 34, 34, '', '2020-05-05 10:24:55'),
+(36, 149, 190, 125.66, '3', 343, 343, '', '2020-05-05 10:26:18'),
+(37, 150, 180, 450, '4', 234, 34, '', '2020-05-05 10:43:58'),
+(38, 151, 180, 450, '3', 34, 34, '', '2020-05-05 10:51:22'),
+(39, 152, 180, 450, '44', 45, 45, '', '2020-05-05 10:55:00'),
+(40, 153, 180, 450, '34', 2, 2, '', '2020-05-05 10:57:47'),
+(41, 154, 180, 450, '3', 3, 3, '', '2020-05-05 11:02:49'),
+(42, 155, 180, 450, '4', 445, 445, '', '2020-05-05 11:05:56'),
+(43, 157, 180, 450, '3', 344, 344, '', '2020-05-05 11:09:27'),
+(44, 158, 180, 450, '3', 3, 3, '', '2020-05-05 11:10:36'),
+(45, 159, 180, 450, '3', 344, 345, '', '2020-05-05 11:12:17'),
+(46, 160, 180, 450, '3', 3, 34, '', '2020-05-05 11:12:59'),
+(47, 160, 189, 250, '3', 430, 340, '', '2020-05-05 11:14:38'),
+(48, 160, 190, 125.66, '4', 200, 200, '', '2020-05-05 13:55:20'),
+(49, 160, 189, 250, '12', 140, 130, '', '2020-05-05 13:56:00'),
+(50, 173, 187, 15470, '2', 0, 0, '', '2020-05-05 14:57:56'),
+(51, 173, 187, 15470, '2', 0, 0, '', '2020-05-05 14:58:02'),
+(52, 174, 180, 450, '5', 200, 200, '', '2020-05-05 15:31:14'),
+(53, 175, 180, 450, '3', 344, 344, '', '2020-05-05 15:32:53'),
+(54, 175, 180, 450, '3', 344, 344, '', '2020-05-05 15:36:46'),
+(55, 175, 180, 450, '3', 344, 344, '', '2020-05-05 15:37:15'),
+(56, 175, 180, 450, '3', 344, 344, '', '2020-05-05 15:37:15'),
+(57, 177, 180, 450, '3', 200, 200, '', '2020-05-05 15:42:20'),
+(58, 178, 180, 450, '34', 200, 200, '', '2020-05-05 15:59:54'),
+(59, 179, 180, 450, '23', 200, 200, '', '2020-05-05 16:04:58'),
+(60, 180, 180, 450, '2', 300, 300, '', '2020-05-05 16:06:46'),
+(61, 181, 187, 15470, '2', 300, 300, '', '2020-05-05 16:09:09'),
+(62, 182, 187, 15470, '23', 200, 200, '', '2020-05-05 16:11:04'),
+(63, 186, 187, 15470, '23', 20, 200, '', '2020-05-05 16:58:11'),
+(64, 186, 180, 450, '2', 450, 450, '', '2020-05-05 16:58:31'),
+(65, 187, 180, 450, '2', 250, 250, '', '2020-05-05 17:10:11'),
+(66, 187, 187, 15470, '3', 350, 350, '', '2020-05-05 17:12:18'),
+(67, 188, 187, 15470, '2', 250, 250, '', '2020-05-05 17:13:29'),
+(68, 189, 187, 15470, '1', 240, 240, '', '2020-05-05 17:15:41'),
+(69, 190, 187, 15470, '2', 450, 450, '', '2020-05-05 17:19:11'),
+(70, 191, 187, 15470, '2', 540, 540, '', '2020-05-05 17:20:59'),
+(71, 192, 187, 15470, '2', 340, 340, '', '2020-05-05 17:25:05'),
+(72, 193, 187, 15470, '2', 230, 340, '', '2020-05-05 17:28:30'),
+(73, 194, 187, 15470, '2', 230, 230, '', '2020-05-05 17:32:48'),
+(74, 195, 187, 15470, '2', 230, 230, '', '2020-05-05 17:33:54'),
+(75, 201, 180, 450, '3', 3434, 344, '', '2020-05-05 17:52:19'),
+(76, 203, 187, 15470, '2', 233, 233, '', '2020-05-05 18:02:41');
 
 -- --------------------------------------------------------
 
@@ -659,6 +938,7 @@ CREATE TABLE `fornecedores` (
   `idFornecedor` int(11) NOT NULL,
   `codFornecedor` varchar(3) NOT NULL,
   `nome` varchar(45) NOT NULL,
+  `cnpj` varchar(16) DEFAULT NULL,
   `telefone1` varchar(15) NOT NULL,
   `telefone2` varchar(15) DEFAULT NULL,
   `email1` varchar(45) NOT NULL,
@@ -678,11 +958,11 @@ CREATE TABLE `fornecedores` (
 -- Extraindo dados da tabela `fornecedores`
 --
 
-INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `numero`, `bairro`, `cidade`, `complemento`, `uf`, `cep`, `status`, `dtCadastro`) VALUES
-(1, '001', 'Fornecedor X', '19 99999999', '', '', '', 'Rua x', 344, 'jd. do filtro', 'Araras', '', 'SP', '09', 1, '2020-03-03 22:09:00'),
-(2, '002', 'Cargueiro Fornecedor de Containers', '11 99992344', '1255550000', 'cargueiro@grupo.com', 'adm@grupo.com', 'Av. do Louvre', 1009, 'Vila Litoral', 'Santos', '', 'SP', '10', 1, NULL),
-(4, '003', 'Douglas Numeriano', '19 99999999', '19 99999999', 'douglas@gmail.com', '', 'Rua Maria Aparecida', 76, 'jd. das Flores', 'Limeira', 'prédio', 'SP', '13', 1, '2020-03-30 15:29:33'),
-(5, '004', 'Fornecedor YXZ', '19 75363234', '19453656453', 'adm@bergamus.com', 'fincancas@bergamus.com', 'Avenida Brasil', 340, 'Centro', 'São Paulo', 'Barracão', 'SP', '10', 1, '2020-03-30 17:38:44');
+INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `cnpj`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `numero`, `bairro`, `cidade`, `complemento`, `uf`, `cep`, `status`, `dtCadastro`) VALUES
+(1, '001', 'Fornecedor X', '12654345345346', '(19) 9999-9999', '(99) 99999-9999', '', '', 'Rua x', 344, 'jd. do filtro', 'Araras', '', 'SP', '09', 1, '2020-03-03 22:09:00'),
+(2, '002', 'Cargueiro Fornecedor de Containers', NULL, '11 99992344', '1255550000', 'cargueiro@grupo.com', 'adm@grupo.com', 'Av. do Louvre', 1009, 'Vila Litoral', 'Santos', '', 'SP', '10', 1, NULL),
+(4, '003', 'Douglas Numeriano', NULL, '19 99999999', '19 99999999', 'douglas@gmail.com', '', 'Rua Maria Aparecida', 76, 'jd. das Flores', 'Limeira', 'prédio', 'SP', '13', 1, '2020-03-30 15:29:33'),
+(5, '004', 'Fornecedor YXZ', '23423423423432', '1975363234', '19453656453', 'adm@bergamus.com', 'fincancas@bergamus.com', 'Avenida Brasil', 340, 'Centro', 'São Paulo', 'Barracão', 'SP', '10', 1, '2020-03-30 17:38:44');
 
 -- --------------------------------------------------------
 
@@ -704,6 +984,13 @@ CREATE TABLE `historicoalugueis` (
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Extraindo dados da tabela `historicoalugueis`
+--
+
+INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
+(17, 95, 180, 1, 450, '0000-00-00', '0000-00-00', 0, 0, '', '2020-05-02 15:27:43');
+
 -- --------------------------------------------------------
 
 --
@@ -712,6 +999,8 @@ CREATE TABLE `historicoalugueis` (
 
 CREATE TABLE `obras` (
   `idObra` int(11) NOT NULL,
+  `id_fk_cliente` int(11) NOT NULL,
+  `id_fk_resp` int(11) NOT NULL,
   `codObra` int(11) NOT NULL,
   `complemento` varchar(150) DEFAULT NULL,
   `tipoEndereco` varchar(45) NOT NULL,
@@ -721,10 +1010,15 @@ CREATE TABLE `obras` (
   `uf` char(2) NOT NULL,
   `cep` varchar(45) NOT NULL,
   `endereco` varchar(45) NOT NULL,
-  `id_fk_resp` int(11) NOT NULL,
-  `dtCadastro` datetime DEFAULT current_timestamp(),
-  `id_fk_cliente` int(11) NOT NULL
+  `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `obras`
+--
+
+INSERT INTO `obras` (`idObra`, `id_fk_cliente`, `id_fk_resp`, `codObra`, `complemento`, `tipoEndereco`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`) VALUES
+(1, 34, 3, 1, NULL, 'teste', 'Araras', 'Centro', 135, 'SP', '13600-000', 'Rua x', '2020-05-02 10:21:34');
 
 -- --------------------------------------------------------
 
@@ -801,6 +1095,7 @@ CREATE TABLE `prod_categorias` (
   `idCategoria` int(4) NOT NULL,
   `descCategoria` varchar(15) NOT NULL,
   `codCategoria` varchar(3) NOT NULL,
+  `periodoLocacao` varchar(15) NOT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -808,11 +1103,11 @@ CREATE TABLE `prod_categorias` (
 -- Extraindo dados da tabela `prod_categorias`
 --
 
-INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `dtCadastro`) VALUES
-(1, 'Container', '001', '2020-03-03 23:01:57'),
-(2, 'Betoneira', '002', '2020-03-05 00:17:03'),
-(3, 'Andaime', '003', '2020-03-05 00:17:03'),
-(4, 'Escora metálica', '004', '2020-03-09 11:36:59');
+INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `periodoLocacao`, `dtCadastro`) VALUES
+(1, 'Container', '001', 'mensal', '2020-03-03 23:01:57'),
+(2, 'Betoneira', '002', 'quinzenal', '2020-03-05 00:17:03'),
+(3, 'Andaime', '003', '', '2020-03-05 00:17:03'),
+(4, 'Escora metálica', '004', '', '2020-03-09 11:36:59');
 
 -- --------------------------------------------------------
 
@@ -921,6 +1216,7 @@ INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTip
 
 CREATE TABLE `resp_obras` (
   `idResp` int(11) NOT NULL,
+  `id_fk_cliente` int(11) NOT NULL,
   `respObra` varchar(45) DEFAULT NULL,
   `telefone1` varchar(15) DEFAULT NULL,
   `telefone2` varchar(15) DEFAULT NULL,
@@ -928,21 +1224,20 @@ CREATE TABLE `resp_obras` (
   `email1` varchar(45) DEFAULT NULL,
   `email2` varchar(45) DEFAULT NULL,
   `anotacoes` varchar(150) DEFAULT NULL,
-  `dtCadastro` datetime DEFAULT current_timestamp(),
-  `id_fk_cliente` int(11) NOT NULL
+  `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `resp_obras`
 --
 
-INSERT INTO `resp_obras` (`idResp`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`, `id_fk_cliente`) VALUES
-(3, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56', 34),
-(5, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50', 34),
-(7, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39', 34),
-(10, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41', 35),
-(12, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14', 35),
-(13, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11', 33);
+INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
+(3, 34, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56'),
+(5, 34, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
+(7, 34, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
+(10, 35, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
+(12, 35, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14'),
+(13, 33, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11');
 
 -- --------------------------------------------------------
 
@@ -997,6 +1292,14 @@ ALTER TABLE `contratos`
   ADD KEY `fk_contrato_obra1` (`obra_idObra`);
 
 --
+-- Índices para tabela `contrato_itens`
+--
+ALTER TABLE `contrato_itens`
+  ADD PRIMARY KEY (`idItem`),
+  ADD KEY `fk_contrato_has_produto_contrato2` (`idContrato`),
+  ADD KEY `fk_contrato_has_produto_produto2` (`idProduto_gen`);
+
+--
 -- Índices para tabela `faturas`
 --
 ALTER TABLE `faturas`
@@ -1022,8 +1325,8 @@ ALTER TABLE `historicoalugueis`
 --
 ALTER TABLE `obras`
   ADD PRIMARY KEY (`idObra`),
-  ADD KEY `fk_obra_cliente1` (`id_fk_resp`),
-  ADD KEY `id_fk_cliente` (`id_fk_cliente`);
+  ADD KEY `id_fk_cliente` (`id_fk_cliente`),
+  ADD KEY `id_fk_resp` (`id_fk_resp`) USING BTREE;
 
 --
 -- Índices para tabela `produtos_esp`
@@ -1091,13 +1394,19 @@ ALTER TABLE `aditamentos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de tabela `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+
+--
+-- AUTO_INCREMENT de tabela `contrato_itens`
+--
+ALTER TABLE `contrato_itens`
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`
@@ -1109,19 +1418,19 @@ ALTER TABLE `faturas`
 -- AUTO_INCREMENT de tabela `fornecedores`
 --
 ALTER TABLE `fornecedores`
-  MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
 --
 ALTER TABLE `obras`
-  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_esp`
@@ -1176,6 +1485,13 @@ ALTER TABLE `contratos`
   ADD CONSTRAINT `fk_contrato_obra1` FOREIGN KEY (`obra_idObra`) REFERENCES `obras` (`idObra`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Limitadores para a tabela `contrato_itens`
+--
+ALTER TABLE `contrato_itens`
+  ADD CONSTRAINT `fk_contrato_has_produto_contrato` FOREIGN KEY (`idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_contrato_has_produto_produto` FOREIGN KEY (`idProduto_gen`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Limitadores para a tabela `faturas`
 --
 ALTER TABLE `faturas`
@@ -1192,7 +1508,6 @@ ALTER TABLE `historicoalugueis`
 -- Limitadores para a tabela `obras`
 --
 ALTER TABLE `obras`
-  ADD CONSTRAINT `fk_obra_cliente1` FOREIGN KEY (`id_fk_resp`) REFERENCES `clientes` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `id_fk_cliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`),
   ADD CONSTRAINT `id_fkresp` FOREIGN KEY (`id_fk_resp`) REFERENCES `resp_obras` (`idResp`);
 
