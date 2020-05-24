@@ -1,10 +1,6 @@
 var myTable = null
 
-$("#dtEmissao").mask("00/00/0000").val(currentDay());
-
-$(function () {
-
-	
+$(function () {	
 
 	loadTableItens()
 	//carrega a tabela de Budgets
@@ -815,7 +811,7 @@ function loadTableItens(){ //carrega a tabela de Fornecedores
 					
 					});
 
-					atualizaValorTotal(); //valor total do orçamento/contrato
+					//atualizaValorTotal(); //valor total do orçamento/contrato
 					
 					return rows;
 				},

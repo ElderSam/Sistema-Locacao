@@ -27,12 +27,18 @@
                 </div>
 
                 <div>
-                    <form id="formBudget">
+                    <form id="formBudget"> <!-- Formulário do Orçamento -->
                         <div class="form-row">
                 
                             <div class="form-group col-lg-3">
                                 <label for="codigo">Código</label>
                                 <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="3">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="nomeEmpresa">Nome da Empresa</label>
+                                <input type="text" class="form-control" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da Empresa Solicitante" maxlength="50">
                                 <span class="help-block"></span>
                             </div>
 
@@ -46,14 +52,14 @@
                             <div class="form-group col-lg-3">
                                 <label for="obra_idObra">Obra</label>
                                 <select class="form-control" id="obra_idObra" name="obra_idObra">
-                                    <option selected value="">(Escolha um cliente)</option>
+                                    <option selected value="">(Escolha um cliente primeiro)</option>
                                 </select>
                                 <span class="help-block"></span>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="dtEmissao">Data de Emissão</label>
-                                <input type="text" class="form-control" id="dtEmissao" name="dtEmissao">
+                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao">
                             </div>
 
                             <div class="form-group col-lg-3 bg-dark pb-2 text-white">
@@ -104,7 +110,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="dtInicio">Data de Início</label>
-                                <input type="text" class="form-control" id="dtInicio" name="dtInicio">
+                                <input type="date" class="form-control" id="dtInicio" name="dtInicio">
                                 <span class="help-block"></span>
                             </div>
 
@@ -223,7 +229,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="formRent">
+                        <form id="formRent"> <!-- Formulário do Item -->
                             <div class="form-row">
             
                                 <div class="form-group col-lg-3">
@@ -363,13 +369,10 @@
             </div>
         </div>  <!-- end Product Modal -->  
 
-
-
         </div>
-
-        
+      
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <script src="../res/plugins/mask/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
     <script src="../res/js/budget_save.js"></script>
       

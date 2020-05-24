@@ -19,6 +19,10 @@ class Contract extends Generator{
     }
 
     public function insert(){
+
+        if ($this->getobra_idObra() == "") {        
+            $this->setobra_idObra(NULL);
+        }
         
         $sql = new Sql();
         /*echo "<br>codContrato " . $this->getcodigo() .
@@ -36,8 +40,9 @@ class Contract extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_contratos_save(:codContrato, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
+            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
                 ":codContrato"=>$this->getcodigo(),
+                ":nomeEmpresa"=>$this->getnomeEmpresa(),
                 ":obra_idObra"=>$this->getobra_idObra(),
                 ":dtEmissao"=>$this->getdtEmissao(),
                 ":solicitante"=>$this->getsolicitante(),
@@ -52,6 +57,8 @@ class Contract extends Generator{
                 ":prazoDuracao"=>$this->getprazoDuracao(),
                 ":statusOrcamento"=>$this->getstatus()
             ));
+
+            //print_r($results);
 
             if(count($results) > 0){
 
@@ -81,7 +88,7 @@ class Contract extends Generator{
         $sql = new Sql();
 
         $results = $sql->select("SELECT a.*, b.idObra FROM contratos a
-                    INNER JOIN obras b ON(a.obra_idObra = b.idObra)
+                    LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
                     WHERE idContrato = :idContrato", array(
             ":idContrato"=>$idContrato
         ));
@@ -106,9 +113,9 @@ class Contract extends Generator{
 
     public function get_datatable_budgets($requestData, $column_search, $column_order){
         
-        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
-        INNER JOIN obras b ON(a.obra_idObra = b.idObra)
-        INNER JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
+        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
+        LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
+        LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
@@ -121,7 +128,7 @@ class Contract extends Generator{
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
 
-                if ($field == "status") {
+               /* if ($field == "status") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
                     if (($search == "ATIV")) {
@@ -131,7 +138,7 @@ class Contract extends Generator{
                     }
 
                     //echo "status: ".$search;
-                }
+                }*/
 
                 //filtra no banco
                 if ($first) {
@@ -167,9 +174,9 @@ class Contract extends Generator{
 
     public function get_datatable_contracts($requestData, $column_search, $column_order){
 
-        $query = "SELECT a.idContrato, a.codContrato, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
-        INNER JOIN obras b  ON(a.obra_idObra = b.idObra)
-        INNER JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
+        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
+        LEFT JOIN obras b  ON(a.obra_idObra = b.idObra)
+        LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
@@ -180,7 +187,7 @@ class Contract extends Generator{
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-                if ($field == "status") {
+                /*if ($field == "status") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
                     if (($search == "ATIV")) {
@@ -190,7 +197,7 @@ class Contract extends Generator{
                     }
 
                     //echo "status: ".$search;
-                }
+                }*/
 
 
                 //filtra no banco
@@ -244,12 +251,17 @@ class Contract extends Generator{
     
 
     public function update(){
+
+        if ($this->getobra_idObra() == "") {        
+            $this->setobra_idObra(NULL);
+        }
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
+        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
             ":idContrato"=>$this->getidContrato(),
             ":codContrato"=>$this->getcodigo(),
+            ":nomeEmpresa"=>$this->getnomeEmpresa(),
             ":obra_idObra"=>$this->getobra_idObra(),
             ":dtEmissao"=>$this->getdtEmissao(),
             ":dtAprovacao"=>$this->getdtAprovacao(),

@@ -78,20 +78,26 @@ function showErrorsModal(error_list) {
 } 
 
 /* para mostrar imagem que acabou de fazer upload antes de enviar --------------------- */
-document.querySelector('#desImagePath').addEventListener('change', function(){
+const desImagePath = document.querySelector('#desImagePath')
+
+if(desImagePath !== null){
+
+	desImagePath.addEventListener('change', function(){
 	
-	var file = new FileReader();
-	$('#loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
+		var file = new FileReader();
+		$('#loadingImg').html(loadingImg("Carregando imagem...")); //mostra ao usuário status de carregando
+			
+		file.onload = function() {
 		
-	file.onload = function() {
+			document.querySelector('#image-preview').src = file.result;
+			$('#loadingImg').html('');
+		}
 	
-		document.querySelector('#image-preview').src = file.result;
-		$('#loadingImg').html('');
-	}
+		file.readAsDataURL(this.files[0]);
+	
+	});
+}
 
-	file.readAsDataURL(this.files[0]);
-
-});
 
 function loadingImg(message="") { //para mostrar animação de carregando (círculo girando)
 	return "<i class='fa fa-circle-o-notch fa-spin'></i>&nbsp;" + message
@@ -119,7 +125,7 @@ function paraMoedaReal(valor){ //transforma número no formato moeda real (brasi
 */
 //console.log(round(1.005, 2)); // 1.01
 
-
+/*
 function formatDate(dateX){ //format Date to input in Form
 	
     var data = new Date(dateX),
@@ -135,6 +141,6 @@ function formatDate(dateX){ //format Date to input in Form
 function currentDay(){
 	dt = new Date();
 	return formatDate(dt);
-}
+}*/
 
 
