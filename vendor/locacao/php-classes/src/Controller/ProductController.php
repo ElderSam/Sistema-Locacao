@@ -130,7 +130,7 @@ class ProductController extends Generator
                 $_POST["tipo4"] = NULL;
             }
             
-            if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004")) {
+            if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004")) { //nas categorias 1, 2 e 3 o tipo 3 é obrigatório para a maioria dos casos
                 
                 $codTipo2 = substr($_POST["tipo2"], -2);
 
@@ -149,7 +149,11 @@ class ProductController extends Generator
                     }
                     
                     
+                }else if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for um Container Sanitário
+                    $_POST["tipo3"] = NULL;
+                    
                 }else{
+                   
                     $errors["#tipo3"] = "tipo 3 é obrigatório!";
                 }
                 
@@ -248,10 +252,10 @@ class ProductController extends Generator
         /*---------------------- Tipos ------------------------------------------------*/
         $qtdTipos = 4;
 
-        if(($this->getcodCategory() == "001") || ($this->getcodCategory() == "002")){
+        if(($this->getcodCategory() == "001")/* || ($this->getcodCategory() == "002")*/){
             //$qtdTipos = 4;
 
-            if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for container sanitário
+            if(/*($this->getcodCategory() == "001") && */($_POST["tipo2"] == "7-03")){ //se for container sanitário
                 $_POST["tipo3"] = NULL; 
      
             }
