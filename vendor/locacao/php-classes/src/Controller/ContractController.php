@@ -92,24 +92,6 @@ class ContractController extends Generator
             $errors["#status"] = "Status é obrigatório!";
         }
 
-        if ($_POST["referencia"] == "") {
-            $errors["#referencia"] = "Referência é obrigatória!";
-        }
-        
-        /*if ($_POST["custoEntrega"] == "") {
-            $errors["#custoEntrega"] = "Custo Entrega é obrigatório!";
-        }
-
-
-        if ($_POST["custoRetirada"] == "") {
-            $errors["#custoRetirada"] = "Custo Retiratda é obrigatório!";
-        }*/
-
-        
-        /*if ($_POST["valorTotal"] == "") {
-            $errors["#valorTotal"] = "Valor Total é obrigatório!";
-        } */
-
         if(($update) && isset($_POST["idContrato"])){ //se for atualizar um Contrato
             
             if ($_POST["dtInicio"] == "") {

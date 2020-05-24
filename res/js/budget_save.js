@@ -1,6 +1,10 @@
 var myTable = null
 
+$("#dtEmissao").mask("00/00/0000").val(currentDay());
+
 $(function () {
+
+	
 
 	loadTableItens()
 	//carrega a tabela de Budgets
@@ -51,6 +55,7 @@ $(function () {
 
 		//adiciona as máscaras
 		$("#telefone").mask("(00) 0000-00009", {placeholder:"(00)0000-0000"});
+		$("#dtInicio").mask("dd/mm/aaaa");
 
 		$("#formBudget #codigo").prop('disabled', true);
 
@@ -408,7 +413,7 @@ function loadFieldsBudget(idOrcamento) {
 		$("#formBudget #solicitante").val(data.solicitante).prop('disabled', true);
 		$("#formBudget #telefone").val(data.telefone).prop('disabled', true);
 		$("#formBudget #email").val(data.email).prop('disabled', true);
-		$("#formBudget #referencia").val(data.referencia).prop('disabled', true);
+		//$("#formBudget #referencia").val(data.referencia).prop('disabled', true);
 
 		$("#formBudget #status").val(data.statusOrcamento).prop('disabled', true);
 
@@ -432,7 +437,7 @@ function loadFieldsBudget(idOrcamento) {
 			//$("#formBudget #codigo").prop('disabled', false);
 			$("#formBudget #obra_idObra").prop('disabled', false);
 			$("#formBudget #dtEmissao").prop('disabled', false);
-			$("#formBudget #referencia").prop('disabled', false);
+			//$("#formBudget #referencia").prop('disabled', false);
 
 			$("#formBudget #status").prop('disabled', false);
 			$("#formBudget #dtAprovacao").prop('disabled', false);
@@ -628,11 +633,11 @@ function clearFieldsValues() {
 	$('#obra_idObra').val('');
 
 	//$('#status').val('1');
-	$('#dtEmissao').val('');
+	//$('#dtEmissao').val('');
 	$('#solicitante').val('');
 	$('#telefone').val('');
 	$('#email').val('');
-	$('#referencia').val('');
+	//$('#referencia').val('');
 
 
 	//$('#idFornecedor').val('0');
@@ -760,7 +765,7 @@ function loadTableItens(){ //carrega a tabela de Fornecedores
 						row['quantidade'] = element.quantidade
 
 						vlTotal = element.vlAluguel * element.quantidade
-						vlTotalContrato += vlTotal
+						//vlTotalContrato += vlTotal
 						row['vlTotal'] = paraMoedaReal(vlTotal)
 
 						row['observacao'] = element.observacao
@@ -786,7 +791,7 @@ function loadTableItens(){ //carrega a tabela de Fornecedores
 							row['quantidade'] = element.quantidade
 	
 							vlTotal = element.custoEntrega * element.quantidade
-							vlTotalContrato += vlTotal
+							//vlTotalContrato += vlTotal
 							row['vlTotal'] = paraMoedaReal(vlTotal)
 
 							row['observacao'] = ""
@@ -801,7 +806,7 @@ function loadTableItens(){ //carrega a tabela de Fornecedores
 							row['quantidade'] = element.quantidade
 	
 							vlTotal = element.custoRetirada * element.quantidade
-							vlTotalContrato += vlTotal
+							//vlTotalContrato += vlTotal
 							row['vlTotal'] = paraMoedaReal(vlTotal)
 							
 							row['observacao'] = ""
@@ -929,7 +934,7 @@ $(function () {
 });
 
 
-let vlTotalContrato = 0;
+//let vlTotalContrato = 0;
 
 let vlTotalItem = 0;
 let vlTotalEntrega = 0;
@@ -951,9 +956,9 @@ function calculaTotalRetirada(){
 	$("#vlTotalRetirada").html(paraMoedaReal(vlTotalRetirada))
 }
 
-function atualizaValorTotal(){
+/*function atualizaValorTotal(){ //Valor total do Orçamento
 
 	$("#valorTotal").val(vlTotalContrato);
 	$("#vlTotalContrato").html(paraMoedaReal(vlTotalContrato));
 	
-}
+}*/

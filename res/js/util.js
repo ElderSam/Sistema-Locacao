@@ -119,3 +119,22 @@ function paraMoedaReal(valor){ //transforma número no formato moeda real (brasi
 */
 //console.log(round(1.005, 2)); // 1.01
 
+
+function formatDate(dateX){ //format Date to input in Form
+	
+    var data = new Date(dateX),
+        dia  = data.getDate().toString(),
+        diaF = (dia.length == 1) ? '0'+dia : dia,
+        mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+        mesF = (mes.length == 1) ? '0'+mes : mes,
+        anoF = data.getFullYear();
+	//return diaF+"/"+mesF+"/"+anoF;
+	return diaF+"/"+mesF+"/"+anoF;
+}
+
+function currentDay(){
+	dt = new Date();
+	return formatDate(dt);
+}
+
+
