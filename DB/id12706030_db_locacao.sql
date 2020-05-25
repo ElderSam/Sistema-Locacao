@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 24-Maio-2020 às 03:23
+-- Tempo de geração: 26-Maio-2020 às 01:40
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -84,7 +84,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -107,6 +107,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       prazoDuracao = pprazoDuracao,
       statusOrcamento = pstatusOrcamento,
       codContrato = pcodContrato,
+      nomeEmpresa = pnomeEmpresa,
       obra_idObra = pobra_idObra
     
     WHERE idContrato = vidContrato;
@@ -127,12 +128,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` INT, IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
-    VALUES(pcodContrato, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
+    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -140,7 +141,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrat
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itensUpdate_save` (IN `pidItem` INT(11), IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `quantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itensUpdate_save` (IN `pidItem` INT(11), IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `pquantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pperiodoLocacao` VARCHAR(15), IN `pobservacao` TEXT)  BEGIN
   
     DECLARE vidItem INT;
     
@@ -157,6 +158,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itensUpdate_save` (IN `
       quantidade = pquantidade,
       custoEntrega = pcustoEntrega,
       custoRetirada = pcustoRetirada,
+      periodoLocacao = pperiodoLocacao,
       observacao = pobservacao
 
     
@@ -178,12 +180,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_delete` (IN `pidI
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `pquantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidContrato` INT(11), IN `pidProduto_gen` INT(11), IN `pvlAluguel` FLOAT, IN `pquantidade` VARCHAR(4), IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pperiodoLocacao` VARCHAR(15), IN `pobservacao` TEXT)  BEGIN
   
     DECLARE vidItem INT;
     
-  INSERT INTO contrato_itens (idContrato, idProduto_gen, vlAluguel, quantidade, custoEntrega, custoRetirada, observacao)
-    VALUES(pidContrato, pidProduto_gen, pvlAluguel, pquantidade, pcustoEntrega, pcustoRetirada, pobservacao);
+  INSERT INTO contrato_itens (idContrato, idProduto_gen, vlAluguel, quantidade, custoEntrega, custoRetirada, periodoLocacao, observacao)
+    VALUES(pidContrato, pidProduto_gen, pvlAluguel, pquantidade, pcustoEntrega, pcustoRetirada, pperiodoLocacao, pobservacao);
     
     SET vidItem = LAST_INSERT_ID();
     
@@ -661,8 +663,9 @@ INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`,
 
 CREATE TABLE `contratos` (
   `idContrato` int(11) NOT NULL,
-  `codContrato` varchar(11) NOT NULL,
-  `obra_idObra` int(11) NOT NULL,
+  `codContrato` varchar(12) NOT NULL,
+  `nomeEmpresa` varchar(50) DEFAULT NULL,
+  `obra_idObra` int(11) DEFAULT NULL,
   `dtEmissao` date NOT NULL,
   `solicitante` varchar(50) NOT NULL,
   `telefone` varchar(15) DEFAULT NULL,
@@ -680,9 +683,18 @@ CREATE TABLE `contratos` (
 -- Extraindo dados da tabela `contratos`
 --
 
-INSERT INTO `contratos` (`idContrato`, `codContrato`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(204, '10', 1, '2020-12-05', 'elder', '', '', NULL, NULL, NULL, 0, 1860, '', '2020-05-17 20:59:49'),
-(205, '10', 1, '2020-12-31', 'teste', '', '', NULL, NULL, NULL, 0, 1700, '', '2020-05-23 20:32:31');
+INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
+(223, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '12 meses', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
+(224, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
+(226, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
+(227, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
+(228, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
+(229, '22', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:14'),
+(230, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
+(231, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
+(232, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 09:58:46'),
+(233, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
+(236, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49');
 
 -- --------------------------------------------------------
 
@@ -698,6 +710,7 @@ CREATE TABLE `contrato_itens` (
   `quantidade` varchar(4) NOT NULL,
   `custoEntrega` float DEFAULT NULL,
   `custoRetirada` float DEFAULT NULL,
+  `periodoLocacao` varchar(15) NOT NULL,
   `observacao` text DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -706,9 +719,18 @@ CREATE TABLE `contrato_itens` (
 -- Extraindo dados da tabela `contrato_itens`
 --
 
-INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(77, 204, 180, 450, '2', 240, 240, '', '2020-05-17 21:00:18'),
-(78, 205, 180, 450, '2', 200, 200, 'Entrega em 15dd úteis', '2020-05-23 20:37:07');
+INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
+(80, 226, 192, 600, '2', 200, 200, '', '', '2020-05-24 08:30:02'),
+(81, 227, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:44:47'),
+(82, 228, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:46:03'),
+(83, 223, 180, 450, '2', 200, 200, '', 'Entrega em 15DD úteis', '2020-05-24 22:32:55'),
+(84, 230, 191, 200, '12', 150, 120, '', '', '2020-05-25 08:17:37'),
+(85, 223, 195, 500, '2', 170, 170, '', 'Entrega em 5DD úteis', '2020-05-25 08:35:47'),
+(86, 223, 190, 125.66, '15', 234.54, 210, '1', 'Entrega em 3DD', '2020-05-25 08:57:41'),
+(87, 223, 181, 234, '2', 199, 199, '4', '', '2020-05-25 09:01:09'),
+(88, 223, 187, 15470, '5', 253.98, 225.37, '3', 'Entrega em 10DD', '2020-05-25 09:07:43'),
+(90, 236, 193, 600, '1', 150, 150, '4', 'entrega em 4DD', '2020-05-25 10:45:31'),
+(92, 231, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08');
 
 -- --------------------------------------------------------
 
@@ -903,7 +925,6 @@ CREATE TABLE `prod_categorias` (
   `idCategoria` int(4) NOT NULL,
   `descCategoria` varchar(15) NOT NULL,
   `codCategoria` varchar(3) NOT NULL,
-  `periodoLocacao` varchar(15) NOT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -911,12 +932,12 @@ CREATE TABLE `prod_categorias` (
 -- Extraindo dados da tabela `prod_categorias`
 --
 
-INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `periodoLocacao`, `dtCadastro`) VALUES
-(1, 'Container', '001', 'mensal', '2020-03-03 23:01:57'),
-(2, 'Betoneira', '002', 'quinzenal', '2020-03-05 00:17:03'),
-(3, 'Andaime', '003', '', '2020-03-05 00:17:03'),
-(4, 'Escora metálica', '004', '', '2020-03-09 11:36:59'),
-(5, 'Ar-condicionado', '005', '', '2020-05-23 21:22:43');
+INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `dtCadastro`) VALUES
+(1, 'Container', '001', '2020-03-03 23:01:57'),
+(2, 'Betoneira', '002', '2020-03-05 00:17:03'),
+(3, 'Andaime', '003', '2020-03-05 00:17:03'),
+(4, 'Escora metálica', '004', '2020-03-09 11:36:59'),
+(5, 'Ar-condicionado', '005', '2020-05-23 21:22:43');
 
 -- --------------------------------------------------------
 
@@ -1216,13 +1237,13 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de tabela `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=206;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
 
 --
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`
