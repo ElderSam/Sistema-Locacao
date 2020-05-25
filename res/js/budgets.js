@@ -46,14 +46,14 @@ function loadTableBudgets(){ //carrega a tabela de Orçamentos
 					row['codContrato'] = element.codContrato
 					row['dtEmissao'] = element.dtEmissao
 					row['obraCliente'] = element.obraCliente
-					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-					onclick='loadSupplier(${element.id});'>
+					row['options'] = `<a type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+					href='/budgets/${element.idContrato}'>
 						<i class='fas fa-bars sm'></i>
-					</button>
-					<button type='button' title='excluir' onclick='deleteSupplier(${element.id});'
+					</a>
+					<!--button type='button' title='excluir' onclick='deleteBudget(${element.idContrato});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
-					</button>`
+					</button-->`
 
 					rows.push(row)
 				

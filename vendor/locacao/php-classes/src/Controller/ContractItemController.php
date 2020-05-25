@@ -72,8 +72,8 @@ class ContractItemController extends Generator
             $errors["#quantidade"] = "Quantidade é obrigatória!";
         }
 
-        if ($_POST["periodoAluguel"] == "") {
-            $errors["#periodoAluguel"] = "Período é obrigatório!";
+        if ($_POST["periodoLocacao"] == "") {
+            $errors["#periodoLocacao"] = "Período é obrigatório!";
         }
 
 
@@ -144,11 +144,11 @@ class ContractItemController extends Generator
                 "idProduto_gen"=>$contractItem['idProduto_gen'],
                 "descricao"=>$contractItem['descricao'],
                 "descCategoria"=>$contractItem['descCategoria'],
-                "periodoLocacao"=>$contractItem['periodoLocacao'],
                 "vlAluguel"=>$contractItem['vlAluguel'],
                 "quantidade"=>$contractItem['quantidade'],
                 "custoEntrega"=>$contractItem['custoEntrega'],
                 "custoRetirada"=>$contractItem['custoRetirada'], 
+                "periodoLocacao"=>$contractItem['periodoLocacao'],
                 "observacao"=>$contractItem['observacao'],             
             ];
 

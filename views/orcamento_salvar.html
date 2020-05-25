@@ -32,7 +32,7 @@
                 
                             <div class="form-group col-lg-3">
                                 <label for="codigo">Código</label>
-                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="3">
+                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="12">
                                 <span class="help-block"></span>
                             </div>
 
@@ -120,7 +120,7 @@
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-3">
+                            <!--div class="form-group col-lg-3">
                                 <label for="periodoFatura">Periodo para Faturamento</label>
                                 <select class="form-control" id="periodoFatura" name="periodoFatura">
                                     <option selected value="1">diário</option>
@@ -129,7 +129,7 @@
                                     <option selected value="4">mensal</option>                        
                                 </select>
                                 <span class="help-block"></span>
-                            </div>
+                            </div-->
 
                             <div class="form-group col-lg-12">
                                 <label for="notas">Notas (informação internas)</label>
@@ -145,7 +145,7 @@
                                 </div>
     
                                 <div class="col-lg-3">
-                                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#productModal">
+                                    <button type="button" id="btnCart" class="btn btn-success float-right" data-toggle="modal" data-target="#productModal">
                                         <i title="adicionar item ao orçamento" class="fas fa-cart-plus"></i>
                                     </button> 
                                 </div>     
@@ -153,7 +153,7 @@
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover" id="dataTable" cellspacing="0">
-                                    <thead>
+                                    <thead style="background-color: lightcyan;">
                                     
                                         <tr>
                                             <th>Item</th>
@@ -197,7 +197,7 @@
                         <!--Usado apenas para Editar -->
                         <div hidden="true">
                             <label for="idOrcamento">Id</label>
-                            <input type="text" id="idOrcamento" name="idOrcamento">
+                            <input type="text" id="idOrcamento" name="idOrcamento" value="{$idOrcamento}">
                         </div>
 
                     </form>
@@ -207,11 +207,20 @@
                     <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
                         
                         <a href="/budgets" id="btnVoltar" class="btn btn-danger text-white">Voltar</a>
-                        <!-- btnCreateBudget and btnEditBudget-->
-                        <input id="btnSaveBudget" type="submit" value="Cadastrar" class="btn btn-success">
+
+                        <div>
+                            <!-- para desbloquear os campos para editar o procuto -->
+                            <button type='button' title='excluir orçamento' onclick='deleteBudget({$idOrcamento});'
+                            id="btnDeleteBudget" class='btn btn-danger btnDelete'>
+                            <i class='fas fa-trash'></i>
+                            </button>
+                            
+                            <!-- btnCreateBudget and btnEditBudget-->
+                            <input id="btnSaveBudget" type="submit" value="Cadastrar" class="btn btn-success">
                         
-                        <!-- para desbloquear os camps para editar o procuto -->
-                        <!--input id="btnUpdate" type="button" value="Editar" class="btn btn-primary"-->
+                            <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+
+                        </div>
                         
                     </div>                
                 </div>               
@@ -320,8 +329,8 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label for="periodoAluguel">Periodo Aluguel</label>
-                                    <select class="form-control" id="periodoAluguel" name="periodoAluguel">
+                                    <label for="periodoLocacao">Periodo Locação</label>
+                                    <select class="form-control" id="periodoLocacao" name="periodoLocacao">
                                         <option selected value="1">diário</option>
                                         <option value="2">semanal</option>  
                                         <option value="3">quinzenal</option>     
@@ -374,5 +383,6 @@
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="../res/plugins/mask/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
+    <script src="../res/js/budgetItems_save.js"></script>
     <script src="../res/js/budget_save.js"></script>
       

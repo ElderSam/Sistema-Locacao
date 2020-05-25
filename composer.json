@@ -14,6 +14,9 @@
     	"slim/slim":"2.0",
     	"rain/raintpl":"3.0.0" 
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
     "autoload": {
         "psr-4": {
             "Locacao\\": "vendor\\locacao\\php-classes\\src"

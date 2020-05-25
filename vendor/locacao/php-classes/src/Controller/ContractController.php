@@ -38,6 +38,10 @@ class ContractController extends Generator
 
         }
 
+        //pega apenas o número do orçamento (tira o /ano)
+        $auxArr = explode('/', $_POST['codigo']);
+        $_POST['codigo'] = $auxArr[0];
+        
         $contract->setData($_POST);
 
 
@@ -68,11 +72,11 @@ class ContractController extends Generator
 
         /*if ($_POST["idCliente"] == "") {
             $errors["#idCliente"] = "Cliente é obrigatório!";
-        }
-
-        if ($_POST["obra_idObra"] == "") {
-            $errors["#obra_idObra"] = "Obra é obrigatória!";
         }*/
+
+        if (($_POST["idCliente"] != "") && ($_POST["obra_idObra"] == "")) { //se escolher um cliente, então é obrigatório ter uma Obra (pois o Orçamento/Contrato vai estar relacionado diretamente à obra)
+            $errors["#obra_idObra"] = "Obra é obrigatória!";
+        }
 
         if ($_POST["dtEmissao"] == "") {
             $errors["#dtEmissao"] = "Data de Emissão é obrigatória!";
@@ -125,7 +129,8 @@ class ContractController extends Generator
         } else {
             //Valida o dominio
             $dominio = explode('@', $email);
-            if (!checkdnsrr($dominio[1], 'A')) {
+
+            if (!checkdnsrr($dominio[1], 'A')) { //OBS: se não estiver com Internet, a função vai retornar false, pois ela usa a conexão para verificar se o domínio existe
                 return false;
             } else {
                 return true;

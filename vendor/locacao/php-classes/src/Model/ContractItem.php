@@ -26,13 +26,14 @@ class ContractItem extends Generator{
 
         if(($this->getidProduto_gen() != "") && ($this->getidContrato() != "")){
            
-            $results = $sql->select("CALL sp_contrato_itens_save(:idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :observacao)", array(
+            $results = $sql->select("CALL sp_contrato_itens_save(:idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
                 ":idContrato"=>$this->getidContrato(),
                 ":idProduto_gen"=>$this->getidProduto_gen(),
                 ":vlAluguel"=>$this->getvlAluguel(),
                 ":quantidade"=>$this->getquantidade(),
                 ":custoEntrega"=>$this->getcustoEntrega(),
                 ":custoRetirada"=>$this->getcustoRetirada(),
+                ":periodoLocacao"=>$this->getperiodoLocacao(),
                 ":observacao"=>$this->getobservacao()
             ));
 
@@ -87,7 +88,7 @@ class ContractItem extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order, $idContrato){
         
-        $query = "SELECT a.*, b.descricao, c.descCategoria, c.periodoLocacao FROM `contrato_itens` a
+        $query = "SELECT a.*, b.descricao, c.descCategoria FROM `contrato_itens` a
             INNER JOIN produtos_gen b ON (a.idProduto_gen = b.idProduto_gen)
             INNER JOIN prod_categorias c ON (b.idCategoria = c.idCategoria)";
 
@@ -160,16 +161,17 @@ class ContractItem extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_contrato_itensUpdate_save(:idHistoricoAluguel, :idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :observacao)", array(
+        $results = $sql->select("CALL sp_contrato_itensUpdate_save(:idHistoricoAluguel, :idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
             ":idContrato"=>$this->getidContrato(),
             ":idProduto_gen"=>$this->getidProduto_gen(),
             ":vlAluguel"=>$this->getvlAluguel(),
             ":quantidade"=>$this->getquantidade(),
-            ":periodoAluguel"=>$this->getperiodoAluguel(),
+            //":periodoAluguel"=>$this->getperiodoAluguel(),
             ":dtInicio"=>$this->getdtInicio(),
             ":dtFinal"=>$this->getdtFinal(),
             ":custoEntrega"=>$this->getcustoEntrega(),
             ":custoRetirada"=>$this->getcustoRetirada(),
+            ":periodoLocacao"=>$this->getperiodoLocacao(),
             ":observacao"=>$this->getobservacao()
         ));
 

@@ -87,8 +87,9 @@ class Contract extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT a.*, b.idObra FROM contratos a
+        $results = $sql->select("SELECT a.*, b.idObra, c.idCliente, c.nome as descCliente FROM contratos a
                     LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
+                    LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
                     WHERE idContrato = :idContrato", array(
             ":idContrato"=>$idContrato
         ));
@@ -96,6 +97,11 @@ class Contract extends Generator{
         if(count($results) > 0){
             $this->setData($results[0]);
 
+            //$auxData = strtotime(date("Y-m-d H:i:s"));//para teste
+            $auxData = strtotime($results[0]['dtCadastro']);      
+            $auxAno = date('Y', $auxData);
+            $auxCode = $results[0]['codContrato'] . "/". $auxAno;
+            $this->setcodContrato($auxCode);
         }
     }
 
@@ -335,20 +341,13 @@ class Contract extends Generator{
         echo $hoje . "<br>";*/
 
         $ano = date('Y'); //pega o ano atual
-        
-        $results = $sql->select("SELECT MAX(codContrato) FROM contratos WHERE YEAR(dtCadastro) =:ano", array(
+
+        $results = $sql->select("SELECT MAX(codContrato) FROM contratos WHERE (statusOrcamento IN (0, 1)  AND YEAR(dtCadastro) =:ano)", array( //pega apenas orçamentos pendentes ou arquivados do ano
             'ano'=>$ano
         ));
+
         $nextNumber = 1 + $results[0]['MAX(codContrato)'];
        
-       /* if($nextNumber < 10){
-            $nextNumber = "00". $nextNumber;
-
-        }else if($nextNumber < 100){
-            $nextNumber = "0". $nextNumber;
-            
-        }*/
-        
         return $nextNumber . "/" . $ano; //retorna o próximo número de série da categoria
 
     }

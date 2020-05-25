@@ -5,6 +5,7 @@ use \Locacao\Page;
 use \Locacao\Controller\CostumerController;
 use \Locacao\Model\Costumer;
 use \Locacao\Model\User;
+use \Locacao\Model\Construction;
 
 
 /* rota para chamar o método listAll*/
@@ -48,6 +49,14 @@ $app->get("/costumers/json/:idCliente", function($idCliente){
 
 	echo json_encode($cliente->getValues());
 
+});
+
+$app->get('/costumers/json/:idCliente/constructions', function($idCliente){
+
+    User::verifyLogin();
+
+   echo Construction::listAll();
+  
 });
 
 /* rota para criar cliente (salva no banco) -----------*/
