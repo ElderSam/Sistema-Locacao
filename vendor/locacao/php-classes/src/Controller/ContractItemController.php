@@ -32,19 +32,14 @@ class ContractItemController extends Generator
 
         if ($update) { //se for atualizar
             
-            $upd =  $contractItem->update();
-
-            
-            return $upd;
-            
+            $upd =  $contractItem->update();      
+            return $upd;       
 
         } else { // se for cadastrar novo Fornecedor
             
             $res = $contractItem->insert();
-            //print_r($res);
-            
-            return $res;
-                   
+            //print_r($res);           
+            return $res;                   
         }
     }
 

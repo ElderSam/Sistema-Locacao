@@ -3,9 +3,8 @@
 use \Locacao\Page;
 use \Locacao\Controller\ContractController;
 use \Locacao\Model\Contract;
-use Locacao\Model\ContractItem;
 use \Locacao\Model\User;
-use \Locacao\Model\Product;
+
 
 /* rota para página de orcamentos --------------*/
 
@@ -117,26 +116,4 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 
 	echo $contract->save($update);
 	
-});
-
-$app->get("/budgets/addProductToContract/:idContract/:codeProd", function($idContract, $codeProd){
-	
-    User::verifyLogin();
-	
-	$teste = ContractItem::productAlreadyAdded($idContract, $codeProd);
-
-	$jaAdicionado = json_decode($teste);
-
-	if($jaAdicionado->error){
-
-		echo $teste;
-
-	}else{
-	
-		$product = new Product();
-
-		echo $product->getByCode($codeProd);
-	}
-
-
 });

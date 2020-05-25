@@ -1,6 +1,12 @@
 /*----------------------------------------------- Itens de orçamento --------------------------------------- */
-function searchProduct() {
+function searchProduct(update = false) {
 	console.log('searchProduct:')
+
+    if(update){
+        methodRoute = 'searchItemInContract';
+    }else{
+        methodRoute = 'addItemToContract';        
+    }
 
 	if (($('#codeProduct').val() != undefined) && ($('#codeProduct').val() != "")) {
 
@@ -12,7 +18,7 @@ function searchProduct() {
 
 		idContrato = $("#fk_idOrcamento").val()
 
-		$.getJSON(`/budgets/addProductToContract/${idContrato}/${code}`, function (response) { //requisição ajax que retorna um JSON
+		$.getJSON(`/budgetItens/${methodRoute}/${idContrato}/${code}`, function (response) { //requisição ajax que retorna um JSON
 
 			console.log(response)
 
@@ -27,11 +33,13 @@ function searchProduct() {
 
 			} else {
 
-				Swal.fire(
-					'Adicionado!',
-					'O Produto foi relacionado ao item!',
-					'success'
-				)
+                if(!update){
+                    Swal.fire(
+                        'Adicionado!',
+                        'O Produto foi relacionado ao item!',
+                        'success'
+                    )
+                }
 
 				$('#idProduto_gen').val(response.idProduto_gen)
 
@@ -54,16 +62,19 @@ function searchProduct() {
 							.removeClass('btn-light')
 							.addClass('btn-success'); //volta a cor verde (Bootstrap)
 
-			clearErrors();
+            clearErrors();
+            
+            calculaTotalItem();
+            calculaTotalEntrega();
+            calculaTotalRetirada();
 
 		}).fail(function () {
-			console.log(`Rota não encontrada! (/products/addProductToContract/${code})`);
+			console.log(`Rota não encontrada! (/budgetItens/addItemToContract/${code})`);
 			return false
 		});
 	}
 
 }
-
 
 function loadTableItens(){ //carrega a tabela de Itens
 
@@ -141,7 +152,7 @@ const typeForm = 'save';
 
 const obj = {
 	descCategoria: 'Container',
-	id: 1,
+	idItem: 1,
 	descricao: '6M Sanitário DC',
 	periodoLocacao: '2',
 	vlAluguel: '350.98',
@@ -152,6 +163,8 @@ const obj = {
 loadRowProduct(obj);*/
 
 function loadRowProduct(element){
+    console.log(element);
+
 	let hidden;
 
 	if(typeForm == 'view'){
@@ -187,20 +200,20 @@ function loadRowProduct(element){
 	}
 	row['periodoLocacao'] = periodo
 
-	row['vlAluguel'] = /*paraMoedaReal(*/Number(element.vlAluguel)/*)*/
+	row['vlAluguel'] = paraMoedaReal(Number(element.vlAluguel))
 	row['quantidade'] = element.quantidade
 
 	vlTotal = element.vlAluguel * element.quantidade
 	//vlTotalContrato += vlTotal
-	row['vlTotal'] = /*paraMoedaReal(*/vlTotal/*)*/
+	row['vlTotal'] = paraMoedaReal(vlTotal)
 
 	row['observacao'] = element.observacao
 
 	row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-	onclick='loadItem(${element.id});' ${hidden}>
+	onclick='loadItem(${element.idItem});' ${hidden}>
 		<i class='fas fa-bars sm'></i>
 	</button>
-	<button type='button' title='excluir' onclick='deleteItem(${element.id});'
+	<button type='button' title='excluir' onclick='deleteItem(${element.idItem});'
 		class='btn btn-danger btnDelete' ${hidden}>
 		<i class='fas fa-trash'></i>
 	</button>`
@@ -253,6 +266,11 @@ function loadRowsFrete(element){ //carrega valores de Entrega e Retirada
 //limpar campos do modal para Cadastrar
 function clearFieldsItem() {
 
+    $("#productModal #modalTitle").html('Adicionar Item ao Orçamento')
+    $('#productModal #btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
+    $('#productModal #btnSaveItem').val('Cadastrar').show();
+    $('#productModal #btnUpdate').hide();
+
 	$("#produtoAdicionado").html('');
 	$("#prodCodigo").html('');
 	$("#prodDescricao").html('');
@@ -282,6 +300,112 @@ function clearFieldsItem() {
 
 /********************************************************** ITENS DE ORÇAMENTO ************************************************************************** */
 $(function () {
+
+    $("#btnCart").click(function(){
+        clearFieldsItem();
+    });
+
+    
+	$("#btnSaveItem").click(function (e) { //salva o aluguel (az reserva do produto para alugar)
+		e.preventDefault();
+
+		let form = $('#formItem'); //formulário de aluguel do produto
+		let formData = new FormData(form[0]);
+
+		idItem = $('#idItem').val()
+		console.log("salvar item, idItem:" + idItem)
+
+        let route
+
+		if ((idItem == 0) || (idItem == undefined)) { //se for para cadastrar --------------------------------------------------
+            route = 'create'
+            msgError = 'adicionar'
+            msgSuccess = 'adicionado'
+
+        }else{ //update
+            route = idItem
+            msgError = 'atualizar'
+            msgSuccess = 'atualizado'
+        }
+
+        //console.log("você quer cadastrar um Aluguel")
+
+        $.ajax({
+            type: "POST",
+            url: `/budgetItens/${route}`,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                clearErrors();
+                $("#btnSaveItem").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+
+            },
+            success: function (response) {
+                clearErrors();
+
+                if (JSON.parse(response).error) {
+                    console.log(`erro ao ${msgError} Item!`)
+                    response = JSON.parse(response)
+
+                    Swal.fire(
+                        'Erro!',
+                        response.msg,
+                        'error'
+                    )
+
+                    if (response['error_list']) {
+
+                        showErrorsModal(response['error_list'])
+
+                        Swal.fire(
+                            'Atenção!',
+                            'Por favor verifique os campos',
+                            'warning'
+                        )
+                    }
+
+
+                } else { // Se cadastrou com sucesso
+
+                    //$('#BudgetModal').modal('hide');
+
+                    res = JSON.parse(response)
+                    console.log("id do orçamento: " + res.idContrato)
+                    // $('#idOrcamento').val(res.idContrato)
+
+                    //$('#divListItens').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
+
+                    Swal.fire(
+                        'Sucesso!',
+                        `Item ${msgSuccess}!`,
+                        'success'
+                    )
+                }
+
+            },
+            error: function (response) {
+                //$('#BudgetModal').modal('hide');
+                //$('#formBudget').trigger("reset");
+                console.log(`Erro! Mensagem: ${response}`);
+
+            }
+        }).then(response => {
+
+            response = JSON.parse(response)
+
+            if(!response['error_list']){ //se o array de erros está vazio
+
+                //loadTableBudget()
+                $("#productModal").modal('hide'); //esconde o modal
+                clearFieldsItem();
+                
+                loadTableItens();
+            }
+        });
+		
+	});
+    
 
 	//console.log('----- itens de orçamento -----')
 	/* Itens de orçamento */
@@ -313,6 +437,123 @@ $(function () {
 	});
 });
 
+function loadItem(idItem){
+    console.log(`load item: ${idItem}`)
+    $("#productModal").modal('show');
+
+	clearFieldsItem();
+    clearErrors();
+    
+    $("#productModal #modalTitle").html('Detalhes do Item')
+    $('#productModal #btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
+    $('#productModal #btnSaveItem').hide();
+    $('#productModal #btnUpdate').show();
+
+    $.getJSON(`/budgetItens/json/${idItem}`, function (data) { //ajax
+        console.log(data)
+
+        $("#formItem #idItem").val(data.idItem);
+        $("#formItem #vlAluguel").val(data.vlAluguel).prop('disabled', true);
+        $("#formItem #codeProduct").val(data.codigoGen).prop('disabled', true);
+        $("#formItem #quantidade").val(data.quantidade).prop('disabled', true);
+        $("#formItem #custoEntrega").val(data.custoEntrega).prop('disabled', true);
+        $("#formItem #custoRetirada").val(data.custoRetirada).prop('disabled', true);
+        $("#formItem #periodoLocacao").val(data.periodoLocacao).prop('disabled', true);
+        $("#formItem #observacao").val(data.observacao).prop('disabled', true);
+
+        $("#qtdEntrega, #qtdRetirada").html(`${$("#quantidade").val()}`)
+
+    }).then((data) => {
+
+        searchProduct(true);
+
+        $('#productModal #btnUpdate').click(function () {
+          
+            $("#formItem #vlAluguel").prop('disabled', false);
+            $("#formItem #codeProduct").prop('disabled', false);
+            $("#formItem #quantidade").prop('disabled', false);
+            $("#formItem #custoEntrega").prop('disabled', false);
+            $("#formItem #custoRetirada").prop('disabled', false);
+            $("#formItem #periodoLocacao").prop('disabled', false);
+            $("#formItem #observacao").prop('disabled', false);
+
+            $("#productModal #modalTitle").html('Editar Item')
+            $('#productModal #btnClose').val('Cancelar').removeClass('btn-primary').addClass('btn-danger')
+            $('#productModal #btnSaveItem').val('Atualizar').show();
+            $('#productModal #btnUpdate').hide();
+        
+        });
+
+    }).fail(function () {
+		console.log("Rota não encontrada! (/budgetItens/json/:idItem)");
+	});
+    
+}
+
+function deleteItem(idItem) {
+
+	Swal.fire({
+		title: `Você tem certeza de excluir esse Item ?`,
+		text: "Você não será capaz de reverter isso!",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
+		confirmButtonText: 'Sim, apagar!'
+
+	}).then((result) => {
+
+		if (result.value) {
+
+			$.ajax({
+				type: "POST",
+				url: `/budgetItens/${idItem}/delete`,
+				beforeSend: function () {
+
+					$('.swal2-content').hide()
+					$('.swal2-actions').hide()
+					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+
+				},
+				success: function (response) {
+
+					if (JSON.parse(response).error) {
+						console.log('erro ao excluir!')
+						response = JSON.parse(response)
+
+						Swal.fire(
+							'Erro!',
+							response.msg,
+							'error'
+						)
+
+					} else {
+
+						Swal.fire(
+							'Excluído!',
+							'Item excluído!',
+							'success'
+						)
+
+						console.log(`item ${idItem} excluído`)
+						
+						loadTableItens();
+					}
+				},
+				error: function (response) {
+					Swal.fire(
+						'Erro!',
+						'Não foi possível excluir o item',
+						'error'
+					)
+					console.log(`Erro! Mensagem: ${response}`);
+				}
+			});
+		}
+	})
+
+	$('.swal2-cancel').html('Cancelar');
+}
 
 //let vlTotalContrato = 0;
 
@@ -341,7 +582,3 @@ function calculaTotalRetirada(){
 	$("#vlTotalContrato").html(paraMoedaReal(vlTotalContrato));
 	
 }*/
-
-function teste(){
-    console.log('test import');
-}

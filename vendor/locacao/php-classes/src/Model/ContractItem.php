@@ -60,12 +60,14 @@ class ContractItem extends Generator{
     }
 
     
-    public function get($idFornecedor){
+    public function get($idItem){
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM contrato_itens WHERE idFornecedor = :idFornecedor", array(
-            ":idFornecedor"=>$idFornecedor
+        $results = $sql->select("SELECT a.*, b.codigoGen FROM contrato_itens a
+            INNER JOIN produtos_gen b ON(a.idProduto_gen = b.idProduto_gen)
+            WHERE a.idItem = :idItem", array(
+            ":idItem"=>$idItem
         ));
 
         if(count($results) > 0){
@@ -161,14 +163,12 @@ class ContractItem extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_contrato_itensUpdate_save(:idHistoricoAluguel, :idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
+        $results = $sql->select("CALL sp_contrato_itensUpdate_save(:idItem, :idContrato, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
+            ":idItem"=>$this->getidItem(),
             ":idContrato"=>$this->getidContrato(),
             ":idProduto_gen"=>$this->getidProduto_gen(),
             ":vlAluguel"=>$this->getvlAluguel(),
             ":quantidade"=>$this->getquantidade(),
-            //":periodoAluguel"=>$this->getperiodoAluguel(),
-            ":dtInicio"=>$this->getdtInicio(),
-            ":dtFinal"=>$this->getdtFinal(),
             ":custoEntrega"=>$this->getcustoEntrega(),
             ":custoRetirada"=>$this->getcustoRetirada(),
             ":periodoLocacao"=>$this->getperiodoLocacao(),
@@ -196,15 +196,15 @@ class ContractItem extends Generator{
 
         try{
 
-            $sql->query("CALL sp_contrato_itens_delete(:idFornecedor)", array(
-                ":idFornecedor"=>$this->getidFornecedor()
+            $sql->query("CALL sp_contrato_itens_delete(:idItem)", array(
+                ":idItem"=>$this->getidItem()
             ));
 
-            if($this->get($this->getidFornecedor())){
+            if($this->get($this->getidItem())){
 
                 return json_encode([
                     "error"=>true,
-                    "msg"=>"Erro ao excluir Aluguel"
+                    "msg"=>"Erro ao excluir Item"
                 ]);
 
             }else{
