@@ -2,9 +2,11 @@
 
 namespace Locacao\Controller;
 
+use \Locacao\Utils\myPDF;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Contract;
+use \Locacao\Model\ContractItem;
 
 class ContractController extends Generator
 {
@@ -320,5 +322,22 @@ class ContractController extends Generator
         return $contract->delete();
         
         
+    }
+
+    public static function getPDF($id)
+    {
+        $pdf = new myPDF();
+
+        $file_name = "example.pdf";
+        $content = "<h1>Orçamento número $id</h1><br>";
+        
+        $contract = new Contract();
+    
+        $contract->get((int)$id);
+    
+        $content .= json_encode($contract->getValues());
+    
+        $pdf->createPDF($file_name, $content);
+        $pdf->display();
     }
 }//end class ContractController

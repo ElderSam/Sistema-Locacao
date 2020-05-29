@@ -1,7 +1,10 @@
 <?php
 
-require __DIR__ . "/../../../../autoload.php"; //vendor/autoload
+namespace Locacao\Utils;
 
+use Exception;
+
+require __DIR__ . "/../../../../autoload.php"; //vendor/autoload
 use Dompdf\Dompdf;
 
 //require __DIR__ . "/page.php"; //página HTML que será transformada em PDF
@@ -35,13 +38,13 @@ class myPDF{
 
 }
 
-$pdf = new myPDF();
+/*$pdf = new myPDF();
 
 $file_name = "example.pdf";
 $content = "<h1>Hello World!</h1><p>It's an example!</p>";
 
 $pdf->createPDF($file_name, $content);
-$pdf->display();
+$pdf->display();*/
 
 
 
