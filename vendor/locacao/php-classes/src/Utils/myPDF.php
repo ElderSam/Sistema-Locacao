@@ -4,16 +4,44 @@ require __DIR__ . "/../../../../autoload.php"; //vendor/autoload
 
 use Dompdf\Dompdf;
 
-$dompdf = new Dompdf();
+//require __DIR__ . "/page.php"; //página HTML que será transformada em PDF
+class myPDF{
 
-$dompdf->load_html("<h1>Hello World!</h1>"); //carrega o conteúdo passado por parâmtro
-$dompdf->render();
+    private $dompdf;
+    private $file_name;
+
+    public function __construct()
+    {
+        $this->dompdf = new Dompdf();
+    }
+
+    public function createPDF($file_name, $content)
+    {
+        $this->file_name = $file_name;
+
+        $this->dompdf->load_html($content);
+        $this->dompdf->render();
+    }
+
+    public function display()
+    {
+        $this->dompdf->stream($this->file_name, ["Attachment" => false]);
+    }
+
+    public function download()
+    {
+        $this->dompdf->stream($this->file_name);
+    }
+
+}
+
+$pdf = new myPDF();
 
 $file_name = "example.pdf";
-$dompdf->stream($file_name, ["Attachment" => false]); //mostra o PDF na tela
+$content = "<h1>Hello World!</h1><p>It's an example!</p>";
 
-/*$dompdf->stream($file_name); */ //baixa o PDF
+$pdf->createPDF($file_name, $content);
+$pdf->display();
 
-/* //baixa o PDF no servidor (na mesma pasta)
-$file = $dompdf->output();
-file_put_contents($file_name, $file);*/
+
+
