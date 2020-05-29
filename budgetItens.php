@@ -59,6 +59,21 @@ $app->post("/budgetItens/:idItem/delete", function($idItem){
 
 });
 
+
+/* rota para atualizar item --------------------------*/
+$app->post("/budgetItens/create", function(){ //update
+    
+    User::verifyLogin();
+
+	$item = new ContractItemController();
+
+	$update = true;
+
+	echo $item->save();
+	
+});
+
+
 /* rota para atualizar item --------------------------*/
 $app->post("/budgetItens/:idbudget", function($idbudget){ //update
     
