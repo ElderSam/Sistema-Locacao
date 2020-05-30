@@ -41,8 +41,8 @@ $app->get('/budgets/json', function(){
 $app->get("/budgets/:id/pdf/show", function($id){
 
 	User::verifyLogin();
-
-	ContractController::getPDF($id);
+	
+	echo ContractController::getPDF($id);
 
 });
 

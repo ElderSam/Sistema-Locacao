@@ -251,6 +251,30 @@ class ContractItem extends Generator{
     
         return json_encode($results);
     }
+
     
+    public function getValuesToBudgetPDF($idOrcamento){
+        
+        $sql = new Sql();
+
+        $query = "SELECT a.*, b.descricao, c.descCategoria FROM contrato_itens a
+            INNER JOIN produtos_gen b ON (a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON (b.idCategoria = c.idCategoria)
+            WHERE (a.idContrato = :idOrcamento)
+            ORDER BY a.idItem ASC";
+
+        $listItems = $sql->select($query, array(
+            ':idOrcamento'=>$idOrcamento
+        ));
+
+        //$this->setTotalFiltered(count($listItems));
+        
+        /*echo "<br>query: " . $query . "<br>";
+        print_r($listItems);
+        echo "<br>total: ". $this->getTotalFiltered();*/
+
+        return $listItems; //array
+    }
+
 }
 

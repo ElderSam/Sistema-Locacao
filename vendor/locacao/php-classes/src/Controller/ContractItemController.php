@@ -164,11 +164,8 @@ class ContractItemController extends Generator
 
     public function records_total()
     {
-
         return ContractItem::total();
     }
-
-
 
     public function delete($idContractItem){
        
@@ -176,8 +173,26 @@ class ContractItemController extends Generator
         echo "id: " . $idContractItem;
         $contractItem->get((int)$idContractItem); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $contractItem->delete();
-        
-        
+        return $contractItem->delete();      
     }
+
+    public function getValuesToBudgetPDF($idOrcamento){
+
+        $items = new ContractItem();
+        
+        $listItems = $items->getValuesToBudgetPDF($idOrcamento);
+          
+        for($i=0; $i<count($listItems); $i++){
+            //print_r($item);
+            
+            $periodo = $listItems[$i]['periodoLocacao'];
+            $arrayPeriodos = array("diário", "semanal", "quinzenal", "mensal");
+
+            $listItems[$i]['periodoLocacao'] = $arrayPeriodos[$periodo -1]; //pega a string no array referente ao número 
+            //echo "<br>periodoLocacao: $periodo => " . $listItems[$i]['periodoLocacao'];   
+        }
+
+        return json_encode($listItems);
+    }
+
 }//end class ContractItemController

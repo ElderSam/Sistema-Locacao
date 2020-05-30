@@ -6,7 +6,8 @@ use \Locacao\Utils\myPDF;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Contract;
-use \Locacao\Model\ContractItem;
+use \Locacao\Controller\ContractItemController;
+use \Locacao\Utils\PDFs\BudgetPDF;
 
 class ContractController extends Generator
 {
@@ -319,25 +320,29 @@ class ContractController extends Generator
         //echo "id: " . $idcontract;
         $contract->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $contract->delete();
-        
-        
+        return $contract->delete();       
     }
 
     public static function getPDF($id)
     {
-        $pdf = new myPDF();
-
-        $file_name = "example.pdf";
-        $content = "<h1>Orçamento número $id</h1><br>";
-        
+               
         $contract = new Contract();
     
-        $contract->get((int)$id);
-    
-        $content .= json_encode($contract->getValues());
-    
+        $orcamento = $contract->getValuesToBudgetPDF($id);
+        
+        $items = new ContractItemController();
+
+        $listItems = $items->getValuesToBudgetPDF($id);
+        
+        //echo $listItems;
+
+        $budgetPDF = new BudgetPDF($orcamento, $listItems);
+
+        /*$pdf = new myPDF();
+        $file_name = "example.pdf";
+
+
         $pdf->createPDF($file_name, $content);
-        $pdf->display();
+        $pdf->display();*/
     }
 }//end class ContractController

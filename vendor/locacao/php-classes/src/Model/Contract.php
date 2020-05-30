@@ -351,6 +351,27 @@ class Contract extends Generator{
         return $nextNumber . "/" . $ano; //retorna o próximo número de série da categoria
 
     }
-    
+
+    public function getValuesToBudgetPDF($idBudget){
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT a.*, b.idObra, c.idCliente, c.nome as descCliente FROM contratos a
+                    LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
+                    LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
+                    WHERE idContrato = :idBudget", array(
+            ":idBudget"=>$idBudget
+        ));
+
+        if(count($results) > 0){
+            $this->setData($results[0]);
+
+            //$auxData = strtotime(date("Y-m-d H:i:s"));//para teste
+            $auxData = strtotime($results[0]['dtCadastro']);      
+            $auxAno = date('Y', $auxData);
+            $auxCode = $results[0]['codContrato'] . "/". $auxAno;
+            $this->setcodContrato($auxCode);
+        }
+
+    }    
 }
 
