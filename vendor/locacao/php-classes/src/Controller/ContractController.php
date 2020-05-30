@@ -324,25 +324,26 @@ class ContractController extends Generator
     }
 
     public static function getPDF($id)
-    {
-               
+    {   
         $contract = new Contract();
     
         $orcamento = $contract->getValuesToBudgetPDF($id);
-        
+        //echo $orcamento;
         $items = new ContractItemController();
 
-        $listItems = $items->getValuesToBudgetPDF($id);
-        
+        $listItems = $items->getValuesToBudgetPDF($id);     
         //echo $listItems;
 
         $budgetPDF = new BudgetPDF($orcamento, $listItems);
+    
+        $res = $budgetPDF->show();
+        //echo $content;
 
-        /*$pdf = new myPDF();
-        $file_name = "example.pdf";
-
-
-        $pdf->createPDF($file_name, $content);
-        $pdf->display();*/
+        $pdf = new myPDF();
+        $file_name = str_replace('/', '-', $res[0]); //substitui / por - (porque quando baixa o PDF, não reconhece a barra no nome do arquivo)
+        
+        $pdf->createPDF($file_name.".pdf", $res[1]); //$res[1]  é o conteúdo do PDF
+        $pdf->display();
     }
+
 }//end class ContractController

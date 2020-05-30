@@ -360,16 +360,19 @@ class Contract extends Generator{
                     LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
                     WHERE idContrato = :idBudget", array(
             ":idBudget"=>$idBudget
-        ));
+        ));   
 
         if(count($results) > 0){
-            $this->setData($results[0]);
+            $res = $results[0];
+            //print_r($res);
+            //$this->setData($results[0]);
 
             //$auxData = strtotime(date("Y-m-d H:i:s"));//para teste
-            $auxData = strtotime($results[0]['dtCadastro']);      
+            $auxData = strtotime($res['dtCadastro']);      
             $auxAno = date('Y', $auxData);
-            $auxCode = $results[0]['codContrato'] . "/". $auxAno;
-            $this->setcodContrato($auxCode);
+            $res['codContrato'] = $res['codContrato'] . "/". $auxAno;
+        
+            return json_encode($res);
         }
 
     }    

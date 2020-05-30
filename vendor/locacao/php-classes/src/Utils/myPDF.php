@@ -15,7 +15,8 @@ class myPDF{
 
     public function __construct()
     {
-        $this->dompdf = new Dompdf();
+        //$this->dompdf = new Dompdf();
+        $this->dompdf = new Dompdf(["enable_remote" => true]);
     }
 
     public function createPDF($file_name, $content)

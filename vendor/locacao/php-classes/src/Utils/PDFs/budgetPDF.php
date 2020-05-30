@@ -1,7 +1,7 @@
 <?php
 
 namespace Locacao\Utils\PDFs;
-$orcamento = [
+/*$orcamento = [
     'idContrato'=>'230',
     'codContrato'=>'001/2020',
     'dtEmissao'=>'2020-05-29',
@@ -47,10 +47,9 @@ $listItems = json_encode(array(
 $x = new BudgetPDF($orcamento, $listItems);
 
 $x->show();
-
+*/
 class BudgetPDF
 {
-    //private $id;
     private $codContrato;
     private $dtEmissao;
     private $nomeCliente;
@@ -62,32 +61,34 @@ class BudgetPDF
 
     public function __construct($budget, $listItems)
     {
+       // echo $budget;
+        $budget = json_decode($budget);
+
         $this->setHeaderValues($budget);
         $this->setTableItemsValues($listItems);
     }
 
     public function setHeaderValues($budget){ //Informações do Orçamento, para o cabeçalho do documento PDF
         //print_r($budget);
-        $this->idOrcamento = $budget['idContrato'];
-        $this->codContrato = $budget['codContrato'];
-        //$data = strftime('%d/%m/%Y', strtotime($budget['dtEmissao']));
-        $this->solicitante = $budget['solicitante'];
-        $this->telefone = $budget['telefone'];
-        $this->email = $budget['email'];
 
-        if ($budget['nomeEmpresa'] != "") {
-            $this->nomeCliente = $budget['nomeEmpresa'];
+        $this->codContrato = $budget->codContrato;
+        $this->solicitante = $budget->solicitante;
+        $this->telefone = $budget->telefone;
+        $this->email = $budget->email;
 
-        } else { //se nomEmpresa estiver vazio
-            $this->nomeCliente = $budget['descCliente'];
-            
+        if ($budget->nomeEmpresa != "") {
+            $this->nomeCliente = $budget->nomeEmpresa;
+
+        } else { //se nomeEmpresa estiver vazio
+            $this->nomeCliente = $budget->descCliente;
         }
 
-        $this->title = "PROPOSTA - Nº $this->codContrato - $this->nomeCliente.pdf";
+        $this->title = "PROPOSTA - Nº $this->codContrato - $this->nomeCliente";
 
-        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-        date_default_timezone_set('America/Sao_Paulo');
-        $this->dtEmissao = utf8_encode(strftime('%d de %B de %Y', strtotime($budget['dtEmissao'])));
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese'); //para a data ficar em Português
+        //date_default_timezone_set('America/Sao_Paulo');
+        //$data = strftime('%d/%m/%Y', strtotime($budget->dtEmissao));
+        $this->dtEmissao = utf8_encode(strftime('%d de %B de %Y', strtotime($budget->dtEmissao)));
 
     }
 
@@ -145,7 +146,7 @@ class BudgetPDF
 
     function show()
     {
-        echo "
+        $result = "
         <!DOCTYPE html>
         <html lang='pt-br'>
 
@@ -153,20 +154,45 @@ class BudgetPDF
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <title>$this->title</title>
+            <style>
+            #div-lateral{
+                position:relative;
+                width:20rem;
+                float: left;
+            }
+            #div-logo{
+                position: relative;
+                width: 20rem;
+                left:0px;
+                float: left;
+            }
+
+            #div-logo img{
+                width: 100%;
+            }
+            .group:before,
+            .group:after {
+                content: '';
+                display: table;
+            } 
+            .group:after {
+                clear: both;
+            }
+            </style>
         </head>
 
         <body>
 
-            <p class='text-center'>$this->title</p><br>
+            <p class='text-center bg-warning' style='margin-bottom: -10px;'><small>$this->title</small></p><br>
 
-            <session>
+            <session style='margin-top: -10rem;'>
                 <div> <!-- CABEÇALHO DO ORÇAMENTO -->
-                    <div class='row'>
-                        <div class='bg-dark p-1 col-4' >
-                            <img src='./img/logo-COMFAL.jpg' alt='logo' width='100%'>
+                    <div class='group'>
+                        <div id='div-logo' class='bg-dark p-1'>
+                            <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
                         </div>
-                        <div class='col-8 text-center'>
-                            <h5 class='text-success'>ORÇAMENTO<h5>
+                        <div id='div-lateral' class='text-center mt-4 ml-4'>
+                            <h5 class='text-success'>ORÇAMENTO</h5>
                             <b>Data: $this->dtEmissao</b><br>
                             <b>Nº $this->codContrato</b><br>
                             Rerefência: <b>locação</b>. validade: 3 três dias
@@ -181,9 +207,10 @@ class BudgetPDF
                 </div>
 
                 <div class='mt-2'> <!-- TABELA DOS ITENS -->
-                    <h6 class='text-center pt-4'>FORNECIMENTO</h6>
+                    <h6 class='text-center pt-4'><b>FORNECIMENTO</b></h6>
 
                     <!--... tabela de itens -->
+                    <small>
                     <table class='table table-bordered table-hover' id='dataTable' cellspacing='0'>
                         <thead style='background-color: lightgreen;'>
                         
@@ -210,7 +237,7 @@ class BudgetPDF
 
                                 $auxP = "a/" . substr($periodo, 0, 1); //pega o primeiro caracter do período. ex: 'semanal' -> 's'
 
-                                echo "<tr>
+                                $result .= "<tr>
                                     <td><b>$desc</b></td>
                                     <td>$periodo</td>
                                     <td>$vlUnit $auxP</td>
@@ -227,7 +254,7 @@ class BudgetPDF
                                     $vlUnit = $row['frete'][$i]['vlUnit'];
                                     $vlTotal = $row['frete'][$i]['vlTotal']; 
 
-                                    echo "<tr style='background-color: lightgrey'>
+                                    $result .= "<tr style='background-color: lightgrey'>
                                     <td>$tipoFrete[$i]</td>
                                     <td></td>
                                     <td>$vlUnit</td>
@@ -236,35 +263,34 @@ class BudgetPDF
                                     <td></td>
                                     </tr>";
                                 }
-
-
-
                             }
-                            echo "
+
+                            $result .= "
                         </tbody>        
                     </table>
+                    </small>
                 </div>
-                <hr>
+                
                 <div> <!-- DISPOSIÇÕES GERAIS -->
-                    <h6 class='text-center'>DISPOSIÇÕES GERAIS</h6>
-                    <ol>
-                    <li><b>FORMA DE PAGAMENTO:</b> Faturamento do aluguel realizado mensalmente, através de boleto bancário ou deposito em conta. (Primeiro faturamento em 30 dias após entrega).</li>
-                    <li><b>PRAZO DE ENTREGA:</b> Descrito na seção “FORNECIMENTO” ou conforme combinado com locatário.</li>
-                    <li><b>IMPOSTOS:</b> Impostos - federais, estaduais, municipais, trabalhistas ou encargos sociais - incluídos no preço, exceto quando descritos separadamente na seção “FORNECIMENTO”.</li>
-                    <li><b>OBSERVAÇÕES:</b> O período de locação mínimo é de 30 (trinta) dias. Os valores dos fretes, descritos na seção “FORNECIMENTO”, são referentes ao carregamento e/ou descarregamento dos equipamentos no local dentro do prazo de uma hora (ou período previamente acordado). Horas adicionais à disposição, devido a mau tempo, processos de liberação, ou outros quaisquer, serão cobradas sobre o valor do frete previamente acordado.</li>
-                    </ol>
+                    <h6 class='text-center'><b>DISPOSIÇÕES GERAIS</b></h6>
+                    <small>
+                    <div class='text-justify'>
+                    <p><b>1. FORMA DE PAGAMENTO:</b> Faturamento do aluguel realizado mensalmente, através de boleto bancário ou deposito em conta. (Primeiro faturamento em 30 dias após entrega).<br>
+                    <b>2. PRAZO DE ENTREGA:</b> Descrito na seção “FORNECIMENTO” ou conforme combinado com locatário.<br>
+                    <b>3. IMPOSTOS:</b> Impostos - federais, estaduais, municipais, trabalhistas ou encargos sociais - incluídos no preço, exceto quando descritos separadamente na seção “FORNECIMENTO”.<br>
+                    <b>4. OBSERVAÇÕES:</b> O período de locação mínimo é de 30 (trinta) dias. Os valores dos fretes, descritos na seção “FORNECIMENTO”, são referentes ao carregamento e/ou descarregamento dos equipamentos no local dentro do prazo de uma hora (ou período previamente acordado). Horas adicionais à disposição, devido a mau tempo, processos de liberação, ou outros quaisquer, serão cobradas sobre o valor do frete previamente acordado.</p>
+                    </div>
+                    </small>
                 </div> 
             </session>
 
-            <form hidden='true'>
-                <input id='fk_idOrcamento' value='$this->idOrcamento'>
-            </form>
-
-            <link href='./bootstrap.min.css' rel='stylesheet' />
+            <link href='http://localhost/res/plugins/bootstrap.min.css' rel='stylesheet' />
 
         </body>
 
         </html>";
+
+        return array($this->title, $result);
     }
 }
 
