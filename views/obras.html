@@ -6,7 +6,7 @@
             <ol class="breadcrumb mb-4 justify-content-between">
                 <li class="breadcrumb-item active">Início/Cliente/Obras</li>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#constructionModal">
+                <button id="btnAddConstruction" type="button" class="btn btn-success" data-toggle="modal" data-target="#constructionModal">
                     Nova Obra
                 </button>
             </ol>
@@ -19,44 +19,23 @@
                         <thead class="bg-dark text-white">
                             <tr>
                                 <th>Código</th>
-                                <th title="responsável pela obra">Resposavel</th>
-                                <th>Telefone</th>
-                                <th>E-mail</th>
+                                <th>Resposável</th>
                                 <th>Cidade</th>
-                                <th>Data de Cadastro</th>
+                                <th>Endereço</th>
                                 <th>Opções</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Fulano de tal</td>
-                                <td>(19) 3543-3432</td>
-                                <td>hr_construcoes@gmail.com</td>
-                                <td>Piracicaba-SP</td>
-                                <td>22/12/2019</td>
-                                <td>
-                                    <button type="button" title="ver detalhes" class="btn btn-warning"
-                                        data-toggle="modal" data-target="#constructionModal">
-                                        <i class="fas fa-bars sm"></i>
-                                    </button>
-                                    <button type="button" title="excluir" onclick="deleteRow('.$data->id.')"
-                                        class="btn btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="listObra">
+                         
                         </tbody>
 
                         <tfoot  class="bg-dark text-white">
                             <tr>
                                 <th>Código</th>
-                                <th title="responsável pela obra">Resposavel</th>
-                                <th>Telefone</th>
-                                <th>E-mail</th>
+                                <th>Resposável</th>
                                 <th>Cidade</th>
-                                <th>Data de Cadastro</th>
+                                <th>Endereço</th>
                                 <th>Opções</th>
                             </tr>
                         </tfoot>
@@ -74,94 +53,129 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title"><b>Nova Obra</b></h3>
+                        <h3 class="modal-title"><b id="modalTitle">Nova Obra</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form>
+                        <form id="formConstruction">
                             <div class="form-row">
 
-                                <div class="form-group col-lg-3">
-                                    <label for="codigo">Código</label>
-                                    <input type="text" class="form-control" name="codigo" id="codigo" placeholder="000">
+                                
+                                <div id="divId" class="form-group col-lg-4">
+                                    <label for="IdObra">IdObra</label>
+                                    <input type="text" class="form-control" name="IdObra" id="IdObra">
                                 </div>
-
-                                <div class="form-group col-lg-9">
-                                    <label for="nome">Responsavel pela Obra</label>
-                                    <input type="text" class="form-control" name="nome" id="nome"
-                                        placeholder="Nome Completo">
+                                 
+                                <div id="divCodigo" class="form-group col-lg-2">
+                                    <label for="codObra">Código</label>
+                                    <input type="text" class="form-control" name="codObra" id="codObra" placeholder="000">
                                 </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="inputAddress">Telefone 01</label>
-                                    <input type="text" class="form-control" id="telefone01" placeholder="(00)00000000">
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="inputAddress">Telefone 02</label>
-                                    <input type="phone" class="form-control" id="telefone02" placeholder="(00)00000000">
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="inputEmail4">Email 01</label>
-                                    <input type="email" class="form-control" id="inputEmail4"
-                                        placeholder="exemplo@exemplo.com">
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="inputEmail4">Email 02</label>
-                                    <input type="email" class="form-control" id="inputEmail4"
-                                        placeholder="exemplo@exemplo.com">
-                                </div>
+                                
+                                <div id="divNomeCliente" class="form-group col-lg-6">
+                                    <label>Cliente</label>
+                                    <input type="text" class="form-control" name="cliente" id="cliente">
+                                </div>    
 
                                 <div class="form-group col-lg-4">
-                                    <label for="inputEmail4">Data de Cadastro</label>
-                                    <input type="date" class="form-control" id="inputEmail4" placeholder="00/00/0000">
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="inputEstado">UF</label>
-                                    <select id="inputEstado" class="form-control">
-                                        <option selected>Escolher...</option>
+                                    <label for="respObra">Responsáveis</label>
+                                    <select id="respObra" name="respObra" class="form-control">
+                                        <option value= 0 selected>Escolher...</option>
                                         <option>...</option>
+                                    </select>
+                                </div>
+                                
+                             
+                                <div class="form-group col-md-4">
+                                    <label for="uf" title="Unidade Federativa">UF</label>
+                                    <select id="uf" name="uf" class="form-control">
+                                        <option value = "" selected>Escolher...</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="inputAddress">Cidade</label>
-                                    <input type="text" class="form-control" id="inputAddress">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" class="form-control" name="cep" id="cep" placeholder="00000-000">
                                 </div>
 
-                                <div class="form-group col-lg-6">
-                                    <label for="inputAddress">CEP</label>
-                                    <input type="text" class="form-control" id="inputAddress" placeholder="00000-000">
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="inputPassword4">Bairro</label>
-                                    <input type="text" class="form-control" id="inputPassword4"
-                                        placeholder="Rua Exemplo">
-                                </div>
-
-                                <div class="form-group col-lg-8">
-                                    <label for="inputAddress">Endereço</label>
-                                    <input type="text" class="form-control" id="inputAddress" placeholder="000">
-                                </div>
                                 <div class="form-group col-lg-4">
-                                    <label for="inputAddress">Número</label>
-                                    <input type="text" class="form-control" id="inputAddress" placeholder="000">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" class="form-control"  name="cidade" id="cidade">
                                 </div>
-                            </div>
-                        </form>
 
+                                <div class="form-group col-lg-4">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" class="form-control" name="bairro" id="bairro">
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="endereco">Endereço</label>
+                                    <input type="text" class="form-control" id="endereco" name="endereco" placeholder=" Rua Exemplo">
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="numero">Número</label>
+                                    <input type="text" class="form-control" id="numero" name="numero" placeholder="000">
+                                </div>
+                                
+                                <div id="divCliente" class="form-group col-md-6">
+                                    <label id="labelid_fk_Cliente" for="id_fk_cliente">ID Cliente</label>
+                                    <input type="text" class="form-control" name="id_fk_cliente" id="id_fk_cliente">
+                                </div>
+                                   
+                                
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="dtCadastro">Data de Cadastro</label>
+                                <input type="date" class="form-control" id="dtCadastro" name="dtCadastro"
+                                    placeholder="00/00/0000" disabled>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="complemento">Complemento</label>
+                                <textarea maxlength="150" class="form-control" id="complemento" name="complemento" rows="3"></textarea>
+                                Caractetres Restantes: <span class="caracteres">150</span><br>
+                            </div>
+
+                        </form>
+                       
                         <div style="margin: 0px;" class="breadcrumb justify-content-between">
 
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <input type="button" onclick="viewORedit('.$data->id.', 'edit')" value="Editar"
-                                class="btn btn-primary">
+
+                            <input id="btnSaveConstruction" type="submit" value="Cadastrar" class="btn btn-success">
+                            
+                             <!-- para desbloquear os camps para editar o usuário -->
+                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
                         </div>
                     </div>
 
@@ -173,7 +187,10 @@
         <!-- end Construction Modal -->
 
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
-    <script src="../res/js/util.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <script src="../../res/js/util.js"></script>
+    <script src="../../res/js/construction.js"></script>
+
 
 
         <!--script>

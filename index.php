@@ -27,6 +27,7 @@ require_once("suppliers.php"); //fornecedores
 require_once("budgets.php"); //orçamentos
 require_once("contracts.php"); //contratos
 require_once("rents.php"); //alugueis
+require_once("construction.php");
 
 $app->get('/', function(){
 
@@ -70,17 +71,6 @@ $app->get('/products/containers', function(){
 
 });
 
-
-$app->get('/construction', function(){
-
-    User::verifyLogin();
-
-    $page = new Page();
-
-    $page->setTpl("obras");
-  
-
-});
 
 /* rota página login ---------------------------------- */
 $app->get('/login', function(){

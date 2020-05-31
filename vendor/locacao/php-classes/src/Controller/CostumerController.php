@@ -59,12 +59,12 @@ class CostumerController extends Generator
             $row[] = $documento;
             $row[] = $tipoCliente;
            
-            $row[] = "<a class='btn btn-primary ml-3' href='/reposibleWorks/json/$id' role='button'><i class='fas fa-hard-hat'></i></a>
-
-                    <button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                    onclick='loadCostumer($id);'>
+            $row[] = "<a class='btn btn-primary' title='responsáveis de obras' href='/reposibleWorks/json/$id' role='button'><i class='fas fa-hard-hat'></i></a>
+                      <a class='btn btn-success' title='obras do cliente' href='/construction/$id' role='button'><i class='fas fa-hammer'></i></a>  
+                      <button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+                      onclick='loadCostumer($id);'>
                         <i class='fas fa-bars sm'></i>
-                    </button>
+                      </button>
 
                     <button type='button' title='excluir' onclick='deleteCostumer($id);'
                         class='btn btn-danger btnDelete'>

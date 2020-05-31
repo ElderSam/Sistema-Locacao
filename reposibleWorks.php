@@ -30,7 +30,6 @@ $app->post('/reposibleWorks/list_datatables/:idCliente', function($idCliente){ /
 });
 
 
-
 $app->get('/reposibleWorks2/json/:idResp', function($idResp){
 	
 	User::verifyLogin();
@@ -76,8 +75,6 @@ $app->post("/reposibleWorks/:idResp/delete", function($idResp){
 	echo $reposible->delete();
 
 });
-
-
 
 
 ?>
