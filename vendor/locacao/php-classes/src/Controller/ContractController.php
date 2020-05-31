@@ -323,7 +323,7 @@ class ContractController extends Generator
         return $contract->delete();       
     }
 
-    public static function getPDF($id)
+    public function getPDF($id, $destiny)
     {   
         $contract = new Contract();
     
@@ -343,7 +343,74 @@ class ContractController extends Generator
         $file_name = str_replace('/', '-', $res[0]); //substitui / por - (porque quando baixa o PDF, não reconhece a barra no nome do arquivo)
         
         $pdf->createPDF($file_name.".pdf", $res[1]); //$res[1]  é o conteúdo do PDF
-        $pdf->display();
+
+        if($destiny == "sendEmail"){
+            //print_r($_POST);
+
+            //valida os campos
+            $error = $this->verifyFieldsEmail(); //verifica os campos do formulário de email
+            $aux = json_decode($error);
+    
+            if ($aux->error) {
+                return $error;
+            }
+            
+            //se estiver tudo ok, então envia o e-mail
+            return $pdf->sendEmail($_POST['username'], $_POST['password'], $_POST['name_from'], $_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
+
+        }else{
+            $pdf->display();
+        }
+        
+    }
+
+    public function verifyFieldsEmail(){  //valida os campos
+        $errors = array();
+
+        $emails = array([$_POST['username'], 'username'], [$_POST['toAdress'], 'toAdress']);
+            
+        for($i=0; $i<count($emails); $i++){
+            
+            $field = $emails[$i][0];
+            $txt = $emails[$i][1];
+
+            if($field == ""){ //se o e-mail estiver correto){
+                $errors["#$txt"] = "E-mail é obrigatório!";
+
+            }else if($this->validaEmail($field) == false){
+                $errors["#$txt"] = "E-mail inválido!";
+            }   
+        }
+
+        if($_POST['password'] == ""){
+            $errors["#password"] = "Senha é obrigatória!";
+        }
+
+        if($_POST['name_from'] == ""){
+            $errors["#name_from"] = "Destinatário é obrigatório!";
+        }
+
+        if($_POST['subject'] == ""){
+            $errors["#subject"] = "Assunto é obrigatório!";
+        }
+
+        if($_POST['html'] == ""){
+            $errors["#html"] = "Mensagem é obrigatória!";
+        }
+
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário de email
+
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors,
+                'msg'=>'campos incompletos/inválidos!'
+            ]);
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+        }
     }
 
 }//end class ContractController

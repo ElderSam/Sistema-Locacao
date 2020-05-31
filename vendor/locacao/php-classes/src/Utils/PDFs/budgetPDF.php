@@ -289,6 +289,8 @@ class BudgetPDF
         </body>
 
         </html>";
+        
+        $this->title = "PROPOSTA - N. $this->codContrato - $this->nomeCliente";
 
         return array($this->title, $result);
     }
