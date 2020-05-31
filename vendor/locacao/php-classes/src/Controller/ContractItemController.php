@@ -4,9 +4,9 @@ namespace Locacao\Controller;
 
 use \Locacao\Generator;
 use \Locacao\Model\User;
-use \Locacao\Model\Rent;
+use \Locacao\Model\ContractItem;
 
-class RentController extends Generator
+class ContractItemController extends Generator
 {
 
     //construtor
@@ -14,9 +14,7 @@ class RentController extends Generator
     {
     }
 
-
-
-    public function save($update = false) //Add a new Rent or Update
+    public function save($update = false) //Add a new ContractItem or Update
     {
         
         User::verifyLogin();
@@ -28,24 +26,20 @@ class RentController extends Generator
             return $error;
         }
 
-        $rent = new Rent(); //Model
+        $contractItem = new ContractItem(); //Model
 
-        $rent->setData($_POST);
+        $contractItem->setData($_POST);
 
         if ($update) { //se for atualizar
             
-            $upd =  $rent->update();
-
-            
-            return $upd;
-            
+            $upd =  $contractItem->update();      
+            return $upd;       
 
         } else { // se for cadastrar novo Fornecedor
-            $res = $rent->insert();
-            //print_r($res);
             
-            return $res;
-                   
+            $res = $contractItem->insert();
+            //print_r($res);           
+            return $res;                   
         }
     }
 
@@ -57,11 +51,11 @@ class RentController extends Generator
 
         //print_r($_POST);
 
-        if ($_POST["contrato_idContrato"] == "") {
+        if ($_POST["idContrato"] == "") {
                 $errors["#contrato"] = "Contrato é obrigatório!";
         }
 
-        if ($_POST["produto_idProduto_gen"] == "") {
+        if ($_POST["idProduto_gen"] == "") {
             $errors["#codeProduct"] = "Produto é obrigatório!";
         }
         
@@ -69,8 +63,12 @@ class RentController extends Generator
             $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
         }
 
-        if ($_POST["periodoAluguel"] == "") {
-            $errors["#periodoAluguel"] = "Período é obrigatório!";
+        if ($_POST["quantidade"] == "") {
+            $errors["#quantidade"] = "Quantidade é obrigatória!";
+        }
+
+        if ($_POST["periodoLocacao"] == "") {
+            $errors["#periodoLocacao"] = "Período é obrigatório!";
         }
 
 
@@ -110,45 +108,44 @@ class RentController extends Generator
 		$_POST['length'] = Qual posição começar
     */
 
-    public function ajax_list_rents($requestData)
+    public function ajax_list_contractItens($requestData, $idContrato)
     {
 
         $column_search = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //colunas pesquisáveis pelo datatables
         $column_order = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
-        $rent = new Rent(); //model
+        $contractItem = new ContractItem(); //model
 
-        $datatable = $rent->get_datatable($requestData, $column_search, $column_order);
+        $datatable = $contractItem->get_datatable($requestData, $column_search, $column_order, $idContrato);
 
         $data = array();
 
-        foreach ($datatable['data'] as $rent) { //para cada registro retornado
+        foreach ($datatable['data'] as $contractItem) { //para cada registro retornado
 
-            if ($rent['status'] == 1) {
+            /*if ($contractItem['status'] == 1) {
                 $status = "Ativo";
             } else{
                 $status = "Inativo";
-            }
+            }*/
 
-            $id = $rent['idFornecedor'];
+            
 
             // Ler e criar o array de dados ---------------------
-            $row = array();
-
-            $row[] = $rent['codFornecedor'];
-            $row[] = $rent['nome'];
-            $row[] = $status;
-            $row[] = $rent['telefone1'];
-            $row[] = $rent['cidade'];
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadRent($id);'>
-                    <i class='fas fa-bars sm'></i>
-                </button>
-                <button type='button' title='excluir' onclick='deleteRent($id);'
-                    class='btn btn-danger btnDelete'>
-                    <i class='fas fa-trash'></i>
-                </button>";
+            
+            $row = [
+                "idItem"=>$contractItem['idItem'],
+                "idContrato"=>$contractItem['idContrato'],
+                "idProduto_gen"=>$contractItem['idProduto_gen'],
+                "descricao"=>$contractItem['descricao'],
+                "descCategoria"=>$contractItem['descCategoria'],
+                "vlAluguel"=>$contractItem['vlAluguel'],
+                "quantidade"=>$contractItem['quantidade'],
+                "custoEntrega"=>$contractItem['custoEntrega'],
+                "custoRetirada"=>$contractItem['custoRetirada'], 
+                "periodoLocacao"=>$contractItem['periodoLocacao'],
+                "observacao"=>$contractItem['observacao'],             
+            ];
 
             $data[] = $row;
         } //
@@ -167,20 +164,35 @@ class RentController extends Generator
 
     public function records_total()
     {
-
-        return Rent::total();
+        return ContractItem::total();
     }
 
-
-
-    public function delete($idrent){
+    public function delete($idContractItem){
        
-        $rent = new Rent();
-        echo "id: " . $idrent;
-        $rent->get((int)$idrent); //carrega o usuário, para ter certeza que ainda existe no banco
+        $contractItem = new ContractItem();
+        echo "id: " . $idContractItem;
+        $contractItem->get((int)$idContractItem); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $rent->delete();
-        
-        
+        return $contractItem->delete();      
     }
-}//end class RentController
+
+    public function getValuesToBudgetPDF($idOrcamento){
+
+        $items = new ContractItem();
+        
+        $listItems = $items->getValuesToBudgetPDF($idOrcamento);
+          
+        for($i=0; $i<count($listItems); $i++){
+            //print_r($item);
+            
+            $periodo = $listItems[$i]['periodoLocacao'];
+            $arrayPeriodos = array("diário", "semanal", "quinzenal", "mensal");
+
+            $listItems[$i]['periodoLocacao'] = $arrayPeriodos[$periodo -1]; //pega a string no array referente ao número 
+            //echo "<br>periodoLocacao: $periodo => " . $listItems[$i]['periodoLocacao'];   
+        }
+
+        return json_encode($listItems);
+    }
+
+}//end class ContractItemController

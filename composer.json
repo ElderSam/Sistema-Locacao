@@ -12,7 +12,8 @@
     "require": {
     	"phpmailer/phpmailer":"5.2.22",
     	"slim/slim":"2.0",
-    	"rain/raintpl":"3.0.0" 
+    	"rain/raintpl":"3.0.0",
+        "dompdf/dompdf": "^0.8.5" 
     },
     "autoload": {
         "psr-4": {

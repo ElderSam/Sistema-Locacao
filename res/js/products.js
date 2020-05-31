@@ -21,9 +21,9 @@ $(function() { //quando a página carrega
 		//loadContainer();
 						
 		tam = $('#categoria').val().length //pega o tamanho da string (ex: 34-001) (id-categoria)
-		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id
+		idCategoria = $('#categoria').val().substring(0,(tam - 4)); //tira os quatro últimos caracteres e pega o id (ex: 34)
 		
-		loadTypes(idCategoria);
+		loadTypes(idCategoria); //carrega os tipos da Categoria selecionada
 		//console.log('idCategoria: ' + idCategoria)
 		if(idCategoria == 3 || idCategoria == 4){ //se for Andamie ou Escora
 			$('#numSerie').val('xxxx').parent().hide()
@@ -284,6 +284,8 @@ $(function() { //quando a página carrega
 	let tipo2para3M
 	//carrega as opções de tipo 1 de produto
 	function loadTypes(idCategory, tipos = false){
+		//console.log(`idCategoria: ${idCategory}`)
+		
 		//para os tipos de produto do formulário
 		types = []
 
@@ -317,14 +319,12 @@ $(function() { //quando a página carrega
 				}
 			});		
 
-
-
 			//Carrega os valores nos selects
 			for(i=1; i<=4; i++){
 				$(`#tipo${i}`).html(types[i])
 			}
 				
-			if(idCategory == '1'){
+			if(idCategory == '1'){ //Container
 				//console.log('você escolheu Container')
 				$('#labelType1').html('Metragem (tipo1)')
 				$('#labelType2').html('Modelo (tipo2)')
@@ -335,7 +335,7 @@ $(function() { //quando a página carrega
 					$(`#tipo${i}`).parent().show()
 				}
 
-			}else if(idCategory == '2'){
+			}else if(idCategory == '2'){ //Betoneira
 				//console.log('você escolheu Betoneira')
 				$('#labelType1').html('Marca (tipo1)')
 				$('#labelType2').html('Modelo (tipo2)')
@@ -347,7 +347,7 @@ $(function() { //quando a página carrega
 					$(`#tipo${i}`).parent().show()
 				}
 
-			}else if(idCategory == '3'){
+			}else if(idCategory == '3'){ //Andaime
 				//console.log('você escolheu Andaime')
 				$('#labelType1').html('Tipo (tipo1)')
 				$('#labelType2').html('Peça (tipo2)')
@@ -360,7 +360,7 @@ $(function() { //quando a página carrega
 
 				$(`#tipo4`).parent().hide()
 
-			}else if(idCategory == '4'){
+			}else if(idCategory == '4'){ //Escora
 				//console.log('você escolheu Escora')
 				$('#labelType1').html('Metragem (tipo1)')
 				/*$('#labelType2').html('N/A')
@@ -374,6 +374,22 @@ $(function() { //quando a página carrega
 				for(i=2; i<=4; i++){
 					$(`#tipo${i}`).parent().hide()
 				}
+				
+			}else if(idCategory == '5'){ //Ar-condicionado
+				console.log('você escolheu Ar-condicionado')
+				$('#labelType1').html('Tipo (tipo1)')
+				$('#labelType2').html('Potência (tipo2)')
+				$('#labelType3').html('Volts (tipo3)')
+				//$('#labelType4').html('N/A (tipo4)')
+
+				for(i=1; i<=3; i++){
+					$(`#tipo${i}`).parent().show()
+				}
+
+				$(`#tipo4`).parent().hide() //não tem o tipo4
+
+				$("#tipo3").val('59-02') //deixa o tipo3 com padrão 220V 
+
 			}
 
 		}).then(() => { 
@@ -382,7 +398,6 @@ $(function() { //quando a página carrega
 			if(tipos){
 				//console.log('setting values in types')
 				
-
 				for(i=1; i<=4; i++){
 					campo = i
 

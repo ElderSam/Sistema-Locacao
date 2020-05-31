@@ -130,7 +130,7 @@ class ProductController extends Generator
                 $_POST["tipo4"] = NULL;
             }
             
-            if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004")) {
+            if (($_POST["tipo3"] == "") && ($this->getcodCategory() != "004")) { //nas categorias 1, 2 e 3 o tipo 3 é obrigatório para a maioria dos casos
                 
                 $codTipo2 = substr($_POST["tipo2"], -2);
 
@@ -145,17 +145,17 @@ class ProductController extends Generator
 
                     }else{
                         $errors["#tipo3"] = "tipo 3 é obrigatório!";
-
                     }
                     
                     
-                }else{
-                    $errors["#tipo3"] = "tipo 3 é obrigatório!";
-                }
-                
-            }
+                }else if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for um Container Sanitário
+                    $_POST["tipo3"] = NULL;
 
-            
+                }else{
+                   
+                    $errors["#tipo3"] = "tipo 3 é obrigatório!";
+                }                
+            }            
 
             if (($this->getcodCategory() == "003") || ($this->getcodCategory() == "004")) { //se for Andaime ou Escora
                 $_POST["tipo4"] = NULL;
@@ -163,6 +163,9 @@ class ProductController extends Generator
             }else if(($_POST["tipo4"] == "") && ($this->getcodCategory() == "002") && ($_POST["tipo3"] == "19-02")){ //se for Betoneira com tipo3 Combustão, então não tem tipo4
                 $_POST["tipo4"] = NULL;
                 
+            }else if($this->getcodCategory() == "005"){ //se for um Ar-condicionado
+                    $_POST["tipo4"] = NULL;
+                    
             }else{
 
                 if ($_POST["tipo4"] == "") {
@@ -248,10 +251,10 @@ class ProductController extends Generator
         /*---------------------- Tipos ------------------------------------------------*/
         $qtdTipos = 4;
 
-        if(($this->getcodCategory() == "001") || ($this->getcodCategory() == "002")){
+        if(($this->getcodCategory() == "001")/* || ($this->getcodCategory() == "002")*/){
             //$qtdTipos = 4;
 
-            if(($this->getcodCategory() == "001") && ($_POST["tipo2"] == "7-03")){ //se for container sanitário
+            if(/*($this->getcodCategory() == "001") && */($_POST["tipo2"] == "7-03")){ //se for container sanitário
                 $_POST["tipo3"] = NULL; 
      
             }

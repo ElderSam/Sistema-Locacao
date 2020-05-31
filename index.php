@@ -25,7 +25,9 @@ require_once("products_esp.php"); //produtos específicos
 require_once("prod-types.php");
 require_once("suppliers.php"); //fornecedores
 require_once("budgets.php"); //orçamentos
+require_once("budgetItens.php"); //itens de orçamento (produtos adicionados)
 require_once("contracts.php"); //contratos
+require_once("contract_itens.php"); //itens de contrato
 require_once("rents.php"); //alugueis
 require_once("construction.php");
 

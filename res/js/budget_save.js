@@ -1,268 +1,154 @@
-$(function(){
+let myTable = null;
 
-	//carrega a tabela de Budgets
-	myTable = $("#dataTable").DataTable({ 
-		"oLanguage": DATATABLE_PTBR, //tradução
-		"autoWidth": false, //largura
-		"processing": true, //mensagem 'processando'
-		"serverSide": false, 
-		/*"ajax": {
-			"url": `/budgets/cart_list_datatables/${...}`, //chama a rota para carregar os dados 
-			"type": "POST",
+let obra_idObra = '';
+let idCliente = '';
+let codigo = '0'
 
-		},*/
-		"columnDefs": [
-			{ targets: "no-sort", orderable: false }, //para não ordenar
-			{ targets: "text-center", className: "text-center" },
-		]
-	});
-	
-    showsNextNumber();
+const idOrcamento = $("#idOrcamento").val();
+let typeForm = '';
+
+//Somente para orçamento
+$('#dtInicio').parent().hide();
+$('#prazoDuracao').parent().hide();
+
+$(function () {	
+
+	if(idOrcamento !== '0'){ //se for para ver um Orçamento existente
+		
+		console.log(`idOrçamento: ${idOrcamento}`)
+		typeForm = 'view';
+
+		$("#fk_idOrcamento").val(idOrcamento)
+		$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
+
+		$('#btnCart').hide();
+
+		$('#btnDeleteBudget').show();
+
+	}else{ //se for para cadastrar
+		typeForm = 'save';
+		console.log('Novo Orçamento')
+		$('#btnDeleteBudget').hide();
+	}
+
+	//adiciona as máscaras
+	$("#telefone").mask("(00) 0000-00009");
+	//$("#dtInicio").mask("dd/mm/aaaa");
+
+	loadBudget(idOrcamento);
+
+	loadTableItens() //carrega a tabela de itens de orçamento (produtos adicionados)
 
 	/*$("#btnAddBudget").click(function(){
 		
-		loadCadaster();	
-	});
+		loadBudget();
+	});*/
 
-	async function loadCadaster(){
 
-		await clearFieldsValues();
-	
-		await showsNextNumber();
+	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/
+	$("#btnSaveBudget").click(function (e) { //quando enviar o formulário de Orcamento
 
-		//await loadCostumers();		
-		//await loadConstructions();
-		//await loadTableProducts(); //carrega lista de produtos para colocar no Carrinho
-	}*/
-
-    $("#btnSaveRent").click(function(e){ //salva o aluguel (az reserva do produto para alugar)
-        e.preventDefault();
-
-        let form = $('#formRent'); //formulário de aluguel do produto
-        let formData = new FormData(form[0]);
-
-        idOrcamento = $('#idOrcamento').val()
-        //console.log("idOrcamento:" + idOrcamento)
-
-        if((idOrcamento == 0) || (idOrcamento == undefined)){ //se for para cadastrar --------------------------------------------------
-
-            console.log("você quer cadastrar um Aluguel")
-
-            $.ajax({
-				type: "POST",
-				url: '/rents/create',
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log('erro ao cadastrar Aluguel!')
-						response = JSON.parse(response)
-						
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum problema ao cadastrar Aluguel',
-							'error'
-						)
-	
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'error'
-							)
-                        }
-                                        
-						
-					} else { // Se cadastrou com sucesso
-						
-						//$('#BudgetModal').modal('hide');
-                        
-                        res = JSON.parse(response)
-                        console.log("id do novo orçamento: " + res.idContrato)
-                       // $('#idOrcamento').val(res.idContrato)
-                        
-                        $('#formProdutos').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
-
-						Swal.fire(
-							'Sucesso!',
-							'Produto adicionado no orçamento!',
-							'success'
-                            )
-                        
-	
-						//loadTableBudget();
-						//$('#formBudget').trigger("reset");
-						
-					}
-					
-				},
-				error: function (response) {
-					//$('#BudgetModal').modal('hide');
-					//$('#formBudget').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
-				}
-			}).then( response => {
-
-				console.log('nova locação/aluguel: ')
-				response = JSON.parse(response)
-				console.log(response)
-
-				loadTableBudget()
-				
-				/*product = ''
-
-				product += `<tr id="${response.produto_idProduto}">`
-		
-				
-				product += `<td>${response.codigoGen}</td>
-						<td>${response.descCategoria}</td>
-						<td>${response.tipo1} ${response.descricao}</td>
-						<td>${response.vlAluguel}</td>
-						<td>${response.observacao}</td>
-						<td>
-							<button type='button' title='remover' onclick='removeProduct(${response.produto_idProduto});'
-								class='btn btn-danger btnDelete'>
-								<i class='fas fa-trash'></i>
-							</button>
-						</td>
-						</tr>`
-
-				$('#cart').append(product)*/
-			});
-
-        }
-
-	});
-	
-	function loadTableBudget(){ //carrega a tabela dos produtos adicionados ao orçamento atual
-		
-		id = $('#fk_idOrcamento').val();
-
-		myTable.destroy(); //desfaz as paginações
-		
-		myTable = $("#dataTable").DataTable({ 
-			"oLanguage": DATATABLE_PTBR,
-			"autoWidth": false, //largura
-			"processing": true, //mensagem 'processando'
-			"serverSide": true,
-			"ajax": {
-				"url": `/budgets/cart_list_datatables/${id}`, //para chamar o método ajax_list_budget
-				"type": "POST",
-			},
-			"columnDefs": [
-				{ targets: "no-sort", orderable: false }, //para não ordenar
-				{ targets: "text-center", className: "text-center" },
-			]
-		});
-	}
-    	 
-	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/	
-	$("#btnSaveBudget").click(function(e) { //quando enviar o formulário de Orcamento
 		e.preventDefault();
-		
+
+		//adiciona as máscaras
+		$("#telefone").unmask();
+
+		$("#formBudget #codigo").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+
 		let form = $('#formBudget');
 		let formData = new FormData(form[0]);
 
-		idOrcamento = $('#idOrcamento').val()
+		//idOrcamento = $('#idOrcamento').val()
 		//console.log("idOrcamento:" + idOrcamento)
 
-		if((idOrcamento == 0) || (idOrcamento == undefined)){ //se for para cadastrar --------------------------------------------------
+		if ((idOrcamento == 0) || (idOrcamento == undefined)) { //se for para cadastrar --------------------------------------------------
 
 			//console.log("você quer cadastrar")
-
+			
 			$.ajax({
 				type: "POST",
 				url: '/budgets/create',
 				data: formData,
 				contentType: false,
 				processData: false,
-				beforeSend: function() {
+				beforeSend: function () {
 					clearErrors();
 					$("#btnSaveBudget").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
+
 				},
 				success: function (response) {
 					clearErrors();
-	
+					$("#telefone").mask("(00) 0000-00009");
+
 					if (JSON.parse(response).error) {
 						console.log('erro ao cadastrar novo Orçamento!')
 						response = JSON.parse(response)
-						
+
 						Swal.fire(
 							'Erro!',
 							'Ocorreu algum problema ao cadastrar',
 							'error'
 						)
-	
-						if(response['error_list']){
-							
+
+						if (response['error_list']) {
+
 							showErrorsModal(response['error_list'])
 
 							Swal.fire(
 								'Atenção!',
 								'Por favor verifique os campos',
-								'error'
+								'warning'
 							)
-                        }
-                        
-                        
-						
+						}
+
 					} else { // Se cadastrou com sucesso
 
 						//$('#BudgetModal').modal('hide');
-                        
-                        res = JSON.parse(response)
-                        console.log("id do novo orçamento: " + res.idContrato)
-                        $('#fk_idOrcamento').val(res.idContrato)
-                        
-                        $('#formProdutos').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
+
+						res = JSON.parse(response)
+						console.log("id do novo orçamento: " + res.idContrato)
+						$('#fk_idOrcamento').val(res.idContrato)
+						$('#idOrcamento').val(res.idContrato)
+						
+
+						$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
 
 						Swal.fire(
 							'Sucesso!',
 							'Primeira parte do Orçamento cadastrada!',
 							'success'
-                            )                        
-	
+						)
+
+						$("#btnSaveBudget").attr('value', 'Finalizar');
+
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
-						
+
 					}
-					
+
 				},
 				error: function (response) {
 					//$('#BudgetModal').modal('hide');
 					//$('#formBudget').trigger("reset");
 					console.log(`Erro! Mensagem: ${response}`);
-	
+
 				}
 			});
 
-		}else{ /* se for para Editar -------------------------------------------------- */
+		} else { /* se for para Editar -------------------------------------------------- */
 
 			//console.log('você quer editar o Orçamento: ' + idOrcamento)
-			
+
 			$.ajax({
 				type: "POST",
 				url: `/budgets/${idOrcamento}`, //rota para editar
 				data: formData,
 				contentType: false,
 				processData: false,
-				beforeSend: function() {
+				beforeSend: function () {
 					clearErrors();
 					$("#btnSaveBudget").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
+
 				},
 				success: function (response) {
 					clearErrors();
@@ -278,14 +164,14 @@ $(function(){
 							'error'
 						);
 
-						if(response['error_list']){
-							
+						if (response['error_list']) {
+
 							showErrorsModal(response['error_list'])
 
 							Swal.fire(
 								'Atenção!',
 								'Por favor verifique os campos',
-								'error'
+								'warning'
 							);
 						}
 
@@ -301,122 +187,96 @@ $(function(){
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
 					}
-	
+
 				},
 				error: function (response) {
-	
+
 					//$('#BudgetModal').modal('hide');
 					//$('#formBudget').trigger("reset");
 					console.log(`Erro! Mensagem: ${response}`);
-	
+
 				}
 			});
-		}	
+		}
 
 		return false;
-    });
-    
-
-	$("#btnAddProduct").on('click', function (e) { //ao clicar para adicionar um novo
-		e.preventDefault()
-
-		searchProduct();
-    });
+	});
 
 });
 
 
-function searchProduct(){
-	console.log('searchProduct:')
+//detalhes do Orcamento
+async function loadBudget(idOrcamento) {
+	//console.log(`function loadBudget(${idOrcamento})`)
+	//console.log("idOrcamento:" + idOrcamento)
 
-	if(($('#codeProduct').val() != undefined) && ($('#codeProduct').val() != "")){
+	//clearFieldsValues();
+	clearErrors();
 
-		code = $('#codeProduct').val();
+	$('#title').html('Detalhes do Orçamento')
+	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
+	$('#btnSaveBudget').hide();
+	$('#btnUpdate').show();
 
-        $('#btnAddProduct').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+	let idCliente, obra_idObra;
 
-		$.getJSON(`/products/addToContract/${code}`, function (response) { //ajax
-			
-			console.log(response)  
-	
+	if ((idOrcamento == '0') || (idOrcamento == undefined)) { //se for cadastrar um novo orçamento
 		
-			if (response.error) {
-				console.log('erro ao adicionar produto ao orçamento!')
-				
-				Swal.fire(
-					'Erro!',
-					response.msg,
-					'error'
-				)
-				
-			} else {					
-								
-				Swal.fire(
-					'Adicionado!',
-					'Produto adicionado ao Orçamento!',
-					'success'
-				)
+		await clearFieldsValues();
 
-				$('#produto_idProduto_gen').val(response.idProduto_gen)   
-            
-				$('#produto').css('border', '1px solid black')
-				$('#produtoAdicionado').html(`<strong style="color: green;">Produto Adicionado!</strong>`)
+		await showsNextNumber();
+
+		disable = true
+
+		$("#formBudget #dtInicio").parent().hide();
+		$("#formBudget #prazoDuracao").parent().hide();
+
+		loadCostumers(idCliente, obra_idObra); //carrega clientes
+
+	}else{ //se for para Editar um orçamento existente
+		disable = false
+
 	
-				$('#prodCodigo').html(`<strong>Código:</strong> ${response.codigoGen}`)
-				$('#prodDescricao').html(`<strong>Descrição:</strong> ${response.descCategoria} - ${response.descricao}`)
-						
-				$('#codeProduct').val('');	
-				console.log(response.vlBaseAluguel)
-
-				$('#vlAluguel').val(response.vlBaseAluguel)	
-			}					
-		
-
-		}).then(() => {
-
-			$('#btnAddProduct').html('Adicionar');
-        
-				
-		}).fail(function () {
-			console.log(`Rota não encontrada! (/products/addToContract/${code})`);
-			return false
-		});
+		idCliente, obra_idObra = await loadFieldsBudget(idOrcamento); //busca os valores dos campos de Orçamento para preencher	
 	}
 
+	$("#formBudget #dtInicio").prop('disabled', disable);
+	$("#formBudget #prazoDuracao").prop('disabled', disable);
+
+	$("#formBudget #codigo").prop('disabled', true);
+
+	$("#idCliente").change(async function () {
+		
+		await loadConstructions(idCliente, obra_idObra);
+	});
+
+	//await loadTableProducts(); //carrega lista de produtos para colocar no Carrinho
 }
 
-function removeProduct(id){
-
-	$(`#${id}`).html('').hide();
-
-}
-
-
-function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
+function showsNextNumber() { //mostra o próximo número de série relacionado à categoria
 	//console.log('shows next number')
 	$.ajax({
 		type: "POST",
 		url: `/budgets/showsNextNumber`,
 		contentType: false,
 		processData: false,
-		
+
 		success: function (response) {
-	
+
 			//console.log('próximo código de orçamento: ' + response)
-			$('#codigo').val(response)						
-								
+			$('#codigo').val(response)
+
 		},
 		error: function (response) {
 
-			console.log(`Erro! Mensagem: ${response}`);		
+			console.log(`Erro! Mensagem: ${response}`);
 		}
-	});	
+	});
 }
 
 
-function loadFieldsBudget(idOrcamento){
-
-	//console.log(`loading all fields of budget (id = ${idOrcamento}`)
+async function loadFieldsBudget(idOrcamento) {
+	console.log(`function loadFieldsBudget(${idOrcamento})`)
 
 	$.getJSON(`/budgets/json/${idOrcamento}`, function (data) { //ajax
 		console.log(data)
@@ -425,71 +285,91 @@ function loadFieldsBudget(idOrcamento){
 		//console.log('load View Orcamento idOrcamento: ' + $("#idOrcamento").val())
 
 		$("#formBudget #codigo").val(data.codContrato).prop('disabled', true);
-		$("#formBudget #obra_idObra").val(data.obra_idObra).prop('disabled', true);
+		codigo = data.codContrato //seta o valor para mostrar no modal excluir
+		$("#formBudget #nomeEmpresa").val(data.nomeEmpresa).prop('disabled', true);
+
 		$("#formBudget #dtEmissao").val(data.dtEmissao).prop('disabled', true);
+		$("#formBudget #solicitante").val(data.solicitante).prop('disabled', true);
+		
+		$("#telefone").unmask();
+		$("#formBudget #telefone").val(data.telefone).prop('disabled', true);
+
+		$("#formBudget #email").val(data.email).prop('disabled', true);
+		//$("#formBudget #referencia").val(data.referencia).prop('disabled', true);
+
 		$("#formBudget #status").val(data.statusOrcamento).prop('disabled', true);
+		$("#formBudget #dtInicio").val(data.dtInicio).prop('disabled', true);
 		$("#formBudget #dtAprovacao").val(data.dtAprovacao).prop('disabled', true);
-		$("#formBudget #custoEntrega").val(data.custoEntrega).prop('disabled', true);
-		$("#formBudget #custoRetirada").val(data.custoRetirada).prop('disabled', true);
+		$("#formBudget #prazoDuracao").val(data.prazoDuracao).prop('disabled', true);
+		$("#formBudget #notas").val(data.notas).prop('disabled', true);
 
 		$("#formBudget #notas").val(data.notas).prop('disabled', true);
-		$("#formBudget #valorAluguel").val(data.valorAluguel).prop('disabled', true);
+
+
+	}).then((data) => {
+		
+		$("#telefone").mask('(00) 0000-00009');
+		
+		$("#BudgetModal").modal();
+
+		//$("#formBudget #idCliente").val(data.idCliente).prop('disabled', true);
+		idCliente = data.idCliente;
+		//console.log(`received idCliente: ${idCliente}`)
+
+		//$("#formBudget #obra_idObra").val(data.obra_idObra).prop('disabled', true);
+		obra_idObra = data.obra_idObra;
+		//console.log(`received obra_idObra: ${obra_idObra}`)
+
+		loadCostumers(idCliente, obra_idObra); //carrega clientes
 
 		
 		/* Atualizar Orcamento ------------------------------------------------------------------ */
-		$('#btnUpdate').click(function(){ //se eu quiser atualizar o Orcamento atual
+		$('#btnUpdate').click(function () { //se eu quiser atualizar o Orcamento atual
 
-			$('#modalTitle').html('Editar Orcamento');
+			typeForm = 'save';
+
+			$('#title').html('Editar Orçamento');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
 			$('#btnSaveBudget').val('Atualizar').show();
 			$('#btnUpdate').hide();
-		
-			$("#formBudget #codigo").prop('disabled', false);
+
+			//$("#formBudget #codigo").prop('disabled', false);
+			
+			$("#formBudget #nomeEmpresa").prop('disabled', false);
+			$("#formBudget #idCliente").prop('disabled', false);
 			$("#formBudget #obra_idObra").prop('disabled', false);
 			$("#formBudget #dtEmissao").prop('disabled', false);
-			$("#formBudget #status").prop('disabled', false);
-			$("#formBudget #dtAprovacao").prop('disabled', false);
-			$("#formBudget #custoEntrega").prop('disabled', false);
-			$("#formBudget #custoRetirada").prop('disabled', false);
-			$("#formBudget #notas").prop('disabled', false);
-			$("#formBudget #valorAluguel").prop('disabled', false);
+			$("#formBudget #solicitante").prop('disabled', false);
+			$("#formBudget #telefone").prop('disabled', false);
+			$("#formBudget #email").prop('disabled', false);
 
-		}); /* Fim Atualizar Orcamento ---------------------------------------------------------- */
+			$("#formBudget #status").prop('disabled', false);
+			$("#formBudget #dtInicio").prop('disabled', false);
+			$("#formBudget #dtAprovacao").prop('disabled', false);
+			$("#formBudget #prazoDuracao").prop('disabled', false);
+			$("#formBudget #notas").prop('disabled', false);
+
+			$('#btnCart').show();
+			$('#divListItens .btnEdit').show();
+			$('#divListItens .btnDelete').show();
+
+			$('#divListItens .btnEdit').attr('hidden', false)
+			$('#divListItens .btnDelete').attr('hidden', false)
 			
 
-	}).then(() => { 
+		}); /* Fim Atualizar Orcamento ---------------------------------------------------------- */
 
-		$("#BudgetModal").modal();
+		return [idCliente, obra_idObra];
+		
 	}).fail(function () {
 		console.log("Rota não encontrada! (/budgets/json/:idOrcamento)");
 	});
 }
 
-
-//detalhes do Orcamento
-function loadBudget(idBudget) { //carrega todos os campos do modal referente ao Orcamento escolhido
-	
-	//console.log('loading budgets')
-	
-	loadConstructions(loadFieldsBudget, idBudget); //carrega as obras e em seguida, todos os campos de orçamento/contrato
-
-	clearFieldsValues();
-	clearErrors();
-
-	$('#modalTitle').html('Detalhes do Orcamento')
-	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
-	$('#btnSaveBudget').hide();
-	$('#btnUpdate').show();
-
-}
-
-
-
-
-function deleteBudget(idOrcamento){
+function deleteBudget(idOrcamento) {
 
 	Swal.fire({
-		title: 'Você tem certeza?',
+		title: `Você tem certeza de excluir o Orçamento nº ${codigo}?`,
 		text: "Você não será capaz de reverter isso!",
 		icon: 'warning',
 		showCancelButton: true,
@@ -504,45 +384,48 @@ function deleteBudget(idOrcamento){
 			$.ajax({
 				type: "POST",
 				url: `/budgets/${idOrcamento}/delete`,
-				beforeSend: function() {
-					
+				beforeSend: function () {
+
 					$('.swal2-content').hide()
 					$('.swal2-actions').hide()
 					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
-				
+
 				},
 				success: function (response) {
-		
+
 					if (JSON.parse(response).error) {
 						console.log('erro ao excluir!')
 						response = JSON.parse(response)
-						
+
 						Swal.fire(
 							'Erro!',
 							'Não foi possível excluir',
 							'error'
 						)
-						
-					} else {					
-										
+
+					} else {
+
 						Swal.fire(
 							'Excluído!',
-							'Registro apagado!',
+							'Orçamento apagado!',
 							'success'
 						)
 
-						loadTableBudget();						
-					}					
+						console.log(`orçamento ${idOrcamento} deletado`)
+						window.location.assign("/budgets"); //vai para a página de orçamentos
+
+						//loadTableBudget();
+					}
 				},
 				error: function (response) {
 					Swal.fire(
 						'Erro!',
-						'Não foi possível excluir',
+						'Não foi possível excluir o orçamento',
 						'error'
 					)
-					console.log(`Erro! Mensagem: ${response}`);		
+					console.log(`Erro! Mensagem: ${response}`);
 				}
-			});		
+			});
 
 		}
 	})
@@ -551,68 +434,109 @@ function deleteBudget(idOrcamento){
 }
 
 //carrega os Clientes para colocar no Orçamento
-function loadCostumers(){
+function loadCostumers(idCliente = '', obra_idObra = '') {
 
 	//console.log('loading costumers')
 
 	$("#idCliente").html(`<option value="">(escolha)</option>`);
 	let costumers
 
-	$.getJSON(`/budgets/costumers/json`, function (data) { //ajax
-		
-		console.log(data)
-		
+	$.getJSON(`/costumers/json`, function (data) { //ajax
+
+		//console.log(data)
+
 		costumers = `<option value="">(escolha)</option>`
-		
-		data.forEach(function(item){
+
+		data.forEach(function (item) {
 			//console.log(item)
-			costumers += `<option value="${item.idCliente}">${item.descCategoria}</option>`
+			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
 		});
-				
+
+		$('#idCliente').html(costumers)
+
 
 	}).then(() => {
-		
-		$('#idCliente').html(costumers)
-	
+
+		if(idCliente !== ''){ //se já tem um cliente escolhido
+			$("#idCliente").val(idCliente).prop('disabled', true);
+			//console.log(`setting value idCliente: ${idCliente}`)
+		}
+
+		loadConstructions(idCliente, obra_idObra)
+
 	}).fail(function () {
-		console.log("Rota não encontrada! (/budgets/constructions/json)");
+		console.log("Rota não encontrada! (/budgets/costumers/json)");
 		return false
 	});
 
 }
 
 //carrega as opções de Obras para colocar no Orçamento
-function loadConstructions(callback='', idBudget = false){
-
-	//console.log('loading constructions')
+function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obras e em seguida os campos de orçamento (chamando outra função)
+	console.log('loading constructions')
 
 	$("#obra_idObra").html(`<option value="">(escolha)</option>`);
 
-	$.getJSON(`/budgets/constructions/json`, function (data) { //ajax
-		
+	//***************************************************
+	$("#obra_idObra").append(`<option value="1">TESTE 1/2020 (número/ano)</option>`); //MUDAR ESSA LINHA QUANDO O CADSTRO DE OBRAS ESTIVER PRONTO
+	
+	if(obra_idObra == 1){
+		$("#obra_idObra").val('1').prop('disabled', true); //tirar isso quando Obras estiver pronto ******************************************************************
+
+
+	}
+		/*$.getJSON(`/costumers/json/${idCliente}/constructions`, function (data) { //ajax
+
 		console.log(data)
-		
+
 		let constructions = `<option value="">(escolha)</option>`
-		
-		data.forEach(function(item){
+
+		data.forEach(function (item) {
 			//console.log(item)
 			constructions += `<option value="${item.idObra}">${item.codObra} - ${item.descCategoria}</option>`
 		});
 
-		$('#obra_idObra').html(constructions)
-					
+		$('#obra_idObra').html(constructions).prop('disabled', true);
+
 
 	}).then(() => {
-		
-		
-		if(idBudget){
-			callback(idBudget) //executa a função loadFieldsBudget()
-		}
-	
-	
+
+		$("#obra_idObra").val(obra_idObra)
+
 	}).fail(function () {
 		console.log("Rota não encontrada! (/budgets/constructions/json)");
 		return false
-	});
+	});*/
 
+}
+
+//limpar campos do modal para Cadastrar
+function clearFieldsValues() {
+
+	//$("#formBudget #codigo").prop('disabled', true)
+	$('#btnUpdate').hide();
+	$('#title').html('Cadastrar Orçamento');
+	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
+	$('#btnSaveBudget').val('Cadastrar').show();
+
+	//$('#dtCadastro').parent().hide(); //aparece a data de cadastro (só para visualizar)
+
+	//$("#formBudget #codigo").prop('disabled', false);
+
+	//$('#dtCadastro').parent().hide();
+
+	$('#codigo').val('');
+	$('#nome').val('');
+
+	$('#endereco').html('');
+
+	$('#idCliente').val('');
+	$('#obra_idObra').val('');
+
+	//$('#status').val('1');
+	//$('#dtEmissao').val('');
+	$('#solicitante').val('');
+	$('#telefone').val('');
+	$('#email').val('');
+	//$('#referencia').val('');
 }

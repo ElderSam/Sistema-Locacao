@@ -3,7 +3,6 @@
 use \Locacao\Page;
 use \Locacao\Controller\ContractController;
 use \Locacao\Model\Contract;
-use \Locacao\Model\User\Construction;
 use \Locacao\Model\User;
 
 
@@ -23,9 +22,12 @@ $app->get('/budgets/new', function(){
     User::verifyLogin();
 	
 	$page = new Page();
-	$page->setTpl("orcamento_salvar");
+	$page->setTpl("orcamento_salvar", [
+		"idOrcamento"=>'0'
+	]);
   
 });
+
 
 $app->get('/budgets/json', function(){
 
@@ -35,6 +37,27 @@ $app->get('/budgets/json', function(){
   
 });
 
+
+$app->get("/budgets/:id/pdf/show", function($id){
+
+	User::verifyLogin();
+	
+	echo ContractController::getPDF($id);
+
+});
+
+
+$app->get('/budgets/:id', function($id){
+
+	User::verifyLogin();
+
+	$page = new Page();
+	$page->setTpl("orcamento_salvar", [
+        "idOrcamento"=>$id
+    ]); 
+  
+
+});
 
 /* rota que mostra o próximo código de contrato */
 $app->post('/budgets/showsNextNumber', function(){
@@ -103,12 +126,4 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 
 	echo $contract->save($update);
 	
-});
-
-$app->get('/budgets/constructions/json', function(){
-
-    User::verifyLogin();
-
-   //echo Construction::listAll();
-  
 });

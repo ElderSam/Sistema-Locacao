@@ -27,11 +27,12 @@ class Rent extends Generator{
 
         if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
                 ":contrato_idContrato"=>$this->getcontrato_idContrato(),
                 ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
                 ":status"=>$this->getstatus(),
                 ":vlAluguel"=>$this->getvlAluguel(),
+                ":periodoAluguel"=>$this->getperiodoAluguel(),
                 ":dtInicio"=>$this->getdtInicio(),
                 ":dtFinal"=>$this->getdtFinal(),
                 ":custoEntrega"=>$this->getcustoEntrega(),
@@ -169,22 +170,17 @@ class Rent extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idFornecedor, :codFornecedor, :nome, :telefone1, :telefone2, :email1, :email2, :endereco, :numero, :bairro, :cidade, :complemento, :uf, :cep, :status)", array(
-            ":idFornecedor"=>$this->getidFornecedor(),
-            ":codFornecedor"=>$this->getcodigo(),
-            ":nome"=>$this->getnome(),
-            ":telefone1"=>$this->gettelefone1(),
-            ":telefone2"=>$this->gettelefone2(),
-            ":email1"=>$this->getemail1(),
-            ":email2"=>$this->getemail2(),
-            ":endereco"=>$this->getendereco(),
-            ":numero"=>$this->getnumero(),
-            ":bairro"=>$this->getbairro(),
-            ":cidade"=>$this->getcidade(),
-            ":complemento"=>$this->getcomplemento(),
-            ":uf"=>$this->getuf(),
-            ":cep"=>$this->getcep(),
-            ":status"=>$this->getstatus()
+        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            ":contrato_idContrato"=>$this->getcontrato_idContrato(),
+            ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
+            ":status"=>$this->getstatus(),
+            ":vlAluguel"=>$this->getvlAluguel(),
+            ":periodoAluguel"=>$this->getperiodoAluguel(),
+            ":dtInicio"=>$this->getdtInicio(),
+            ":dtFinal"=>$this->getdtFinal(),
+            ":custoEntrega"=>$this->getcustoEntrega(),
+            ":custoRetirada"=>$this->getcustoRetirada(),
+            ":observacao"=>$this->getobservacao()
         ));
 
         if(count($results) > 0){

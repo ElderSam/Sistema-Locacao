@@ -2,13 +2,15 @@
 
 namespace Locacao\Controller;
 
+use \Locacao\Utils\myPDF;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Contract;
+use \Locacao\Controller\ContractItemController;
+use \Locacao\Utils\PDFs\BudgetPDF;
 
 class ContractController extends Generator
 {
-
     //construtor
     public function __construct()
     {
@@ -39,6 +41,10 @@ class ContractController extends Generator
 
         }
 
+        //pega apenas o número do orçamento (tira o /ano)
+        $auxArr = explode('/', $_POST['codigo']);
+        $_POST['codigo'] = $auxArr[0];
+        
         $contract->setData($_POST);
 
 
@@ -48,7 +54,7 @@ class ContractController extends Generator
 
 
         } else { // se for cadastrar novo Fornecedor
-             
+            
             $res = $contract->insert();        
            
             return $res;
@@ -59,7 +65,7 @@ class ContractController extends Generator
 
     public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
-       // print_r($_POST);
+       //print_r($_POST);
 
         $errors = array();
 
@@ -67,27 +73,29 @@ class ContractController extends Generator
             $errors["#codigo"] = "Código é obrigatório!";
         }
 
+        /*if ($_POST["idCliente"] == "") {
+            $errors["#idCliente"] = "Cliente é obrigatório!";
+        }*/
+
+        if (($_POST["idCliente"] != "") && ($_POST["obra_idObra"] == "")) { //se escolher um cliente, então é obrigatório ter uma Obra (pois o Orçamento/Contrato vai estar relacionado diretamente à obra)
+            $errors["#obra_idObra"] = "Obra é obrigatória!";
+        }
+
         if ($_POST["dtEmissao"] == "") {
             $errors["#dtEmissao"] = "Data de Emissão é obrigatória!";
         }
+
+        if ($_POST["solicitante"] == "") {
+            $errors["#solicitante"] = "Nome do solicitante é obrigatório!";
+        }
                 
+        if($_POST["email"] != "" && $this->validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
+            $errors["#email"] = "E-mail Incorreto!";
+        }
+
         if ($_POST["status"] == "") {
             $errors["#status"] = "Status é obrigatório!";
         }
-        
-        if ($_POST["custoEntrega"] == "") {
-            $errors["#custoEntrega"] = "Custo Entrega é obrigatório!";
-        }
-
-
-        if ($_POST["custoRetirada"] == "") {
-            $errors["#custoRetirada"] = "Custo Retiratda é obrigatório!";
-        }
-
-        
-        if ($_POST["valorAluguel"] == "") {
-            $errors["#valorAluguel"] = "Valor Aluguel é obrigatório!";
-        } 
 
         if(($update) && isset($_POST["idContrato"])){ //se for atualizar um Contrato
             
@@ -96,8 +104,8 @@ class ContractController extends Generator
 
             }
 
-            if ($_POST["dtFim"] == "") {
-                $errors["#dtFim"] = "data obrigatória!";
+            if ($_POST["prazoDuracao"] == "") {
+                $errors["#prazoDuracao"] = "Prazo é obrigatório!";
             }
         }
 
@@ -116,6 +124,23 @@ class ContractController extends Generator
         }
     }/* --- fim verificaErros() ---------------------------*/
 
+    public function validaEmail($email)
+    {
+        //verifica se e-mail esta no formato correto de escrita
+        if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
+            return false;
+        } else {
+            //Valida o dominio
+            $dominio = explode('@', $email);
+
+            if (!checkdnsrr($dominio[1], 'A')) { //OBS: se não estiver com Internet, a função vai retornar false, pois ela usa a conexão para verificar se o domínio existe
+                return false;
+            } else {
+                return true;
+            } // Retorno true para indicar que o e-mail é valido
+        }
+    }
+    
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
 
     /* CAMPOS VIA POST (Para trabalhar como DataTables)
@@ -132,8 +157,8 @@ class ContractController extends Generator
     public function ajax_list_budgets($requestData) //carrega tabela de orçamentos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -142,34 +167,41 @@ class ContractController extends Generator
 
         $data = array();
 
+        //print_r($datatable);
+
         foreach ($datatable['data'] as $contract) { //para cada registro retornado
 
             $statusOrcamento = '';
-            $color = '';
 
             if ($contract['statusOrcamento'] == 0) {
                 $statusOrcamento = "Arquivado";
-                $color = 'grey';
 
             } else if ($contract['statusOrcamento'] == 1){
                 $statusOrcamento = "Pendente";
-                $color = 'orange';
-
-
             }
 
-            $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
-
-            $id = $contract['idContrato'];
+            if($contract['codObra'] != NULL){
+                $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
+           
+            }else{
+                $obraCliente = $contract['nomeEmpresa'];
+            }  
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
-            $row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
+            $row = [
+                "idContrato"=>$contract['idContrato'],
+                "statusOrcamento"=>$statusOrcamento,
+                "codContrato"=>$contract['codContrato'],
+                "dtEmissao"=>date('d/m/Y', strtotime($contract['dtEmissao'])),
+                "obraCliente"=>$obraCliente
+            ];
+
+            /*$row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
             $row[] = $obraCliente;
-            $row[] = 'R$ '.$contract['valorAluguel'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadBudget($id);'>
                     <i class='fas fa-bars sm'></i>
@@ -177,7 +209,7 @@ class ContractController extends Generator
                 <button type='button' title='excluir' onclick='deleteBudget($id);'
                     class='btn btn-danger btnDelete'>
                     <i class='fas fa-trash'></i>
-                </button>";
+                </button>";*/
 
             $data[] = $row;
         } //
@@ -199,8 +231,8 @@ class ContractController extends Generator
     public function ajax_list_contracts($requestData) //carrega tabela de contratos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra", "valorAluguel"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
@@ -209,45 +241,54 @@ class ContractController extends Generator
 
         $data = array();
 
+        //print_r($datatable);
+
         foreach ($datatable['data'] as $contract) { //para cada registro retornado
             
             $statusOrcamento = '';
-            $color = '';
             
             if ($contract['statusOrcamento'] == 2){
                 $statusOrcamento = "Vencido";
-                $color = 'red';
 
             }else if ($contract['statusOrcamento'] == 3){
                 $statusOrcamento = "Aprovado";
-                $color = 'orange';
 
             }else if ($contract['statusOrcamento'] == 4){
                 $statusOrcamento = "Em vigência";
-                $color = 'green';
 
             }else if ($contract['statusOrcamento'] == 5){
                 $statusOrcamento = "Encerrado";
-                $color = 'grey';
 
             }
-
-            $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
-
-            $id = $contract['idContrato'];
+            
+            if($contract['codObra'] != NULL){
+                $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
+           
+            }else{
+                $obraCliente = "";
+            }  
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
-            $row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
+            $row = [
+                "idContrato"=>$contract['idContrato'],
+                "statusOrcamento"=>$statusOrcamento,
+                "codContrato"=>$contract['codContrato'],
+                "dtEmissao"=>date('d/m/Y', strtotime($contract['dtEmissao'])),
+                "obraCliente"=>$obraCliente
+            ];
+
+            //print_r($row);
+
+            /*$row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
             $row[] = $contract['codContrato'];
             $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
             $row[] = $obraCliente;
-            $row[] = 'R$ '.$contract['valorAluguel'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadContract($id);'>
                     <i class='fas fa-bars sm'></i>
-                </button>";
+                </button>";*/
 
             $data[] = $row;
         } //
@@ -279,8 +320,30 @@ class ContractController extends Generator
         //echo "id: " . $idcontract;
         $contract->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $contract->delete();
-        
-        
+        return $contract->delete();       
     }
+
+    public static function getPDF($id)
+    {   
+        $contract = new Contract();
+    
+        $orcamento = $contract->getValuesToBudgetPDF($id);
+        //echo $orcamento;
+        $items = new ContractItemController();
+
+        $listItems = $items->getValuesToBudgetPDF($id);     
+        //echo $listItems;
+
+        $budgetPDF = new BudgetPDF($orcamento, $listItems);
+    
+        $res = $budgetPDF->show();
+        //echo $content;
+
+        $pdf = new myPDF();
+        $file_name = str_replace('/', '-', $res[0]); //substitui / por - (porque quando baixa o PDF, não reconhece a barra no nome do arquivo)
+        
+        $pdf->createPDF($file_name.".pdf", $res[1]); //$res[1]  é o conteúdo do PDF
+        $pdf->display();
+    }
+
 }//end class ContractController

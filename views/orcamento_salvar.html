@@ -1,3 +1,9 @@
+<style>
+    .linhaFrete{
+        background-color: lightgray;
+    }
+</style>
+
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
@@ -17,23 +23,39 @@
     
                 <div>
                     <br>
-                    <h3><b id="title">Cadastrar Orçamento</b></h3>
+                    <div class="row">
+                        <h3><b id="title">Cadastrar Orçamento</b></h3>
+                        <a class="btn btn-danger ml-4" href="/budgets/{$idOrcamento}/pdf/show"> PDF</a>
+                    </div>    
                 </div>
 
                 <div>
-                    <form id="formBudget">
+                    <form id="formBudget"> <!-- Formulário do Orçamento -->
                         <div class="form-row">
                 
                             <div class="form-group col-lg-3">
                                 <label for="codigo">Código</label>
-                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="3">
+                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="12">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="nomeEmpresa">Nome da Empresa</label>
+                                <input type="text" class="form-control" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da Empresa Solicitante" maxlength="50">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="idCliente">Cliente</label>
+                                <select class="form-control" id="idCliente" name="idCliente">
+                                </select>
                                 <span class="help-block"></span>
                             </div>
 
                             <div class="form-group col-lg-3">
                                 <label for="obra_idObra">Obra</label>
                                 <select class="form-control" id="obra_idObra" name="obra_idObra">
-                                                    
+                                    <option selected value="">(Escolha um cliente primeiro)</option>
                                 </select>
                                 <span class="help-block"></span>
                             </div>
@@ -42,7 +64,31 @@
                                 <label for="dtEmissao">Data de Emissão</label>
                                 <input type="date" class="form-control" id="dtEmissao" name="dtEmissao">
                             </div>
+
+                            <div class="form-group col-lg-3 bg-dark pb-2 text-white">
+                                <label for="solicitante">Solicitante</label>
+                                <input type="text" class="form-control" id="solicitante" name="solicitante" placeholder="Quem solicitou o orçamento?" maxlength="50">
+                                <span class="help-block" style="background-color: white"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-dark pb-2 text-white">
+                                <label for="telefone">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="(00) 0000-0000" maxlength="15">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-dark pb-2 text-white">
+                                <label for="email">E-mail (para envio)</label>
+                                <input type="emai" class="form-control" id="email" name="email" placeholder="exemplo@email.com" maxlength="40">
+                                <span class="help-block" style="background-color: white"></span>
+                            </div>
                             
+                            <!--div class="form-group col-lg-3">
+                                <label for="referencia">Referência</label>
+                                <input type="text" class="form-control" id="referencia" name="referencia" placeholder="ex: locação. validade 3 (três) dias">
+                                <span class="help-block"></span>
+                            </div-->
+
                             <div class="form-group col-lg-3">
                                 <label for="status">Status</label>
                                 <select class="form-control" id="status" name="status">
@@ -53,7 +99,7 @@
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-3">
+                            <!--div class="form-group col-lg-3">
                                 <label for="custoEntrega">Custo Entrega</label>
                                 <input type="number" class="form-control" id="custoEntrega" name="custoEntrega" placeholder="000" maxlength="3">
                                 <span class="help-block"></span>
@@ -63,49 +109,61 @@
                                 <label for="custoRetirada">Custo Retirada</label>
                                 <input type="number" class="form-control" id="custoRetirada" name="custoRetirada" placeholder="000" maxlength="3">
                                 <span class="help-block"></span>
-                            </div>
+                            </div-->
 
                             <div class="form-group col-lg-3">
                                 <label for="dtInicio">Data de Início</label>
-                                <input type="date" class="form-control" id="dtInicio" name="dtInicio" disabled>
+                                <input type="date" class="form-control" id="dtInicio" name="dtInicio">
                                 <span class="help-block"></span>
                             </div>
 
                             <div class="form-group col-lg-3">
-                                <label for="dtFim">Data de Encerramento</label>
-                                <input type="date" class="form-control" id="dtFim" name="dtFim" disabled>
+                                <label for="prazoDuracao">Prazo de duração</label>
+                                <input type="text" class="form-control" id="prazoDuracao" name="prazoDuracao" placeholder="ex: (12) meses" maxlength="40">
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-3">
-                                <label for="valorAluguel">Valor Aluguel (total)</label>
-                                <input type="number" class="form-control" id="valorAluguel" name="valorAluguel" placeholder="000" maxlength="3">
+                            <!--div class="form-group col-lg-3">
+                                <label for="periodoFatura">Periodo para Faturamento</label>
+                                <select class="form-control" id="periodoFatura" name="periodoFatura">
+                                    <option selected value="1">diário</option>
+                                    <option value="2">semanal</option>  
+                                    <option value="3">quinzenal</option>     
+                                    <option selected value="4">mensal</option>                        
+                                </select>
                                 <span class="help-block"></span>
-                            </div>
+                            </div-->
 
                             <div class="form-group col-lg-12">
-                                <label for="dtFim">Notas:</label>
-                                <textarea class="form-group col-lg-12" id="notas" name="notas" maxlength="100" placeholder="anotações ..."></textarea>
+                                <label for="notas">Notas (informação internas)</label>
+                                <textarea class="form-group col-lg-12" id="notas" name="notas" maxlength="50"></textarea>
                             </div>
                             
                         </div>
 
-                        <fieldset id="formProdutos" class="ml-2" hidden="true"> 
-                            <legend>Lista de Produtos no Aluguel:</legend>       
-                                            
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#productModal">
-                                Buscar
-                            </button> <br>
+                        <div id="divListItens" class="ml-2" hidden="true"> 
+                            <div class="row"> <!--Header List -->
+                                <div class="col-lg-9">
+                                    <legend>Lista de Produtos no Aluguel:</legend>    
+                                </div>
+    
+                                <div class="col-lg-3">
+                                    <button type="button" id="btnCart" class="btn btn-success float-right" data-toggle="modal" data-target="#productModal">
+                                        <i title="Adicionar Item ao Orçamento" class="fas fa-cart-plus"></i>
+                                    </button> 
+                                </div>     
+                            </div>
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover" id="dataTable" cellspacing="0">
-                                    <thead>
+                                    <thead style="background-color: lightcyan;">
                                     
                                         <tr>
-                                            <th>Cod.</th>
-                                            <th>Categoria</th>
-                                            <th>Desc.</th>
-                                            <th>Aluguel</th>
+                                            <th>Item</th>
+                                            <th>Período</th>
+                                            <th>Valor unit.</th>
+                                            <th>Qtd.</th>
+                                            <th>Valor total</th>
                                             <th>OBS:</th>
                                             <th>Opções</th>
                                         </tr>
@@ -115,10 +173,11 @@
                                     </tbody>
                                     <!--tfoot>
                                         <tr>
-                                            <th>Cod.</th>
-                                            <th>Categoria</th>
-                                            <th>Desc.</th>
-                                            <th>Aluguel</th>
+                                            <th>Item</th>
+                                            <th>Período</th>
+                                            <th>Valor unit.</th>
+                                            <th>Qtd.</th>
+                                            <th>Valor total</th>
                                             <th>OBS:</th>
                                             <th>Opções</th>
                                         </tr>
@@ -127,13 +186,21 @@
                                 </table>
                             </div>
 
-                        </fieldset>
+                        </div>
+                        
+                        <!--br>
+                        <div class="form-group col-lg-3 float-right border">
+                            <label for="valorTotal">Valor Total</label>
+                            <div><strong id="vlTotalContrato">R$ 0,00</strong></div>
+                            <input type="number" class="form-control" id="valorTotal" name="valorTotal" placeholder="000" hidden="true">
+                            <span class="help-block"></span>
+                        </div-->
 
 
                         <!--Usado apenas para Editar -->
                         <div hidden="true">
                             <label for="idOrcamento">Id</label>
-                            <input type="text" id="idOrcamento" name="idOrcamento">
+                            <input type="text" id="idOrcamento" name="idOrcamento" value="{$idOrcamento}">
                         </div>
 
                     </form>
@@ -142,31 +209,39 @@
                     
                     <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
                         
-                        <a href="/budgets" class="btn btn-danger text-white">Voltar</a>
-                        <!-- btnCreateBudget and btnEditBudget-->
-                        <input id="btnSaveBudget" type="submit" value="Continuar" class="btn btn-success">
+                        <a href="/budgets" id="btnVoltar" class="btn btn-danger text-white">Voltar</a>
+
+                        <div>
+                            <!-- para desbloquear os campos para editar o procuto -->
+                            <button type='button' title='excluir orçamento' onclick='deleteBudget({$idOrcamento});'
+                            id="btnDeleteBudget" class='btn btn-danger btnDelete'>
+                            <i class='fas fa-trash'></i>
+                            </button>
+                            
+                            <!-- btnCreateBudget and btnEditBudget-->
+                            <input id="btnSaveBudget" type="submit" value="Cadastrar" class="btn btn-success">
                         
-                        <!-- para desbloquear os camps para editar o procuto -->
-                        <!--input id="btnUpdate" type="button" value="Editar" class="btn btn-primary"-->
+                            <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+
+                        </div>
                         
                     </div>                
                 </div>               
             </div>  <!-- end Budget -->  
-
 
         <!-- Product Modal------------------------------------------------------------------------------->
         <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
-                        <h3 class="modal-title"><b id="modalTitle">Adicionar Produto ao Orçamento</b></h3>
+                        <h3 class="modal-title"><b id="modalTitle">Adicionar Item ao Orçamento</b></h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form id="formRent">
+                        <form id="formItem"> <!-- Formulário do Item -->
                             <div class="form-row">
             
                                 <div class="form-group col-lg-3">
@@ -177,28 +252,24 @@
 
                                 <div class="form-group col-lg-2 mt-4 pt-2">
                                     <button id="btnAddProduct" type="button" class="btn btn-success">
-                                        Adicionar
+                                        <i title="adicionar produto" class="fas fa-plus"></i>
                                     </button>
+                                </div>
+
+                                <div class="form-group mt-2 col-lg-3">
+                                    <a href="/products" target="_blank">Não sei o código do produto</a>
                                 </div>
                                 <br>
                                 <div id="produto" class="form-group col-lg-12">
-                                    <input id="produto_idProduto_gen" name="produto_idProduto_gen" hidden="true">
+                                    <input id="idProduto_gen" name="idProduto_gen" hidden="true">
                                     <div id="produtoAdicionado"></div>
                                     <div id="prodCodigo"></div>
                                     <div id="prodDescricao"></div>
                                 </div>
                                 
                                 <br>
-                                <div class="form-group col-lg-3">
-                                    <label for="status">Status</label>
-                                    <select class="form-control" id="status" name="status">
-                                        <option value="0">Alugado</option>
-                                      <option value="1" selected>Disponível</option>     
-                                      <option value="2">Manutenção</option>
-                                    </select>
-                                    <span class="help-block"></span>
-                                </div>
 
+                                <!-- Valor aluguel -->
                                 <div class="form-group col-lg-3">
                                     <label for="vlAluguel">Valor Aluguel (unitário)</label>
                                     <input type="number" class="form-control" name="vlAluguel" id="vlAluguel" placeholder="000">
@@ -206,12 +277,19 @@
                                 </div>
                                
                                 <div class="form-group col-lg-3">
-                                    <label for="qtd">Quantidade</label>
-                                    <input type="number" class="form-control" name="qtd" id="qtd" placeholder="0">
+                                    <label for="quantidade">Quantidade</label>
+                                    <input type="number" class="form-control" name="quantidade" id="quantidade" placeholder="0">
                                     <span class="help-block"></span>
                                 </div>
-                                <br>
+
+                                <div class="form-group col-lg-5">
+                                    <div class="bg-dark text-white text-center p-1 pt-2 mt-4">
+                                        <label>Valor Total</label>
+                                        <strong id="vlTotalItem">R$ 0,00</strong>
+                                    </div>                             
+                                </div>
                                 
+                                <!-- Entrega -->
                                 <div class="form-group col-lg-3">
                                     <label for="custoEntrega">Custo de Entrega</label>
                                     <input type="number" class="form-control" name="custoEntrega" id="custoEntrega" placeholder="000">
@@ -219,38 +297,66 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
+                                    <div class="bg-dark text-white text-center p-1 pt-2 mt-4">
+                                        <label>Quantidade: </label>
+                                        <strong id="qtdEntrega">0</strong>
+                                    </div>                             
+                                </div>
+
+                                <div class="form-group col-lg-5">
+                                    <div class="bg-dark text-white text-center p-1 pt-2 mt-4">
+                                        <label>Total Entrega</label>
+                                        <strong id="vlTotalEntrega">R$ 0,00</strong>
+                                    </div>                             
+                                </div>
+
+                                <!-- Retirada -->
+                                <div class="form-group col-lg-3">
                                     <label for="custoRetirada">Custo de Retirada</label>
                                     <input type="number" class="form-control" name="custoRetirada" id="custoRetirada" placeholder="000">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label for="dtInicio">Data de Início</label>
-                                    <input type="date" class="form-control" id="dtInicio" name="dtInicio">
-                                    <span class="help-block"></span>
+                                    <div class="bg-dark text-white text-center p-1 pt-2 mt-4">
+                                        <label>Quantidade: </label>
+                                        <strong id="qtdRetirada">0</strong>
+                                    </div>                             
+                                </div>
+
+                                <div class="form-group col-lg-5">
+                                    <div class="bg-dark text-white text-center p-1 pt-2 mt-4">
+                                        <label>Total Retirada</label>
+                                        <strong id="vlTotalRetirada">R$ 0,00</strong>
+                                    </div>                             
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label for="dtFinal">Data Final</label>
-                                    <input type="date" class="form-control" id="dtFinal" name="dtFinal">
+                                    <label for="periodoLocacao">Periodo Locação</label>
+                                    <select class="form-control" id="periodoLocacao" name="periodoLocacao">
+                                        <option selected value="1">diário</option>
+                                        <option value="2">semanal</option>  
+                                        <option value="3">quinzenal</option>     
+                                        <option selected value="4">mensal</option>                        
+                                    </select>
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-12">
-                                    <label for="observacao">Obervação: </label>
-                                    <textarea class="form-control" id="observacao" name="observacao" placeholder="anotações do produto (máximo de 300 caracteres)" maxlength="300" rows="3"></textarea>
+                                    <label for="observacao">Observação: </label>
+                                    <textarea class="form-control" id="observacao" name="observacao" placeholder="Entrega em 15dd úteis" maxlength="300" rows="3"></textarea>
                                 </div>
                             </div>
 
                             <div hidden="true">
                                 <label for="fk_idOrcamento">Id</label>
-                                <input type="text" id="fk_idOrcamento" name="contrato_idContrato">
+                                <input type="text" id="fk_idOrcamento" name="idContrato">
                             </div>
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
-                                <label for="idHistoricoAluguel">Id</label>
-                                <input type="text" id="idHistoricoAluguel" name="idHistoricoAluguel">
+                                <label for="idItem">Id</label>
+                                <input type="text" id="idItem" name="idItem">
                             </div>
 
                          </form>
@@ -261,10 +367,10 @@
                              
                              <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                              <!-- btnCreateProduct and btnEditProduct-->
-                             <input id="btnSaveRent" type="submit" value="Cadastrar" class="btn btn-success">
+                             <input id="btnSaveItem" type="submit" value="Cadastrar" class="btn btn-success">
                              
                              <!-- para desbloquear os camps para editar o procuto -->
-                             <!--input id="btnUpdate" type="button" value="Editar" class="btn btn-primary"-->
+                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
                              
                          </div>
                        
@@ -275,12 +381,11 @@
             </div>
         </div>  <!-- end Product Modal -->  
 
-
-
         </div>
-
-        
+      
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+    <script src="../res/plugins/mask/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
+    <script src="../res/js/budgetItems_save.js"></script>
     <script src="../res/js/budget_save.js"></script>
       
