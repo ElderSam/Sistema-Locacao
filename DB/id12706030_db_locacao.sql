@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26-Maio-2020 às 01:40
--- Versão do servidor: 10.4.11-MariaDB
--- versão do PHP: 7.4.5
+-- Generation Time: May 31, 2020 at 05:18 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `id12706030_db_locacao`
+-- Database: `id12706030_db_locacao`
 --
 
 DELIMITER $$
 --
--- Procedimentos
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  BEGIN
   
@@ -600,7 +600,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `aditamentos`
+-- Table structure for table `aditamentos`
 --
 
 CREATE TABLE `aditamentos` (
@@ -617,7 +617,7 @@ CREATE TABLE `aditamentos` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `clientes`
+-- Table structure for table `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -644,7 +644,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `clientes`
+-- Dumping data for table `clientes`
 --
 
 INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
@@ -658,7 +658,7 @@ INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`,
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `contratos`
+-- Table structure for table `contratos`
 --
 
 CREATE TABLE `contratos` (
@@ -680,7 +680,7 @@ CREATE TABLE `contratos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `contratos`
+-- Dumping data for table `contratos`
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
@@ -689,17 +689,19 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (226, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
 (227, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
 (228, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
-(229, '22', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:14'),
+(229, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '', 1, NULL, 'teste', '2020-05-25 08:16:14'),
 (230, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
 (231, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
 (232, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 09:58:46'),
 (233, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
-(236, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49');
+(236, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49'),
+(237, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
+(238, '30', '', NULL, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:31:28');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `contrato_itens`
+-- Table structure for table `contrato_itens`
 --
 
 CREATE TABLE `contrato_itens` (
@@ -716,7 +718,7 @@ CREATE TABLE `contrato_itens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `contrato_itens`
+-- Dumping data for table `contrato_itens`
 --
 
 INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
@@ -724,18 +726,21 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (81, 227, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:44:47'),
 (82, 228, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:46:03'),
 (83, 223, 180, 450, '2', 200, 200, '', 'Entrega em 15DD úteis', '2020-05-24 22:32:55'),
-(84, 230, 191, 200, '12', 150, 120, '', '', '2020-05-25 08:17:37'),
+(84, 230, 191, 200, '12', 150, 120, '2', 'Entrega em 5DD úteis', '2020-05-25 08:17:37'),
 (85, 223, 195, 500, '2', 170, 170, '', 'Entrega em 5DD úteis', '2020-05-25 08:35:47'),
 (86, 223, 190, 125.66, '15', 234.54, 210, '1', 'Entrega em 3DD', '2020-05-25 08:57:41'),
 (87, 223, 181, 234, '2', 199, 199, '4', '', '2020-05-25 09:01:09'),
 (88, 223, 187, 15470, '5', 253.98, 225.37, '3', 'Entrega em 10DD', '2020-05-25 09:07:43'),
 (90, 236, 193, 600, '1', 150, 150, '4', 'entrega em 4DD', '2020-05-25 10:45:31'),
-(92, 231, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08');
+(92, 231, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08'),
+(93, 232, 180, 450, '2', 230, 230, '4', '', '2020-05-29 00:28:11'),
+(94, 230, 193, 600, '2', 200, 190, '4', 'Entrega em 5DD úteis', '2020-05-30 09:53:34'),
+(95, 229, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `faturas`
+-- Table structure for table `faturas`
 --
 
 CREATE TABLE `faturas` (
@@ -763,7 +768,7 @@ CREATE TABLE `faturas` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `fornecedores`
+-- Table structure for table `fornecedores`
 --
 
 CREATE TABLE `fornecedores` (
@@ -787,7 +792,7 @@ CREATE TABLE `fornecedores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `fornecedores`
+-- Dumping data for table `fornecedores`
 --
 
 INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `cnpj`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `numero`, `bairro`, `cidade`, `complemento`, `uf`, `cep`, `status`, `dtCadastro`) VALUES
@@ -799,7 +804,7 @@ INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `cnpj`, `te
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `historicoalugueis`
+-- Table structure for table `historicoalugueis`
 --
 
 CREATE TABLE `historicoalugueis` (
@@ -819,7 +824,7 @@ CREATE TABLE `historicoalugueis` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `obras`
+-- Table structure for table `obras`
 --
 
 CREATE TABLE `obras` (
@@ -839,7 +844,7 @@ CREATE TABLE `obras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `obras`
+-- Dumping data for table `obras`
 --
 
 INSERT INTO `obras` (`idObra`, `id_fk_cliente`, `id_fk_resp`, `codObra`, `complemento`, `tipoEndereco`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`) VALUES
@@ -848,7 +853,7 @@ INSERT INTO `obras` (`idObra`, `id_fk_cliente`, `id_fk_resp`, `codObra`, `comple
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produtos_esp`
+-- Table structure for table `produtos_esp`
 --
 
 CREATE TABLE `produtos_esp` (
@@ -865,7 +870,7 @@ CREATE TABLE `produtos_esp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Extraindo dados da tabela `produtos_esp`
+-- Dumping data for table `produtos_esp`
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
@@ -884,7 +889,7 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produtos_gen`
+-- Table structure for table `produtos_gen`
 --
 
 CREATE TABLE `produtos_gen` (
@@ -901,7 +906,7 @@ CREATE TABLE `produtos_gen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `produtos_gen`
+-- Dumping data for table `produtos_gen`
 --
 
 INSERT INTO `produtos_gen` (`idProduto_gen`, `codigoGen`, `descricao`, `idCategoria`, `tipo1`, `tipo2`, `tipo3`, `tipo4`, `vlBaseAluguel`, `dtCadastro`) VALUES
@@ -918,7 +923,7 @@ INSERT INTO `produtos_gen` (`idProduto_gen`, `codigoGen`, `descricao`, `idCatego
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `prod_categorias`
+-- Table structure for table `prod_categorias`
 --
 
 CREATE TABLE `prod_categorias` (
@@ -929,7 +934,7 @@ CREATE TABLE `prod_categorias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `prod_categorias`
+-- Dumping data for table `prod_categorias`
 --
 
 INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `dtCadastro`) VALUES
@@ -942,7 +947,7 @@ INSERT INTO `prod_categorias` (`idCategoria`, `descCategoria`, `codCategoria`, `
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `prod_containers`
+-- Table structure for table `prod_containers`
 --
 
 CREATE TABLE `prod_containers` (
@@ -962,7 +967,7 @@ CREATE TABLE `prod_containers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `prod_containers`
+-- Dumping data for table `prod_containers`
 --
 
 INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelasLat`, `janelasCirc`, `forrado`, `eletrificado`, `tomadas`, `lampadas`, `entradasAC`, `sanitarios`, `chuveiro`, `dtCadastro`) VALUES
@@ -974,7 +979,7 @@ INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelas
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `prod_tipos`
+-- Table structure for table `prod_tipos`
 --
 
 CREATE TABLE `prod_tipos` (
@@ -987,7 +992,7 @@ CREATE TABLE `prod_tipos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Extraindo dados da tabela `prod_tipos`
+-- Dumping data for table `prod_tipos`
 --
 
 INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTipo`, `dtCadastro`) VALUES
@@ -1048,7 +1053,7 @@ INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTip
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `resp_obras`
+-- Table structure for table `resp_obras`
 --
 
 CREATE TABLE `resp_obras` (
@@ -1065,7 +1070,7 @@ CREATE TABLE `resp_obras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `resp_obras`
+-- Dumping data for table `resp_obras`
 --
 
 INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
@@ -1079,7 +1084,7 @@ INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `t
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuarios`
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -1095,7 +1100,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `usuarios`
+-- Dumping data for table `usuarios`
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `senha`, `email`, `administrador`, `foto`, `dtCadastro`) VALUES
@@ -1105,31 +1110,31 @@ INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `s
 (185, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
 
 --
--- Índices para tabelas despejadas
+-- Indexes for dumped tables
 --
 
 --
--- Índices para tabela `aditamentos`
+-- Indexes for table `aditamentos`
 --
 ALTER TABLE `aditamentos`
   ADD PRIMARY KEY (`idAditamento`),
   ADD KEY `fk_aditamento_contrato1` (`contrato_idContrato`);
 
 --
--- Índices para tabela `clientes`
+-- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`idCliente`);
 
 --
--- Índices para tabela `contratos`
+-- Indexes for table `contratos`
 --
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`idContrato`),
   ADD KEY `fk_contrato_obra1` (`obra_idObra`);
 
 --
--- Índices para tabela `contrato_itens`
+-- Indexes for table `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
   ADD PRIMARY KEY (`idItem`),
@@ -1137,20 +1142,20 @@ ALTER TABLE `contrato_itens`
   ADD KEY `fk_contrato_has_produto_produto2` (`idProduto_gen`);
 
 --
--- Índices para tabela `faturas`
+-- Indexes for table `faturas`
 --
 ALTER TABLE `faturas`
   ADD PRIMARY KEY (`idFatura`),
   ADD KEY `fk_fatura_contrato1` (`contrato_idcontrato`);
 
 --
--- Índices para tabela `fornecedores`
+-- Indexes for table `fornecedores`
 --
 ALTER TABLE `fornecedores`
   ADD PRIMARY KEY (`idFornecedor`);
 
 --
--- Índices para tabela `historicoalugueis`
+-- Indexes for table `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
   ADD PRIMARY KEY (`idHistoricoAluguel`),
@@ -1158,7 +1163,7 @@ ALTER TABLE `historicoalugueis`
   ADD KEY `fk_contrato_has_produto_produto2` (`produto_idProduto`);
 
 --
--- Índices para tabela `obras`
+-- Indexes for table `obras`
 --
 ALTER TABLE `obras`
   ADD PRIMARY KEY (`idObra`),
@@ -1166,7 +1171,7 @@ ALTER TABLE `obras`
   ADD KEY `id_fk_resp` (`id_fk_resp`) USING BTREE;
 
 --
--- Índices para tabela `produtos_esp`
+-- Indexes for table `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
   ADD PRIMARY KEY (`idProduto_esp`),
@@ -1174,7 +1179,7 @@ ALTER TABLE `produtos_esp`
   ADD KEY `fk_produtos_esp` (`idProduto_gen`);
 
 --
--- Índices para tabela `produtos_gen`
+-- Indexes for table `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
   ADD PRIMARY KEY (`idProduto_gen`),
@@ -1185,178 +1190,178 @@ ALTER TABLE `produtos_gen`
   ADD KEY `fk_produto_tipo4` (`tipo4`);
 
 --
--- Índices para tabela `prod_categorias`
+-- Indexes for table `prod_categorias`
 --
 ALTER TABLE `prod_categorias`
   ADD PRIMARY KEY (`idCategoria`);
 
 --
--- Índices para tabela `prod_containers`
+-- Indexes for table `prod_containers`
 --
 ALTER TABLE `prod_containers`
   ADD PRIMARY KEY (`idContainer`),
   ADD KEY `fk_produto_container1` (`idProduto`) USING BTREE;
 
 --
--- Índices para tabela `prod_tipos`
+-- Indexes for table `prod_tipos`
 --
 ALTER TABLE `prod_tipos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_idCategoria` (`idCategoria`) USING BTREE;
 
 --
--- Índices para tabela `resp_obras`
+-- Indexes for table `resp_obras`
 --
 ALTER TABLE `resp_obras`
   ADD PRIMARY KEY (`idResp`),
   ADD KEY `id_fkcliente` (`id_fk_cliente`);
 
 --
--- Índices para tabela `usuarios`
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`idUsuario`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `aditamentos`
+-- AUTO_INCREMENT for table `aditamentos`
 --
 ALTER TABLE `aditamentos`
   MODIFY `idAditamento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `clientes`
+-- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
--- AUTO_INCREMENT de tabela `contratos`
+-- AUTO_INCREMENT for table `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
 
 --
--- AUTO_INCREMENT de tabela `contrato_itens`
+-- AUTO_INCREMENT for table `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
--- AUTO_INCREMENT de tabela `faturas`
+-- AUTO_INCREMENT for table `faturas`
 --
 ALTER TABLE `faturas`
   MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `fornecedores`
+-- AUTO_INCREMENT for table `fornecedores`
 --
 ALTER TABLE `fornecedores`
   MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT de tabela `historicoalugueis`
+-- AUTO_INCREMENT for table `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
   MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT de tabela `obras`
+-- AUTO_INCREMENT for table `obras`
 --
 ALTER TABLE `obras`
   MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de tabela `produtos_esp`
+-- AUTO_INCREMENT for table `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
   MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT de tabela `produtos_gen`
+-- AUTO_INCREMENT for table `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
   MODIFY `idProduto_gen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 
 --
--- AUTO_INCREMENT de tabela `prod_categorias`
+-- AUTO_INCREMENT for table `prod_categorias`
 --
 ALTER TABLE `prod_categorias`
   MODIFY `idCategoria` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de tabela `prod_containers`
+-- AUTO_INCREMENT for table `prod_containers`
 --
 ALTER TABLE `prod_containers`
   MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
--- AUTO_INCREMENT de tabela `prod_tipos`
+-- AUTO_INCREMENT for table `prod_tipos`
 --
 ALTER TABLE `prod_tipos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
--- AUTO_INCREMENT de tabela `resp_obras`
+-- AUTO_INCREMENT for table `resp_obras`
 --
 ALTER TABLE `resp_obras`
   MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT de tabela `usuarios`
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
--- Restrições para despejos de tabelas
+-- Constraints for dumped tables
 --
 
 --
--- Limitadores para a tabela `contratos`
+-- Constraints for table `contratos`
 --
 ALTER TABLE `contratos`
   ADD CONSTRAINT `fk_contrato_obra1` FOREIGN KEY (`obra_idObra`) REFERENCES `obras` (`idObra`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `contrato_itens`
+-- Constraints for table `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
   ADD CONSTRAINT `fk_contrato_has_produto_contrato` FOREIGN KEY (`idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_contrato_has_produto_produto` FOREIGN KEY (`idProduto_gen`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `faturas`
+-- Constraints for table `faturas`
 --
 ALTER TABLE `faturas`
   ADD CONSTRAINT `fk_fatura_contrato1` FOREIGN KEY (`contrato_idcontrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `historicoalugueis`
+-- Constraints for table `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
   ADD CONSTRAINT `fk_contrato_has_produto_contrato2` FOREIGN KEY (`contrato_idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_contrato_has_produto_produto2` FOREIGN KEY (`produto_idProduto`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `obras`
+-- Constraints for table `obras`
 --
 ALTER TABLE `obras`
   ADD CONSTRAINT `id_fk_cliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`),
   ADD CONSTRAINT `id_fkresp` FOREIGN KEY (`id_fk_resp`) REFERENCES `resp_obras` (`idResp`);
 
 --
--- Limitadores para a tabela `produtos_esp`
+-- Constraints for table `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
   ADD CONSTRAINT `fk_fornecedor` FOREIGN KEY (`idFornecedor`) REFERENCES `fornecedores` (`idFornecedor`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_produtos_esp` FOREIGN KEY (`idProduto_gen`) REFERENCES `produtos_gen` (`idProduto_gen`);
 
 --
--- Limitadores para a tabela `produtos_gen`
+-- Constraints for table `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
   ADD CONSTRAINT `fk_produto_categoria1` FOREIGN KEY (`idCategoria`) REFERENCES `prod_categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1366,19 +1371,19 @@ ALTER TABLE `produtos_gen`
   ADD CONSTRAINT `fk_produto_tipo4` FOREIGN KEY (`tipo4`) REFERENCES `prod_tipos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `prod_containers`
+-- Constraints for table `prod_containers`
 --
 ALTER TABLE `prod_containers`
   ADD CONSTRAINT `fk_produto_container1` FOREIGN KEY (`idProduto`) REFERENCES `produtos_esp` (`idProduto_esp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `prod_tipos`
+-- Constraints for table `prod_tipos`
 --
 ALTER TABLE `prod_tipos`
   ADD CONSTRAINT `fk_tiposprodutos_categoria` FOREIGN KEY (`idCategoria`) REFERENCES `prod_categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limitadores para a tabela `resp_obras`
+-- Constraints for table `resp_obras`
 --
 ALTER TABLE `resp_obras`
   ADD CONSTRAINT `id_fkcliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`);
