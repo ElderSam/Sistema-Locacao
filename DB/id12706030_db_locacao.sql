@@ -303,6 +303,58 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_save` (IN `pco
     
 END$$
 
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obrasUpdate_save` (IN `pidObra` INT(11), IN `pcodObra` INT(11), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(15), IN `pbairro` VARCHAR(20), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pid_fk_cliente` INT(11), IN `pid_fk_respObra` INT(11))  BEGIN
+  
+    DECLARE vidObra INT;
+    
+    SELECT idObra INTO vidObra
+    FROM obras
+    WHERE idObra = pidObra;
+
+    UPDATE obras
+    SET
+        codObra = pcodObra, 
+        complemento = pcomplemento,
+        cidade = pcidade,
+        bairro = pbairro,
+        numero = pnumero,
+        uf = puf,
+        cep = pcep,
+        endereco = pendereco,
+        id_fk_cliente = pid_fk_cliente,
+        id_fk_respObra = pid_fk_respObra
+    WHERE idObra = vidObra;
+    
+    SELECT * FROM obras WHERE idObra = pidObra;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obras_delete` (IN `pidObra` INT(11))  BEGIN
+  
+    DECLARE vidObra INT;
+    
+  SELECT vidObra INTO vidObra
+    FROM obras
+    WHERE idObra = pidObra;
+    
+    DELETE FROM obras WHERE idObra = pidObra;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obras_save` (IN `pcodObra` INT(11), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(15), IN `pbairro` VARCHAR(20), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pid_fk_cliente` INT(11), IN `pid_fk_respObra` INT(11))  BEGIN
+DECLARE vidObra INT;
+    
+  INSERT INTO obras (codObra, complemento, cidade, bairro , numero, uf, cep, endereco, id_fk_cliente, id_fk_respObra)
+    VALUES(pcodObra, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pendereco, pid_fk_cliente, pid_fk_respObra);
+    
+    SET vidObra = LAST_INSERT_ID();
+    
+   SELECT * FROM obras WHERE idObra = LAST_INSERT_ID();
+    
+END$$
+
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_produtos_espUpdate_save` (IN `pidProduto_esp` INT, IN `pidProduto_gen` INT, IN `pcodigoEsp` VARCHAR(70), IN `pvalorCompra` FLOAT, IN `pstatus` TINYINT(4), IN `pdtFabricacao` DATE, IN `pnumSerie` VARCHAR(4), IN `panotacoes` VARCHAR(100), IN `pidFornecedor` INT(11))  BEGIN
   
     DECLARE vidProduto_esp INT;
@@ -829,26 +881,28 @@ CREATE TABLE `historicoalugueis` (
 
 CREATE TABLE `obras` (
   `idObra` int(11) NOT NULL,
-  `id_fk_cliente` int(11) NOT NULL,
-  `id_fk_resp` int(11) NOT NULL,
   `codObra` int(11) NOT NULL,
   `complemento` varchar(150) DEFAULT NULL,
-  `tipoEndereco` varchar(45) NOT NULL,
-  `cidade` varchar(15) NOT NULL,
-  `bairro` varchar(20) NOT NULL,
-  `numero` int(11) NOT NULL,
-  `uf` char(2) NOT NULL,
-  `cep` varchar(45) NOT NULL,
-  `endereco` varchar(45) NOT NULL,
-  `dtCadastro` datetime DEFAULT current_timestamp()
+  `cidade` varchar(15) DEFAULT NULL,
+  `bairro` varchar(20) DEFAULT NULL,
+  `numero` int(11) DEFAULT NULL,
+  `uf` char(2) DEFAULT NULL,
+  `cep` varchar(45) DEFAULT NULL,
+  `endereco` varchar(45) DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp(),
+  `id_fk_cliente` int(11) NOT NULL,
+  `id_fk_respObra` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `obras`
+-- Extraindo dados da tabela `obras`
 --
 
-INSERT INTO `obras` (`idObra`, `id_fk_cliente`, `id_fk_resp`, `codObra`, `complemento`, `tipoEndereco`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`) VALUES
-(1, 1, 1, 1, NULL, 'teste', 'Araras', 'Centro', 135, 'SP', '13600-000', 'Rua x', '2020-05-02 10:21:34');
+INSERT INTO `obras` (`idObra`, `codObra`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`, `id_fk_cliente`, `id_fk_respObra`) VALUES
+(1, 1, 'teste', 'Campinas', 'JD. Nova Limeira', 213, 'PA', '3213123', 'Av. Dom Pedro II', '2020-05-29 20:06:04', 39, 18),
+(12, 2, '8', 'Miranguaba', '9798', 7, 'PB', '13.481-043', 'Rua Jorge Salibe Sobrinho', '2020-05-30 21:38:51', 39, 20),
+(13, 3, 'casa', 'Araras', 'Centro', 3454, 'SP', '13600000', 'Av. Melvin jOnes', '2020-05-30 21:39:26', 39, 18),
+(15, 1, 'fsfsd', 'Limeira', 'fsdfd', 212, 'CE', '13481659', 'Dr. Arlindo Justos Baptistella', '2020-05-31 13:38:27', 41, 19);
 
 -- --------------------------------------------------------
 
@@ -1167,8 +1221,8 @@ ALTER TABLE `historicoalugueis`
 --
 ALTER TABLE `obras`
   ADD PRIMARY KEY (`idObra`),
-  ADD KEY `id_fk_cliente` (`id_fk_cliente`),
-  ADD KEY `id_fk_resp` (`id_fk_resp`) USING BTREE;
+  ADD KEY `obras_ibfk_1` (`id_fk_cliente`),
+  ADD KEY `obras_ibfk_2` (`id_fk_respObra`);
 
 --
 -- Indexes for table `produtos_esp`
@@ -1272,7 +1326,7 @@ ALTER TABLE `historicoalugueis`
 -- AUTO_INCREMENT for table `obras`
 --
 ALTER TABLE `obras`
-  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `produtos_esp`
@@ -1350,8 +1404,8 @@ ALTER TABLE `historicoalugueis`
 -- Constraints for table `obras`
 --
 ALTER TABLE `obras`
-  ADD CONSTRAINT `id_fk_cliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`),
-  ADD CONSTRAINT `id_fkresp` FOREIGN KEY (`id_fk_resp`) REFERENCES `resp_obras` (`idResp`);
+  ADD CONSTRAINT `obras_ibfk_1` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `obras_ibfk_2` FOREIGN KEY (`id_fk_respObra`) REFERENCES `resp_obras` (`idResp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `produtos_esp`
