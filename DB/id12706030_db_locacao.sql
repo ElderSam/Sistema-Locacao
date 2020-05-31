@@ -648,12 +648,12 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
-(33, 'Construtora Guilhermina', 1, '(19) 5454-54545', '(54) 5454-54545', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Jorge Salibe Sobrinho', '', 'Limeira', 'Parque das Nações', 454, 'BA', '13481-659', '', '', '53.252.352/5252-55', '423432423523532', 'J', '2020-04-04 19:07:05'),
-(34, 'Construtora do Matheusss', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', 'sdffsfsfdsfdsfsgsghrjjnffjf', 'Limeira', 'Jardim Botânicokjs', 424, 'AM', '13481-659', '', '', '86.867.867/8868-86', '425454543453', 'J', '2020-04-04 21:33:41'),
-(35, 'Construtela', 1, '(19) 9438-74384', '(19) 5379-8537', 'construtela_exemplo@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Thereza de Oliveira Lima ', 'Este é um exemplo de cliente', 'Piracicaba', 'Campos do Conde', 232, 'RN', '31737-361', '', '', '09.804.980/2804-34', '3283748983248', 'J', '2020-04-25 08:08:03'),
-(36, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02'),
-(37, 'CONSTRUTOR TESTE', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:30'),
-(38, 'CLIENTE TESET', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:50');
+(1, 'Construtora Guilhermina', 1, '(19) 5454-54545', '(54) 5454-54545', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Jorge Salibe Sobrinho', '', 'Limeira', 'Parque das Nações', 454, 'BA', '13481-659', '', '', '53.252.352/5252-55', '423432423523532', 'J', '2020-04-04 19:07:05'),
+(2, 'Construtora do Matheus', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', 'sdffsfsfdsfdsfsgsghrjjnffjf', 'Limeira', 'Jardim Botânicokjs', 424, 'AM', '13481-659', '', '', '86.867.867/8868-86', '425454543453', 'J', '2020-04-04 21:33:41'),
+(3, 'Construtela', 1, '(19) 9438-74384', '(19) 5379-8537', 'construtela_exemplo@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Thereza de Oliveira Lima ', 'Este é um exemplo de cliente', 'Piracicaba', 'Campos do Conde', 232, 'RN', '31737-361', '', '', '09.804.980/2804-34', '3283748983248', 'J', '2020-04-25 08:08:03'),
+(4, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02'),
+(5, 'CONSTRUTOR TESTE', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:30'),
+(6, 'CLIENTE TESET', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:50');
 
 -- --------------------------------------------------------
 
@@ -684,19 +684,19 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(223, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '12 meses', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
-(224, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
-(226, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
-(227, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
-(228, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
-(229, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '', 1, NULL, 'teste', '2020-05-25 08:16:14'),
-(230, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
-(231, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
-(232, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 09:58:46'),
-(233, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
-(236, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49'),
-(237, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
-(238, '30', '', NULL, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:31:28');
+(1, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '12 meses', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
+(2, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
+(3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
+(4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
+(5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
+(6, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '', 1, NULL, 'teste', '2020-05-25 08:16:14'),
+(7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
+(8, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
+(9, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 09:58:46'),
+(10, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
+(10, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49'),
+(11, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
+(12, '30', '', NULL, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:31:28');
 
 -- --------------------------------------------------------
 
@@ -722,20 +722,20 @@ CREATE TABLE `contrato_itens` (
 --
 
 INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
-(80, 226, 192, 600, '2', 200, 200, '', '', '2020-05-24 08:30:02'),
-(81, 227, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:44:47'),
-(82, 228, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:46:03'),
-(83, 223, 180, 450, '2', 200, 200, '', 'Entrega em 15DD úteis', '2020-05-24 22:32:55'),
-(84, 230, 191, 200, '12', 150, 120, '2', 'Entrega em 5DD úteis', '2020-05-25 08:17:37'),
-(85, 223, 195, 500, '2', 170, 170, '', 'Entrega em 5DD úteis', '2020-05-25 08:35:47'),
-(86, 223, 190, 125.66, '15', 234.54, 210, '1', 'Entrega em 3DD', '2020-05-25 08:57:41'),
-(87, 223, 181, 234, '2', 199, 199, '4', '', '2020-05-25 09:01:09'),
-(88, 223, 187, 15470, '5', 253.98, 225.37, '3', 'Entrega em 10DD', '2020-05-25 09:07:43'),
-(90, 236, 193, 600, '1', 150, 150, '4', 'entrega em 4DD', '2020-05-25 10:45:31'),
-(92, 231, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08'),
-(93, 232, 180, 450, '2', 230, 230, '4', '', '2020-05-29 00:28:11'),
-(94, 230, 193, 600, '2', 200, 190, '4', 'Entrega em 5DD úteis', '2020-05-30 09:53:34'),
-(95, 229, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38');
+(1, 3, 192, 600, '2', 200, 200, '', '', '2020-05-24 08:30:02'),
+(2, 4, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:44:47'),
+(3, 5, 191, 200, '2', 25, 25, '', '', '2020-05-24 08:46:03'),
+(4, 1, 180, 450, '2', 200, 200, '', 'Entrega em 15DD úteis', '2020-05-24 22:32:55'),
+(5, 7, 191, 200, '12', 150, 120, '2', 'Entrega em 5DD úteis', '2020-05-25 08:17:37'),
+(6, 1, 195, 500, '2', 170, 170, '', 'Entrega em 5DD úteis', '2020-05-25 08:35:47'),
+(7, 1, 190, 125.66, '15', 234.54, 210, '1', 'Entrega em 3DD', '2020-05-25 08:57:41'),
+(8, 1, 181, 234, '2', 199, 199, '4', '', '2020-05-25 09:01:09'),
+(9, 1, 187, 15470, '5', 253.98, 225.37, '3', 'Entrega em 10DD', '2020-05-25 09:07:43'),
+(10, 10, 193, 600, '1', 150, 150, '4', 'entrega em 4DD', '2020-05-25 10:45:31'),
+(11, 8, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08'),
+(12, 9, 180, 450, '2', 230, 230, '4', '', '2020-05-29 00:28:11'),
+(13, 7, 193, 600, '2', 200, 190, '4', 'Entrega em 5DD úteis', '2020-05-30 09:53:34'),
+(14, 6, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38');
 
 -- --------------------------------------------------------
 
@@ -848,7 +848,7 @@ CREATE TABLE `obras` (
 --
 
 INSERT INTO `obras` (`idObra`, `id_fk_cliente`, `id_fk_resp`, `codObra`, `complemento`, `tipoEndereco`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`) VALUES
-(1, 34, 3, 1, NULL, 'teste', 'Araras', 'Centro', 135, 'SP', '13600-000', 'Rua x', '2020-05-02 10:21:34');
+(1, 1, 1, 1, NULL, 'teste', 'Araras', 'Centro', 135, 'SP', '13600-000', 'Rua x', '2020-05-02 10:21:34');
 
 -- --------------------------------------------------------
 
@@ -874,17 +874,17 @@ CREATE TABLE `produtos_esp` (
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
-(17, 180, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(18, 180, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
-(19, 180, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
-(20, 181, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
-(21, 181, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
-(22, 181, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
-(23, 181, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
-(28, 180, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
-(29, 190, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
-(30, 195, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
-(31, 190, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30');
+(1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
+(2, 1, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
+(4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
+(5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
+(6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
+(7, 2, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
+(8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
+(9, 3, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
+(10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
+(11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30');
 
 -- --------------------------------------------------------
 
@@ -910,15 +910,15 @@ CREATE TABLE `produtos_gen` (
 --
 
 INSERT INTO `produtos_gen` (`idProduto_gen`, `codigoGen`, `descricao`, `idCategoria`, `tipo1`, `tipo2`, `tipo3`, `tipo4`, `vlBaseAluguel`, `dtCadastro`) VALUES
-(180, '001.01.01.01.01', '3M almoxarifado com lavabo DC', 1, 1, 5, 12, 14, 450, '2020-04-20 19:25:32'),
-(181, '002.01.01.01.01', 'MARCA X MODELO X Elétrica 110V', 2, 16, 17, 18, 21, 234, '2020-04-20 19:54:06'),
-(187, '001.04.05.02.02', '12M stand de vendas sem lavabo HC', 1, 4, 9, 13, 15, 15470, '2020-04-22 14:22:48'),
-(189, '004.05.xx.xx.xx', '3,00m a 5,10m', 4, 52, NULL, NULL, NULL, 250, '2020-04-22 15:07:22'),
-(190, '004.03.xx.xx.xx', '2,30m a 4,00m', 4, 50, NULL, NULL, NULL, 125.66, '2020-04-22 15:14:37'),
-(191, '003.01.01.01.xx', 'Tubular Painel 1,00m', 3, 30, 33, 45, NULL, 200, '2020-04-22 15:17:37'),
-(192, '001.03.01.02.01', '6M almoxarifado sem lavabo DC', 1, 3, 5, 13, 14, 600, '2020-05-23 20:58:53'),
-(193, '001.03.03.xx.01', '6M sanitário DC', 1, 3, 7, NULL, 14, 600, '2020-05-23 21:03:20'),
-(195, '005.02.01.02.xx', 'Janela 10.000 btu 220V', 5, 54, 55, 59, NULL, 500, '2020-05-23 21:57:10');
+(1, '001.01.01.01.01', '3M almoxarifado com lavabo DC', 1, 1, 5, 12, 14, 450, '2020-04-20 19:25:32'),
+(2, '002.01.01.01.01', 'MARCA X MODELO X Elétrica 110V', 2, 16, 17, 18, 21, 234, '2020-04-20 19:54:06'),
+(5, '001.04.05.02.02', '12M stand de vendas sem lavabo HC', 1, 4, 9, 13, 15, 15470, '2020-04-22 14:22:48'),
+(6, '004.05.xx.xx.xx', '3,00m a 5,10m', 4, 52, NULL, NULL, NULL, 250, '2020-04-22 15:07:22'),
+(3, '004.03.xx.xx.xx', '2,30m a 4,00m', 4, 50, NULL, NULL, NULL, 125.66, '2020-04-22 15:14:37'),
+(7, '003.01.01.01.xx', 'Tubular Painel 1,00m', 3, 30, 33, 45, NULL, 200, '2020-04-22 15:17:37'),
+(8, '001.03.01.02.01', '6M almoxarifado sem lavabo DC', 1, 3, 5, 13, 14, 600, '2020-05-23 20:58:53'),
+(9, '001.03.03.xx.01', '6M sanitário DC', 1, 3, 7, NULL, 14, 600, '2020-05-23 21:03:20'),
+(4, '005.02.01.02.xx', 'Janela 10.000 btu 220V', 5, 54, 55, 59, NULL, 500, '2020-05-23 21:57:10');
 
 -- --------------------------------------------------------
 
@@ -971,10 +971,10 @@ CREATE TABLE `prod_containers` (
 --
 
 INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelasLat`, `janelasCirc`, `forrado`, `eletrificado`, `tomadas`, `lampadas`, `entradasAC`, `sanitarios`, `chuveiro`, `dtCadastro`) VALUES
-(38, 17, 'Marítima', 1, 0, 1, 1, 1, 1, 1, 0, 0, '2020-04-22 09:49:52'),
-(39, 18, 'Marítma', 2, 0, 1, 1, 2, 2, 1, 0, 0, '2020-04-22 09:51:18'),
-(40, 19, 'Marítma', 1, 0, 1, 0, 1, 1, 1, 0, 0, '2020-04-22 09:57:53'),
-(41, 28, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07');
+(1, 1, 'Marítima', 1, 0, 1, 1, 1, 1, 1, 0, 0, '2020-04-22 09:49:52'),
+(2, 2, 'Marítma', 2, 0, 1, 1, 2, 2, 1, 0, 0, '2020-04-22 09:51:18'),
+(3, 3, 'Marítma', 1, 0, 1, 0, 1, 1, 1, 0, 0, '2020-04-22 09:57:53'),
+(4, 8, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07');
 
 -- --------------------------------------------------------
 
@@ -1074,12 +1074,12 @@ CREATE TABLE `resp_obras` (
 --
 
 INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
-(3, 34, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56'),
-(5, 34, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
-(7, 34, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
-(10, 35, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
-(12, 35, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14'),
-(13, 33, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11');
+(1, 1, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56'),
+(2, 1, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
+(3, 1, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
+(4, 2, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
+(5, 2, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14'),
+(6, 2, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11');
 
 -- --------------------------------------------------------
 
@@ -1105,9 +1105,9 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `senha`, `email`, `administrador`, `foto`, `dtCadastro`) VALUES
 (1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 1, '/res/img/users/1583106585_elder-profile.jpg', '2020-02-26 10:45:06'),
-(173, 'Administrador', 'Teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
-(180, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
-(185, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
+(2, 'Administrador', 'Teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
+(3, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
+(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
 
 --
 -- Indexes for dumped tables
@@ -1236,19 +1236,19 @@ ALTER TABLE `aditamentos`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `faturas`
@@ -1260,13 +1260,13 @@ ALTER TABLE `faturas`
 -- AUTO_INCREMENT for table `fornecedores`
 --
 ALTER TABLE `fornecedores`
-  MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `obras`
@@ -1278,13 +1278,13 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT for table `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
-  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
-  MODIFY `idProduto_gen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
+  MODIFY `idProduto_gen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `prod_categorias`
@@ -1296,7 +1296,7 @@ ALTER TABLE `prod_categorias`
 -- AUTO_INCREMENT for table `prod_containers`
 --
 ALTER TABLE `prod_containers`
-  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `prod_tipos`
@@ -1314,7 +1314,7 @@ ALTER TABLE `resp_obras`
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
