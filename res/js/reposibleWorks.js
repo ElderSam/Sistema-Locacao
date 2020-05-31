@@ -27,7 +27,6 @@ $(function() { //quando a página carrega
 	//Função para o botão que cria novos chefes de obra
 	$('#btnAddReposibleWorks').click(function(){
 		limparCampos();
-
 		clearErrors();
 	});
 
@@ -201,10 +200,10 @@ function loadTableReposibleWorks(){ //carrega a tabela de Chesfes de Obra depois
 //Detalhes de Chefe de Obras 
 function loadReposibleWorks(idResp) { //carrega todos os campos do modal referente ao chefe escolhido
 	
-	clearErrors();
+	//clearErrors();
 
 	$('#formReposibleWorks #divId').hide();
-//	$('#formReposibleWorks #divCliente').hide();
+	$('#formReposibleWorks #divCliente').hide();
 	$('#modalTitle').html('Detalhes de Responsáveis de Obras')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveReposibleWorks').hide();

@@ -16,7 +16,7 @@ $app->get('/costumers/json', function(){
   
 });
 
-/* rota que mostra o próximo código de fornecedor */
+/* rota que mostra o próximo código de Cliente */
 $app->post('/costumer/showsNextNumber', function(){
 
     User::verifyLogin();
