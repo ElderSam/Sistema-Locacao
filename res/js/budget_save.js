@@ -128,7 +128,7 @@ $(function () {
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
 						
-						$('#btnDeleteBudget').attr('onclick', deleteBudget(res.idContrato)).show();
+						$('#btnDeleteBudget').show();
 						$('#btnShowPDF').attr('href', `/budgets/${res.idContrato}/pdf/show`).show();
 						$('#btnEmail').show();
 					
@@ -380,6 +380,12 @@ async function loadFieldsBudget(idOrcamento) {
 }
 
 function deleteBudget(idOrcamento) {
+
+	if(idOrcamento == 0){ //se o orçamento acabou de ser cadastrado
+		alert('idOrcamento == 0')
+		idOrcamento = $('#idOrcamento').val();
+		codigo = $("#codigo").val();
+	}
 
 	Swal.fire({
 		title: `Você tem certeza de excluir o Orçamento nº ${codigo}?`,
