@@ -572,8 +572,6 @@ async function loadEmailFields(idOrcamento) {
 	clearErrors();
 
 	if ((idOrcamento != '0') && (idOrcamento != undefined)) { //se já tiver um orçamento cadastrado
-		$("#formEmail #username").val('tcclocacao7@gmail.com');
-		$("#formEmail #password").val('sistemalocacao');
 		$("#formEmail #name_from").val('TCC - teste (sistemalocacao)');
 		$("#formEmail #toAdress").val(`${$("#formBudget #email").val()}`)
 		$("#formEmail #toName").val(`${$("#formBudget #solicitante").val()}`)

@@ -37,7 +37,7 @@ class myPDF{
         $this->dompdf->stream($this->file_name);
     }
 
-    public function sendEmail($username, $password, $name_from, $toAdress, $toName, $subject, $html)
+    public function sendEmail($toAdress, $toName, $subject, $html)
     {
         require_once __DIR__ . "/Mailer.php";
 
@@ -56,7 +56,7 @@ class myPDF{
             Matheus Leite<br>
             COMFAL - locações de equipamentos para construções';*/
 
-        $mail = new Mailer($username, $password, $name_from, $toAdress, $toName, $subject, $html, $this->file_name);
+        $mail = new Mailer($toAdress, $toName, $subject, $html, $this->file_name);
 
         if ($mail->send()) { //envia o email, e verifica se retornou sucesso
             $error = false;

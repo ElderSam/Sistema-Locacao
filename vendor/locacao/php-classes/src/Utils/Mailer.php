@@ -9,23 +9,25 @@ use PHPMailer;
 
 require __DIR__ . "/../../../../phpmailer/phpmailer/PHPMailerAutoload.php";
 
+    //You need enable less secure apps to access Gmail -> https://myaccount.google.com/lesssecureapps
+    const USERNAME = "sistemalocacao32@gmail.com";  //here your email
+    const PASSWORD = "testetcc"; //here your password
+    const NAME_FROM = "Sistema Locacao - TESTE";
 
 class Mailer{
 
-    //You need enable less secure apps to access Gmail -> https://myaccount.google.com/lesssecureapps
-    /*const USERNAME = "******";  //here your email
-    const PASSWORD = "******"; //here your password
-    const NAME_FROM = "****";*/
-
     private $mail;
 
-    public function __construct($username, $password, $name_from, $toAdress, $toName, $subject, $html, $file_name=false){
+    public function __construct($toAdress, $toName, $subject, $html, $file_name=false){
 
         //Create a new PHPMailer instance
         $this->mail = new PHPMailer();
 
+
         //Tell PHPMailer to use SMTP
         $this->mail->isSMTP();
+        $this->mail->isHTML();
+        $this->mail->setLanguage("br");
 
         $this->mail->SMTPOptions = array(
             'ssl' => array(
@@ -41,6 +43,7 @@ class Mailer{
         // SMTP::DEBUG_SERVER (2) = client and server messages
         $this->mail->SMTPDebug = 0;
         $this->mail->Debugoutput = 'html';
+        $this->Charset = "utf-8";
 
         //Set the hostname of the mail server
         $this->mail->Host = 'smtp.gmail.com';
@@ -51,7 +54,6 @@ class Mailer{
         //Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
         $this->mail->Port = 587;
 
-
         //Set the encryption mechanism to use - STARTTLS or SMTPS
         $this->mail->SMTPSecure = 'tls';
 
@@ -60,15 +62,15 @@ class Mailer{
 
         //Username to use for SMTP authentication - use full email address for gmail
         //$this->mail->Username = Mailer::USERNAME;
-        $this->mail->Username = $username;
+        $this->mail->Username = USERNAME;
 
         //Password to use for SMTP authentication
         //$this->mail->Password = Mailer::PASSWORD;
-        $this->mail->Password = $password;
+        $this->mail->Password = PASSWORD;
 
         //Set who the message is to be sent from
         //$this->mail->setFrom(Mailer::USERNAME, Mailer::NAME_FROM);
-        $this->mail->setFrom($username, $name_from);
+        $this->mail->setFrom(USERNAME, NAME_FROM);
 
         //Set an alternative reply-to address
         //$this->mail->addReplyTo('youremail@gmail.com', 'PHP7TESTE');

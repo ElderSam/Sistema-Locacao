@@ -356,7 +356,7 @@ class ContractController extends Generator
             }
             
             //se estiver tudo ok, então envia o e-mail
-            return $pdf->sendEmail($_POST['username'], $_POST['password'], $_POST['name_from'], $_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
+            return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
 
         }else{
             $pdf->display();
@@ -367,27 +367,12 @@ class ContractController extends Generator
     public function verifyFieldsEmail(){  //valida os campos
         $errors = array();
 
-        $emails = array([$_POST['username'], 'username'], [$_POST['toAdress'], 'toAdress']);
-            
-        for($i=0; $i<count($emails); $i++){
-            
-            $field = $emails[$i][0];
-            $txt = $emails[$i][1];
+        $email = $_POST['toAdress'];
+        if($email == ""){ //se o e-mail estiver correto){
+            $errors["#toAdress"] = "E-mail é obrigatório!";
 
-            if($field == ""){ //se o e-mail estiver correto){
-                $errors["#$txt"] = "E-mail é obrigatório!";
-
-            }else if($this->validaEmail($field) == false){
-                $errors["#$txt"] = "E-mail inválido!";
-            }   
-        }
-
-        if($_POST['password'] == ""){
-            $errors["#password"] = "Senha é obrigatória!";
-        }
-
-        if($_POST['name_from'] == ""){
-            $errors["#name_from"] = "Destinatário é obrigatório!";
+        }else if($this->validaEmail($email) == false){
+            $errors["#toAdress"] = "E-mail inválido!";
         }
 
         if($_POST['subject'] == ""){
