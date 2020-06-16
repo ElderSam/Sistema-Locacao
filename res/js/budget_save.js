@@ -186,9 +186,11 @@ $(function () {
 					} else {
 						//$('#BudgetModal').modal('hide');
 
+						msg = 'Orçamento atualizado!';
+
 						Swal.fire(
 							'Sucesso!',
-							'Orçamento atualizado!',
+							msg,
 							'success'
 						);
 
@@ -656,68 +658,8 @@ NOME DO FORNECEDOR - locações de equipamentos para construções`
 				}
 			});
 
-		} else { /* se for para Editar -------------------------------------------------- */
+		} else { /* -------------------------------------------------- */
 
-			//console.log('você quer editar o Orçamento: ' + idOrcamento)
-
-			$.ajax({
-				type: "POST",
-				url: `/budgets/${idOrcamento}`, //rota para editar
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function () {
-					clearErrors();
-					$("#btnSaveBudget").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-
-				},
-				success: function (response) {
-					clearErrors();
-
-					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Orçamento!')
-
-						response = JSON.parse(response)
-
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum erro ao Atualizar',
-							'error'
-						);
-
-						if (response['error_list']) {
-
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'warning'
-							);
-						}
-
-					} else {
-						//$('#BudgetModal').modal('hide');
-
-						Swal.fire(
-							'Sucesso!',
-							'Orçamento atualizado!',
-							'success'
-						);
-
-						//loadTableBudgets();
-						//$('#formBudget').trigger("reset");
-					}
-
-				},
-				error: function (response) {
-
-					//$('#BudgetModal').modal('hide');
-					//$('#formBudget').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-
-				}
-			});
 		}
 
 		return false;
