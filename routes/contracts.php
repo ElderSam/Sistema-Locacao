@@ -24,6 +24,16 @@ $app->get('/contracts/json', function(){
   
 });
 
+$app->get('/contracts/:id', function($id){
+
+	User::verifyLogin();
+
+	$page = new Page();
+	$page->setTpl("contrato_salvar", [
+        "idContrato"=>$id
+    ]); 
+
+});
 
 /* rota que mostra o próximo código de contrato */
 $app->post('/contracts/showsNextNumber', function(){
