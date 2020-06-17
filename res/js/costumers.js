@@ -57,7 +57,7 @@ $(function() { //quando a página carrega
 
 			$.ajax({
 				type: "POST",
-				url: '/costumer/create',
+				url: '/costumers/create',
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -204,32 +204,12 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveCostumer').hide();
 	$('#btnUpdate').show();
-
-/*
-	if($("#tipoCliente option:selected").val() == 'F'){
-		$("#labelCnpj").hide();
-		$("#cnpj").hide();
-		$("#labelIe").hide();
-		$("#ie").hide();
-		$("#labelCpf").show();
-		$("#cpf").show();
-		$("#labelRg").show();
-		$("#rg").show();
-	}else{
-		$("#labelCnpj").show();
-		$("#cnpj").show();
-		$("#labelIe").show();
-		$("#ie").show();
-		$("#labelCpf").hide();
-		$("#cpf").hide();
-		$("#labelRg").hide();
-		$("#rg").hide();
-	}
-*/
 	$('#dtCadastro').parent().show(); //aparece a data de cadastro (só para visualizar)
 
 
 	$.getJSON(`/costumers/json/${idCliente}`, function (data) {
+
+		$("#formCostumer #divCodigo").show();
 
 		$("#formCostumer #idCliente").val(data.idCliente);
 		$("#formCostumer #codigo").val(data.codigo).prop('disabled', true);
@@ -253,23 +233,8 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 		$("#formCostumer #complemento").val(data.complemento).prop('disabled', true);
 	
 		exibir_ocultar();
-		/*
-		if(data.tipoCliente == "J"){
-			$("#formCostumer #ie").val(data.ie).prop('disabled', true);
-			$("#formCostumer #cnpj").val(data.cnpj).prop('disabled', true);
-
-			$("#formCostumer #rg").parent().hide();
-			$("#formCostumer #cpf").parent().hide();
-		}else{
-			$("#formCostumer #rg").val(data.rg).prop('disabled', true);
-			$("#formCostumer #cpf").val(data.cpf).prop('disabled', true);
-
-			$("#formCostumer #ie").parent().hide();
-			$("#formCostumer #cnpj").parent().hide();
-		}
-		*/
+		
 		dtCadastro = formatDate(data.dtCadastro)
-		//console.log('data: ' + dtCadastro)
 		$("#formCostumer #dtCadastro").val(dtCadastro);
 	
 
@@ -314,8 +279,8 @@ function loadCostumer(idCliente) { //carrega todos os campos do modal referente 
 
 }
 
-function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
-	console.log('shows next number')
+function showsNextNumber(){ //mostra o próximo número de série relacionado ao cliente
+
 	$.ajax({
 		type: "POST",
 		url: `/costumers/showsNextNumber`,
@@ -324,7 +289,7 @@ function showsNextNumber(){ //mostra o próximo número de série relacionado à
 		
 		success: function (response) {
 	
-			//console.log('próximo código de fornecedor: ' + response)
+			
 			$('#codigo').val(response)						
 								
 		},
@@ -401,9 +366,10 @@ function limparCampos(){
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveCostumer').val('Cadastrar').show();
 	$('#btnUpdate').hide();
+	
 
 
-
+	$("#formCostumer #codigo").prop('disabled', true);
 	$("#formCostumer #nome").prop('disabled', false);
 	$("#formCostumer #status").prop('disabled', false);
 	$("#formCostumer #tipoCliente").prop('disabled', false);
@@ -418,7 +384,7 @@ function limparCampos(){
 	$("#formCostumer #dtCadastro").parent().hide();
 	$("#formCostumer #uf").prop('disabled', false);
 	$("#formCostumer #cep").prop('disabled', false);
-	$("#formCostumer #cidade").prop('disabled', false);s
+	$("#formCostumer #cidade").prop('disabled', false);
 	$("#formCostumer #bairro").prop('disabled', false);
 	$("#formCostumer #endereco").prop('disabled', false);
 	$("#formCostumer #numero").prop('disabled', false);
@@ -426,7 +392,7 @@ function limparCampos(){
 
 
 	$('#idCliente').val(0);
-	$('#codigo').val('');
+	showsNextNumber();
 	$('#nome').val('');
 	$('#status').val('0');
 	$('#tipoCliente').val('J');

@@ -71,7 +71,6 @@ $app->post("/reposibleWorks/:idResp/delete", function($idResp){
     $reposible = new reposibleWorks();
 
 	$reposible->get((int)$idResp); //carrega o cliente, para ter certeza que ainda existe no banco
-
 	echo $reposible->delete();
 
 });

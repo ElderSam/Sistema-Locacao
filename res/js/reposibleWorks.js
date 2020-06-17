@@ -289,7 +289,7 @@ function deleteReposible(idResp){
 						
 						Swal.fire(
 							'Erro!',
-							'Por favor verifique os campos',
+							response.msg, //'Por favor verifique os campos',
 							'error'
 						)
 						
