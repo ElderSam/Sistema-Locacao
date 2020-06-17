@@ -38,11 +38,22 @@ $app->get('/budgets/json', function(){
 });
 
 
-$app->get("/budgets/:id/pdf/show", function($id){
-
-	User::verifyLogin();
+$app->get("/budgets/:id/pdf/show", function($id){ //o destino pode ser a visualização do PDF (/show) ou enviar por e-mail (/sendEmail)
 	
-	echo ContractController::getPDF($id);
+	User::verifyLogin();
+
+	$contractController = new ContractController();
+	echo $contractController->getPDF($id, 'show');
+
+});
+
+
+$app->post("/budgets/:id/pdf/sendEmail", function($id){ //o destino pode ser a visualização do PDF (/show) ou enviar por e-mail (/sendEmail)
+	
+	User::verifyLogin();
+
+	$contractController = new ContractController();
+	echo $contractController->getPDF($id, 'sendEmail');
 
 });
 

@@ -25,7 +25,11 @@
                     <br>
                     <div class="row">
                         <h3><b id="title">Cadastrar Orçamento</b></h3>
-                        <a class="btn btn-danger ml-4" href="/budgets/{$idOrcamento}/pdf/show"> PDF</a>
+                        <a id="btnShowPDF" class="btn btn-danger ml-4" href="/budgets/{$idOrcamento}/pdf/show" title="ver PDF"> <i class="fas fa-file-pdf fa-lg"></i></a>
+                        <!--a class="btn btn-warning ml-4" href="/budgets/{$idOrcamento}/pdf/sendEmail" title="enviar PDF por e-mail"><i class="fas fa-envelope fa-lg"></i></a-->
+                        <button type="button" id="btnEmail" class="btn btn-warning ml-4" title="enviar PDF por e-mail" data-toggle="modal" data-target="#emailModal">
+                            <i class="fas fa-envelope fa-lg"></i>
+                        </button>
                     </div>    
                 </div>
 
@@ -380,6 +384,71 @@
 
             </div>
         </div>  <!-- end Product Modal -->  
+
+        <!-- Email Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="Enviar orçamento (PDF) por-mail" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b id="modalTitle">Enviar orçamento (PDF) por-mail</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formEmail"> <!-- Formulário do Item -->
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-6">
+                                    <label for="toAdress">E-mail do Cliente</label>
+                                    <input type="email" class="form-control" name="toAdress" id="toAdress" placeholder="cliente@gmail.com">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="toName">Nome do Destinatário</label>
+                                    <input type="text" class="form-control" name="toName" id="toName" placeholder="Ex: João da Silva">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="subject">Assunto</label>
+                                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Título do e-mail">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group mt-4 col-lg-6">
+                                    <p><b>OBS:</b> o orçamento em PDF será enviado em anexo deste e-mail</p>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label for="html">Mensagem</label>
+                                    <textarea class="form-control" name="html" id="html" placeholder="A mensagem do e-mail" cols="30" rows="5"></textarea>
+                                    <span class="help-block"></span>
+                                </div>
+                                <br>
+                            
+                            </div>
+
+                            </form>
+
+                            <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                            
+                        <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                                
+                                <button id="btnCloseEmail" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                <!-- btnCreateProduct and btnEditProduct-->
+                                <input id="btnSendEmail" type="submit" value="Enviar" class="btn btn-success">
+
+                            </div>
+                        
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  <!-- end Email Modal -->  
 
         </div>
       

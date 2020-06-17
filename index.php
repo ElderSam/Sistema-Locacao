@@ -17,19 +17,19 @@ $app = new Slim();
 //configura o modo Debug para explicar cada erro 
 $app->config('debug', true);
 
-require_once("reposibleWorks.php");
-require_once("users.php");
-require_once("costumers.php"); //Clientes
-require_once("products.php"); //produtos genéricos
-require_once("products_esp.php"); //produtos específicos
-require_once("prod-types.php");
-require_once("suppliers.php"); //fornecedores
-require_once("budgets.php"); //orçamentos
-require_once("budgetItens.php"); //itens de orçamento (produtos adicionados)
-require_once("contracts.php"); //contratos
-require_once("contract_itens.php"); //itens de contrato
-require_once("rents.php"); //alugueis
-require_once("construction.php");
+require_once("./routes/reposibleWorks.php");
+require_once("./routes/users.php");
+require_once("./routes/costumers.php"); //Clientes
+require_once("./routes/products.php"); //produtos genéricos
+require_once("./routes/products_esp.php"); //produtos específicos
+require_once("./routes/prod-types.php");
+require_once("./routes/suppliers.php"); //fornecedores
+require_once("./routes/budgets.php"); //orçamentos
+require_once("./routes/budgetItens.php"); //itens de orçamento (produtos adicionados)
+require_once("./routes/contracts.php"); //contratos
+require_once("./routes/contract_itens.php"); //itens de contrato
+require_once("./routes/rents.php"); //alugueis
+require_once("./routes/construction.php");
 
 $app->get('/', function(){
 

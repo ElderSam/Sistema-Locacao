@@ -37,6 +37,48 @@ class myPDF{
         $this->dompdf->stream($this->file_name);
     }
 
+    public function sendEmail($toAdress, $toName, $subject, $html)
+    {
+        require_once __DIR__ . "/Mailer.php";
+
+        //baixa o PDF
+        $file = $this->dompdf->output();
+		file_put_contents($this->file_name, $file);
+
+		//sendMail($this->file_name); //envia o email
+        
+        /*$toAdress = 'exemplo@email.com';
+        $toName = 'Nome do Destinatário';
+        $subject = 'ORÇAMENTO - TCC';
+        $html = 'REF: PROPOSTA DA EMPRESA X PARA LOCAÇÃO
+        Olá, segue em anexo o arquivo PDF do Orçamento dos itens cotados para futura locação.<br>
+            Atenciosamente,<br>
+            Matheus Leite<br>
+            COMFAL - locações de equipamentos para construções';*/
+
+        $mail = new Mailer($toAdress, $toName, $subject, $html, $this->file_name);
+
+        if ($mail->send()) { //envia o email, e verifica se retornou sucesso
+            $error = false;
+            $message = "Email enviado!";
+            
+        } else {
+            $error = true;
+            $txtError = $mail->getErrorInfo();
+            $message = "Ops, algo deu errado<br>
+                    <strong style='color: red;'> $txtError :(</strong><br>
+                    Talvez algum email ou senha estão incorretos!<br>
+                    <b>OBS:</b> para permitir enviar e-mail através do Gmail, você deve habilitar habilitar essa opção nesse <a href='https://myaccount.google.com/lesssecureapps' target='_blank'>link</a>!";
+        }
+
+        unlink($this->file_name);
+
+        return json_encode([
+            'error'=>$error,
+            'msg'=>$message
+        ]);
+    }
+
 }
 
 /*$pdf = new myPDF();

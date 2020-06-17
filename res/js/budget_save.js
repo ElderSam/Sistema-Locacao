@@ -24,11 +24,15 @@ $(function () {
 		$('#btnCart').hide();
 
 		$('#btnDeleteBudget').show();
-
+		$('#btnShowPDF').show();
+		$('#btnEmail').show();
+		
 	}else{ //se for para cadastrar
 		typeForm = 'save';
 		console.log('Novo Orçamento')
 		$('#btnDeleteBudget').hide();
+		$('#btnShowPDF').hide();
+		$('#btnEmail').hide();
 	}
 
 	//adiciona as máscaras
@@ -101,7 +105,7 @@ $(function () {
 							)
 						}
 
-					} else { // Se cadastrou com sucesso
+					} else { // Se cadastrou/atualizou com sucesso
 
 						//$('#BudgetModal').modal('hide');
 
@@ -117,13 +121,17 @@ $(function () {
 							'Sucesso!',
 							'Primeira parte do Orçamento cadastrada!',
 							'success'
-						)
+						)						
 
 						$("#btnSaveBudget").attr('value', 'Finalizar');
 
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
-
+						
+						$('#btnDeleteBudget').show();
+						$('#btnShowPDF').attr('href', `/budgets/${res.idContrato}/pdf/show`).show();
+						$('#btnEmail').show();
+					
 					}
 
 				},
@@ -178,9 +186,11 @@ $(function () {
 					} else {
 						//$('#BudgetModal').modal('hide');
 
+						msg = 'Orçamento atualizado!';
+
 						Swal.fire(
 							'Sucesso!',
-							'Orçamento atualizado!',
+							msg,
 							'success'
 						);
 
@@ -202,6 +212,10 @@ $(function () {
 		return false;
 	});
 
+	
+	$("#btnEmail").click(function () { //quando abrir o modal
+		loadEmailFields(idOrcamento);
+	});
 });
 
 
@@ -287,6 +301,7 @@ async function loadFieldsBudget(idOrcamento) {
 		$("#formBudget #codigo").val(data.codContrato).prop('disabled', true);
 		codigo = data.codContrato //seta o valor para mostrar no modal excluir
 		$("#formBudget #nomeEmpresa").val(data.nomeEmpresa).prop('disabled', true);
+		$("#formBudget #obra_idObra").prop('disabled', true);
 
 		$("#formBudget #dtEmissao").val(data.dtEmissao).prop('disabled', true);
 		$("#formBudget #solicitante").val(data.solicitante).prop('disabled', true);
@@ -367,6 +382,12 @@ async function loadFieldsBudget(idOrcamento) {
 }
 
 function deleteBudget(idOrcamento) {
+
+	if(idOrcamento == 0){ //se o orçamento acabou de ser cadastrado
+		alert('idOrcamento == 0')
+		idOrcamento = $('#idOrcamento').val();
+		codigo = $("#codigo").val();
+	}
 
 	Swal.fire({
 		title: `Você tem certeza de excluir o Orçamento nº ${codigo}?`,
@@ -540,3 +561,109 @@ function clearFieldsValues() {
 	$('#email').val('');
 	//$('#referencia').val('');
 }
+
+
+
+/************************************************** EMAIL ********************************************** */
+//detalhes do Orcamento
+async function loadEmailFields(idOrcamento) {
+	console.log(`function loadEmailFields(${idOrcamento})`)
+	//console.log("idOrcamento:" + idOrcamento)
+
+	//clearFieldsValues();
+	clearErrors();
+
+	if ((idOrcamento != '0') && (idOrcamento != undefined)) { //se já tiver um orçamento cadastrado
+		$("#formEmail #name_from").val('TCC - teste (sistemalocacao)');
+		$("#formEmail #toAdress").val(`${$("#formBudget #email").val()}`)
+		$("#formEmail #toName").val(`${$("#formBudget #solicitante").val()}`)
+		$("#formEmail #subject").val(
+			`PROPOSTA N. ${$("#formBudget #codigo").val()} - FORNECEDOR X`
+		)
+		//mensagem do email
+		$("#formEmail #html").val(`OBS: Este é um e-mai teste
+REF: PROPOSTA DA EMPRESA X PARA LOCAÇÃO
+	Olá, segue em anexo o arquivo PDF do Orçamento dos itens cotados para futura locação.
+
+Atenciosamente,
+Nome do Remetente
+NOME DO FORNECEDOR - locações de equipamentos para construções`
+		)
+	
+	}else{
+		console.log('não pode enviar o e-mail, pois ainda não cadastrou o orçamento')
+	}
+	
+	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/
+	$("#btnSendEmail").click(function (e) { //quando enviar o formulário de Orcamento
+		e.preventDefault();
+
+		let form = $('#formEmail');
+		let formData = new FormData(form[0]);
+
+		if ((idOrcamento != 0) || (idOrcamento != undefined)) { //se o orçamento já foi cadastrado 
+			console.log("você quer mandar um e-mail")
+
+			$.ajax({
+				type: "POST",
+				url: `/budgets/${idOrcamento}/pdf/sendEmail`,
+				data: formData,
+				contentType: false,
+				processData: false,
+				beforeSend: function () {
+					clearErrors();
+					$("#btnSendEmail").parent().siblings(".help-block").html("<i class='fas fa-cog fa-spin fa-lg'></i>");
+
+				},
+				success: function (response) {
+					res = JSON.parse(response)
+					console.log(res)
+
+					clearErrors();
+
+
+					if (res.error) {
+						console.log('erro ao enviar Orçamento!')
+						Swal.fire(
+							'Erro!',
+							res.msg, //'Ocorreu algum problema ao enviar o e-mail',
+							'error'
+						)
+
+						if (res['error_list']) {
+							showErrorsModal(res['error_list'])
+
+							Swal.fire(
+								'Atenção!',
+								res.msg, //'Por favor verifique os campos',
+								'warning'
+							)
+						}
+
+					} else { // Se enviou com sucesso
+						
+						Swal.fire(
+							'Sucesso!',
+							res.msg,//'Orçamento enviado para o cliente!',
+							'success'
+						)
+					}
+
+				},
+				error: function (response) {
+					//$('#BudgetModal').modal('hide');
+					//$('#formBudget').trigger("reset");
+					console.log(`Erro! Mensagem: ${response}`);
+
+				}
+			});
+
+		} else { /* -------------------------------------------------- */
+
+		}
+
+		return false;
+	});
+
+}
+

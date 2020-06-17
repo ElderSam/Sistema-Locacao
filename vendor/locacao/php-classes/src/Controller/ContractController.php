@@ -323,7 +323,7 @@ class ContractController extends Generator
         return $contract->delete();       
     }
 
-    public static function getPDF($id)
+    public function getPDF($id, $destiny)
     {   
         $contract = new Contract();
     
@@ -343,7 +343,59 @@ class ContractController extends Generator
         $file_name = str_replace('/', '-', $res[0]); //substitui / por - (porque quando baixa o PDF, não reconhece a barra no nome do arquivo)
         
         $pdf->createPDF($file_name.".pdf", $res[1]); //$res[1]  é o conteúdo do PDF
-        $pdf->display();
+
+        if($destiny == "sendEmail"){
+            //print_r($_POST);
+
+            //valida os campos
+            $error = $this->verifyFieldsEmail(); //verifica os campos do formulário de email
+            $aux = json_decode($error);
+    
+            if ($aux->error) {
+                return $error;
+            }
+            
+            //se estiver tudo ok, então envia o e-mail
+            return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
+
+        }else{
+            $pdf->display();
+        }
+        
+    }
+
+    public function verifyFieldsEmail(){  //valida os campos
+        $errors = array();
+
+        $email = $_POST['toAdress'];
+        if($email == ""){ //se o e-mail estiver correto){
+            $errors["#toAdress"] = "E-mail é obrigatório!";
+
+        }else if($this->validaEmail($email) == false){
+            $errors["#toAdress"] = "E-mail inválido!";
+        }
+
+        if($_POST['subject'] == ""){
+            $errors["#subject"] = "Assunto é obrigatório!";
+        }
+
+        if($_POST['html'] == ""){
+            $errors["#html"] = "Mensagem é obrigatória!";
+        }
+
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário de email
+
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors,
+                'msg'=>'campos incompletos/inválidos!'
+            ]);
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+        }
     }
 
 }//end class ContractController
