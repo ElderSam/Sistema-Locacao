@@ -17,7 +17,7 @@ $app->get('/costumers/json', function(){
 });
 
 /* rota que mostra o próximo código de Cliente */
-$app->post('/costumer/showsNextNumber', function(){
+$app->post('/costumers/showsNextNumber', function(){
 
     User::verifyLogin();
 
@@ -60,7 +60,7 @@ $app->get('/costumers/json/:idCliente/constructions', function($idCliente){
 });
 
 /* rota para criar cliente (salva no banco) -----------*/
-$app->post("/costumer/create", function(){
+$app->post("/costumers/create", function(){
 
 	$costumer = new CostumerController();
 	echo $costumer->save();

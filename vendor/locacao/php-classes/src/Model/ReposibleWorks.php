@@ -189,23 +189,38 @@ class ReposibleWorks extends Generator{
     public function delete(){
 
         $sql = new Sql();
+            
+      $resultsObra = $sql->select("SELECT idObra FROM obras WHERE id_fk_respObra = :idResp", array(
 
-        try{
-            $sql->query("CALL sp_responsaveis_delete(:idResp)", array(
-                ":idResp"=>$this->getidResp()
-            ));
+        ":idResp"=>$this->getidResp()
+      ));  
 
-            echo json_encode([
-                "error"=>false,
-            ]);
-
-        }catch(Exception $e){
+        if(count($resultsObra) > 0){
 
             echo json_encode([
                 "error"=>true,
-                "msg"=>$e->getMessage()
+                "msg"=>"Você não pode excluir, pois este Responsável  está sendo usado em Obras"
             ]);
 
+        }
+        else{
+            try{
+                $sql->query("CALL sp_responsaveis_delete(:idResp)", array(
+                    ":idResp"=>$this->getidResp()
+                ));
+
+                echo json_encode([
+                    "error"=>false,
+                ]);
+
+            }catch(Exception $e){
+
+                echo json_encode([
+                    "error"=>true,
+                    "msg"=>$e->getMessage()
+                ]);
+
+            }
         }
        
     }

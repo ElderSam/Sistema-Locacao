@@ -101,7 +101,6 @@ class Costumer extends Generator{
             'data'=>$costumers->searchAll($query)
         );
     }
-
     
     public function searchAll($query){ //pesquisa genérica (para todos os campos). Recebe uma query
 
@@ -117,7 +116,7 @@ class Costumer extends Generator{
         
         $sql = new Sql();
 
-        if(($this->getnome() != "") && ($this->getstatus() != "") && ($this->gettipoCliente () != "")){
+        if(($this->getnome() != "") && ($this->gettipoCliente () != "")){
            
             $results = $sql->select("CALL sp_clientes_save(:codigo, :nome, :status, :telefone1, :telefone2, :email1, :email2, :endereco, :complemento, :cidade, :bairro, :numero, :uf, :cep, :cpf, :rg, :cnpj, :ie, :tipoCliente)", array(
                 ":codigo"=>$this->getcodigo(),
@@ -141,11 +140,11 @@ class Costumer extends Generator{
                 ":tipoCliente"=>$this->gettipoCliente(),
             ));
 
-
+            
             if(count($results) > 0){
 
                 $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
-
+               
                 return json_encode($results[0]);
 
             }else{
@@ -232,7 +231,7 @@ class Costumer extends Generator{
             $nextNumber = "0". $nextNumber;
             
         }
-        
+
         return $nextNumber; //retorna o próximo número de série da categoria
 
     }
@@ -243,7 +242,12 @@ class Costumer extends Generator{
 
       $results = $sql->select("SELECT idResp FROM resp_obras WHERE id_fk_cliente = :idCliente ", array(
             ":idCliente"=>$this->getidCliente()
-        ));        
+        ));
+        
+      $resultsObra = $sql->select("SELECT idObra FROM obras WHERE id_fk_cliente = :idCliente", array(
+
+        ":idCliente"=>$this->getidCliente()
+      ));  
 
         if(count($results) > 0){
             
@@ -251,7 +255,13 @@ class Costumer extends Generator{
                 "error"=>true,
                 "msg"=>"Você não pode excluir, pois este cliente tem Responsáveis de Obra"
             ]);
-        }else{
+        }else if(count($resultsObra) > 0){
+            
+            echo json_encode([
+                "error"=>true,
+                "msg"=>"Você não pode excluir, pois este cliente tem Obras"
+            ]);
+        } else{
             
         try{
             $sql->query("CALL sp_clientes_delete(:idCliente)", array(

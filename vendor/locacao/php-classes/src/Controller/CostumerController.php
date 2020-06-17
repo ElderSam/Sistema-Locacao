@@ -19,8 +19,8 @@ class CostumerController extends Generator
     public function ajax_list_costumers($requestData)
     {
 
-        $column_search = array("nome", "status", "cpf", "cnpj", "tipoCliente"); //colunas pesquisáveis pelo datatables
-        $column_order = array("nome", "status", "cpf", "cnpj", "tipoCliente"); //ordem que vai aparecer (o nome primeiro)
+        $column_search = array("codigo", "nome", "status", "cpf", "cnpj", "tipoCliente"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigo", "nome", "status", "cpf", "cnpj", "tipoCliente"); //ordem que vai aparecer (o nome primeiro)
 
         //faz a pesquisa no banco de dados
         $costumers = new Costumer(); //model
@@ -49,11 +49,14 @@ class CostumerController extends Generator
                 $tipoCliente = "Jurídica";
             }
 
+            
+            $codigo = $costumer['codigo'];
             $id = $costumer['idCliente'];
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
+            $row[] = $codigo;
             $row[] = $costumer['nome'];
             $row[] = $status;
             $row[] = $documento;
