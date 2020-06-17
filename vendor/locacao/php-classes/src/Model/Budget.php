@@ -7,7 +7,7 @@ use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
 
-class Contract extends Generator{
+class Budget extends Generator{
 
     public static function listAll(){
 
@@ -25,18 +25,6 @@ class Contract extends Generator{
         }
         
         $sql = new Sql();
-        /*echo "<br>codContrato " . $this->getcodigo() .
-        "<br>obra_idObra " . $this->getobra_idObra() .
-        "<br>dtEmissao " . $this->getdtEmissao() .
-        "<br>solicitante " . $this->getsolicitante() .
-        "<br>telefone " . $this->gettelefone() .
-        "<br>email " . $this->getemail() .
-        "<br>dtAprovacao " . $this->getdtAprovacao() .
-        "<br>notas " . $this->getnotas() .
-        "<br>valorTotal " . $this->getvalorTotal() .
-        "<br>dtInicio " . $this->getdtInicio() .
-        "<br>prazoDuracao " . $this->getprazoDuracao() .
-        "<br>statusOrcamento " . $this->getstatus();*/
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            

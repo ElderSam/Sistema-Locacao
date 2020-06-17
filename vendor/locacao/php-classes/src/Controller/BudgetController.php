@@ -5,18 +5,18 @@ namespace Locacao\Controller;
 use \Locacao\Utils\myPDF;
 use \Locacao\Generator;
 use \Locacao\Model\User;
-use \Locacao\Model\Contract;
+use \Locacao\Model\Budget;
 use \Locacao\Controller\ContractItemController;
 use \Locacao\Utils\PDFs\BudgetPDF;
 
-class ContractController extends Generator
+class BudgetController extends Generator
 {
     //construtor
     public function __construct()
     {
     }
 
-    public function save($update = false) //Add a new Contract or Update
+    public function save($update = false) //Add a new Budget or Update
     {
         
         User::verifyLogin();
@@ -28,7 +28,7 @@ class ContractController extends Generator
             return $error;
         }
 
-        $contract = new Contract(); //Model
+        $budget = new Budget(); //Model
 
         if(!isset($_POST['idContrato'])){ //se for um orçamento
 
@@ -45,17 +45,17 @@ class ContractController extends Generator
         $auxArr = explode('/', $_POST['codigo']);
         $_POST['codigo'] = $auxArr[0];
         
-        $contract->setData($_POST);
+        $budget->setData($_POST);
 
 
         if ($update) { //se for atualizar
             
-            return $contract->update();
+            return $budget->update();
 
 
         } else { // se for cadastrar novo Fornecedor
             
-            $res = $contract->insert();        
+            $res = $budget->insert();        
            
             return $res;
             
@@ -161,46 +161,46 @@ class ContractController extends Generator
         $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
-        $contract = new Contract(); //model
+        $budget = new Budget(); //model
 
-        $datatable = $contract->get_datatable_budgets($requestData, $column_search, $column_order);
+        $datatable = $budget->get_datatable_budgets($requestData, $column_search, $column_order);
 
         $data = array();
 
         //print_r($datatable);
 
-        foreach ($datatable['data'] as $contract) { //para cada registro retornado
+        foreach ($datatable['data'] as $budget) { //para cada registro retornado
 
             $statusOrcamento = '';
 
-            if ($contract['statusOrcamento'] == 0) {
+            if ($budget['statusOrcamento'] == 0) {
                 $statusOrcamento = "Arquivado";
 
-            } else if ($contract['statusOrcamento'] == 1){
+            } else if ($budget['statusOrcamento'] == 1){
                 $statusOrcamento = "Pendente";
             }
 
-            if($contract['codObra'] != NULL){
-                $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
+            if($budget['codObra'] != NULL){
+                $obraCliente = $budget['codObra'] . " - " . $budget['nome'];
            
             }else{
-                $obraCliente = $contract['nomeEmpresa'];
+                $obraCliente = $budget['nomeEmpresa'];
             }  
 
             // Ler e criar o array de dados ---------------------
             $row = array();
 
             $row = [
-                "idContrato"=>$contract['idContrato'],
+                "idContrato"=>$budget['idContrato'],
                 "statusOrcamento"=>$statusOrcamento,
-                "codContrato"=>$contract['codContrato'],
-                "dtEmissao"=>date('d/m/Y', strtotime($contract['dtEmissao'])),
+                "codContrato"=>$budget['codContrato'],
+                "dtEmissao"=>date('d/m/Y', strtotime($budget['dtEmissao'])),
                 "obraCliente"=>$obraCliente
             ];
 
             /*$row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
-            $row[] = $contract['codContrato'];
-            $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
+            $row[] = $budget['codContrato'];
+            $row[] = date('d/m/Y', strtotime($budget['dtEmissao']));
             $row[] = $obraCliente;
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadBudget($id);'>
@@ -235,34 +235,34 @@ class ContractController extends Generator
         $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
-        $contract = new Contract(); //model
+        $budget = new Budget(); //model
 
-        $datatable = $contract->get_datatable_contracts($requestData, $column_search, $column_order);
+        $datatable = $budget->get_datatable_contracts($requestData, $column_search, $column_order);
 
         $data = array();
 
         //print_r($datatable);
 
-        foreach ($datatable['data'] as $contract) { //para cada registro retornado
+        foreach ($datatable['data'] as $budget) { //para cada registro retornado
             
             $statusOrcamento = '';
             
-            if ($contract['statusOrcamento'] == 2){
+            if ($budget['statusOrcamento'] == 2){
                 $statusOrcamento = "Vencido";
 
-            }else if ($contract['statusOrcamento'] == 3){
+            }else if ($budget['statusOrcamento'] == 3){
                 $statusOrcamento = "Aprovado";
 
-            }else if ($contract['statusOrcamento'] == 4){
+            }else if ($budget['statusOrcamento'] == 4){
                 $statusOrcamento = "Em vigência";
 
-            }else if ($contract['statusOrcamento'] == 5){
+            }else if ($budget['statusOrcamento'] == 5){
                 $statusOrcamento = "Encerrado";
 
             }
             
-            if($contract['codObra'] != NULL){
-                $obraCliente = $contract['codObra'] . " - " . $contract['nome'];
+            if($budget['codObra'] != NULL){
+                $obraCliente = $budget['codObra'] . " - " . $budget['nome'];
            
             }else{
                 $obraCliente = "";
@@ -272,21 +272,21 @@ class ContractController extends Generator
             $row = array();
 
             $row = [
-                "idContrato"=>$contract['idContrato'],
+                "idContrato"=>$budget['idContrato'],
                 "statusOrcamento"=>$statusOrcamento,
-                "codContrato"=>$contract['codContrato'],
-                "dtEmissao"=>date('d/m/Y', strtotime($contract['dtEmissao'])),
+                "codContrato"=>$budget['codContrato'],
+                "dtEmissao"=>date('d/m/Y', strtotime($budget['dtEmissao'])),
                 "obraCliente"=>$obraCliente
             ];
 
             //print_r($row);
 
             /*$row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
-            $row[] = $contract['codContrato'];
-            $row[] = date('d/m/Y', strtotime($contract['dtEmissao']));
+            $row[] = $budget['codContrato'];
+            $row[] = date('d/m/Y', strtotime($budget['dtEmissao']));
             $row[] = $obraCliente;
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadContract($id);'>
+                onclick='loadBudget($id);'>
                     <i class='fas fa-bars sm'></i>
                 </button>";*/
 
@@ -309,25 +309,25 @@ class ContractController extends Generator
     public function records_total()
     {
 
-        return Contract::total();
+        return Budget::total();
     }
 
 
 
     public function delete($idcontract){
        
-        $contract = new Contract();
+        $budget = new Budget();
         //echo "id: " . $idcontract;
-        $contract->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
+        $budget->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $contract->delete();       
+        return $budget->delete();       
     }
 
     public function getPDF($id, $destiny)
     {   
-        $contract = new Contract();
+        $budget = new Budget();
     
-        $orcamento = $contract->getValuesToBudgetPDF($id);
+        $orcamento = $budget->getValuesToBudgetPDF($id);
         //echo $orcamento;
         $items = new ContractItemController();
 
@@ -398,4 +398,4 @@ class ContractController extends Generator
         }
     }
 
-}//end class ContractController
+}//end class BudgetController
