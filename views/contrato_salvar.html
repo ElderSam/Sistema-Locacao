@@ -25,8 +25,8 @@
                     <br>
                     <div class="row">
                         <h3><b id="title">Cadastrar Contrato</b></h3>
-                        <a id="btnShowPDF" class="btn btn-danger ml-4" href="/budgets/{$idOrcamento}/pdf/show" title="ver PDF"> <i class="fas fa-file-pdf fa-lg"></i></a>
-                        <!--a class="btn btn-warning ml-4" href="/budgets/{$idOrcamento}/pdf/sendEmail" title="enviar PDF por e-mail"><i class="fas fa-envelope fa-lg"></i></a-->
+                        <a id="btnShowPDF" class="btn btn-danger ml-4" href="/budgets/{$idContrato}/pdf/show" title="ver PDF"> <i class="fas fa-file-pdf fa-lg"></i></a>
+                        <!--a class="btn btn-warning ml-4" href="/budgets/{$idContrato}/pdf/sendEmail" title="enviar PDF por e-mail"><i class="fas fa-envelope fa-lg"></i></a-->
                         <button type="button" id="btnEmail" class="btn btn-warning ml-4" title="enviar PDF por e-mail" data-toggle="modal" data-target="#emailModal">
                             <i class="fas fa-envelope fa-lg"></i>
                         </button>
@@ -203,8 +203,8 @@
 
                         <!--Usado apenas para Editar -->
                         <div hidden="true">
-                            <label for="idOrcamento">Id</label>
-                            <input type="text" id="idOrcamento" name="idOrcamento" value="{$idOrcamento}">
+                            <label for="idContrato">Id</label>
+                            <input type="text" id="idContrato" name="idContrato" value="{$idContrato}">
                         </div>
 
                     </form>
@@ -217,7 +217,7 @@
 
                         <div>
                             <!-- para desbloquear os campos para editar o procuto -->
-                            <button type='button' title='excluir orçamento' onclick='deleteBudget({$idOrcamento});'
+                            <button type='button' title='excluir orçamento' onclick='deleteBudget({$idContrato});'
                             id="btnDeleteBudget" class='btn btn-danger btnDelete'>
                             <i class='fas fa-trash'></i>
                             </button>
@@ -353,8 +353,8 @@
                             </div>
 
                             <div hidden="true">
-                                <label for="fk_idOrcamento">Id</label>
-                                <input type="text" id="fk_idOrcamento" name="idContrato">
+                                <label for="fk_idContrato">Id</label>
+                                <input type="text" id="fk_idContrato" name="idContrato">
                             </div>
 
                             <!--Usado apenas para Editar -->
