@@ -226,99 +226,17 @@ class BudgetController extends Generator
 
     }
 
-    
-    // lista todos os Orçamentos
-    public function ajax_list_contracts($requestData) //carrega tabela de contratos
-    {
-
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
-
-        //faz a pesquisa no banco de dados
-        $budget = new Budget(); //model
-
-        $datatable = $budget->get_datatable_contracts($requestData, $column_search, $column_order);
-
-        $data = array();
-
-        //print_r($datatable);
-
-        foreach ($datatable['data'] as $budget) { //para cada registro retornado
-            
-            $statusOrcamento = '';
-            
-            if ($budget['statusOrcamento'] == 2){
-                $statusOrcamento = "Vencido";
-
-            }else if ($budget['statusOrcamento'] == 3){
-                $statusOrcamento = "Aprovado";
-
-            }else if ($budget['statusOrcamento'] == 4){
-                $statusOrcamento = "Em vigência";
-
-            }else if ($budget['statusOrcamento'] == 5){
-                $statusOrcamento = "Encerrado";
-
-            }
-            
-            if($budget['codObra'] != NULL){
-                $obraCliente = $budget['codObra'] . " - " . $budget['nome'];
-           
-            }else{
-                $obraCliente = "";
-            }  
-
-            // Ler e criar o array de dados ---------------------
-            $row = array();
-
-            $row = [
-                "idContrato"=>$budget['idContrato'],
-                "statusOrcamento"=>$statusOrcamento,
-                "codContrato"=>$budget['codContrato'],
-                "dtEmissao"=>date('d/m/Y', strtotime($budget['dtEmissao'])),
-                "obraCliente"=>$obraCliente
-            ];
-
-            //print_r($row);
-
-            /*$row[] = "<strong style='color: $color'>$statusOrcamento</strong>";
-            $row[] = $budget['codContrato'];
-            $row[] = date('d/m/Y', strtotime($budget['dtEmissao']));
-            $row[] = $obraCliente;
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadBudget($id);'>
-                    <i class='fas fa-bars sm'></i>
-                </button>";*/
-
-            $data[] = $row;
-        } //
-
-        //Cria o array de informações a serem retornadas para o Javascript
-        $json = array(
-            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
-            "recordsTotal" => $this->records_total(),  //Quantidade de registros que há no banco de dados
-            "recordsFiltered" => $datatable['totalFiltered'], //Total de registros quando houver pesquisa
-            "data" => $data,  //Array de dados completo dos dados retornados da tabela 
-        );
-
-        return json_encode($json); //enviar dados como formato json
-
-    }
-
-
     public function records_total()
     {
 
         return Budget::total();
     }
 
-
-
-    public function delete($idcontract){
+    public function delete($idBudget){
        
         $budget = new Budget();
-        //echo "id: " . $idcontract;
-        $budget->get((int)$idcontract); //carrega o usuário, para ter certeza que ainda existe no banco
+        //echo "id: " . $idBudget;
+        $budget->get((int)$idBudget); //carrega o usuário, para ter certeza que ainda existe no banco
        
         return $budget->delete();       
     }
