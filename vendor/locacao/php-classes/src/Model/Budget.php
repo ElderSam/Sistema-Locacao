@@ -162,11 +162,11 @@ class Budget extends Generator{
         $query .= " ORDER BY statusOrcamento " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
-        $suppliers = new Supplier();
+        $budgets = new Budget();
         //echo $query;
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$suppliers->searchAll($query)
+            'data'=>$budgets->searchAll($query)
         );
     }
 
