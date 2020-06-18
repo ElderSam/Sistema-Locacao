@@ -7,7 +7,7 @@ use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
 
-class Contract extends Generator{
+class Budget extends Generator{
 
     public static function listAll(){
 
@@ -25,18 +25,6 @@ class Contract extends Generator{
         }
         
         $sql = new Sql();
-        /*echo "<br>codContrato " . $this->getcodigo() .
-        "<br>obra_idObra " . $this->getobra_idObra() .
-        "<br>dtEmissao " . $this->getdtEmissao() .
-        "<br>solicitante " . $this->getsolicitante() .
-        "<br>telefone " . $this->gettelefone() .
-        "<br>email " . $this->getemail() .
-        "<br>dtAprovacao " . $this->getdtAprovacao() .
-        "<br>notas " . $this->getnotas() .
-        "<br>valorTotal " . $this->getvalorTotal() .
-        "<br>dtInicio " . $this->getdtInicio() .
-        "<br>prazoDuracao " . $this->getprazoDuracao() .
-        "<br>statusOrcamento " . $this->getstatus();*/
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
@@ -177,64 +165,6 @@ class Contract extends Generator{
             'data'=>$suppliers->searchAll($query)
         );
     }
-
-    public function get_datatable_contracts($requestData, $column_search, $column_order){
-
-        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
-        LEFT JOIN obras b  ON(a.obra_idObra = b.idObra)
-        LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
-        WHERE a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos aprovados, em andamento, vencidos e encerrados
-
-        if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
-
-            $first = TRUE;
-
-            foreach ($column_search as $field) {
-               
-                $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
-
-                /*if ($field == "status") {
-                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
-
-                    if (($search == "ATIV")) {
-                        $search = 1;
-                    } else if ($search == "INAT") {
-                        $search = 0;
-                    }
-
-                    //echo "status: ".$search;
-                }*/
-
-
-                //filtra no banco
-                if ($first) {
-                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
-                    $first = FALSE;
-                } else {
-                    $query .= " OR $field LIKE '%$search%'";
-                }
-            } //fim do foreach
-            if (!$first) {
-                $query .= ")"; //termina o WHERE e a query
-            }
-
-        }
-        
-        $res = $this->searchAll($query);
-        $this->setTotalFiltered(count($res));
-
-        //ordenar o resultado
-        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
-        "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
-        
-        $suppliers = new Supplier();
-        //echo $query;
-        return array(
-            'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$suppliers->searchAll($query)
-        );
-    }
-
 
     public function searchAll($query){ //pesquisa genérica (para todos os campos). Recebe uma query
 

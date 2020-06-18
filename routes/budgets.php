@@ -1,8 +1,8 @@
 <?php
 
 use \Locacao\Page;
-use \Locacao\Controller\ContractController;
-use \Locacao\Model\Contract;
+use \Locacao\Controller\BudgetController;
+use \Locacao\Model\Budget;
 use \Locacao\Model\User;
 
 
@@ -33,7 +33,7 @@ $app->get('/budgets/json', function(){
 
     User::verifyLogin();
 
-    echo Contract::listAll();
+    echo Budget::listAll();
   
 });
 
@@ -42,8 +42,8 @@ $app->get("/budgets/:id/pdf/show", function($id){ //o destino pode ser a visuali
 	
 	User::verifyLogin();
 
-	$contractController = new ContractController();
-	echo $contractController->getPDF($id, 'show');
+	$BudgetController = new BudgetController();
+	echo $BudgetController->getPDF($id, 'show');
 
 });
 
@@ -52,8 +52,8 @@ $app->post("/budgets/:id/pdf/sendEmail", function($id){ //o destino pode ser a v
 	
 	User::verifyLogin();
 
-	$contractController = new ContractController();
-	echo $contractController->getPDF($id, 'sendEmail');
+	$BudgetController = new BudgetController();
+	echo $BudgetController->getPDF($id, 'sendEmail');
 
 });
 
@@ -75,7 +75,7 @@ $app->post('/budgets/showsNextNumber', function(){
 
     User::verifyLogin();
 
-    echo Contract::showsNextNumber();
+    echo Budget::showsNextNumber();
   
 });
 
@@ -86,7 +86,7 @@ $app->post('/budgets/list_datatables', function(){ //ajax list datatables
 	//Receber a requisão da pesquisa 
 	$requestData = $_REQUEST;
 
-	$budgets = new ContractController();
+	$budgets = new BudgetController();
 	echo $budgets->ajax_list_budgets($requestData);
 	
 });
@@ -97,11 +97,11 @@ $app->post("/budgets/:idbudget/delete", function($idbudget){
     
     User::verifyLogin();
 
-    $contract = new Contract();
+    $budget = new Budget();
 
-	$contract->get((int)$idbudget); //carrega o contrato, para ter certeza que ainda existe no banco
+	$budget->get((int)$idbudget); //carrega o contrato, para ter certeza que ainda existe no banco
 
-	echo $contract->delete();
+	echo $budget->delete();
 
 });
 
@@ -109,19 +109,19 @@ $app->get("/budgets/json/:idbudget", function($idbudget){
 	
     User::verifyLogin();
 
-	$contract = new Contract();
+	$budget = new Budget();
 
-	$contract->get((int)$idbudget);
+	$budget->get((int)$idbudget);
 
-	echo json_encode($contract->getValues());
+	echo json_encode($budget->getValues());
 
 });
 
 /* rota para criar contrato (salva no banco) -----------*/
 $app->post("/budgets/create", function(){
 	
-	$contract = new ContractController();
-	echo $contract->save();
+	$budget = new BudgetController();
+	echo $budget->save();
 
 });
 
@@ -131,10 +131,10 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 	
     User::verifyLogin();
 
-	$contract = new ContractController();
+	$budget = new BudgetController();
 
 	$update = true;
 
-	echo $contract->save($update);
+	echo $budget->save($update);
 	
 });
