@@ -2,6 +2,7 @@
 
 namespace Locacao\Controller;
 
+use \Locacao\Model\User;
 use \Locacao\Model\Contract;
 use \Locacao\Controller\BudgetController;
 
@@ -12,6 +13,99 @@ class ContractController extends BudgetController
     {
     }
 
+    public function save($update = false) //Add a new Contract or Update
+    {
+        
+        User::verifyLogin();
+        
+        $error = $this->verifyFields($update); //verifica os campos do formulário
+        $aux = json_decode($error);
+
+        if ($aux->error) {
+            return $error;
+        }
+
+        $contract = new Contract(); //Model
+
+        //pega apenas o número do orçamento (tira o /ano)
+        $auxArr = explode('/', $_POST['codigo']);
+        $_POST['codigo'] = $auxArr[0];
+        
+        $contract->setData($_POST);
+
+
+        if ($update) { //se for atualizar
+            
+            return $contract->update();
+
+
+        } else { // se for cadastrar novo Fornecedor
+            
+            $res = $contract->insert();        
+           
+            return $res;
+            
+        }
+    }
+
+
+    public function verifyFields($update = false)
+    {/*Verifica todos os campos ---------------------------*/
+       //print_r($_POST);
+
+        $errors = array();
+
+        if ($_POST["codigo"] == "") {
+            $errors["#codigo"] = "Código é obrigatório!";
+        }
+
+        if ($_POST["idCliente"] == "") {
+            $errors["#idCliente"] = "Cliente é obrigatório!";
+        }
+
+        if ($_POST["obra_idObra"] == "") { //é obrigatório ter uma Obra (pois o Contrato vai estar relacionado diretamente à obra)
+            $errors["#obra_idObra"] = "Obra é obrigatória!";
+        }
+
+        if ($_POST["dtEmissao"] == "") {
+            $errors["#dtEmissao"] = "Data de Emissão é obrigatória!";
+        }
+        
+        if ($_POST["prazoDuracao"] == "") {
+            $errors["#prazoDuracao"] = "Duração é obrigatória!";
+        }
+  
+        if ($_POST["dtInicio"] == "") {
+            $errors["#dtInicio"] = "Data de Início é obrigatória!";
+        }
+
+        if ($_POST["solicitante"] == "") {
+            $errors["#solicitante"] = "Nome do solicitante é obrigatório!";
+        }
+                
+        if($_POST["email"] != "" && $this->validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
+            $errors["#email"] = "E-mail Incorreto!";
+        }
+
+        if ($_POST["status"] == "") {
+            $errors["#status"] = "Status é obrigatório!";
+        }
+
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
+
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors
+            ]);
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+
+        }
+    }/* --- fim verificaErros() ---------------------------*/
+    
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
 
     /* CAMPOS VIA POST (Para trabalhar como DataTables)
@@ -79,7 +173,7 @@ class ContractController extends BudgetController
             //print_r($row);
 
             $data[] = $row;
-        }
+        } //
 
         //Cria o array de informações a serem retornadas para o Javascript
         $json = array(

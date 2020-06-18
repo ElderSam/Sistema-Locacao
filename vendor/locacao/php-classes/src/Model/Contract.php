@@ -14,6 +14,10 @@ use \Locacao\Model\Budget;
 
 class Contract extends Budget{
 
+    public function insert(){
+        parent::insert();
+    }
+
     public static function listAll(){
 
         $sql = new Sql();
