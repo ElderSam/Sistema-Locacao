@@ -105,7 +105,7 @@ class Budget extends Generator{
         $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
         LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
         LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
-        WHERE (a.statusOrcamento IN (0, 1))"; //pega orçamentos pendentes e arquivados
+        WHERE (a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -116,21 +116,29 @@ class Budget extends Generator{
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-               /* if ($field == "status") {
+                if ($field == "statusOrcamento") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
-                    if (($search == "ATIV")) {
-                        $search = 1;
-                    } else if ($search == "INAT") {
+                    if (($search == "PEND")) { //Pendente
                         $search = 0;
+                    } else if ($search == "ARQU") { //Arquivado
+                        $search = 1;
                     }
 
                     //echo "status: ".$search;
-                }*/
+
+                } else if ($field == "dtEmissao") {
+                                        
+                    $ano= substr($search, 6);
+                    $mes= substr($search, 3,-5);
+                    $dia= substr($search, 0,-8);
+
+                    $search = $ano."-".$mes."-".$dia;
+                }
 
                 //filtra no banco
                 if ($first) {
-                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
+                    $query .= " AND ($field LIKE '%$search%'"; //primeiro caso
                     $first = FALSE;
                 } else {
                     $query .= " OR $field LIKE '%$search%'";
@@ -138,9 +146,11 @@ class Budget extends Generator{
             } //fim do foreach
             
             if (!$first) {
-                $query .= ")"; //termina o WHERE e a query
+                $query .= "))"; //termina o WHERE e a query
             }
 
+        } else { //Se não pesquisou nada
+            $query .= ")";
         }
         
         $res = $this->searchAll($query);

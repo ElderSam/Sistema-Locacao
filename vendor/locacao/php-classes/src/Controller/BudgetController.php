@@ -157,8 +157,8 @@ class BudgetController extends Generator
     public function ajax_list_budgets($requestData) //carrega tabela de orçamentos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao", "Obra"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("statusOrcamento", "codContrato", "dtEmissao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("statusOrcamento", "codContrato", "dtEmissao"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $budget = new Budget(); //model
@@ -174,10 +174,10 @@ class BudgetController extends Generator
             $statusOrcamento = '';
 
             if ($budget['statusOrcamento'] == 0) {
-                $statusOrcamento = "Arquivado";
+                $statusOrcamento = "Pendente";
 
             } else if ($budget['statusOrcamento'] == 1){
-                $statusOrcamento = "Pendente";
+                $statusOrcamento = "Arquivado";
             }
 
             if($budget['codObra'] != NULL){
