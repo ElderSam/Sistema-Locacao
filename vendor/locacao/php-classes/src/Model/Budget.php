@@ -6,6 +6,9 @@ use Exception;
 use \Locacao\DB\Sql;
 use \Locacao\Generator;
 
+/* Status do Orçamento;
+0 - Pendente
+1 - Arquivado */
 
 class Budget extends Generator{
 
@@ -13,8 +16,12 @@ class Budget extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM contratos ORDER BY dtEmissao DESC");
-    
+        $query = "SELECT * FROM contratos 
+            WHERE (statusOrcamento IN (0, 1))
+            ORDER BY dtEmissao DESC";
+
+        $results = $sql->select($query);
+
         return json_encode($results);
     }
 
@@ -78,7 +85,7 @@ class Budget extends Generator{
         $results = $sql->select("SELECT a.*, b.idObra, c.idCliente, c.nome as descCliente FROM contratos a
                     LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
                     LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
-                    WHERE idContrato = :idContrato", array(
+                    WHERE (a.idContrato = :idContrato AND statusOrcamento IN (0, 1))", array(
             ":idContrato"=>$idContrato
         ));
 
@@ -93,24 +100,12 @@ class Budget extends Generator{
         }
     }
 
- 
-    public static function searchName($dtEmissao){ //search if name or desc already exists
-
-        $sql = new Sql();
-
-        $results = $sql->select("SELECT * FROM contratos WHERE (dtEmissao = :dtEmissao)", array(
-            ":dtEmissao"=>$dtEmissao
-        ));
-
-        return $results;
-    }
-
     public function get_datatable_budgets($requestData, $column_search, $column_order){
         
         $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
         LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
         LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
-        WHERE a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
+        WHERE (a.statusOrcamento IN (0, 1))"; //pega orçamentos pendentes e arquivados
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -120,7 +115,6 @@ class Budget extends Generator{
                 
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
-
 
                /* if ($field == "status") {
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
@@ -180,7 +174,10 @@ class Budget extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM contratos");
+        $query = "SELECT * FROM contratos
+            WHERE (statusOrcamento IN (0, 1))"; //pega orçamentos pendentes ou arquivados
+        
+        $results = $sql->select($query);
 
         return count($results);		
 	}
@@ -272,7 +269,10 @@ class Budget extends Generator{
 
         $ano = date('Y'); //pega o ano atual
 
-        $results = $sql->select("SELECT MAX(codContrato) FROM contratos WHERE (statusOrcamento IN (0, 1)  AND YEAR(dtCadastro) =:ano)", array( //pega apenas orçamentos pendentes ou arquivados do ano
+        $query = "SELECT MAX(codContrato) FROM contratos
+            WHERE (statusOrcamento IN (0, 1) AND YEAR(dtCadastro) =:ano)"; //pega apenas orçamentos pendentes ou arquivados do ano
+        
+        $results = $sql->select($query, array(
             'ano'=>$ano
         ));
 
@@ -288,7 +288,7 @@ class Budget extends Generator{
         $results = $sql->select("SELECT a.*, b.idObra, c.idCliente, c.nome as descCliente FROM contratos a
                     LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
                     LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
-                    WHERE idContrato = :idBudget", array(
+                    WHERE (a.idContrato = :idBudget AND a.statusOrcamento IN (0, 1))", array(
             ":idBudget"=>$idBudget
         ));   
 
