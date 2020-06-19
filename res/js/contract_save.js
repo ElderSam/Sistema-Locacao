@@ -1,24 +1,21 @@
-let myTable = null;
 
+let myTable = null;
 let obra_idObra = '';
 let idCliente = '';
 let codigo = '0'
 
-const idOrcamento = $("#idOrcamento").val();
+const idContrato = $("#idContrato").val();
 let typeForm = '';
 
-//Somente para orçamento
-$('#dtInicio').parent().hide();
-$('#prazoDuracao').parent().hide();
 
 $(function () {	
 
-	if(idOrcamento !== '0'){ //se for para ver um Orçamento existente
+	if(idContrato !== '0'){ //se for para ver um Contrato existente
 		
-		console.log(`idOrçamento: ${idOrcamento}`)
+		console.log(`idContrato: ${idContrato}`)
 		typeForm = 'view';
 
-		$("#fk_idOrcamento").val(idOrcamento)
+		$("#fk_idContrato").val(idContrato)
 		$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
 
 		$('#btnCart').hide();
@@ -29,7 +26,7 @@ $(function () {
 		
 	}else{ //se for para cadastrar
 		typeForm = 'save';
-		console.log('Novo Orçamento')
+		console.log('Novo Contrato')
 		$('#btnDeleteBudget').hide();
 		$('#btnShowPDF').hide();
 		$('#btnEmail').hide();
@@ -39,9 +36,9 @@ $(function () {
 	$("#telefone").mask("(00) 0000-00009");
 	//$("#dtInicio").mask("dd/mm/aaaa");
 
-	loadBudget(idOrcamento);
+	loadContract(idContrato);
 
-	loadTableItens() //carrega a tabela de itens de orçamento (produtos adicionados)
+	loadTableItens() //carrega a tabela de itens de contrato (produtos adicionados)
 
 	/*$("#btnAddBudget").click(function(){
 		
@@ -49,120 +46,44 @@ $(function () {
 	});*/
 
 
-	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/
-	$("#btnSaveBudget").click(function (e) { //quando enviar o formulário de Orcamento
+	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
+	$("#btnSaveContract").click(function (e) { //quando enviar o formulário de Contrato
 
 		e.preventDefault();
 
 		//adiciona as máscaras
 		$("#telefone").unmask();
 
-		$("#formBudget #codigo").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+		$("#formContrato #codigo").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
 
-		let form = $('#formBudget');
+		let form = $('#formContrato');
 		let formData = new FormData(form[0]);
 
 		//idOrcamento = $('#idOrcamento').val()
 		//console.log("idOrcamento:" + idOrcamento)
 
-		if ((idOrcamento == 0) || (idOrcamento == undefined)) { //se for para cadastrar --------------------------------------------------
+		if ((idContrato == 0) || (idContrato == undefined)) { //se for para cadastrar --------------------------------------------------
 
-			//console.log("você quer cadastrar")
-			
-			$.ajax({
-				type: "POST",
-				url: '/budgets/create',
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function () {
-					clearErrors();
-					$("#btnSaveBudget").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-
-				},
-				success: function (response) {
-					clearErrors();
-					$("#telefone").mask("(00) 0000-00009");
-
-					if (JSON.parse(response).error) {
-						console.log('erro ao cadastrar novo Orçamento!')
-						response = JSON.parse(response)
-
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum problema ao cadastrar',
-							'error'
-						)
-
-						if (response['error_list']) {
-
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'warning'
-							)
-						}
-
-					} else { // Se cadastrou/atualizou com sucesso
-
-						//$('#BudgetModal').modal('hide');
-
-						res = JSON.parse(response)
-						console.log("id do novo orçamento: " + res.idContrato)
-						$('#fk_idOrcamento').val(res.idContrato)
-						$('#idOrcamento').val(res.idContrato)
-						
-
-						$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
-
-						Swal.fire(
-							'Sucesso!',
-							'Primeira parte do Orçamento cadastrada!',
-							'success'
-						)						
-
-						$("#btnSaveBudget").attr('value', 'Finalizar');
-
-						//loadTableBudgets();
-						//$('#formBudget').trigger("reset");
-						
-						$('#btnDeleteBudget').show();
-						$('#btnShowPDF').attr('href', `/budgets/${res.idContrato}/pdf/show`).show();
-						$('#btnEmail').show();
-					
-					}
-
-				},
-				error: function (response) {
-					//$('#BudgetModal').modal('hide');
-					//$('#formBudget').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-
-				}
-			});
+			alert("ERRO: Id do contrato não definido");
 
 		} else { /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o Orçamento: ' + idOrcamento)
-
 			$.ajax({
 				type: "POST",
-				url: `/budgets/${idOrcamento}`, //rota para editar
+				url: `/contracts/${idContrato}`, //rota para editar
 				data: formData,
 				contentType: false,
 				processData: false,
 				beforeSend: function () {
 					clearErrors();
-					$("#btnSaveBudget").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					$("#btnSaveContractt").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 
 				},
 				success: function (response) {
 					clearErrors();
 
 					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Orçamento!')
+						console.log('erro ao atualizar Contrato!')
 
 						response = JSON.parse(response)
 
@@ -186,7 +107,7 @@ $(function () {
 					} else {
 						//$('#BudgetModal').modal('hide');
 
-						msg = 'Orçamento atualizado!';
+						msg = 'Contrato atualizado!';
 
 						Swal.fire(
 							'Sucesso!',
@@ -214,50 +135,36 @@ $(function () {
 
 	
 	$("#btnEmail").click(function () { //quando abrir o modal
-		loadEmailFields(idOrcamento);
+		loadEmailFields(idContrato);
 	});
 });
 
 
-//detalhes do Orcamento
-async function loadBudget(idOrcamento) {
+//detalhes do Contrato
+async function loadContract(idContrato) {
 	//console.log(`function loadBudget(${idOrcamento})`)
 	//console.log("idOrcamento:" + idOrcamento)
 
 	//clearFieldsValues();
 	clearErrors();
 
-	$('#title').html('Detalhes do Orçamento')
+	$('#title').html('Detalhes do Contrato')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
-	$('#btnSaveBudget').hide();
+	$('#btnSaveContract').hide();
 	$('#btnUpdate').show();
 
 	let idCliente, obra_idObra;
 
-	if ((idOrcamento == '0') || (idOrcamento == undefined)) { //se for cadastrar um novo orçamento
+	if ((idContrato == '0') || (idContrato == undefined)) { //se for cadastrar um novo Contrato
 		
-		await clearFieldsValues();
-
-		await showsNextNumber();
-
-		disable = true
-
-		$("#formBudget #dtInicio").parent().hide();
-		$("#formBudget #prazoDuracao").parent().hide();
-
-		loadCostumers(idCliente, obra_idObra); //carrega clientes
-
-	}else{ //se for para Editar um orçamento existente
-		disable = false
-
+		alert("ERRO: Id não encontrado");
+		
+	}else{ //se for para Editar um Contrato existente
 	
-		idCliente, obra_idObra = await loadFieldsBudget(idOrcamento); //busca os valores dos campos de Orçamento para preencher	
+		idCliente, obra_idObra = await loadFieldsContract(idContrato); //busca os valores dos campos de Contrato para preencher	
 	}
 
-	$("#formBudget #dtInicio").prop('disabled', disable);
-	$("#formBudget #prazoDuracao").prop('disabled', disable);
-
-	$("#formBudget #codigo").prop('disabled', true);
+	$("#formContract #codigo").prop('disabled', true);
 
 	$("#idCliente").change(async function () {
 		
@@ -271,13 +178,13 @@ function showsNextNumber() { //mostra o próximo número de série relacionado �
 	//console.log('shows next number')
 	$.ajax({
 		type: "POST",
-		url: `/budgets/showsNextNumber`,
+		url: `/contracts/showsNextNumber`,
 		contentType: false,
 		processData: false,
 
 		success: function (response) {
 
-			//console.log('próximo código de orçamento: ' + response)
+			//console.log('próximo código de Contrato: ' + response)
 			$('#codigo').val(response)
 
 		},
@@ -289,43 +196,40 @@ function showsNextNumber() { //mostra o próximo número de série relacionado �
 }
 
 
-async function loadFieldsBudget(idOrcamento) {
-	console.log(`function loadFieldsBudget(${idOrcamento})`)
+async function loadFieldsContract(idContrato) {
+	console.log(`function loadFieldsContract(${idContrato})`)
 
-	$.getJSON(`/budgets/json/${idOrcamento}`, function (data) { //ajax
+	$.getJSON(`/contract/json/${idContrato}`, function (data) { //ajax
 		console.log(data)
 
-		$("#idOrcamento").val(data.idContrato);
+		$("#idContrato").val(data.idContrato);
 		//console.log('load View Orcamento idOrcamento: ' + $("#idOrcamento").val())
 
-		$("#formBudget #codigo").val(data.codContrato).prop('disabled', true);
+		$("#formContract #codigo").val(data.codContrato).prop('disabled', true);
 		codigo = data.codContrato //seta o valor para mostrar no modal excluir
-		$("#formBudget #nomeEmpresa").val(data.nomeEmpresa).prop('disabled', true);
-		$("#formBudget #obra_idObra").prop('disabled', true);
+		
+		$("#formContract #obra_idObra").prop('disabled', true);
 
-		$("#formBudget #dtEmissao").val(data.dtEmissao).prop('disabled', true);
-		$("#formBudget #solicitante").val(data.solicitante).prop('disabled', true);
+		$("#formContract #dtEmissao").val(data.dtEmissao).prop('disabled', true);
+		$("#formContract #solicitante").val(data.solicitante).prop('disabled', true);
 		
 		$("#telefone").unmask();
-		$("#formBudget #telefone").val(data.telefone).prop('disabled', true);
+		$("#formContract #telefone").val(data.telefone).prop('disabled', true);
 
-		$("#formBudget #email").val(data.email).prop('disabled', true);
-		//$("#formBudget #referencia").val(data.referencia).prop('disabled', true);
+		$("#formContract #email").val(data.email).prop('disabled', true);
+		//$("#formContract #referencia").val(data.referencia).prop('disabled', true);
 
-		$("#formBudget #status").val(data.statusOrcamento).prop('disabled', true);
-		$("#formBudget #dtInicio").val(data.dtInicio).prop('disabled', true);
-		$("#formBudget #dtAprovacao").val(data.dtAprovacao).prop('disabled', true);
-		$("#formBudget #prazoDuracao").val(data.prazoDuracao).prop('disabled', true);
-		$("#formBudget #notas").val(data.notas).prop('disabled', true);
-
-		$("#formBudget #notas").val(data.notas).prop('disabled', true);
-
+		$("#formContract #status").val(data.statusOrcamento).prop('disabled', true);
+		$("#formContract #dtInicio").val(data.dtInicio).prop('disabled', true);
+		$("#formContract #dtAprovacao").val(data.dtAprovacao).prop('disabled', true);
+		$("#formContract #prazoDuracao").val(data.prazoDuracao).prop('disabled', true);
+		$("#formContract #notas").val(data.notas).prop('disabled', true);
 
 	}).then((data) => {
 		
 		$("#telefone").mask('(00) 0000-00009');
 		
-		$("#BudgetModal").modal();
+		$("#ContractModal").modal();
 
 		//$("#formBudget #idCliente").val(data.idCliente).prop('disabled', true);
 		idCliente = data.idCliente;
@@ -338,31 +242,29 @@ async function loadFieldsBudget(idOrcamento) {
 		loadCostumers(idCliente, obra_idObra); //carrega clientes
 
 		
-		/* Atualizar Orcamento ------------------------------------------------------------------ */
-		$('#btnUpdate').click(function () { //se eu quiser atualizar o Orcamento atual
+		/* Atualizar formContract ------------------------------------------------------------------ */
+		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
 
 			typeForm = 'save';
 
-			$('#title').html('Editar Orçamento');
+			$('#title').html('Editar Contrato');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
-			$('#btnSaveBudget').val('Atualizar').show();
+			$('#btnSaveContract').val('Atualizar').show();
 			$('#btnUpdate').hide();
 
 			//$("#formBudget #codigo").prop('disabled', false);
 			
-			$("#formBudget #nomeEmpresa").prop('disabled', false);
-			$("#formBudget #idCliente").prop('disabled', false);
-			$("#formBudget #obra_idObra").prop('disabled', false);
-			$("#formBudget #dtEmissao").prop('disabled', false);
-			$("#formBudget #solicitante").prop('disabled', false);
-			$("#formBudget #telefone").prop('disabled', false);
-			$("#formBudget #email").prop('disabled', false);
-
-			$("#formBudget #status").prop('disabled', false);
-			$("#formBudget #dtInicio").prop('disabled', false);
-			$("#formBudget #dtAprovacao").prop('disabled', false);
-			$("#formBudget #prazoDuracao").prop('disabled', false);
-			$("#formBudget #notas").prop('disabled', false);
+			$("#formContract #idCliente").prop('disabled', false);
+			$("#formContract #obra_idObra").prop('disabled', false);
+			$("#formContract #dtEmissao").prop('disabled', false);
+			$("#formContract #solicitante").prop('disabled', false);
+			$("#formContract #telefone").prop('disabled', false);
+			$("#formContract #email").prop('disabled', false);
+			$("#formContract #status").prop('disabled', false);
+			$("#formContract #dtInicio").prop('disabled', false);
+			$("#formContract #dtAprovacao").prop('disabled', false);
+			$("#formContract #prazoDuracao").prop('disabled', false);
+			$("#formContract #notas").prop('disabled', false);
 
 			$('#btnCart').show();
 			$('#divListItens .btnEdit').show();
@@ -372,25 +274,25 @@ async function loadFieldsBudget(idOrcamento) {
 			$('#divListItens .btnDelete').attr('hidden', false)
 			
 
-		}); /* Fim Atualizar Orcamento ---------------------------------------------------------- */
+		}); /* Fim Atualizar Contrato ---------------------------------------------------------- */
 
 		return [idCliente, obra_idObra];
 		
 	}).fail(function () {
-		console.log("Rota não encontrada! (/budgets/json/:idOrcamento)");
+		console.log("Rota não encontrada! (/contracts/json/:idContrato)");
 	});
 }
 
-function deleteBudget(idOrcamento) {
+function deleteBudget(idContrato) {
 
-	if(idOrcamento == 0){ //se o orçamento acabou de ser cadastrado
-		alert('idOrcamento == 0')
-		idOrcamento = $('#idOrcamento').val();
+	if(idContrato == 0){ //se o orçamento acabou de ser cadastrado
+		alert('idContrato == 0')
+		idContrato = $('#idContrato').val();
 		codigo = $("#codigo").val();
 	}
 
 	Swal.fire({
-		title: `Você tem certeza de excluir o Orçamento nº ${codigo}?`,
+		title: `Você tem certeza de excluir o Contrato nº ${codigo}?`,
 		text: "Você não será capaz de reverter isso!",
 		icon: 'warning',
 		showCancelButton: true,
@@ -404,7 +306,7 @@ function deleteBudget(idOrcamento) {
 
 			$.ajax({
 				type: "POST",
-				url: `/budgets/${idOrcamento}/delete`,
+				url: `/contracts/${idContrato}/delete`,
 				beforeSend: function () {
 
 					$('.swal2-content').hide()
@@ -428,12 +330,12 @@ function deleteBudget(idOrcamento) {
 
 						Swal.fire(
 							'Excluído!',
-							'Orçamento apagado!',
+							'Contrato apagado!',
 							'success'
 						)
 
-						console.log(`orçamento ${idOrcamento} deletado`)
-						window.location.assign("/budgets"); //vai para a página de orçamentos
+						console.log(`contrato ${idContrato} deletado`)
+						window.location.assign("/contracts"); //vai para a página de orçamentos
 
 						//loadTableBudget();
 					}
@@ -441,7 +343,7 @@ function deleteBudget(idOrcamento) {
 				error: function (response) {
 					Swal.fire(
 						'Erro!',
-						'Não foi possível excluir o orçamento',
+						'Não foi possível excluir o contrato',
 						'error'
 					)
 					console.log(`Erro! Mensagem: ${response}`);
@@ -454,7 +356,7 @@ function deleteBudget(idOrcamento) {
 	$('.swal2-cancel').html('Cancelar');
 }
 
-//carrega os Clientes para colocar no Orçamento
+//carrega os Clientes para colocar no Contrato
 function loadCostumers(idCliente = '', obra_idObra = '') {
 
 	//console.log('loading costumers')
@@ -492,7 +394,7 @@ function loadCostumers(idCliente = '', obra_idObra = '') {
 
 }
 
-//carrega as opções de Obras para colocar no Orçamento
+//carrega as opções de Obras para colocar no Contrato
 function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obras e em seguida os campos de orçamento (chamando outra função)
 	console.log('loading constructions')
 
@@ -536,7 +438,7 @@ function clearFieldsValues() {
 
 	//$("#formBudget #codigo").prop('disabled', true)
 	$('#btnUpdate').hide();
-	$('#title').html('Cadastrar Orçamento');
+	//$('#title').html('Cadastrar Orçamento');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveBudget').val('Cadastrar').show();
 
@@ -565,25 +467,25 @@ function clearFieldsValues() {
 
 
 /************************************************** EMAIL ********************************************** */
-//detalhes do Orcamento
-async function loadEmailFields(idOrcamento) {
-	console.log(`function loadEmailFields(${idOrcamento})`)
+//detalhes do Contrato
+async function loadEmailFields(idContrato) {
+	console.log(`function loadEmailFields(${idContrato})`)
 	//console.log("idOrcamento:" + idOrcamento)
 
 	//clearFieldsValues();
 	clearErrors();
 
-	if ((idOrcamento != '0') && (idOrcamento != undefined)) { //se já tiver um orçamento cadastrado
+	if ((idContrato != '0') && (idContrato != undefined)) { //se já tiver um orçamento cadastrado
 		$("#formEmail #name_from").val('TCC - teste (sistemalocacao)');
-		$("#formEmail #toAdress").val(`${$("#formBudget #email").val()}`)
-		$("#formEmail #toName").val(`${$("#formBudget #solicitante").val()}`)
+		$("#formEmail #toAdress").val(`${$("#formContract #email").val()}`)
+		$("#formEmail #toName").val(`${$("#formContract #solicitante").val()}`)
 		$("#formEmail #subject").val(
-			`PROPOSTA N. ${$("#formBudget #codigo").val()} - FORNECEDOR X`
+			`PROPOSTA N. ${$("#formContract #codigo").val()} - FORNECEDOR X`
 		)
 		//mensagem do email
 		$("#formEmail #html").val(`OBS: Este é um e-mai teste
 REF: PROPOSTA DA EMPRESA X PARA LOCAÇÃO
-	Olá, segue em anexo o arquivo PDF do Orçamento dos itens cotados para futura locação.
+	Olá, segue em anexo o arquivo PDF do Contrato dos itens cotados para futura locação.
 
 Atenciosamente,
 Nome do Remetente
@@ -591,22 +493,22 @@ NOME DO FORNECEDOR - locações de equipamentos para construções`
 		)
 	
 	}else{
-		console.log('não pode enviar o e-mail, pois ainda não cadastrou o orçamento')
+		console.log('não pode enviar o e-mail, pois ainda não cadastrou o contrato')
 	}
 	
-	/* Cadastrar ou Editar Orcamento --------------------------------------------------------------*/
-	$("#btnSendEmail").click(function (e) { //quando enviar o formulário de Orcamento
+	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
+	$("#btnSendEmail").click(function (e) { //quando enviar o formulário de Contrato
 		e.preventDefault();
 
 		let form = $('#formEmail');
 		let formData = new FormData(form[0]);
 
-		if ((idOrcamento != 0) || (idOrcamento != undefined)) { //se o orçamento já foi cadastrado 
+		if ((idContrato != 0) || (idContrato != undefined)) { //se o orçamento já foi cadastrado 
 			console.log("você quer mandar um e-mail")
 
 			$.ajax({
 				type: "POST",
-				url: `/budgets/${idOrcamento}/pdf/sendEmail`,
+				url: `/contracts/${idContrato}/pdf/sendEmail`,
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -623,7 +525,7 @@ NOME DO FORNECEDOR - locações de equipamentos para construções`
 
 
 					if (res.error) {
-						console.log('erro ao enviar Orçamento!')
+						console.log('erro ao enviar Contrato!')
 						Swal.fire(
 							'Erro!',
 							res.msg, //'Ocorreu algum problema ao enviar o e-mail',
@@ -644,7 +546,7 @@ NOME DO FORNECEDOR - locações de equipamentos para construções`
 						
 						Swal.fire(
 							'Sucesso!',
-							res.msg,//'Orçamento enviado para o cliente!',
+							res.msg,//'Contrato enviado para o cliente!',
 							'success'
 						)
 					}
