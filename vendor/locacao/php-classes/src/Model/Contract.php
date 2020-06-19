@@ -18,6 +18,39 @@ class Contract extends Budget{
         parent::insert();
     }
 
+    public static function showsNextCode($dtEmissao){
+
+        $sql = new Sql();
+
+        $query = "SELECT dtEmissao FROM contratos
+            WHERE (dtEmissao = :dtEmissao AND statusOrcamento IN(2, 3, 4, 5))";
+
+        $res = $sql->select($query, array(
+            ":dtEmissao"=>$dtEmissao
+        ));
+
+        $dtEmissao = strtotime($dtEmissao); //formata o valor para data
+
+        $nextNumber = count($res) + 1;
+
+        $ano = date("Y", $dtEmissao);
+        $mes = date("m", $dtEmissao);
+        $dia = date("d", $dtEmissao);
+
+        if(strlen($nextNumber) < 3){ //se tiver menos que 3 dígitos
+            if(strlen($nextNumber) < 2){
+                $nextNumber = '00' . $nextNumber;
+
+            }else{ //se tiver 2 dígitos
+                $nextNumber = '0' . $nextNumber;
+            }
+        }       
+
+        $nextCode = $ano . $mes . $dia . "-" . $nextNumber;
+
+        return $nextCode;
+    }
+
     public static function listAll(){
 
         $sql = new Sql();

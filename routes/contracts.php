@@ -36,12 +36,11 @@ $app->get('/contracts/:id', function($id){
 });
 
 /* rota que mostra o próximo código de contrato */
-$app->post('/contracts/showsNextNumber', function(){
+$app->get('/contracts/showsNextNumber/:dtEmissao', function($dtEmissao){
 
     User::verifyLogin();
 
-    echo Contract::showsNextNumber();
-  
+    echo Contract::showsNextCode($dtEmissao); 
 });
 
 $app->post('/contracts/list_datatables', function(){ //ajax list datatables
