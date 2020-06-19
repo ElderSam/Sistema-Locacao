@@ -28,10 +28,28 @@ $app->get('/contracts/:id', function($id){
 
 	User::verifyLogin();
 
+	$contract = new Contract();
+	$contract->get((int)$id);
+	$array = $contract->getValues();
+	//print_r($array);
+	$contract->setData($array);
+	
 	$page = new Page();
 	$page->setTpl("contrato_salvar", [
-        "idContrato"=>$id
-    ]); 
+		"idContrato"=>$id,
+		"codigo"=>$contract->getcodContrato(),
+		"idCliente"=>$contract->getidCliente(),
+		"obra_idObra"=>$contract->getobra_idObra(),
+		"status"=>$contract->getstatusOrcamento(),
+		"solicitante"=>$contract->getsolicitante(),
+		"telefone"=>$contract->gettelefone(),
+		"email"=>$contract->getemail(),
+		"dtEmissao"=>$contract->getdtEmissao(),
+		"dtAprovacao"=>$contract->getdtAprovacao(),
+		"dtInicio"=>$contract->getdtInicio(),
+		"prazoDuracao"=>$contract->getprazoDuracao(),
+		"notas"=>$contract->getnotas(),	
+    ]);
 
 });
 
