@@ -1,3 +1,9 @@
+if($("#fk_idOrcamento").val() == undefined){
+	const idContrato = $("#fk_idContrato").val()
+}else{
+	const idOrcamento = $("#fk_idOrcamento").val()
+}
+
 /*----------------------------------------------- Itens de orçamento --------------------------------------- */
 function searchProduct(update = false) {
 	console.log('searchProduct:')
@@ -15,8 +21,6 @@ function searchProduct(update = false) {
 		$('#btnAddProduct').html(`<div class="help-block">${loadingImg("Buscando...")}</div>`)
 							.removeClass('btn-success')
 							.addClass('btn-light'); //cor cinza-claro (Bootstrap)
-
-		idContrato = $("#fk_idOrcamento").val()
 
 		$.getJSON(`/budgetItens/${methodRoute}/${idContrato}/${code}`, function (response) { //requisição ajax que retorna um JSON
 
@@ -79,8 +83,7 @@ function searchProduct(update = false) {
 function loadTableItens(){ //carrega a tabela de Itens
 
 	console.log('loading Table ContractItens')
-
-	idContrato = $("#fk_idOrcamento").val()
+	
 	if(myTable != null){
 		myTable.destroy(); //desfaz as paginações
 	}
@@ -372,7 +375,6 @@ $(function () {
 
                     res = JSON.parse(response)
                     console.log("id do orçamento: " + res.idContrato)
-                    // $('#idOrcamento').val(res.idContrato)
 
                     //$('#divListItens').attr('hidden', false) //mostra a parte da lista de produtos para adicionar
 

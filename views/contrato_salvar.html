@@ -12,13 +12,13 @@
                 <li class="breadcrumb-item active">home/Orçamentos</li>
 
                
-                <a id="btnAddBudget" href="/budgets/new" class="btn btn-success">
+                <a id="btnAddContract" href="/contracts/new" class="btn btn-success">
                     Novo Orçamento
                 </a>           
             </ol-->
 
 
-            <!-- Budget ------------------------------------------------------------------------------->
+            <!-- Contract ------------------------------------------------------------------------------->
             <div>   
     
                 <div>
@@ -26,7 +26,7 @@
                     <div class="row">
                         <h3><b id="title">Cadastrar Contrato</b></h3>
                         <a id="btnShowPDF" class="btn btn-danger ml-4" href="/budgets/{$idContrato}/pdf/show" title="ver PDF"> <i class="fas fa-file-pdf fa-lg"></i></a>
-                        <!--a class="btn btn-warning ml-4" href="/budgets/{$idContrato}/pdf/sendEmail" title="enviar PDF por e-mail"><i class="fas fa-envelope fa-lg"></i></a-->
+                        <!--a class="btn btn-warning ml-4" href="/contracts/{$idContrato}/pdf/sendEmail" title="enviar PDF por e-mail"><i class="fas fa-envelope fa-lg"></i></a-->
                         <button type="button" id="btnEmail" class="btn btn-warning ml-4" title="enviar PDF por e-mail" data-toggle="modal" data-target="#emailModal">
                             <i class="fas fa-envelope fa-lg"></i>
                         </button>
@@ -181,7 +181,7 @@
                     
                     <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
                         
-                        <a href="/budgets" id="btnVoltar" class="btn btn-danger text-white">Voltar</a>
+                        <a href="/contracts" id="btnVoltar" class="btn btn-danger text-white">Voltar</a>
 
                         <div>
                             <!-- para desbloquear os campos para editar o procuto -->
@@ -190,7 +190,7 @@
                             <i class='fas fa-trash'></i>
                             </button>
                             
-                            <!-- btnCreateBudget and btnEditBudget-->
+                            <!-- btnCreateContract and btnEditContract-->
                             <input id="btnSaveContract" type="submit" value="Cadastrar" class="btn btn-success">
                         
                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
@@ -199,7 +199,7 @@
                         
                     </div>                
                 </div>               
-            </div>  <!-- end Budget -->  
+            </div>  <!-- end Contract -->  
 
         <!-- Product Modal------------------------------------------------------------------------------->
         <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
@@ -423,6 +423,6 @@
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="../res/plugins/mask/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
-    <!-- <script src="../res/js/budgetItems_save.js"></script> -->
+    <script src="../res/js/budgetItems_save.js"></script>
     <script src="../res/js/contract_save.js"></script>
       

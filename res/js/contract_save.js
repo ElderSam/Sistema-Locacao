@@ -24,12 +24,6 @@ $(function () {
 		$('#btnShowPDF').show();
 		$('#btnEmail').show();
 		
-	}else{ //se for para cadastrar
-		typeForm = 'save';
-		console.log('Novo Contrato')
-		$('#btnDeleteBudget').hide();
-		$('#btnShowPDF').hide();
-		$('#btnEmail').hide();
 	}
 
 	//adiciona as máscaras
@@ -39,12 +33,6 @@ $(function () {
 	loadContract(idContrato);
 
 	loadTableItens() //carrega a tabela de itens de contrato (produtos adicionados)
-
-	/*$("#btnAddBudget").click(function(){
-		
-		loadBudget();
-	});*/
-
 
 	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
 	$("#btnSaveContract").click(function (e) { //quando enviar o formulário de Contrato
@@ -58,9 +46,6 @@ $(function () {
 
 		let form = $('#formContrato');
 		let formData = new FormData(form[0]);
-
-		//idOrcamento = $('#idOrcamento').val()
-		//console.log("idOrcamento:" + idOrcamento)
 
 		if ((idContrato == 0) || (idContrato == undefined)) { //se for para cadastrar --------------------------------------------------
 
@@ -76,7 +61,7 @@ $(function () {
 				processData: false,
 				beforeSend: function () {
 					clearErrors();
-					$("#btnSaveContractt").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					$("#btnSaveContract").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 
 				},
 				success: function (response) {
@@ -142,8 +127,8 @@ $(function () {
 
 //detalhes do Contrato
 async function loadContract(idContrato) {
-	//console.log(`function loadBudget(${idOrcamento})`)
-	//console.log("idOrcamento:" + idOrcamento)
+	//console.log(`function loadBudget(${idContrato})`)
+	//console.log("idContrato:" + idContrato)
 
 	//clearFieldsValues();
 	clearErrors();
@@ -161,7 +146,7 @@ async function loadContract(idContrato) {
 		
 	}else{ //se for para Editar um Contrato existente
 	
-		idCliente, obra_idObra = await loadFieldsContract(idContrato); //busca os valores dos campos de Contrato para preencher	
+		idCliente, obra_idObra = await setFieldsContract(idContrato); //busca os valores dos campos de Contrato para preencher	
 	}
 
 	$("#formContract #codigo").prop('disabled', true);
@@ -196,14 +181,14 @@ function showsNextNumber() { //mostra o próximo número de série relacionado �
 }
 
 
-async function loadFieldsContract(idContrato) {
-	console.log(`function loadFieldsContract(${idContrato})`)
+async function setFieldsContract(idContrato) {
+	console.log(`function setFieldsContract(${idContrato})`)
 
-	$.getJSON(`/contract/json/${idContrato}`, function (data) { //ajax
+	$.getJSON(`/contracts/json/${idContrato}`, function (data) { //ajax
 		console.log(data)
 
 		$("#idContrato").val(data.idContrato);
-		//console.log('load View Orcamento idOrcamento: ' + $("#idOrcamento").val())
+		//console.log('load View Orcamento idContrato: ' + $("#idContrato").val())
 
 		$("#formContract #codigo").val(data.codContrato).prop('disabled', true);
 		codigo = data.codContrato //seta o valor para mostrar no modal excluir
@@ -243,14 +228,14 @@ async function loadFieldsContract(idContrato) {
 
 		
 		/* Atualizar formContract ------------------------------------------------------------------ */
-		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
-
+		$('#formContract #btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
+			alert('update')
 			typeForm = 'save';
 
 			$('#title').html('Editar Contrato');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
 			$('#btnSaveContract').val('Atualizar').show();
-			$('#btnUpdate').hide();
+			$('#formContract #btnUpdate').hide();
 
 			//$("#formBudget #codigo").prop('disabled', false);
 			
@@ -464,13 +449,11 @@ function clearFieldsValues() {
 	//$('#referencia').val('');
 }
 
-
-
 /************************************************** EMAIL ********************************************** */
 //detalhes do Contrato
 async function loadEmailFields(idContrato) {
 	console.log(`function loadEmailFields(${idContrato})`)
-	//console.log("idOrcamento:" + idOrcamento)
+	//console.log("idContrato:" + idContrato)
 
 	//clearFieldsValues();
 	clearErrors();
