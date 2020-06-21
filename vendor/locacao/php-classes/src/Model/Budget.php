@@ -229,7 +229,7 @@ class Budget extends Generator{
         }else{
             return json_encode([
                 "error"=>true,
-                "msg"=>"Erro ao atualizar Orçamento!"
+                "msg"=>"Erro ao atualizar!"
                 ]);
         }
 
@@ -249,7 +249,7 @@ class Budget extends Generator{
 
                 return json_encode([
                     "error"=>true,
-                    "msg"=>'Erro ao excluir Orçamento'
+                    "msg"=>'Erro ao excluir!'
                 ]);
 
             }else{

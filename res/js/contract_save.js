@@ -20,7 +20,7 @@ $(function () {
 
 		$('#btnCart').hide();
 
-		$('#btnDeleteBudget').show();
+		$('#btnDeleteContract').show();
 		$('#btnShowPDF').show();
 		$('#btnEmail').show();
 		
@@ -42,9 +42,11 @@ $(function () {
 		//adiciona as máscaras
 		$("#telefone").unmask();
 
-		$("#formContrato #codigo").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+		$("#formContract #codigo").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+		$("#formContract #idCliente").prop('disabled', false);
+		$("#formContract #obra_idObra").prop('disabled', false);
 
-		let form = $('#formContrato');
+		let form = $('#formContract');
 		let formData = new FormData(form[0]);
 
 		if ((idContrato == 0) || (idContrato == undefined)) { //se for para cadastrar --------------------------------------------------
@@ -66,7 +68,7 @@ $(function () {
 				},
 				success: function (response) {
 					clearErrors();
-
+					console.log(response);
 					if (JSON.parse(response).error) {
 						console.log('erro ao atualizar Contrato!')
 
@@ -90,7 +92,7 @@ $(function () {
 						}
 
 					} else {
-						//$('#BudgetModal').modal('hide');
+						//$('#ContractModal').modal('hide');
 
 						msg = 'Contrato atualizado!';
 
@@ -100,15 +102,15 @@ $(function () {
 							'success'
 						);
 
-						//loadTableBudgets();
-						//$('#formBudget').trigger("reset");
+						//loadTableContracts();
+						//$('#formContract').trigger("reset");
 					}
 
 				},
 				error: function (response) {
 
-					//$('#BudgetModal').modal('hide');
-					//$('#formBudget').trigger("reset");
+					//$('#ContractModal').modal('hide');
+					//$('#formContract').trigger("reset");
 					console.log(`Erro! Mensagem: ${response}`);
 
 				}
@@ -127,7 +129,7 @@ $(function () {
 
 //detalhes do Contrato
 async function loadContract(idContrato) {
-	//console.log(`function loadBudget(${idContrato})`)
+	//console.log(`function loadContract(${idContrato})`)
 	//console.log("idContrato:" + idContrato)
 
 	//clearFieldsValues();
@@ -216,11 +218,11 @@ async function setFieldsContract(idContrato) {
 		
 		$("#ContractModal").modal();
 
-		//$("#formBudget #idCliente").val(data.idCliente).prop('disabled', true);
+		//$("#formContract #idCliente").val(data.idCliente).prop('disabled', true);
 		idCliente = data.idCliente;
 		//console.log(`received idCliente: ${idCliente}`)
 
-		//$("#formBudget #obra_idObra").val(data.obra_idObra).prop('disabled', true);
+		//$("#formContract #obra_idObra").val(data.obra_idObra).prop('disabled', true);
 		obra_idObra = data.obra_idObra;
 		//console.log(`received obra_idObra: ${obra_idObra}`)
 
@@ -228,19 +230,19 @@ async function setFieldsContract(idContrato) {
 
 		
 		/* Atualizar formContract ------------------------------------------------------------------ */
-		$('#formContract #btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
-			alert('update')
+		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
+
 			typeForm = 'save';
 
 			$('#title').html('Editar Contrato');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
 			$('#btnSaveContract').val('Atualizar').show();
-			$('#formContract #btnUpdate').hide();
+			$('#btnUpdate').hide();
 
-			//$("#formBudget #codigo").prop('disabled', false);
+			//$("#formContract #codigo").prop('disabled', false);
 			
-			$("#formContract #idCliente").prop('disabled', false);
-			$("#formContract #obra_idObra").prop('disabled', false);
+			//$("#formContract #idCliente").prop('disabled', false);
+			//$("#formContract #obra_idObra").prop('disabled', false);
 			$("#formContract #dtEmissao").prop('disabled', false);
 			$("#formContract #solicitante").prop('disabled', false);
 			$("#formContract #telefone").prop('disabled', false);
@@ -268,7 +270,7 @@ async function setFieldsContract(idContrato) {
 	});
 }
 
-function deleteBudget(idContrato) {
+function deleteContract(idContrato) {
 
 	if(idContrato == 0){ //se o orçamento acabou de ser cadastrado
 		alert('idContrato == 0')
@@ -322,7 +324,7 @@ function deleteBudget(idContrato) {
 						console.log(`contrato ${idContrato} deletado`)
 						window.location.assign("/contracts"); //vai para a página de orçamentos
 
-						//loadTableBudget();
+						//loadTableContract();
 					}
 				},
 				error: function (response) {
@@ -373,7 +375,7 @@ function loadCostumers(idCliente = '', obra_idObra = '') {
 		loadConstructions(idCliente, obra_idObra)
 
 	}).fail(function () {
-		console.log("Rota não encontrada! (/budgets/costumers/json)");
+		console.log("Rota não encontrada! (/contracts/costumers/json)");
 		return false
 	});
 
@@ -412,7 +414,7 @@ function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obra
 		$("#obra_idObra").val(obra_idObra)
 
 	}).fail(function () {
-		console.log("Rota não encontrada! (/budgets/constructions/json)");
+		console.log("Rota não encontrada! (/contracts/constructions/json)");
 		return false
 	});*/
 
@@ -421,15 +423,15 @@ function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obra
 //limpar campos do modal para Cadastrar
 function clearFieldsValues() {
 
-	//$("#formBudget #codigo").prop('disabled', true)
+	//$("#formContract #codigo").prop('disabled', true)
 	$('#btnUpdate').hide();
 	//$('#title').html('Cadastrar Orçamento');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
-	$('#btnSaveBudget').val('Cadastrar').show();
+	$('#btnSaveContract').val('Cadastrar').show();
 
 	//$('#dtCadastro').parent().hide(); //aparece a data de cadastro (só para visualizar)
 
-	//$("#formBudget #codigo").prop('disabled', false);
+	//$("#formContract #codigo").prop('disabled', false);
 
 	//$('#dtCadastro').parent().hide();
 
@@ -536,8 +538,8 @@ NOME DO FORNECEDOR - locações de equipamentos para construções`
 
 				},
 				error: function (response) {
-					//$('#BudgetModal').modal('hide');
-					//$('#formBudget').trigger("reset");
+					//$('#ContractModal').modal('hide');
+					//$('#formContract').trigger("reset");
 					console.log(`Erro! Mensagem: ${response}`);
 
 				}

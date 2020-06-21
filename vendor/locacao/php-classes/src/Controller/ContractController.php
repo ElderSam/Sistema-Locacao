@@ -83,7 +83,7 @@ class ContractController extends BudgetController
             $errors["#solicitante"] = "Nome do solicitante é obrigatório!";
         }
                 
-        if($_POST["email"] != "" && $this->validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
+        if($_POST["email"] != "" && parent::validaEmail($_POST["email"]) == false){ //se o e-mail estiver correto
             $errors["#email"] = "E-mail Incorreto!";
         }
 

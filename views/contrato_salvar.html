@@ -68,10 +68,11 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="status">Status</label>
-                                <select class="form-control" id="status" name="status" value="{$status}">
-                                    <option selected value="0">Pendente</option>
+                                <select class="form-control" id="status" name="status" value="{$status}">    
                                     <option value="3">Aprovado</option>  
-                                    <option value="1">Arquivado</option>                        
+                                    <option value="4">Em andamento</option>
+                                    <option selected value="2">Vencido</option>
+                                    <!--option value="5">Encerrado</option-->                    
                                 </select>
                                 <span class="help-block"></span>
                             </div>
@@ -423,6 +424,6 @@
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="../res/plugins/mask/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
-    <script src="../res/js/budgetItems_save.js"></script>
     <script src="../res/js/contract_save.js"></script>
+    <script src="../res/js/budgetItems_save.js"></script>
       
