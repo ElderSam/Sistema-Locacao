@@ -5,6 +5,7 @@ let idCliente = '';
 let codigo = '0'
 
 const idOrcamento = $("#idOrcamento").val();
+const idContrato = $("#idOrcamento").val(); //para o arquivo budgetItems_save.js
 let typeForm = '';
 
 //Somente para orçamento
@@ -123,7 +124,8 @@ $(function () {
 							'success'
 						)						
 
-						$("#btnSaveBudget").attr('value', 'Finalizar');
+						$("#btnSaveBudget").hide();
+						$("#btnFinalize").attr('hidden', false);						
 
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
@@ -212,7 +214,15 @@ $(function () {
 		return false;
 	});
 
-	
+	$("#btnFinalize").click(function(){
+
+		Swal.fire(
+			'Sucesso!',
+			'Orçamento cadastrado!',
+			'success'
+		)
+	});
+
 	$("#btnEmail").click(function () { //quando abrir o modal
 		loadEmailFields(idOrcamento);
 	});

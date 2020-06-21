@@ -1,9 +1,3 @@
-if($("#fk_idOrcamento").val() == undefined){
-	const idContrato = $("#fk_idContrato").val()
-}else{
-	const idOrcamento = $("#fk_idOrcamento").val()
-}
-
 /*----------------------------------------------- Itens de orçamento --------------------------------------- */
 function searchProduct(update = false) {
 	console.log('searchProduct:')
