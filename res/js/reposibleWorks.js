@@ -1,13 +1,9 @@
 
 $(function() { //quando a página carrega
 
-
 	 var parameters = window.location.href.split('/');
-
-
 	 idCostumer = parameters[parameters.length -1];
 	
-
 	//carrega a tabela de Chefe de Obras
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
@@ -35,6 +31,7 @@ $(function() { //quando a página carrega
 	$("#btnSaveReposibleWorks").click(function(e) { //quando enviar o formulário de Responsaveis
 
 		e.preventDefault();
+		$("#formReposibleWorks #codigo").prop("disabled", false);
 		
 		let form = $('#formReposibleWorks');
 
@@ -170,6 +167,29 @@ $(function() { //quando a página carrega
 
 });
 
+function showsNextNumber(){ //mostra o próximo número de série relacionado ao cliente
+
+	var parameters = window.location.href.split('/');
+	idCostumer = parameters[parameters.length -1];
+
+	$.ajax({
+		type: "POST",
+		url: `/reposibleWorks/showsNextNumber/${idCostumer}`,
+		contentType: false,
+		processData: false,
+		
+		success: function (response) {
+	
+			
+			$('#codigo').val(response)						
+								
+		},
+		error: function (response) {
+
+			console.log(`Erro! Mensagem: ${response}`);		
+		}
+	});	
+}
 
 function loadTableReposibleWorks(){ //carrega a tabela de Chesfes de Obra depois de umas alteração
 
@@ -216,6 +236,7 @@ function loadReposibleWorks(idResp) { //carrega todos os campos do modal referen
 		//console.log(data.id_fk_cliente);
 
 		$("#formReposibleWorks #id").val(data.idResp);
+		$("#formReposibleWorks #codigo").val(data.codigo).prop('disabled', true);
 		$("#formReposibleWorks #id_fk_cliente").val(data.id_fk_cliente);
 		$("#formReposibleWorks #respObra").val(data.respObra).prop('disabled', true);
 		$("#formReposibleWorks #telefone1").val(data.telefone1).prop('disabled', true);
@@ -328,7 +349,8 @@ function limparCampos(){
 	$('#btnSaveReposibleWorks').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-
+	
+	$("#formReposibleWorks #codigo").prop('disabled', true);
 	$("#formReposibleWorks #respObra").prop('disabled', false);
 //	$("#formReposibleWorks #id_fk_cliente").prop('disabled', false);
 	$("#formReposibleWorks #telefone1").prop('disabled', false);
@@ -341,6 +363,7 @@ function limparCampos(){
 
 	$('#id').val(0);
 //	$('#id_fk_cliente').val('');
+	showsNextNumber();
 	$('#respObra').val('');
 	$('#telefone1').val('');
 	$('#telefone2').val('');

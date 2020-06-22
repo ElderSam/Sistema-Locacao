@@ -50,6 +50,15 @@ $app->post("/reposibleWorks/create/:idCliente", function($idCliente){
 
 });
 
+/* rota que mostra o próximo código do Responsavel */
+$app->post('/reposibleWorks/showsNextNumber/:idCliente', function($idCliente){
+
+    User::verifyLogin();
+
+    echo ReposibleWorks::showsNextNumber($idCliente);
+  
+});
+
 // Rota para atualizar Cliente 
 $app->post("/reposibleWorks/:idReposibleWorks", function(){ //update
 	

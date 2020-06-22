@@ -16,7 +16,7 @@ class ReposibleWorks extends Generator{
         $sql = new Sql();
 
        //$results = $sql->select("SELECT * FROM resp_obras WHERE idResp = :idResp", array(
-        $results = $sql->select("SELECT r.idResp, r.respObra, r.telefone1, r.telefone2, r.telefone3, r.email1, r.email2, r.anotacoes, r.dtCadastro, r.id_fk_cliente, c.nome FROM resp_obras r INNER JOIN clientes c on r.id_fk_cliente = c.idCliente WHERE r.idResp = :idResp", array(
+        $results = $sql->select("SELECT r.idResp, r.codigo, r.respObra, r.telefone1, r.telefone2, r.telefone3, r.email1, r.email2, r.anotacoes, r.dtCadastro, r.id_fk_cliente, c.nome FROM resp_obras r INNER JOIN clientes c on r.id_fk_cliente = c.idCliente WHERE r.idResp = :idResp", array(
             ":idResp"=>$idReposible
         ));
 
@@ -103,13 +103,13 @@ class ReposibleWorks extends Generator{
     }
 
     public function insert($idCliente){
-        
      
         $sql = new Sql();
 
         if(($this->getrespObra() != "")){
            
-            $results = $sql->select("CALL sp_responsaveis_save(:respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
+            $results = $sql->select("CALL sp_responsaveis_save(:codigo, :respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
+                ":codigo"=>$this->getcodigo(),
                 ":respObra"=>$this->getrespObra(),
                 ":telefone1"=>$this->gettelefone1(),
                 ":telefone2"=>$this->gettelefone2(),
@@ -143,6 +143,27 @@ class ReposibleWorks extends Generator{
         }
     }
     
+    public static function showsNextNumber($idCliente){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT MAX(codigo) FROM resp_obras WHERE id_fk_cliente = :idCliente", array(
+            ":idCliente"=>$idCliente
+        ));
+        $nextNumber = 1 + $results[0]['MAX(codigo)'];
+       
+        if($nextNumber < 10){
+            $nextNumber = "00". $nextNumber;
+
+        }else if($nextNumber < 100){
+            $nextNumber = "0". $nextNumber;
+            
+        }
+
+        return $nextNumber; //retorna o próximo número de série da categoria
+
+    }
+
     public static function searchCompany($name){ //search if name or user already exists
 
         $sql = new Sql();
@@ -159,8 +180,9 @@ class ReposibleWorks extends Generator{
         $sql = new Sql();
 
 
-        $results = $sql->select("CALL sp_responsaveisUpdate_save(:idResp, :respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
+        $results = $sql->select("CALL sp_responsaveisUpdate_save(:codigo, :idResp, :respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
             ":idResp"=>$this->getid(),
+            ":codigo"=>$this->getcodigo(),
             ":respObra"=>$this->getrespObra(),
             ":telefone1"=>$this->gettelefone1(),
             ":telefone2"=>$this->gettelefone2(),
