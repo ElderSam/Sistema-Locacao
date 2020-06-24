@@ -178,9 +178,9 @@ class ReposibleWorks extends Generator{
     public function update(){
 
         $sql = new Sql();
+        //print_r($_POST);
 
-
-        $results = $sql->select("CALL sp_responsaveisUpdate_save(:codigo, :idResp, :respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
+        $results = $sql->select("CALL sp_responsaveisUpdate_save(:idResp, :codigo, :respObra, :telefone1, :telefone2, :telefone3, :email1, :email2, :anotacoes, :id_fk_cliente)", array(
             ":idResp"=>$this->getid(),
             ":codigo"=>$this->getcodigo(),
             ":respObra"=>$this->getrespObra(),

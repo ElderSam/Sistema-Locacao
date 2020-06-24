@@ -35,7 +35,7 @@ class Budget extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
+            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :dtFim, :statusOrcamento)", array(
                 ":codContrato"=>$this->getcodigo(),
                 ":nomeEmpresa"=>$this->getnomeEmpresa(),
                 ":obra_idObra"=>$this->getobra_idObra(),
@@ -49,7 +49,7 @@ class Budget extends Generator{
                 ":notas"=>$this->getnotas(),
                 ":valorTotal"=>$this->getvalorTotal(),
                 ":dtInicio"=>$this->getdtInicio(),
-                ":prazoDuracao"=>$this->getprazoDuracao(),
+                ":dtFim"=>$this->getdtFim(),
                 ":statusOrcamento"=>$this->getstatus()
             ));
 
@@ -195,13 +195,14 @@ class Budget extends Generator{
 
     public function update(){
 
+        
         if ($this->getobra_idObra() == "") {        
             $this->setobra_idObra(NULL);
         }
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :prazoDuracao, :statusOrcamento)", array(
+        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :dtFim, :statusOrcamento)", array(
             ":idContrato"=>$this->getidContrato(),
             ":codContrato"=>$this->getcodigo(),
             ":nomeEmpresa"=>$this->getnomeEmpresa(),
@@ -216,7 +217,7 @@ class Budget extends Generator{
             ":notas"=>$this->getnotas(),
             ":valorTotal"=>$this->getvalorTotal(),
             ":dtInicio"=>$this->getdtInicio(),
-            ":prazoDuracao"=>$this->getprazoDuracao(),
+            ":dtFim"=>$this->getdtFim(),
             ":statusOrcamento"=>$this->getstatus()
         ));
 

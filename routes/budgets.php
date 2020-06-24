@@ -2,6 +2,7 @@
 
 use \Locacao\Page;
 use \Locacao\Controller\BudgetController;
+use Locacao\Controller\ContractController;
 use \Locacao\Model\Budget;
 use \Locacao\Model\User;
 
@@ -131,8 +132,12 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 	
     User::verifyLogin();
 
-	$budget = new BudgetController();
-
+	if($_POST["status"] == 2){ // Se o Orçamento for aprovado
+		$budget = new ContractController();
+	}else{
+		$budget = new BudgetController();
+	}
+	
 	$update = true;
 
 	echo $budget->save($update);
