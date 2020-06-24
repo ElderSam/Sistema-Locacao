@@ -35,8 +35,10 @@ class ContractController extends BudgetController
 
 
         if ($update) { //se for atualizar
-            
-            return $contract->update();
+           $auxcod = $contract->showsNextCode($_POST["dtEmsissao"]);
+           $contract->setcodigo($auxcod);
+           
+           return $contract->update();
 
 
         } else { // se for cadastrar novo Fornecedor

@@ -209,7 +209,7 @@ async function setFieldsContract(idContrato) {
 		$("#formContract #status").val(data.statusOrcamento).prop('disabled', true);
 		$("#formContract #dtInicio").val(data.dtInicio).prop('disabled', true);
 		$("#formContract #dtAprovacao").val(data.dtAprovacao).prop('disabled', true);
-		$("#formContract #prazoDuracao").val(data.prazoDuracao).prop('disabled', true);
+		$("#formContract #dtFim").val(data.dtFim).prop('disabled', true);
 		$("#formContract #notas").val(data.notas).prop('disabled', true);
 
 	}).then((data) => {
@@ -250,7 +250,7 @@ async function setFieldsContract(idContrato) {
 			$("#formContract #status").prop('disabled', false);
 			$("#formContract #dtInicio").prop('disabled', false);
 			$("#formContract #dtAprovacao").prop('disabled', false);
-			$("#formContract #prazoDuracao").prop('disabled', false);
+			$("#formContract #dtFim").prop('disabled', false);
 			$("#formContract #notas").prop('disabled', false);
 
 			$('#btnCart').show();

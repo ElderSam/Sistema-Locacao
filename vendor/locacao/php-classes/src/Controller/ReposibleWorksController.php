@@ -35,6 +35,7 @@ class ReposibleWorksController extends Generator
             // Ler e criar o array de dados ---------------------
             $row = array();
 
+            $row[] = $reposible['codigo'];
             $row[] = $reposible['respObra'];
             $row[] = $reposible['telefone1'];
             $row[] = $reposible['email1'];
