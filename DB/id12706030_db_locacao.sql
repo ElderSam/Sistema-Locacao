@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS id12706030_db_locacao;
+USE id12706030_db_locacao;
+
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
@@ -1189,14 +1192,6 @@ ALTER TABLE `contratos`
   ADD KEY `fk_contrato_obra1` (`obra_idObra`);
 
 --
--- Índices para tabela `contrato_itens`
---
-ALTER TABLE `contrato_itens`
-  ADD PRIMARY KEY (`idItem`),
-  ADD KEY `fk_contrato_has_produto_contrato2` (`idContrato`),
-  ADD KEY `fk_contrato_has_produto_produto2` (`idProduto_gen`);
-
---
 -- Índices para tabela `faturas`
 --
 ALTER TABLE `faturas`
@@ -1400,13 +1395,6 @@ ALTER TABLE `faturas`
 ALTER TABLE `historicoalugueis`
   ADD CONSTRAINT `fk_contrato_has_produto_contrato2` FOREIGN KEY (`contrato_idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_contrato_has_produto_produto2` FOREIGN KEY (`produto_idProduto`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `obras`
---
-ALTER TABLE `obras`
-  ADD CONSTRAINT `obras_ibfk_1` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `obras_ibfk_2` FOREIGN KEY (`id_fk_respObra`) REFERENCES `resp_obras` (`idResp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `produtos_esp`
