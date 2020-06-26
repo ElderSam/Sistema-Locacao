@@ -35,13 +35,19 @@ class Construction extends Generator{
 
     }
 
- 
 // Método para listar todos os registros
-    public static function listAll(){
+    public static function listAll($idCliente = false){
 
         $sql = new Sql();
+        
+        $query = "SELECT * FROM obras";
+        $arrValues = [];
 
-        return json_encode( $sql->select("SELECT * FROM obras"));
+        if($idCliente){
+            $query .= " WHERE id_fk_cliente = $idCliente";
+        }
+
+        return json_encode( $sql->select($query));
     }
 
 

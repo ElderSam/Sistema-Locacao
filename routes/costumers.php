@@ -51,11 +51,11 @@ $app->get("/costumers/json/:idCliente", function($idCliente){
 
 });
 
-$app->get('/costumers/json/:idCliente/constructions', function($idCliente){
+$app->get('/costumers/json/:idCliente/constructions', function($idCliente){ //filtra obras por cliente
 
     User::verifyLogin();
 
-   echo Construction::listAll();
+   echo Construction::listAll($idCliente);
   
 });
 

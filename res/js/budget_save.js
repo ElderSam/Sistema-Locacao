@@ -10,7 +10,7 @@ let typeForm = '';
 
 //Somente para orçamento
 $('#dtInicio').parent().hide();
-$('#prazoDuracao').parent().hide();
+$('#dtFim').parent().hide();
 
 $(function () {	
 
@@ -253,7 +253,7 @@ async function loadBudget(idOrcamento) {
 		disable = true
 
 		$("#formBudget #dtInicio").parent().hide();
-		$("#formBudget #prazoDuracao").parent().hide();
+		$("#formBudget #dtFim").parent().hide();
 
 		loadCostumers(idCliente, obra_idObra); //carrega clientes
 
@@ -265,13 +265,13 @@ async function loadBudget(idOrcamento) {
 	}
 
 	$("#formBudget #dtInicio").prop('disabled', disable);
-	$("#formBudget #prazoDuracao").prop('disabled', disable);
+	$("#formBudget #dtFim").prop('disabled', disable);
 
 	$("#formBudget #codigo").prop('disabled', true);
 
 	$("#idCliente").change(async function () {
-		
-		await loadConstructions(idCliente, obra_idObra);
+
+		await loadConstructions($("#idCliente").val(), obra_idObra);
 	});
 
 	//await loadTableProducts(); //carrega lista de produtos para colocar no Carrinho
@@ -325,7 +325,7 @@ async function loadFieldsBudget(idOrcamento) {
 		$("#formBudget #status").val(data.statusOrcamento).prop('disabled', true);
 		$("#formBudget #dtInicio").val(data.dtInicio).prop('disabled', true);
 		$("#formBudget #dtAprovacao").val(data.dtAprovacao).prop('disabled', true);
-		$("#formBudget #prazoDuracao").val(data.prazoDuracao).prop('disabled', true);
+		$("#formBudget #dtFim").val(data.dtFim).prop('disabled', true);
 		$("#formBudget #notas").val(data.notas).prop('disabled', true);
 
 		$("#formBudget #notas").val(data.notas).prop('disabled', true);
@@ -371,7 +371,7 @@ async function loadFieldsBudget(idOrcamento) {
 			$("#formBudget #status").prop('disabled', false);
 			$("#formBudget #dtInicio").prop('disabled', false);
 			$("#formBudget #dtAprovacao").prop('disabled', false);
-			$("#formBudget #prazoDuracao").prop('disabled', false);
+			$("#formBudget #dtFim").prop('disabled', false);
 			$("#formBudget #notas").prop('disabled', false);
 
 			$('#btnCart').show();
@@ -394,7 +394,7 @@ async function loadFieldsBudget(idOrcamento) {
 function deleteBudget(idOrcamento) {
 
 	if(idOrcamento == 0){ //se o orçamento acabou de ser cadastrado
-		alert('idOrcamento == 0')
+
 		idOrcamento = $('#idOrcamento').val();
 		codigo = $("#codigo").val();
 	}
@@ -476,14 +476,12 @@ function loadCostumers(idCliente = '', obra_idObra = '') {
 
 		//console.log(data)
 
-		costumers = `<option value="">(escolha)</option>`
-
 		data.forEach(function (item) {
 			//console.log(item)
 			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
 		});
 
-		$('#idCliente').html(costumers)
+		$('#idCliente').append(costumers)
 
 
 	}).then(() => {
@@ -503,41 +501,40 @@ function loadCostumers(idCliente = '', obra_idObra = '') {
 }
 
 //carrega as opções de Obras para colocar no Orçamento
-function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obras e em seguida os campos de orçamento (chamando outra função)
+function loadConstructions(idCliente = null, obra_idObra = '') { //Carrega as Obras e em seguida os campos de orçamento (chamando outra função)
 	console.log('loading constructions')
 
-	$("#obra_idObra").html(`<option value="">(escolha)</option>`);
+	if(idCliente == null) return;
 
-	//***************************************************
-	$("#obra_idObra").append(`<option value="1">TESTE 1/2020 (número/ano)</option>`); //MUDAR ESSA LINHA QUANDO O CADSTRO DE OBRAS ESTIVER PRONTO
-	
-	if(obra_idObra == 1){
-		$("#obra_idObra").val('1').prop('disabled', true); //tirar isso quando Obras estiver pronto ******************************************************************
+	$("#obra_idObra").html("");
 
+	console.log('idCliente: ' + idCliente)
 
-	}
-		/*$.getJSON(`/costumers/json/${idCliente}/constructions`, function (data) { //ajax
+	$.getJSON(`/costumers/json/${idCliente}/constructions`, function (data) { //ajax
 
 		console.log(data)
 
 		let constructions = `<option value="">(escolha)</option>`
 
-		data.forEach(function (item) {
-			//console.log(item)
-			constructions += `<option value="${item.idObra}">${item.codObra} - ${item.descCategoria}</option>`
-		});
+		if(data.length == 0){
+			constructions = `<option value="">Sem obra cadastrada</option>`
+		}else{
+			data.forEach(function (item) {
+				//console.log(item)
+				constructions += `<option value="${item.idObra}">${item.codObra}</option>`
+			});
+		}
 
-		$('#obra_idObra').html(constructions).prop('disabled', true);
-
+		$("#obra_idObra").html(constructions)
 
 	}).then(() => {
 
 		$("#obra_idObra").val(obra_idObra)
 
 	}).fail(function () {
-		console.log("Rota não encontrada! (/budgets/constructions/json)");
+		console.log("Rota não encontrada! (/costumers/json/${idCliente}/constructions");
 		return false
-	});*/
+	});
 
 }
 
