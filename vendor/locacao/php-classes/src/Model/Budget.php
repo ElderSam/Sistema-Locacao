@@ -201,7 +201,7 @@ class Budget extends Generator{
         }
         
         $sql = new Sql();
-
+        print_r($_POST);
         $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :dtFim, :statusOrcamento)", array(
             ":idContrato"=>$this->getidContrato(),
             ":codContrato"=>$this->getcodigo(),
@@ -221,6 +221,7 @@ class Budget extends Generator{
             ":statusOrcamento"=>$this->getstatus()
         ));
 
+       // print_r($results);
         if(count($results) > 0){
 
             $this->setData($results[0]); //carrega atributos desse objeto com o retorno da atualização no banco

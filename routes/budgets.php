@@ -130,13 +130,11 @@ $app->post("/budgets/create", function(){
 /* rota para atualizar contrato --------------------------*/
 $app->post("/budgets/:idbudget", function($idbudget){ //update
 	
+	
     User::verifyLogin();
 
-	if($_POST["status"] == 2){ // Se o Orçamento for aprovado
-		$budget = new ContractController();
-	}else{
-		$budget = new BudgetController();
-	}
+
+	$budget = new BudgetController();
 	
 	$update = true;
 

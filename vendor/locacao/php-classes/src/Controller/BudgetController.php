@@ -16,8 +16,8 @@ class BudgetController extends Generator
     {
     }
 
-    public function save($update = false) //Add a new Budget or Update
-    {
+    public function save($update = false){ //Add a new Budget or Update
+    
         
         User::verifyLogin();
         

@@ -14,7 +14,8 @@ class ContractController extends BudgetController
     }
 
     public function save($update = false) //Add a new Contract or Update
-    {
+    {   
+        
         
         User::verifyLogin();
         
@@ -33,7 +34,7 @@ class ContractController extends BudgetController
         
         $contract->setData($_POST);
 
-
+        print_r($_POST);
         if ($update) { //se for atualizar
            $auxcod = $contract->showsNextCode($_POST["dtEmsissao"]);
            $contract->setcodigo($auxcod);
@@ -41,7 +42,7 @@ class ContractController extends BudgetController
            return $contract->update();
 
 
-        } else { // se for cadastrar novo Fornecedor
+        } else { // se for cadastrar novo Contrato
             
             $res = $contract->insert();        
            

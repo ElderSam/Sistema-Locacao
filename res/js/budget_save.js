@@ -195,7 +195,7 @@ $(function () {
 							msg,
 							'success'
 						);
-
+						window.location.assign(`/contracts/${idOrcamento}`);	
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
 					}
