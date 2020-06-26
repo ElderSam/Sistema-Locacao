@@ -34,7 +34,7 @@ class ContractController extends BudgetController
         
         $contract->setData($_POST);
 
-        print_r($_POST);
+       
         if ($update) { //se for atualizar
            $auxcod = $contract->showsNextCode($_POST["dtEmsissao"]);
            $contract->setcodigo($auxcod);
