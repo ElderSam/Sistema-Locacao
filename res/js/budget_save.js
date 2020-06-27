@@ -195,7 +195,11 @@ $(function () {
 							msg,
 							'success'
 						);
-						window.location.assign(`/contracts/${idOrcamento}`);	
+
+						if($("#status").val() == "3"){ //se o orçamento foi aprovado
+							window.location.assign(`/contracts/${idOrcamento}`);
+						}
+							
 						//loadTableBudgets();
 						//$('#formBudget').trigger("reset");
 					}
