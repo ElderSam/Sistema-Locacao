@@ -6,7 +6,7 @@ USE id12706030_db_locacao;
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22-Jun-2020 às 01:48
+-- Tempo de geração: 30-Jun-2020 às 02:16
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -87,7 +87,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtFim` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -103,7 +103,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       solicitante = psolicitante,
       telefone = ptelefone,
       email = pemail,
-      dtAprovacao = pdtAprovacao,
+      dtFim = pdtFim,
       notas = pnotas,
       valorTotal = pvalorTotal,
       dtInicio = pdtInicio,
@@ -133,12 +133,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtFim` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
-    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtFim, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
+    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtFim, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -725,7 +725,7 @@ CREATE TABLE `contratos` (
   `solicitante` varchar(50) NOT NULL,
   `telefone` varchar(15) DEFAULT NULL,
   `email` varchar(40) DEFAULT NULL,
-  `dtAprovacao` date DEFAULT NULL,
+  `dtFim` date DEFAULT NULL,
   `dtInicio` date DEFAULT NULL,
   `prazoDuracao` varchar(40) DEFAULT NULL,
   `statusOrcamento` tinyint(4) NOT NULL,
@@ -738,7 +738,7 @@ CREATE TABLE `contratos` (
 -- Extraindo dados da tabela `contratos`
 --
 
-INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
+INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtFim`, `dtInicio`, `prazoDuracao`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
 (1, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '12 meses', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
 (2, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
@@ -747,7 +747,7 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (6, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '', 1, NULL, 'teste', '2020-05-25 08:16:14'),
 (7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
 (8, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
-(9, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 09:58:46'),
+(9, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, '0000-00-00', NULL, 3, NULL, '', '2020-05-25 09:58:46'),
 (10, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
 (11, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49'),
 (12, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
@@ -790,7 +790,9 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (11, 8, 180, 1523.56, '7', 231.06, 214.91, '3', 'Entrega em 5DD úteis', '2020-05-25 16:00:08'),
 (12, 9, 180, 450, '2', 230, 230, '4', '', '2020-05-29 00:28:11'),
 (13, 7, 193, 600, '2', 200, 190, '4', 'Entrega em 5DD úteis', '2020-05-30 09:53:34'),
-(14, 6, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38');
+(14, 6, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38'),
+(15, 9, 1, 450, '1', 200, 200, '4', 'Entrega em 3DD', '2020-06-26 19:23:13'),
+(16, 9, 4, 500.78, '3', 347.89, 310.64, '2', 'Entrega em 5DD úteis', '2020-06-26 19:25:16');
 
 -- --------------------------------------------------------
 
@@ -902,10 +904,10 @@ CREATE TABLE `obras` (
 --
 
 INSERT INTO `obras` (`idObra`, `codObra`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`, `id_fk_cliente`, `id_fk_respObra`) VALUES
-(1, 1, 'teste', 'Campinas', 'JD. Nova Limeira', 213, 'PA', '3213123', 'Av. Dom Pedro II', '2020-05-29 20:06:04', 39, 18),
-(12, 2, '8', 'Miranguaba', '9798', 7, 'PB', '13.481-043', 'Rua Jorge Salibe Sobrinho', '2020-05-30 21:38:51', 39, 20),
-(13, 3, 'casa', 'Araras', 'Centro', 3454, 'SP', '13600000', 'Av. Melvin jOnes', '2020-05-30 21:39:26', 39, 18),
-(15, 1, 'fsfsd', 'Limeira', 'fsdfd', 212, 'CE', '13481659', 'Dr. Arlindo Justos Baptistella', '2020-05-31 13:38:27', 41, 19);
+(1, 1, 'teste', 'Campinas', 'JD. Nova Limeira', 213, 'PA', '3213123', 'Av. Dom Pedro II', '2020-05-29 20:06:04', 1, 1),
+(12, 2, '8', 'Miranguaba', '9798', 7, 'PB', '13.481-043', 'Rua Jorge Salibe Sobrinho', '2020-05-30 21:38:51', 2, 2),
+(13, 3, 'casa', 'Araras', 'Centro', 3454, 'SP', '13600000', 'Av. Melvin jOnes', '2020-05-30 21:39:26', 3, 3),
+(15, 1, 'fsfsd', 'Limeira', 'fsdfd', 212, 'CE', '13481659', 'Dr. Arlindo Justos Baptistella', '2020-05-31 13:38:27', 4, 4);
 
 -- --------------------------------------------------------
 
@@ -1132,9 +1134,9 @@ CREATE TABLE `resp_obras` (
 
 INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
 (1, 1, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56'),
-(2, 1, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
-(3, 1, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
-(4, 2, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
+(2, 2, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
+(3, 3, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
+(4, 4, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
 (5, 2, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14'),
 (6, 2, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11');
 
@@ -1171,12 +1173,11 @@ INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `s
 --
 
 --
--- Indexes for table `aditamentos`
+-- Índices para tabela `aditamentos`
 --
 ALTER TABLE `aditamentos`
   ADD PRIMARY KEY (`idAditamento`),
   ADD KEY `fk_aditamento_contrato1` (`contrato_idContrato`);
-
 
 --
 -- Índices para tabela `clientes`
@@ -1190,6 +1191,14 @@ ALTER TABLE `clientes`
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`idContrato`),
   ADD KEY `fk_contrato_obra1` (`obra_idObra`);
+
+--
+-- Índices para tabela `contrato_itens`
+--
+ALTER TABLE `contrato_itens`
+  ADD PRIMARY KEY (`idItem`),
+  ADD KEY `fk_contrato_itens_has_contrato` (`idContrato`),
+  ADD KEY `fk_contrato_has_produto` (`idProduto_gen`);
 
 --
 -- Índices para tabela `faturas`
@@ -1277,7 +1286,7 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT for table `aditamentos`
+-- AUTO_INCREMENT de tabela `aditamentos`
 --
 ALTER TABLE `aditamentos`
   MODIFY `idAditamento` int(11) NOT NULL AUTO_INCREMENT;
@@ -1298,7 +1307,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`
@@ -1316,7 +1325,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
@@ -1355,56 +1364,49 @@ ALTER TABLE `prod_tipos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
--- AUTO_INCREMENT for table `resp_obras`
+-- AUTO_INCREMENT de tabela `resp_obras`
 --
 ALTER TABLE `resp_obras`
   MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- Restrições para despejos de tabelas
 --
 
 --
--- Constraints for table `contratos`
+-- Limitadores para a tabela `contratos`
 --
 ALTER TABLE `contratos`
   ADD CONSTRAINT `fk_contrato_obra1` FOREIGN KEY (`obra_idObra`) REFERENCES `obras` (`idObra`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `contrato_itens`
---
-ALTER TABLE `contrato_itens`
-  ADD CONSTRAINT `fk_contrato_has_produto_contrato` FOREIGN KEY (`idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_contrato_has_produto_produto` FOREIGN KEY (`idProduto_gen`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `faturas`
+-- Limitadores para a tabela `faturas`
 --
 ALTER TABLE `faturas`
   ADD CONSTRAINT `fk_fatura_contrato1` FOREIGN KEY (`contrato_idcontrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `historicoalugueis`
+-- Limitadores para a tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
   ADD CONSTRAINT `fk_contrato_has_produto_contrato2` FOREIGN KEY (`contrato_idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_contrato_has_produto_produto2` FOREIGN KEY (`produto_idProduto`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `produtos_esp`
+-- Limitadores para a tabela `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
   ADD CONSTRAINT `fk_fornecedor` FOREIGN KEY (`idFornecedor`) REFERENCES `fornecedores` (`idFornecedor`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_produtos_esp` FOREIGN KEY (`idProduto_gen`) REFERENCES `produtos_gen` (`idProduto_gen`);
 
 --
--- Constraints for table `produtos_gen`
+-- Limitadores para a tabela `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
   ADD CONSTRAINT `fk_produto_categoria1` FOREIGN KEY (`idCategoria`) REFERENCES `prod_categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1414,19 +1416,19 @@ ALTER TABLE `produtos_gen`
   ADD CONSTRAINT `fk_produto_tipo4` FOREIGN KEY (`tipo4`) REFERENCES `prod_tipos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `prod_containers`
+-- Limitadores para a tabela `prod_containers`
 --
 ALTER TABLE `prod_containers`
   ADD CONSTRAINT `fk_produto_container1` FOREIGN KEY (`idProduto`) REFERENCES `produtos_esp` (`idProduto_esp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `prod_tipos`
+-- Limitadores para a tabela `prod_tipos`
 --
 ALTER TABLE `prod_tipos`
   ADD CONSTRAINT `fk_tiposprodutos_categoria` FOREIGN KEY (`idCategoria`) REFERENCES `prod_categorias` (`idCategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `resp_obras`
+-- Limitadores para a tabela `resp_obras`
 --
 ALTER TABLE `resp_obras`
   ADD CONSTRAINT `id_fkcliente` FOREIGN KEY (`id_fk_cliente`) REFERENCES `clientes` (`idCliente`);
