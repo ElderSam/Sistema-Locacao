@@ -14,7 +14,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -74,12 +73,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_delete` (IN `pidCliente
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(45), `pstatus` TINYINT, `ptelefone1` VARCHAR(15), `ptelefone2` VARCHAR(15), `pemail1` VARCHAR(45), `pemail2` VARCHAR(45), `pendereco` VARCHAR(45), `pcomplemento` VARCHAR(150), `pcidade` VARCHAR(25), `pbairro` VARCHAR(25), `pnumero` INT(11), `puf` CHAR(2), `pcep` VARCHAR(45), `pcpf` VARCHAR(45), `prg` VARCHAR(45), `pcnpj` VARCHAR(45), `pie` VARCHAR(45), `ptipoCliente` VARCHAR(45))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (IN `pcodigo` VARCHAR(3), IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  BEGIN
 
     DECLARE vidCliente INT;
     
-  INSERT INTO clientes (nome, status, telefone1, telefone2, email1, email2, endereco, complemento, cidade, bairro, numero, uf, cep, cpf, rg, cnpj, ie, tipoCliente)
-    VALUES(pnome, pstatus, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pcpf, prg, pcnpj, pie, ptipoCliente);
+  INSERT INTO clientes (codigo, nome, status, telefone1, telefone2, email1, email2, endereco, complemento, cidade, bairro, numero, uf, cep, cpf, rg, cnpj, ie, tipoCliente)
+    VALUES(pcodigo, pnome, pstatus, ptelefone1, ptelefone2, pemail1, pemail2, pendereco, pcomplemento, pcidade, pbairro, pnumero, puf, pcep, pcpf, prg, pcnpj, pie, ptipoCliente);
     
     SET vidCliente = LAST_INSERT_ID();
     
@@ -87,7 +86,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (`pnome` VARCHAR(
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -107,7 +106,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       notas = pnotas,
       valorTotal = pvalorTotal,
       dtInicio = pdtInicio,
-      dtFim = pdtFim,
+      prazoDuracao = pprazoDuracao,
       statusOrcamento = pstatusOrcamento,
       codContrato = pcodContrato,
       nomeEmpresa = pnomeEmpresa,
@@ -126,19 +125,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
   SELECT idContrato INTO vidContrato
     FROM contratos
     WHERE idContrato = pidContrato;
-
-     DELETE FROM contrato_itens WHERE idContrato = pidContrato;
     
     DELETE FROM contratos WHERE idContrato = pidContrato;
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, dtFim, statusOrcamento)
-    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pdtFim, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
+    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -555,7 +552,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_prod_tipos_save` (IN `pdescTipo`
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pidResp` INT, IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pidResp` INT, IN `pcodigo` VARCHAR(3), IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
   
     DECLARE vidResp INT;
     
@@ -565,6 +562,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveisUpdate_save` (IN `pi
 
     UPDATE resp_obras
     SET
+    	  codigo = pcodigo,
         respObra = prespObra, 
         telefone1 = ptelefone1,
         telefone2 = ptelefone2,
@@ -591,11 +589,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_delete` (IN `pidRes
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `pidResp` INT(11), IN `pcodigo` VARCHAR(3), IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
 DECLARE vidResp INT;
     
-  INSERT INTO resp_obras (respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
-    VALUES(prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
+  INSERT INTO resp_obras (idResp, codigo, respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
+    VALUES(pidResp, pcodigo, prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
     
     SET vidResp = LAST_INSERT_ID();
     
@@ -677,6 +675,7 @@ CREATE TABLE `aditamentos` (
 
 CREATE TABLE `clientes` (
   `idCliente` int(11) NOT NULL,
+  `codigo` varchar(3) NOT NULL,
   `nome` varchar(45) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
   `telefone1` varchar(15) DEFAULT NULL,
@@ -702,13 +701,10 @@ CREATE TABLE `clientes` (
 -- Extraindo dados da tabela `clientes`
 --
 
-INSERT INTO `clientes` (`idCliente`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
-(1, 'Construtora Guilhermina', 1, '(19) 5454-54545', '(54) 5454-54545', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Jorge Salibe Sobrinho', '', 'Limeira', 'Parque das Nações', 454, 'BA', '13481-659', '', '', '53.252.352/5252-55', '423432423523532', 'J', '2020-04-04 19:07:05'),
-(2, 'Construtora do Matheus', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', 'sdffsfsfdsfdsfsgsghrjjnffjf', 'Limeira', 'Jardim Botânicokjs', 424, 'AM', '13481-659', '', '', '86.867.867/8868-86', '425454543453', 'J', '2020-04-04 21:33:41'),
-(3, 'Construtela', 1, '(19) 9438-74384', '(19) 5379-8537', 'construtela_exemplo@gmail.com', 'douglas.rnmeriano@gmail.com', 'Rua Thereza de Oliveira Lima ', 'Este é um exemplo de cliente', 'Piracicaba', 'Campos do Conde', 232, 'RN', '31737-361', '', '', '09.804.980/2804-34', '3283748983248', 'J', '2020-04-25 08:08:03'),
-(4, 'Construtora Teste', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 17:40:02'),
-(5, 'CONSTRUTOR TESTE', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:30'),
-(6, 'CLIENTE TESET', 0, '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', 'J', '2020-04-25 20:56:50');
+INSERT INTO `clientes` (`idCliente`, `codigo`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
+(1, '001', 'ConstPira', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '534.534.524-25', '35.353.425-3', '', '0', 'F', '2020-06-16 19:53:47'),
+(2, '002', 'fdsfsfsdafasd', 1, '', '', '', '', '', '', '', '', 0, '', '', '', '', '42.341.123/423', '4234124234', 'J', '2020-06-16 20:12:50'),
+(3, '003', 'ecsdafadsfas', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40');
 
 -- --------------------------------------------------------
 
@@ -727,7 +723,7 @@ CREATE TABLE `contratos` (
   `email` varchar(40) DEFAULT NULL,
   `dtAprovacao` date DEFAULT NULL,
   `dtInicio` date DEFAULT NULL,
-  `dtFim` varchar(40) DEFAULT NULL,
+  `dtFim` date DEFAULT NULL,
   `statusOrcamento` tinyint(4) NOT NULL,
   `valorTotal` float DEFAULT NULL,
   `notas` varchar(100) DEFAULT NULL,
@@ -1117,6 +1113,7 @@ INSERT INTO `prod_tipos` (`id`, `descTipo`, `idCategoria`, `ordem_tipo`, `codTip
 
 CREATE TABLE `resp_obras` (
   `idResp` int(11) NOT NULL,
+  `codigo` varchar(3) NOT NULL,
   `id_fk_cliente` int(11) NOT NULL,
   `respObra` varchar(45) DEFAULT NULL,
   `telefone1` varchar(15) DEFAULT NULL,
@@ -1132,13 +1129,12 @@ CREATE TABLE `resp_obras` (
 -- Extraindo dados da tabela `resp_obras`
 --
 
-INSERT INTO `resp_obras` (`idResp`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
-(1, 1, 'João', '8403804324', '43543543534', '980304250495', 'joao_exemplo@hotmail.com', '', '', '2020-04-16 07:28:56'),
-(2, 2, 'Felipe', '(19) 8464-75345', '(19) 9844-75865', '(19) 8756-53453', 'felipe_exemplo@gmail.com', 'felipe_exemplo2@gmail.com', '', '2020-04-25 11:29:50'),
-(3, 3, 'Danilo', '(19) 7483-84865', '', '', 'danilo_exemplo@gamil.com', '', '', '2020-04-25 11:42:39'),
-(4, 4, 'Eduardo', '(19) 9832-73727', '', '', 'eduardo_exemplo@gmail.com', '', '', '2020-04-25 12:48:41'),
-(5, 2, 'Antônio da Silva', '(19) 7737-38383', '', '', 'antonio_exemplo@hotmail.com', 'antonio_exemplo2@hotmail.com', 'Este é um texto de exemplo alterado', '2020-04-25 13:35:14'),
-(6, 2, 'Luiz Antônio', '(11) 3445-6789', '(19) 9788-86888', '', 'luiz_antonio@gmail.com', '', '', '2020-04-25 13:38:11');
+INSERT INTO `resp_obras` (`idResp`, `codigo`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
+(16, '001', 1, 'Roberto', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-16 22:16:37'),
+(17, '002', 1, 'Douglas', '(19) 9953-13563', '', '', '', '', '', '2020-06-21 21:19:56'),
+(18, '001', 2, 'Resp 1', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-21 22:02:14'),
+(22, '002', 2, 'Resp 2', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-21 22:03:24'),
+(23, '001', 3, 'ddsfsdf', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-21 22:11:37');
 
 -- --------------------------------------------------------
 
@@ -1166,7 +1162,8 @@ INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `s
 (1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 1, '/res/img/users/1583106585_elder-profile.jpg', '2020-02-26 10:45:06'),
 (2, 'Administrador', 'Teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
 (3, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
-(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
+(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43'),
+(0, 'DOUGLAS RODRIGUES NUMERIANO', 'Diretor', 'douglas', '$2y$12$LKuhzYgrLzatkMgmAmGNC.KYZWmIYmQMDFDGBe6Wek96MmVfE1YNy', 'douglas.rnmeriano@gmail.com', 1, '/res/img/users/1590973211_1583190423_avatar5.png', '2020-05-31 22:00:11');
 
 --
 -- Índices para tabelas despejadas
@@ -1186,7 +1183,7 @@ ALTER TABLE `clientes`
   ADD PRIMARY KEY (`idCliente`);
 
 --
--- Índices para tabela `contratos`
+-- Índices para tabela `contrato_itens`
 --
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`idContrato`),
@@ -1199,7 +1196,6 @@ ALTER TABLE `contrato_itens`
   ADD PRIMARY KEY (`idItem`),
   ADD KEY `fk_contrato_itens_has_contrato` (`idContrato`),
   ADD KEY `fk_contrato_has_produto` (`idProduto_gen`);
-
 --
 -- Índices para tabela `faturas`
 --
