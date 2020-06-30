@@ -1,18 +1,17 @@
-CREATE DATABASE IF NOT EXISTS id12706030_db_locacao;
-USE id12706030_db_locacao;
-
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30-Jun-2020 às 02:16
+-- Tempo de geração: 01-Jul-2020 às 01:52
 -- Versão do servidor: 10.4.11-MariaDB
--- versão do PHP: 7.4.5
+-- versão do PHP: 7.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -86,7 +85,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (IN `pcodigo` VAR
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -106,7 +105,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       notas = pnotas,
       valorTotal = pvalorTotal,
       dtInicio = pdtInicio,
-      prazoDuracao = pprazoDuracao,
+      dtFim = pdtFim,
       statusOrcamento = pstatusOrcamento,
       codContrato = pcodContrato,
       nomeEmpresa = pnomeEmpresa,
@@ -130,12 +129,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pprazoDuracao` VARCHAR(40), IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, prazoDuracao, statusOrcamento)
-    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pprazoDuracao, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, dtFim, statusOrcamento)
+    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pdtFim, pstatusOrcamento);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -735,17 +734,17 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(1, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '12 meses', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
+(1, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '0000-00-00', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
 (2, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
 (4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
-(6, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '', 1, NULL, 'teste', '2020-05-25 08:16:14'),
+(6, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '0000-00-00', 1, NULL, 'teste', '2020-05-25 08:16:14'),
 (7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
 (8, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
 (9, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, '0000-00-00', NULL, 3, NULL, '', '2020-05-25 09:58:46'),
-(10, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-25 10:03:53'),
-(11, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '', 0, NULL, '', '2020-05-25 10:43:49'),
+(10, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-25 10:03:53'),
+(11, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '0000-00-00', 0, NULL, '', '2020-05-25 10:43:49'),
 (12, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
 (13, '30', '', NULL, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:31:28');
 
@@ -1159,11 +1158,11 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `senha`, `email`, `administrador`, `foto`, `dtCadastro`) VALUES
+(0, 'DOUGLAS RODRIGUES NUMERIANO', 'Diretor', 'douglas', '$2y$12$LKuhzYgrLzatkMgmAmGNC.KYZWmIYmQMDFDGBe6Wek96MmVfE1YNy', 'douglas.rnmeriano@gmail.com', 1, '/res/img/users/1590973211_1583190423_avatar5.png', '2020-05-31 22:00:11'),
 (1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 1, '/res/img/users/1583106585_elder-profile.jpg', '2020-02-26 10:45:06'),
 (2, 'Administrador', 'Teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
 (3, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
-(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43'),
-(0, 'DOUGLAS RODRIGUES NUMERIANO', 'Diretor', 'douglas', '$2y$12$LKuhzYgrLzatkMgmAmGNC.KYZWmIYmQMDFDGBe6Wek96MmVfE1YNy', 'douglas.rnmeriano@gmail.com', 1, '/res/img/users/1590973211_1583190423_avatar5.png', '2020-05-31 22:00:11');
+(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
 
 --
 -- Índices para tabelas despejadas
@@ -1183,7 +1182,7 @@ ALTER TABLE `clientes`
   ADD PRIMARY KEY (`idCliente`);
 
 --
--- Índices para tabela `contrato_itens`
+-- Índices para tabela `contratos`
 --
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`idContrato`),
@@ -1196,6 +1195,7 @@ ALTER TABLE `contrato_itens`
   ADD PRIMARY KEY (`idItem`),
   ADD KEY `fk_contrato_itens_has_contrato` (`idContrato`),
   ADD KEY `fk_contrato_has_produto` (`idProduto_gen`);
+
 --
 -- Índices para tabela `faturas`
 --
@@ -1363,7 +1363,7 @@ ALTER TABLE `prod_tipos`
 -- AUTO_INCREMENT de tabela `resp_obras`
 --
 ALTER TABLE `resp_obras`
-  MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`

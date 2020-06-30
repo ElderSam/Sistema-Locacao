@@ -63,7 +63,7 @@ $(function () {
 		let form = $('#formBudget');
 		let formData = new FormData(form[0]);
 
-		//idOrcamento = $('#idOrcamento').val()
+		idOrcamento = $('#idOrcamento').val()
 		//console.log("idOrcamento:" + idOrcamento)
 
 		if ((idOrcamento == 0) || (idOrcamento == undefined)) { //se for para cadastrar --------------------------------------------------

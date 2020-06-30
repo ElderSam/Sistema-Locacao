@@ -133,7 +133,7 @@ $app->post("/budgets/:idbudget", function($idbudget){ //update
 	
     User::verifyLogin();
 
-
+	//print_r($_POST);
 	$budget = new BudgetController();
 	
 	$update = true;
