@@ -6,6 +6,7 @@ use \Locacao\Utils\myPDF;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Budget;
+use \Locacao\Model\Contract;
 use \Locacao\Controller\ContractItemController;
 use \Locacao\Utils\PDFs\BudgetPDF;
 
@@ -34,17 +35,22 @@ class BudgetController extends Generator
 
             $_POST['idContrato'] = $_POST['idOrcamento']; //muda para a classe model reconhecer
             
-            if($_POST['status'] == 1){ //se o status for Aprovado
+            if($_POST['status'] == 3){ //se o status for Aprovado
                 date_default_timezone_set('America/Sao_Paulo');
                 $_POST['dtAprovacao'] = date('y-m-d');
+                
+                //Aqui foi mudado o valor de código de Orçamento para código de Contrato
+                $_POST['codigo'] = Contract::showsNextCode($_POST['dtEmissao']);
+            }else{
+                //pega apenas o número do orçamento (tira o /ano)
+                $auxArr = explode('/', $_POST['codigo']);
+                $_POST['codigo'] = $auxArr[0];
+        
             }
 
         }
 
-        //pega apenas o número do orçamento (tira o /ano)
-        $auxArr = explode('/', $_POST['codigo']);
-        $_POST['codigo'] = $auxArr[0];
-        
+       
         $budget->setData($_POST);
 
 

@@ -12,6 +12,7 @@ $(function () {
 
 	if(idContrato !== '0'){ //se for para ver um Contrato existente
 		
+		//alert("Entrou");
 		console.log(`idContrato: ${idContrato}`)
 		typeForm = 'view';
 
@@ -23,6 +24,13 @@ $(function () {
 		$('#btnDeleteContract').show();
 		$('#btnShowPDF').show();
 		$('#btnEmail').show();
+		
+		showsNextCode($("#formContract #dtEmissao").val());
+
+		$("#formContract #dtEmissao").change(function(){
+				showsNextCode($("#formContract #dtEmissao").val());
+			}
+		)
 		
 	}
 
@@ -161,11 +169,11 @@ async function loadContract(idContrato) {
 	//await loadTableProducts(); //carrega lista de produtos para colocar no Carrinho
 }
 
-function showsNextNumber() { //mostra o próximo número de série relacionado à categoria
+function showsNextCode(dataEmissao) { //mostra o próximo número de série relacionado à categoria
 	//console.log('shows next number')
 	$.ajax({
-		type: "POST",
-		url: `/contracts/showsNextNumber`,
+		type: "GET",
+		url: `/contracts/showsNextCode/${dataEmissao}`,
 		contentType: false,
 		processData: false,
 
@@ -240,7 +248,6 @@ async function setFieldsContract(idContrato) {
 			$('#btnUpdate').hide();
 
 			//$("#formContract #codigo").prop('disabled', false);
-			
 			//$("#formContract #idCliente").prop('disabled', false);
 			//$("#formContract #obra_idObra").prop('disabled', false);
 			$("#formContract #dtEmissao").prop('disabled', false);
@@ -252,6 +259,8 @@ async function setFieldsContract(idContrato) {
 			$("#formContract #dtAprovacao").prop('disabled', false);
 			$("#formContract #dtFim").prop('disabled', false);
 			$("#formContract #notas").prop('disabled', false);
+			
+
 
 			$('#btnCart').show();
 			$('#divListItens .btnEdit').show();

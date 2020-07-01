@@ -73,10 +73,6 @@ class ContractController extends BudgetController
         if ($_POST["dtEmissao"] == "") {
             $errors["#dtEmissao"] = "Data de Emissão é obrigatória!";
         }
-        
-        if ($_POST["prazoDuracao"] == "") {
-            $errors["#prazoDuracao"] = "Duração é obrigatória!";
-        }
   
         if ($_POST["dtInicio"] == "") {
             $errors["#dtInicio"] = "Data de Início é obrigatória!";

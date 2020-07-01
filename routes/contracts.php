@@ -11,6 +11,7 @@ $app->get('/contracts', function(){
 
     User::verifyLogin();
 	
+	
 	$page = new Page();
 	$page->setTpl("contratos");
   
@@ -54,9 +55,10 @@ $app->get('/contracts/:id', function($id){
 });
 
 /* rota que mostra o próximo código de contrato */
-$app->get('/contracts/showsNextNumber/:dtEmissao', function($dtEmissao){
+$app->get('/contracts/showsNextCode/:dtEmissao', function($dtEmissao){
 
-    User::verifyLogin();
+	User::verifyLogin();
+	
 
     echo Contract::showsNextCode($dtEmissao); 
 });
