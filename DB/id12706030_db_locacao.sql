@@ -1,14 +1,16 @@
+CREATE DATABASE id12706030_db_locacao;
+USE id12706030_db_locacao;
+
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 01-Jul-2020 às 01:52
+-- Tempo de geração: 03-Jul-2020 às 01:49
 -- Versão do servidor: 10.4.11-MariaDB
--- versão do PHP: 7.2.27
+-- versão do PHP: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -26,7 +28,7 @@ DELIMITER $$
 --
 -- Procedimentos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCliente` INT, IN `pcodigo` VARCHAR(3), IN `pnome` VARCHAR(45), IN `pstatus` TINYINT, IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `pendereco` VARCHAR(45), IN `pcomplemento` VARCHAR(150), IN `pcidade` VARCHAR(25), IN `pbairro` VARCHAR(25), IN `pnumero` INT(11), IN `puf` CHAR(2), IN `pcep` VARCHAR(45), IN `pcpf` VARCHAR(45), IN `prg` VARCHAR(45), IN `pcnpj` VARCHAR(45), IN `pie` VARCHAR(45), IN `ptipoCliente` VARCHAR(45))  BEGIN
   
     DECLARE vidCliente INT;
     
@@ -36,6 +38,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientesUpdate_save` (IN `pidCli
 
     UPDATE clientes
     SET
+        codigo = pcodigo,
         nome = pnome, 
         status = pstatus,
         telefone1 = ptelefone1,
@@ -702,7 +705,7 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`idCliente`, `codigo`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
 (1, '001', 'ConstPira', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '534.534.524-25', '35.353.425-3', '', '0', 'F', '2020-06-16 19:53:47'),
-(2, '002', 'fdsfsfsdafasd', 1, '', '', '', '', '', '', '', '', 0, '', '', '', '', '42.341.123/423', '4234124234', 'J', '2020-06-16 20:12:50'),
+(2, '002', 'Construtora Forte', 1, '', '', '', '', '', '', '', '', 0, '', '', '', '', '42.341.123/423', '4234124234', 'J', '2020-06-16 20:12:50'),
 (3, '003', 'ecsdafadsfas', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40');
 
 -- --------------------------------------------------------
