@@ -81,8 +81,7 @@ class Contract extends Budget{
             //$auxData = strtotime(date("Y-m-d H:i:s"));//para teste
             $auxData = strtotime($results[0]['dtCadastro']);      
             $auxAno = date('Y', $auxData);
-            $auxCode = $results[0]['codContrato'] . "/". $auxAno;
-            $this->setcodContrato($auxCode);
+            $this->setcodContrato($results[0]['codContrato']);
         }
     }
 
