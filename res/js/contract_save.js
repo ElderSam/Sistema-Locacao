@@ -404,7 +404,7 @@ function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obra
 
 
 	}
-		/*$.getJSON(`/costumers/json/${idCliente}/constructions`, function (data) { //ajax
+		$.getJSON(`/costumers/json/${idCliente}/constructions`, function (data) { //ajax
 
 		console.log(data)
 
@@ -425,7 +425,7 @@ function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obra
 	}).fail(function () {
 		console.log("Rota não encontrada! (/contracts/constructions/json)");
 		return false
-	});*/
+	});
 
 }
 
