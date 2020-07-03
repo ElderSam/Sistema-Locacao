@@ -1,12 +1,9 @@
-CREATE DATABASE id12706030_db_locacao;
-USE id12706030_db_locacao;
-
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 03-Jul-2020 às 01:49
+-- Tempo de geração: 03-Jul-2020 às 02:28
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -23,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `id12706030_db_locacao`
 --
+CREATE DATABASE IF NOT EXISTS `id12706030_db_locacao` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `id12706030_db_locacao`;
 
 DELIMITER $$
 --
@@ -706,7 +705,7 @@ CREATE TABLE `clientes` (
 INSERT INTO `clientes` (`idCliente`, `codigo`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
 (1, '001', 'ConstPira', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '534.534.524-25', '35.353.425-3', '', '0', 'F', '2020-06-16 19:53:47'),
 (2, '002', 'Construtora Forte', 1, '', '', '', '', '', '', '', '', 0, '', '', '', '', '42.341.123/423', '4234124234', 'J', '2020-06-16 20:12:50'),
-(3, '003', 'ecsdafadsfas', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40');
+(3, '003', 'ConstruDoug', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40');
 
 -- --------------------------------------------------------
 
@@ -737,19 +736,14 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(1, '16', 'TESTE_ATUALIZAR', 1, '2020-02-20', 'teste_ATUALIZAR', '19000000000', 'teste@atualizar.com', '2020-05-25', '2020-05-25', '0000-00-00', 1, NULL, 'teste atualizar', '2020-05-24 08:26:46'),
 (2, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 5, NULL, '', '2020-05-24 08:26:52'),
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 2, NULL, '', '2020-05-24 08:27:46'),
 (4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
-(6, '22', 'Construtora Forte', NULL, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-05-30', '0000-00-00', '0000-00-00', 1, NULL, 'teste', '2020-05-25 08:16:14'),
+(6, '20200530-001', 'Construtora Forte', 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, 'teste', '2020-05-25 08:16:14'),
 (7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
-(8, '24', '', 1, '2020-01-01', 'JOÃO', '', '', '2020-05-25', NULL, NULL, 1, NULL, 'TESTE', '2020-05-25 09:09:32'),
-(9, '25', '', 1, '2020-12-31', 'Douglas', '', '', NULL, '0000-00-00', NULL, 3, NULL, '', '2020-05-25 09:58:46'),
-(10, '26', '', 1, '2020-12-31', 'Douglas', '', '', NULL, '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-25 10:03:53'),
-(11, '28', '', 1, '2020-05-25', 'elder', '', '', NULL, '0000-00-00', '0000-00-00', 0, NULL, '', '2020-05-25 10:43:49'),
-(12, '29', '', NULL, '2020-05-31', 'elder', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:30:29'),
-(13, '30', '', NULL, '2020-12-31', 'Douglas', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-31 09:31:28');
+(12, '20200531-001', '', NULL, '2020-05-31', 'elder', '', '', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-31 09:30:29'),
+(13, '20201231-002', '', 16, '2020-12-31', 'Douglas', '', '', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-31 09:31:28');
 
 -- --------------------------------------------------------
 
@@ -902,10 +896,9 @@ CREATE TABLE `obras` (
 --
 
 INSERT INTO `obras` (`idObra`, `codObra`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `endereco`, `dtCadastro`, `id_fk_cliente`, `id_fk_respObra`) VALUES
-(1, 1, 'teste', 'Campinas', 'JD. Nova Limeira', 213, 'PA', '3213123', 'Av. Dom Pedro II', '2020-05-29 20:06:04', 1, 1),
-(12, 2, '8', 'Miranguaba', '9798', 7, 'PB', '13.481-043', 'Rua Jorge Salibe Sobrinho', '2020-05-30 21:38:51', 2, 2),
-(13, 3, 'casa', 'Araras', 'Centro', 3454, 'SP', '13600000', 'Av. Melvin jOnes', '2020-05-30 21:39:26', 3, 3),
-(15, 1, 'fsfsd', 'Limeira', 'fsdfd', 212, 'CE', '13481659', 'Dr. Arlindo Justos Baptistella', '2020-05-31 13:38:27', 4, 4);
+(16, 1, '', 'Araras', 'Centro', 123, 'SP', '13600000', 'Rua X', '2020-07-02 20:55:15', 1, 17),
+(17, 1, 'teste', 'Araras', 'Jd. Santana', 343, 'AM', '12000000', 'Rua Zanchetta', '2020-07-02 20:57:09', 2, 18),
+(18, 2, 'Teste', 'Rio Branco', 'T-rex', 450, 'AC', '13444000', 'Rua dos Dinos', '2020-07-02 20:58:08', 1, 16);
 
 -- --------------------------------------------------------
 
@@ -1330,7 +1323,7 @@ ALTER TABLE `historicoalugueis`
 -- AUTO_INCREMENT de tabela `obras`
 --
 ALTER TABLE `obras`
-  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_esp`
