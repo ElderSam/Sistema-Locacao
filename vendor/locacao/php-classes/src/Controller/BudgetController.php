@@ -35,12 +35,15 @@ class BudgetController extends Generator
 
             $_POST['idContrato'] = $_POST['idOrcamento']; //muda para a classe model reconhecer
             
-            if($_POST['status'] == 3){ //se o status for Aprovado
+            if($_POST['status'] == 3){ //se o status for Aprovado ------------------------------------
                 date_default_timezone_set('America/Sao_Paulo');
                 $_POST['dtAprovacao'] = date('y-m-d');
                 
                 //Aqui foi mudado o valor de código de Orçamento para código de Contrato
                 $_POST['codigo'] = Contract::showsNextCode($_POST['dtEmissao']);
+
+
+
             }else{
                 //pega apenas o número do orçamento (tira o /ano)
                 $auxArr = explode('/', $_POST['codigo']);
@@ -74,6 +77,18 @@ class BudgetController extends Generator
        //print_r($_POST);
 
         $errors = array();
+
+        if($_POST['status'] == 3){ //se o status for Aprovado ------------------------------------
+        
+            if ($_POST["idCliente"] == "") {
+                $errors["#idCliente"] = "Cliente é obrigatório!";
+            }
+           
+            if ($_POST["obra_idObra"] == "") {
+                $errors["#obra_idObra"] = "Obra é obrigatória!";
+            }
+
+        }
 
         if ($_POST["codigo"] == "") {
             $errors["#codigo"] = "Código é obrigatório!";
