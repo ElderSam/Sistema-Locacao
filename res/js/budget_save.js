@@ -4,7 +4,7 @@ let obra_idObra = '';
 let idCliente = '';
 let codigo = '0'
 
-const idOrcamento = $("#idOrcamento").val();
+let idOrcamento = $("#idOrcamento").val();
 const idContrato = $("#idOrcamento").val(); //para o arquivo budgetItems_save.js
 let typeForm = '';
 
