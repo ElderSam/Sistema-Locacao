@@ -192,4 +192,15 @@ class ContractController extends BudgetController
         return Contract::total();
     }
 
+    public function getPDF($id, $destiny){
+
+        $contract = new Contract();
+
+        $contrato = $contract->getValuesToContractPDF($id);
+
+        $items = new ContractItemController();
+
+        //$contractPDF = new 
+
+    }
 }//end class ContractController

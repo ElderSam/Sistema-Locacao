@@ -167,7 +167,27 @@ class Contract extends Budget{
         $results = $sql->select($query);
 
         return count($results);		
-	}
+    }
+    
+    public function getValuesToContractPDF($idContract){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT c.*, b.idObra, cl.idCliente FROM contratos c 
+                                LEFT JOIN obras b ON(c.obra_idObra = b.IdObra)
+                                LEFT JOIN clientes cl ON(b.id_fk_cliente = cl.idCliente)
+                                WHERE c.idContrato = :idContract AND c.statusOrcamento IN (3, 4 ,5))", array(
+                                ":idContract"=>$idContract    
+                                ));
+        if(count($results) > 0){
+            $res = $results[0];
+            $auxData = strtotime($res['dtCadastro']);      
+            $auxAno = date('Y', $auxData);
+            $res['codContrato'] = $res['codContrato'] . "/". $auxAno;
+        
+            return json_encode($res);
+        }
+    }
 
 }
 
