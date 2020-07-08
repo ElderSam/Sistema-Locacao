@@ -5,6 +5,26 @@ namespace Locacao\Utils\PDFs;
 class ContractPDF
 {
     private $codContrato;
+    private $nomaFantasia;
+    private $endereco;
+    private $complemento;
+    private $bairro;
+    private $cidade;
+    private $cpfCnpj;
+    private $cep;
+    private $ie;
+    private $tipo;
+
+    private $nomaFantasiaCliente;
+    private $enderecoCliente;
+    private $complementoCliente;
+    private $bairroCliente;
+    private $cidadeCliente;
+    private $cpfCnpjCliente;
+    private $cepCliente;
+    private $ieCliente;
+    private $tipoCliente;
+    
     private $dtEmissao;
     private $nomeCliente;
     private $solicitante;
