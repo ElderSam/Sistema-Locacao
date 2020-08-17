@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 03-Jul-2020 às 02:28
+-- Tempo de geração: 18-Ago-2020 às 00:38
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -741,7 +741,7 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 3, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 4, NULL, '', '2020-05-24 08:45:42'),
 (6, '20200530-001', 'Construtora Forte', 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, 'teste', '2020-05-25 08:16:14'),
-(7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'e@gmail.com', '2020-05-25', NULL, NULL, 1, NULL, 'testee', '2020-05-25 08:16:16'),
+(7, '23', '', NULL, '2020-02-05', 'elder', '32423243242', 'eldersamuel98@gmail.com', NULL, '0000-00-00', '0000-00-00', 1, NULL, 'testee', '2020-05-25 08:16:16'),
 (12, '20200531-001', '', NULL, '2020-05-31', 'elder', '', '', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-31 09:30:29'),
 (13, '20201231-002', '', 16, '2020-12-31', 'Douglas', '', '', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, '', '2020-05-31 09:31:28');
 
@@ -784,7 +784,8 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (13, 7, 193, 600, '2', 200, 190, '4', 'Entrega em 5DD úteis', '2020-05-30 09:53:34'),
 (14, 6, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38'),
 (15, 9, 1, 450, '1', 200, 200, '4', 'Entrega em 3DD', '2020-06-26 19:23:13'),
-(16, 9, 4, 500.78, '3', 347.89, 310.64, '2', 'Entrega em 5DD úteis', '2020-06-26 19:25:16');
+(16, 9, 4, 500.78, '3', 347.89, 310.64, '2', 'Entrega em 5DD úteis', '2020-06-26 19:25:16'),
+(17, 7, 1, 450, '2', 250, 250, '4', 'Entrega em 3DD úteis', '2020-08-03 09:58:28');
 
 -- --------------------------------------------------------
 
@@ -1299,7 +1300,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`

@@ -1,68 +1,256 @@
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <h1 class="mt-4">Locações</h1>
+            <ol class="breadcrumb mb-4 justify-content-between">
+                <li class="breadcrumb-item active"><a href="/">home</a>/Locações</li>
 
-<div class="content">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card">
-					<div class="header">
-						<h4 class="title">Locações</h4>
-						<p class="category">Lista de Locações</p>
-					</div>
-					<div class="content table-responsive table-full-width">
-						<table class="table table-hover table-striped">
-							<thead>
-								<th>Produto</th>
-								<th>Tipo</th>
-								<th>Cliente</th>
-								<th>Status</th>
-								<th>Início</th>
-								<th>Fim</th>
-							</thead>
-							<tbody>
-								<tr>
-									<td>C001</td>
-									<td>Container</td>
-									<td>HR Construções</td>
-									<td>Alugando</td>
-									<td>05/07/2019</td>
-									<td>- </td>
-								</tr>
+                <!-- Button trigger modal -->
+                <button id="btnAddRent" type="button" class="btn btn-success" data-toggle="modal" data-target="#RentModal">
+                    Nova Locação
+                </button>           
+            </ol>
 
-								<tr>
-									<td>A1250</td>
-									<td>Container</td>
-									<td>Nestlé</td>
-									<td>Alugando</td>
-									<td>09/12/2019</td>
-									<td>- </td>
-								</tr>
-								<tr>
-									<td>C3052</td>
-									<td>Container</td>
-									<td>Famz</td>
-									<td>Concluída</td>
-									<td>01/08/2019</td>
-									<td>15/10/2019</td>
-								</tr>
-								<tr>
-									<td>E1200</td>
-									<td>Container</td>
-									<td>Nestlé</td>
-									<td>Concluída</td>
-									<td>02/06/2018</td>
-									<td>01/04/2019 </td>
-								</tr>
-						
-							</tbody>
-						</table>
+           
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="bg-dark text-white">
+                            
+                                <tr>
+                                    <th>#</th>
+                                    <th>Produto</th>
+									<th>Status</th>
+									<th>Data Início</th>
+									<th>Data Final</th>
+									<th>Cliente</th>
+                                    <th>Contrato</th>
+                                    <th>Opções</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listRents">
+                              <tr>
+								  <td>1</td>
+								  <td>Container X</td>
+								  <td style="color: green;"><b>Alugado</b></td>
+								  <td>01/08/2020</td>
+								  <td>30/08/2020</td>
+								  <td>João Félix S.A.</td>
+								  <td>...</td>
+								  <td>...</td>
+							  </tr>
+							  <tr>
+								<td>2</td>
+								<td>Container Y</td>
+								<td style="color: grey;"><b>Encerrado</b></td>
+								<td>01/02/2020</td>
+								<td>23/11/2020</td>
+								<td>Construções LTDA</td>
+								<td>...</td>
+								<td>...</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Container Z</td>
+								<td style="color: red;"><b>Entrega pendente</b></td>
+								<td>10/08/2020</td>
+								<td>15/10/2020</td>
+								<td>Construções LTDA</td>
+								<td>...</td>
+								<td>...</td>
+							</tr>
+                            </tbody>
+                            <tfoot class="bg-dark text-white">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Produto</th>
+									<th>Status</th>
+									<th>Data Início</th>
+									<th>Data Final</th>
+									<th>Cliente</th>
+                                    <th>Contrato</th>
+                                    <th>Opções</th>
+                                </tr>
+                            </tfoot>
+   
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-					</div>
-				</div>
-			</div>
+           
+        <!-- Rent Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="RentModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Obra" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b id="modalTitle">Cadastrar Locação</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
 
-		</div>
-	</div>
-</div>
+                    <div class="modal-body">
+                        <form id="formRent">
+                            <div class="form-row">
 
-<script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
-<script src="../res/js/util.js"></script>
+                                <div class="form-group col-lg-2">
+                                    <label for="codigo">Código</label>
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="000" maxlength="3">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-10">
+                                    <label for="nome">Nome / Razão Social</label>
+                                    <input type="text" class="form-control" id="nome" name="nome" maxlength="100" placeholder="nome da Locação">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="cnpj">CNPJ</label>
+                                    <input type="text" class="form-control" id="cnpj" name="cnpj" maxlength="16" placeholder="00.000.000/0000-00">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="telefone1">Telefone 1</label>
+                                    <input type="text" class="form-control" id="telefone1" name="telefone1" maxlength="11" placeholder="(19) 00000000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                
+                                <div class="form-group col-lg-4">
+                                    <label for="telefone2">Telefone 2</label>
+                                    <input type="text" class="form-control" id="telefone2" name="telefone2" maxlength="11" placeholder="(19) 00000000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="email1">E-mail 1</label>
+                                    <input type="text" class="form-control" id="email1" name="email1" maxlength="50" placeholder="exemplo@email.com">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <label for="email2">E-mail 2</label>
+                                    <input type="text" class="form-control" id="email2" name="email2" maxlength="50" placeholder="exemplo@email.com">
+                                    <span class="help-block"></span>
+                                </div>
+
+
+                                <div class="form-group col-lg-4">
+                                    <label for="endereco">Logradouro (Rua/Avenida)</label>
+                                    <input type="text" class="form-control" id="endereco" name="endereco" maxlength="100" placeholder="Rua Maria ...">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-2">
+                                    <label for="numero">nº</label>
+                                    <input type="text" class="form-control" id="numero" name="numero" maxlength="5" placeholder="00">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" class="form-control" id="bairro" name="bairro" maxlength="50" placeholder="Jd. das Flores">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="complemento">Complemento</label>
+                                    <input type="text" class="form-control" id="complemento" name="complemento" maxlength="50" placeholder="prédio">
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                                                                
+                                <div class="form-group col-lg-4">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" class="form-control" id="cep" name="cep" maxlength="40" placeholder="00.000-000">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" class="form-control" id="cidade" name="cidade" maxlength="40" placeholder="Araras">
+                                    <span class="help-block"></span>
+                                </div>
+            
+                                <div class="form-group col-lg-4">
+                                    <label for="uf">UF/Estado</label>
+                                    <select class="form-control" id="uf" name="uf">
+                                        <option selected value="SP">São Paulo</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PR">Paraná</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option selected value="1">Ativo</option>
+                                        <option value="0">Inativo</option>
+                                    </select>
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label for="dtCadastro">Data de Cadastro</label>
+                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
+                                </div>
+
+                            </div>
+
+                            <!--Usado apenas para Editar -->
+                            <div hidden="true">
+                                <label for="idLocacao">Id</label>
+                                <input type="text" id="idLocacao" name="idLocacao" >
+                            </div>
+
+                         </form>
+
+                         <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                         
+                         <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                             
+                             <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             <!-- btnCreateRent and btnEditRent-->
+                             <input id="btnSaveRent" type="submit" value="Cadastrar" class="btn btn-success">
+                             
+                             <!-- para desbloquear os camps para editar o procuto -->
+                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+                             
+                         </div>
+                       
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  <!-- end Rent Modal -->  
+
+
+    <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <script src="../res/js/util.js"></script>
+    <script src="../res/js/rents.js"></script>
+        
+<!--
+<script>
+	$(document).ready(function() {
+
+  	$("#linkLocacoes").addClass("active"); 
+	
+});
+
+</script>
+-->
+
+
+
+    <!--script>
+        $("#linkLocacoes").addClass("active"); 
+    </script-->

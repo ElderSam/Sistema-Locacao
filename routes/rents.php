@@ -5,13 +5,13 @@ use \Locacao\Controller\RentController;
 use \Locacao\Model\User;
 use \Locacao\Model\Rent;
 
-/* rota para página de alugueis --------------*/
+/* rota para página de locações/alugueis --------------*/
 $app->get('/rents', function(){
 
     User::verifyLogin();
 
     $page = new Page();
-    $page->setTpl("alugueis");
+    $page->setTpl("locacoes");
 
 });
 
