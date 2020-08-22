@@ -172,13 +172,17 @@ class Contract extends Budget{
     public function getValuesToContractPDF($idContract){
 
         $sql = new Sql();
-
-        $results = $sql->select("SELECT c.*, b.idObra, cl.idCliente FROM contratos c 
+        
+        $results = $sql->select("SELECT c.*, b.endereco AS enderecoObra, b.complemento AS complementoObra, b.bairro AS bairroObra,
+                                b.cidade AS cidadeObra, b.cep AS cepObra, cl.idCliente AS idCliente, cl.endereco AS enderecoCliente, cl.complemento AS complementoCliente,
+                                cl.cidade AS cidadeCliente, cl.bairro AS bairroCliente, cl.uf AS ufCliente, cl.cep AS cepCliente, cl.cpf AS cpfCliente, cl.rg AS rgCliente,
+                                 cl.cnpj AS cnpjCliente, cl.ie AS ieCliente, cl.tipoCliente FROM contratos c 
                                 LEFT JOIN obras b ON(c.obra_idObra = b.IdObra)
                                 LEFT JOIN clientes cl ON(b.id_fk_cliente = cl.idCliente)
-                                WHERE c.idContrato = :idContract AND c.statusOrcamento IN (3, 4 ,5))", array(
+                                WHERE c.idContrato = :idContract AND c.statusOrcamento IN (3, 4, 5)", array(
                                 ":idContract"=>$idContract    
                                 ));
+                        
         if(count($results) > 0){
             $res = $results[0];
             $auxData = strtotime($res['dtCadastro']);      
@@ -187,6 +191,14 @@ class Contract extends Budget{
         
             return json_encode($res);
         }
+    }
+
+    public function getValuesToCompanyPDF(){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM empresa");
+        return json_encode($results);
     }
 
 }

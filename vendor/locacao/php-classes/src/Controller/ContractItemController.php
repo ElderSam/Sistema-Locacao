@@ -195,4 +195,23 @@ class ContractItemController extends Generator
         return json_encode($listItems);
     }
 
+    public function getValuesToContractPDF($idContrato){
+
+        $items = new ContractItem();
+        
+        $listItems = $items->getValuesToContractPDF($idContrato);
+          
+        for($i=0; $i<count($listItems); $i++){
+            //print_r($item);
+            
+            $periodo = $listItems[$i]['periodoLocacao'];
+            $arrayPeriodos = array("diário", "semanal", "quinzenal", "mensal");
+
+            $listItems[$i]['periodoLocacao'] = $arrayPeriodos[$periodo -1]; //pega a string no array referente ao número 
+            //echo "<br>periodoLocacao: $periodo => " . $listItems[$i]['periodoLocacao'];   
+        }
+
+        return json_encode($listItems);
+    }
+
 }//end class ContractItemController

@@ -790,6 +790,34 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `empresa`
+--
+
+CREATE TABLE `empresa` (
+  `id` int(3) NOT NULL,
+  `codigo` varchar(11) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `endereco` varchar(100) DEFAULT NULL,
+  `complemento` varchar(100) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
+  `municipio` varchar(100) DEFAULT NULL,
+  `estado` varchar(2) DEFAULT NULL,
+  `cep` varchar(9) DEFAULT NULL,
+  `tipoEmpresa` varchar(45) NOT NULL,
+  `cpf` varchar(15) DEFAULT NULL,
+  `rg` varchar(15) DEFAULT NULL,
+  `cnpj` varchar(15) DEFAULT NULL,
+  `ie` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `empresa`
+--
+
+INSERT INTO `empresa` (`id`, `codigo`, `nome`, `endereco`, `complemento`, `bairro`, `municipio`, `estado`, `cep`, `tipoEmpresa`, `cpf`, `rg`, `cnpj`, `ie`) VALUES
+(1, '001', 'COMFAL - Locação de Máquinas LTDA-ME', 'Rua Hugo Rondelli, 66', NULL, 'Monte Carlo', 'Americana', 'SP', '13476692', 'Jurídica', NULL, NULL, '71528426000160', '165122184116');
+
+--
 -- Estrutura da tabela `faturas`
 --
 
@@ -1193,6 +1221,14 @@ ALTER TABLE `contrato_itens`
   ADD KEY `fk_contrato_itens_has_contrato` (`idContrato`),
   ADD KEY `fk_contrato_has_produto` (`idProduto_gen`);
 
+
+--
+-- Índices para tabela `empresa`
+--
+ALTER TABLE `empresa`
+  ADD PRIMARY KEY (`id`);
+
+
 --
 -- Índices para tabela `faturas`
 --
@@ -1301,6 +1337,13 @@ ALTER TABLE `contratos`
 --
 ALTER TABLE `contrato_itens`
   MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT de tabela `empresa`
+--
+ALTER TABLE `empresa`
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`

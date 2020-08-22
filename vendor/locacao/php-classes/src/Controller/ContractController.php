@@ -5,6 +5,8 @@ namespace Locacao\Controller;
 use \Locacao\Model\User;
 use \Locacao\Model\Contract;
 use \Locacao\Controller\BudgetController;
+use Locacao\Utils\myPDF;
+use Locacao\Utils\PDFs\ContractPDF;
 
 class ContractController extends BudgetController
 {
@@ -198,9 +200,39 @@ class ContractController extends BudgetController
 
         $contrato = $contract->getValuesToContractPDF($id);
 
-        $items = new ContractItemController();
+        $empresa = $contract->getValuesToCompanyPDF();
+        
+        $itens = new ContractItemController();
 
-        //$contractPDF = new 
+        $listItens = $itens->getValuesToContractPDF($id);
 
+        $contractPDF = new ContractPDF($contrato, $listItens, $empresa);
+
+        $res = $contractPDF->show();
+
+        $pdf = new myPDF();
+
+        $file_name = str_replace('/', '-', $res[0]);
+
+        $pdf->createPDF($file_name. ".pdf", $res[1]);
+       
+        if($destiny == "sendEmail"){
+            //print_r($_POST);
+
+            //valida os campos
+            $error = $this->verifyFieldsEmail(); //verifica os campos do formulário de email
+            $aux = json_decode($error);
+    
+            if ($aux->error) {
+                return $error;
+            }
+            
+            //se estiver tudo ok, então envia o e-mail
+            return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
+
+        }else{
+            $pdf->display();
+        }
+        
     }
 }//end class ContractController

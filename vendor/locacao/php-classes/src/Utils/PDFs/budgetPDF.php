@@ -207,7 +207,7 @@ class BudgetPDF
             <div> <!-- CABEÇALHO DO ORÇAMENTO -->
                 <div class='group'>
                     <div id='div-logo' class='bg-dark p-1'>
-                        <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
+                        <img src='http://locacao.com/res/img/logo-COMFAL.jpg' alt='logo'>
                     </div>
                     <div id='div-lateral' class='text-center mt-4 ml-4 center' style='padding-left: 40px;'>
                         <h3 class='text-success' style='color: green;'>ORÇAMENTO</h3>

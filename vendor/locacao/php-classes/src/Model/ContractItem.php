@@ -276,5 +276,22 @@ class ContractItem extends Generator{
         return $listItems; //array
     }
 
+    public function getValuesToContractPDF($idContrato){
+        
+        $sql = new Sql();
+
+        $query = "SELECT a.*, b.descricao, c.descCategoria FROM contrato_itens a
+            INNER JOIN produtos_gen b ON (a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON (b.idCategoria = c.idCategoria)
+            WHERE (a.idContrato = :idOrcamento)
+            ORDER BY a.idItem ASC";
+
+        $listItems = $sql->select($query, array(
+            ':idOrcamento'=>$idContrato
+        ));
+        
+        return $listItems; //array
+    }
+
 }
 
