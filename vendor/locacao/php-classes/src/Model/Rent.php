@@ -98,18 +98,6 @@ class Rent extends Generator{
         }
     }
 
- 
-    public static function searchName($nome){ //search if name or desc already exists
-
-        $sql = new Sql();
-
-        $results = $sql->select("SELECT * FROM historicoalugueis WHERE (nome = :nome)", array(
-            ":nome"=>$nome
-        ));
-
-        return $results;
-    }
-
     public function get_datatable($requestData, $column_search, $column_order){
         
         $query = "SELECT * FROM historicoalugueis";
