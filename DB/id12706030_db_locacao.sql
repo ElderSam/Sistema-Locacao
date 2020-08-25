@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18-Ago-2020 às 00:38
+-- Tempo de geração: 25-Ago-2020 às 02:47
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -293,12 +293,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_delete` (IN `p
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_save` (IN `pcontrato_idContrato` INT(11), IN `pproduto_idProduto` INT(11), IN `pstatus` TINYINT(4), IN `pvlAluguel` FLOAT, IN `pdtInicio` DATE, IN `pdtFinal` DATE, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_save` (IN `pcodigo` VARCHAR(11), IN `pcontrato_idContrato` INT(11), IN `pproduto_idProduto` INT(11), IN `pstatus` TINYINT(4), IN `pvlAluguel` FLOAT, IN `pdtInicio` DATE, IN `pdtFinal` DATE, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
   
     DECLARE vidHistoricoAluguel INT;
     
-  INSERT INTO historicoalugueis (contrato_idContrato, produto_idProduto, status, vlAluguel, dtInicio, dtFinal, custoEntrega, custoRetirada, observacao)
-    VALUES(pcontrato_idContrato, pproduto_idProduto, pstatus, pvlAluguel, pdtInicio, pdtFinal, pcustoEntrega, pcustoRetirada, pobservacao);
+  INSERT INTO historicoalugueis (codigo, contrato_idContrato, produto_idProduto, status, vlAluguel, dtInicio, dtFinal, custoEntrega, custoRetirada, observacao)
+    VALUES(pcodigo, pcontrato_idContrato, pproduto_idProduto, pstatus, pvlAluguel, pdtInicio, pdtFinal, pcustoEntrega, pcustoRetirada, pobservacao);
     
     SET vidHistoricoAluguel = LAST_INSERT_ID();
     
@@ -817,6 +817,8 @@ CREATE TABLE `empresa` (
 INSERT INTO `empresa` (`id`, `codigo`, `nome`, `endereco`, `complemento`, `bairro`, `municipio`, `estado`, `cep`, `tipoEmpresa`, `cpf`, `rg`, `cnpj`, `ie`) VALUES
 (1, '001', 'COMFAL - Locação de Máquinas LTDA-ME', 'Rua Hugo Rondelli, 66', NULL, 'Monte Carlo', 'Americana', 'SP', '13476692', 'Jurídica', NULL, NULL, '71528426000160', '165122184116');
 
+-- --------------------------------------------------------
+
 --
 -- Estrutura da tabela `faturas`
 --
@@ -887,6 +889,7 @@ INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `cnpj`, `te
 
 CREATE TABLE `historicoalugueis` (
   `idHistoricoAluguel` int(11) NOT NULL,
+  `codigo` varchar(11) NOT NULL,
   `contrato_idContrato` int(11) NOT NULL,
   `produto_idProduto` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL,
@@ -898,6 +901,14 @@ CREATE TABLE `historicoalugueis` (
   `observacao` text DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `historicoalugueis`
+--
+
+INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
+(1, '1', 2, 1, 1, 560.45, '2020-08-24', NULL, NULL, NULL, 'cadastro teste pelo PHPMyAmin', '2020-08-24 21:42:45'),
+(2, '2', 3, 8, 2, 100.54, '2020-08-10', NULL, NULL, NULL, 'cadastro teste pelo PHPMyAdmin', '2020-08-24 21:43:47');
 
 -- --------------------------------------------------------
 
@@ -1221,13 +1232,11 @@ ALTER TABLE `contrato_itens`
   ADD KEY `fk_contrato_itens_has_contrato` (`idContrato`),
   ADD KEY `fk_contrato_has_produto` (`idProduto_gen`);
 
-
 --
 -- Índices para tabela `empresa`
 --
 ALTER TABLE `empresa`
   ADD PRIMARY KEY (`id`);
-
 
 --
 -- Índices para tabela `faturas`
@@ -1343,7 +1352,6 @@ ALTER TABLE `contrato_itens`
 --
 ALTER TABLE `empresa`
   MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-COMMIT;
 
 --
 -- AUTO_INCREMENT de tabela `faturas`
@@ -1361,7 +1369,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
