@@ -21,10 +21,10 @@ $(function() { //quando a página carrega
 		let form = $('#formRent');
 		let formData = new FormData(form[0]);
 
-		idLocacao = $('#idLocacao').val()
+		idLocacao = $('#id').val()
 		//console.log("idFornecedor:" + idFornecedor)
 
-		if((idFornecedor == 0) || (idFornecedor == undefined)){ //se for para cadastrar --------------------------------------------------
+		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
 			//console.log("você quer cadastrar")
 
@@ -43,7 +43,7 @@ $(function() { //quando a página carrega
 					clearErrors();
 	
 					if (JSON.parse(response).error) {
-						console.log('erro ao cadastrar novo Fornecedor!')
+						console.log('erro ao cadastrar nova Locação!')
 						response = JSON.parse(response)
 						
 						Swal.fire(
@@ -70,7 +70,7 @@ $(function() { //quando a página carrega
 						//console.log(response)
 						Swal.fire(
 							'Sucesso!',
-							'Fornecedor cadastrado!',
+							'Aluguel cadastrado!',
 							'success'
 							)
 	
@@ -94,7 +94,7 @@ $(function() { //quando a página carrega
 			
 			$.ajax({
 				type: "POST",
-				url: `/rents/${idFornecedor}`, //rota para editar
+				url: `/rents/${idLocacao}`, //rota para editar
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -107,7 +107,7 @@ $(function() { //quando a página carrega
 					clearErrors();
 
 					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Fornecedor!')
+						console.log('erro ao atualizar Locação!')
 
 						response = JSON.parse(response)
 
@@ -133,7 +133,7 @@ $(function() { //quando a página carrega
 
 						Swal.fire(
 							'Sucesso!',
-							'Fornecedor atualizado!',
+							'Locação atualizada!',
 							'success'
 						);
 
@@ -205,19 +205,21 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 					row = []
 
 					//Essa variavel você pode apresentar
-					var telFormatado = mascaraTelefone(element.telefone1);
+					// var telFormatado = mascaraTelefone(element.telefone1);
 
 					//row['id'] = element.id
-					row['codLocacao'] = element.codLocacao
-					row['nome'] = element.nome
+
+					row['codLocacao'] = element.codigo
+					row['produto'] = element.produto_idProduto
 					row['status'] = element.status
-					row['telefone1'] = telFormatado
-					row['cidade'] = element.cidade
+					row['dataInicio'] = dtInicio
+					row['cliente'] = element.cliente_idCliente
+					row['contrato'] = element.contrato_idContrato
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-					onclick='loadRent(${element.id});'>
+					onclick='loadRent(${element.idHistoricoAluguel});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
+					<button type='button' title='excluir' onclick='deleteRent(${element.idHistoricoAluguel});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
@@ -233,10 +235,11 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 		},
 		"columns": [
 			{ "data": "codLocacao" },
-			{ "data": "nome" },
+			{ "data": "Produto" },
 			{ "data": "status" },
-			{ "data": "telefone1" },
-			{ "data": "cidade" },
+			{ "data": "dataInicio" },
+			{ "data": "cliente" },
+			{ "data": "contrato" },
 			{ "data": "options" },
 			        
 		],
@@ -256,7 +259,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 	clearFieldsValues();
 	clearErrors();
 
-	$('#modalTitle').html('Detalhes do Locacao')
+	$('#modalTitle').html('Detalhes do Locação')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
 	$('#btnSaveRent').hide();
 	$('#btnUpdate').show();
@@ -264,61 +267,46 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 	$.getJSON(`/rents/json/${idLocacao}`, function (data) { //ajax
 		console.log(data)
 
-		$("#idLocacao").val(data.idLocacao);
+		$("#idLocacao").val(data.idHistoricoAluguel);
 		//console.log('load View Locacao idLocacao: ' + $("#idLocacao").val())
 
-		$("#formRent #codigo").val(data.codLocacao).prop('disabled', true);
-		$("#formRent #nome").val(data.nome).prop('disabled', true);
-		
-        $("#formRent #cnpj").val(data.cnpj).prop('disabled', true)
-        
-		telefone1 = mascaraTelefone(data.telefone1)
-		telefone2 = mascaraTelefone(data.telefone2)
-
-		$("#formRent #telefone1").val(telefone1).prop('disabled', true);
-		$("#formRent #telefone2").val(telefone2).prop('disabled', true);
-		
-		$("#formRent #email1").val(data.email1).prop('disabled', true);
-		$("#formRent #email2").val(data.email2).prop('disabled', true);
-
-		$("#formRent #endereco").val(data.endereco).prop('disabled', true);
-		$("#formRent #numero").val(data.numero).prop('disabled', true);
-		$("#formRent #bairro").val(data.bairro).prop('disabled', true);
-		$("#formRent #complemento").val(data.complemento).prop('disabled', true);
-		$("#formRent #cep").val(data.cep).prop('disabled', true);
-
-		$("#formRent #cidade").val(data.cidade).prop('disabled', true);
+		$("#formRent #codigo").val(data.codigo).prop('disabled', true);
+		$("#formRent #clientes").val(data.cliente_idCliente).prop('disabled', true);		
+        $("#formRent #contratos").val(data.contrato_idContrato).prop('disabled', true);
+		$("#formRent #itens").val(data.produto_idProduto).prop('disabled', true);
 		$("#formRent #status").val(data.status).prop('disabled', true);
-		$("#formRent #uf").val(data.uf).prop('disabled', true);
+		$("#formRent #vlAluguel").val(data.vlAluguel).prop('disabled', true);
+		$("#formRent #dtInicio").val(data.dtInicio).prop('disabled', true);
+		$("#formRent #dtFim").val(data.dtFinal).prop('disabled', true);
+		$("#formRent #vlEntrega").val(data.custoEntrega).prop('disabled', true);
+		$("#formRent #vlRetirada").val(data.custoRetirada).prop('disabled', true);
+		// $("#formRent #quantidade").val(data."").prop('disabled', true);
+		$("#formRent #prodEpecifico").val(data.status).prop('disabled', true);
+		$("#formRent #observacao").val(data.observacao).prop('disabled', true);
 		
 		/* Atualizar Locacao ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function(){ //se eu quiser atualizar o Locacao atual
 
-			$('#modalTitle').html('Editar Locacao');
+			$('#modalTitle').html('Editar Locacão');
 			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
 			$('#btnSaveRent').val('Atualizar').show();
 			$('#btnUpdate').hide();
 		
 			//$('#desImagePath').parent().show();
 
-			$("#formRent #codigo").prop('disabled', false);
-			
-			$("#formRent #nome").prop('disabled', false);
-			$("#formRent #cnpj").prop('disabled', false);
-			$("#formRent #telefone1").prop('disabled', false);
-			$("#formRent #telefone2").prop('disabled', false);
-			$("#formRent #email1").prop('disabled', false);
-			$("#formRent #email2").prop('disabled', false);
-			$("#formRent #endereco").prop('disabled', false);
-			$("#formRent #numero").prop('disabled', false);
-			$("#formRent #bairro").prop('disabled', false);
-			$("#formRent #complemento").prop('disabled', false);
-			$("#formRent #cidade").prop('disabled', false);
-			$("#formRent #uf").prop('disabled', false);
-			$("#formRent #cep").prop('disabled', false);
+			$("#formRent #codigo").prop('disabled', true);	
+			$("#formRent #clientes").prop('disabled', false);
+			$("#formRent #contratoa").prop('disabled', false);
+			$("#formRent #itens").prop('disabled', false);
 			$("#formRent #status").prop('disabled', false);
-
-			
+			$("#formRent #vlAluguel").prop('disabled', false);
+			$("#formRent #dtInicio").prop('disabled', false);
+			$("#formRent #dtFim").prop('disabled', false);
+			$("#formRent #vlEntrega").prop('disabled', false);
+			$("#formRent #vlRetirada").prop('disabled', false);
+			$("#formRent #quantidade").prop('disabled', false);
+			$("#formRent #prodEspecifico").prop('disabled', false);
+			$("#formRent #observacao").prop('disabled', false);
 				
 		}); /* Fim Atualizar Locacao ---------------------------------------------------------- */
 			
@@ -401,53 +389,41 @@ function deleteRent(idLocacao){
 function clearFieldsValues(){
 
 	//$("#formRent #codigo").prop('disabled', true)
-	$('#modalTitle').html('Cadastrar Locacao');
+	$('#modalTitle').html('Cadastrar Locacão');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveRent').val('Cadastrar').show();
 	$('#btnUpdate').hide();
-
-	$('#dtCadastro').parent().hide(); //aparece a data de cadastro (só para visualizar)
+	$("#formRent #idHistoricoAluguel").hide();
+	//$('#dtInicio').parent().hide(); //aparece a data de cadastro (só para visualizar)
 	//$('#desImagePath').parent().show();
 
+	$("#formRent #idHistoricoAluguel").prop('disabled', false);
 	$("#formRent #codigo").prop('disabled', false);
-	$("#formRent #nome").prop('disabled', false);
-	$("#formRent #cnpj").prop('disabled', false);
-	$("#formRent #telefone1").prop('disabled', false);
-	$("#formRent #telefone2").prop('disabled', false);
-	$("#formRent #email1").prop('disabled', false);
-	$("#formRent #email2").prop('disabled', false);
-	$("#formRent #endereco").prop('disabled', false);
-	$("#formRent #numero").prop('disabled', false);
-	$("#formRent #bairro").prop('disabled', false);
-	$("#formRent #cidade").prop('disabled', false);
-	$("#formRent #uf").prop('disabled', false);
-	$("#formRent #cep").prop('disabled', false);
+	$("#formRent #clientes").prop('disabled', false);
+	$("#formRent #contratos").prop('disabled', false);
+	$("#formRent #itens").prop('disabled', false);
 	$("#formRent #status").prop('disabled', false);
+	$("#formRent #vlAluguel").prop('disabled', false);
+	$("#formRent #group-dtInicio").hide();
+	$("#formRent #dtFim").prop('disabled', false);
+	$("#formRent #vlEntrega").prop('disabled', false);
+	$("#formRent #vlRetirada").prop('disabled', false);
+	$("#formRent #quantidade").prop('disabled', false);
+	$("#formRent #observacao").prop('disabled', false);
 
-	//$('#image-preview').attr('src', "/res/img/rents/rent-default.jpg");
-	$('#dtCadastro').parent().hide();
-
+	$('#id').val('');
 	$('#codigo').val('');
-	$('#nome').val('');
-	$('#cnpj').val('');
-	$('#telefone1').val('');
-	$('#telefone2').val('');
-	$('#email1').val('');
-	$('#email2').val('');
-
-	$('#endereco').html('');
-	$('#numero').html('');
-	$('#bairro').html('');
-	$('#cidade').html('');
-
-	$('#uf').val('SP');
-	$('#cep').val('');
-
-	
-	$('#status').val('1');
-	$('#dtCadastro').val('');
-	
-	$('#idLocacao').val('0');
+	$('#clientes').val('');
+	$('#contratos').val('');
+	$('#itens').val('');
+	$('#status').val('');
+	$('#vlAluguel').val('');
+	$('#dtInicio').val('');
+	$('#dtFim').val('');
+	$('#vlEntrega').val('');
+	$('#vlRetirada').val('');
+	$('#quantidade').val('');
+	$('#obseracao').val('');
 	
 }
 
@@ -461,4 +437,15 @@ function formatDate(dateX){ //format Date to input in Form
 	//return diaF+"/"+mesF+"/"+anoF;
 	return anoF+"-"+mesF+"-"+diaF;
 }
+
+//Usado para deixar visivel o itens do dropdown de produtos específicos
+var checkList = document.getElementById('list1');
+
+checkList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+	if (checkList.classList.contains('visible'))
+		checkList.classList.remove('visible');
+	else
+		checkList.classList.add('visible');
+}
+
 

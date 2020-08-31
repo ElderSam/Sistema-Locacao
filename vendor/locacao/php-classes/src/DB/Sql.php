@@ -21,8 +21,8 @@ class Sql {
 
 		}else{ //se estiver em um servidor online
 
-			$username = "id12706030_admin";
-			$password = "+!h{IC*7}JhPc^2n";
+			$username = "*****************";
+			$password = "****************";
 		}
 
 		$this->conn = new \PDO(

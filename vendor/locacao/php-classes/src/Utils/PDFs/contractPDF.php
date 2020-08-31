@@ -110,6 +110,7 @@ class ContractPDF
 
             //print_r($item);
             $newItem['desc'] = strtoupper($item->descCategoria) ." ". $item->descricao; //recebe a descrição completa do item
+            $newItem['periodo'] = $item->periodoLocacao;
             $newItem['locacao'] = $this->toRealMoney($item->vlAluguel);
             $newItem['entrega'] = $item->custoEntrega;
             $newItem['retirada'] = $item->custoRetirada;
@@ -316,6 +317,7 @@ class ContractPDF
                         <thead style='background-color: lightgreen;'>
                             <tr> 
                                 <th>ITEM</th>
+                                <th>PERIODO</th>
                                 <th>LOCAÇÃO</th>
                                 <th>ENTREGA</th>
                                 <th>RETIRADA</th>
@@ -325,12 +327,14 @@ class ContractPDF
                         <tbody>";
                         foreach($this->listItems as $item){
                             $desc = $item['desc'];
+                            $periodo = $item['periodo'];
                             $locacao = $item['locacao'];
                             $entrega = $item['entrega'];
                             $retirada = $item['retirada'];
 
                             $result .= "<tr>
                                 <td class='center'><b>$desc</b></td>
+                                <td class='center'><b>$periodo</b></td>
                                 <td class='center'>$locacao</td>
                                 <td class='center'>$entrega</td>
                                 <td class='center'>$retirada</td>

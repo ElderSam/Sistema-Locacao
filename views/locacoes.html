@@ -1,3 +1,61 @@
+<style>
+
+    #list1{
+        top: 35px;
+        margin-bottom: 50px;
+    }
+
+    #list1 span{
+        width: 100%;
+    }
+  
+    .dropdown-check-list {
+    display: inline-block;
+    }
+    .dropdown-check-list .anchor {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 50px 5px 10px;
+    border: 1px solid #ccc;
+    }
+    .dropdown-check-list .anchor:after {
+    position: absolute;
+    content: "";
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    padding: 5px;
+    right: 10px;
+    top: 20%;
+    -moz-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+    }
+    .dropdown-check-list .anchor:active:after {
+    right: 8px;
+    top: 21%;
+    }
+    .dropdown-check-list ul.items {
+    padding: 2px;
+    display: none;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+    .dropdown-check-list ul.items li {
+    list-style: none;
+    }
+    .dropdown-check-list.visible .anchor {
+    color: #0094ff;
+    }
+    .dropdown-check-list.visible .items {
+    display: block;
+    }
+
+</style>
+
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
@@ -19,11 +77,10 @@
                             <thead class="bg-dark text-white">
                             
                                 <tr>
-                                    <th>#</th>
+                                    <th>Código</th>
                                     <th>Produto</th>
 									<th>Status</th>
 									<th>Data Início</th>
-									<th>Data Final</th>
 									<th>Cliente</th>
                                     <th>Contrato</th>
                                     <th>Opções</th>
@@ -35,7 +92,6 @@
 								  <td>Container X</td>
 								  <td style="color: green;"><b>Alugado</b></td>
 								  <td>01/08/2020</td>
-								  <td>30/08/2020</td>
 								  <td>João Félix S.A.</td>
 								  <td>...</td>
 								  <td>...</td>
@@ -45,13 +101,12 @@
 								<td>Container Y</td>
 								<td style="color: grey;"><b>Encerrado</b></td>
 								<td>01/02/2020</td>
-								<td>23/11/2020</td>
 								<td>Construções LTDA</td>
 								<td>...</td>
 								<td>...</td>
 							</tr>
 							<tr>
-								<td>2</td>
+								<td>3</td>
 								<td>Container Z</td>
 								<td style="color: red;"><b>Entrega pendente</b></td>
 								<td>10/08/2020</td>
@@ -63,11 +118,10 @@
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
-                                    <th>#</th>
+                                    <th>Código</th>
                                     <th>Produto</th>
 									<th>Status</th>
 									<th>Data Início</th>
-									<th>Data Final</th>
 									<th>Cliente</th>
                                     <th>Contrato</th>
                                     <th>Opções</th>
@@ -95,6 +149,12 @@
                     <div class="modal-body">
                         <form id="formRent">
                             <div class="form-row">
+                                
+                                <div id="idHistoricoAluguel" class="form-group col-lg-2">
+                                    <label for="id">ID</label>
+                                    <input type="text" class="form-control" id="id" name="id">
+                                    <span class="help-block"></span>
+                                </div>
 
                                 <div class="form-group col-lg-2">
                                     <label for="codigo">Código</label>
@@ -102,107 +162,118 @@
                                     <span class="help-block"></span>
                                 </div>
 
-                                <div class="form-group col-lg-10">
-                                    <label for="nome">Nome / Razão Social</label>
-                                    <input type="text" class="form-control" id="nome" name="nome" maxlength="100" placeholder="nome da Locação">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="cnpj">CNPJ</label>
-                                    <input type="text" class="form-control" id="cnpj" name="cnpj" maxlength="16" placeholder="00.000.000/0000-00">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="telefone1">Telefone 1</label>
-                                    <input type="text" class="form-control" id="telefone1" name="telefone1" maxlength="11" placeholder="(19) 00000000">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                
-                                <div class="form-group col-lg-4">
-                                    <label for="telefone2">Telefone 2</label>
-                                    <input type="text" class="form-control" id="telefone2" name="telefone2" maxlength="11" placeholder="(19) 00000000">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="email1">E-mail 1</label>
-                                    <input type="text" class="form-control" id="email1" name="email1" maxlength="50" placeholder="exemplo@email.com">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-6">
-                                    <label for="email2">E-mail 2</label>
-                                    <input type="text" class="form-control" id="email2" name="email2" maxlength="50" placeholder="exemplo@email.com">
-                                    <span class="help-block"></span>
-                                </div>
-
-
-                                <div class="form-group col-lg-4">
-                                    <label for="endereco">Logradouro (Rua/Avenida)</label>
-                                    <input type="text" class="form-control" id="endereco" name="endereco" maxlength="100" placeholder="Rua Maria ...">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-2">
-                                    <label for="numero">nº</label>
-                                    <input type="text" class="form-control" id="numero" name="numero" maxlength="5" placeholder="00">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-3">
-                                    <label for="bairro">Bairro</label>
-                                    <input type="text" class="form-control" id="bairro" name="bairro" maxlength="50" placeholder="Jd. das Flores">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-3">
-                                    <label for="complemento">Complemento</label>
-                                    <input type="text" class="form-control" id="complemento" name="complemento" maxlength="50" placeholder="prédio">
-                                    <span class="help-block"></span>
-                                </div>
-                                
-                                                                
-                                <div class="form-group col-lg-4">
-                                    <label for="cep">CEP</label>
-                                    <input type="text" class="form-control" id="cep" name="cep" maxlength="40" placeholder="00.000-000">
-                                    <span class="help-block"></span>
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="cidade">Cidade</label>
-                                    <input type="text" class="form-control" id="cidade" name="cidade" maxlength="40" placeholder="Araras">
-                                    <span class="help-block"></span>
-                                </div>
-            
-                                <div class="form-group col-lg-4">
-                                    <label for="uf">UF/Estado</label>
-                                    <select class="form-control" id="uf" name="uf">
-                                        <option selected value="SP">São Paulo</option>
-                                        <option value="RJ">Rio de Janeiro</option>
-                                        <option value="MG">Minas Gerais</option>
-                                        <option value="PR">Paraná</option>
+                                <div class="form-group col-md-3">
+                                    <label for="clientes">Clientes</label>
+                                    <select id="clientes" name="clientes" class="form-control">
+                                        <option value="" selected>Escolher...</option>
+                                        <option value="">Fulano de Tals</option>
+                                        <option value="">Fulano de Tals</option>
+                                        <option value="">Fulano de Tals</option>
+                                        <option value="">Fulano de Tals</option>
+                                        <option value="">Fulano de Tals</option>
+                                        <option value="">Fulano de Tals</option>
                                     </select>
-                                    <span class="help-block"></span>
+                                </div>
+                                
+                                <div class="form-group col-md-3">
+                                    <label for="contratos">Contratos</label>
+                                    <select id="contratos" name="contratos" class="form-control">
+                                        <option value="" selected>Escolher...</option>
+                                        <option value="">Contrato blablabla</option>
+                                        <option value="">Contrato blablabla</option>
+                                        <option value="">Contrato blablabla</option>
+                                        <option value="">Contrato blablabla</option>
+                                        <option value="">Contrato blablabla</option>                                        
+                                    </select>
                                 </div>
 
-                                <div class="form-group col-lg-3">
+                                <div class="form-group col-md-4">
+                                    <label for="itens">Itens</label>
+                                    <select id="itens" name="itens" class="form-control">
+                                        <option value="" selected>Escolher...</option>
+                                        <option value="">Item blablabla</option>
+                                        <option value="">Item blablabla</option>
+                                        <option value="">Item blablabla</option>
+                                        <option value="">Item blablabla</option>
+                                        <option value="">Item blablabla</option>                                        
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
                                     <label for="status">Status</label>
-                                    <select class="form-control" id="status" name="status">
-                                        <option selected value="1">Ativo</option>
-                                        <option value="0">Inativo</option>
+                                    <select id="status" name="status" class="form-control">
+                                        <option value="" selected>Escolher...</option>
+                                        <option value="" style="color: yellow;"><b>Entrega Pendente</b></option>
+                                        <option value="" style="color: green;"><b>Ativo</b></option>
+                                        <option value="" style="color: orange;"><b>Retirada Pendente</b></option>
+                                        <option value="" style="color: red;"><b>Encerrado</b></option>                                        
                                     </select>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="vlAluguel">Valor do Aluguel</label>
+                                    <input type="text" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="">
+                                    <span class="help-block"></span>
+                                </div>
+                                
+                                <div id="group-dtInicio" class="form-group col-lg-3">
+                                    <label for="dtInicio">Data de Inicio</label>
+                                    <input type="date" class="form-control" id="dtInicio" name="dtInicio">
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="dtFim">Data Final</label>
+                                    <input type="date" class="form-control" id="dtFim" name="dtFim">
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="vlEntrega">Valor de Entrega</label>
+                                    <input type="text" class="form-control" id="vlEntrega" name="vlEntrega"  placeholder="">
                                     <span class="help-block"></span>
                                 </div>
 
-                                <div class="form-group col-lg-3">
-                                    <label for="dtCadastro">Data de Cadastro</label>
-                                    <input type="date" class="form-control" id="dtCadastro" name="dtCadastro" disabled>
+                                <div class="form-group col-lg-4">
+                                    <label for="vlRetirada">Valor de Retirada</label>
+                                    <input type="text" class="form-control" id="vlRetirada" name="vlRetirada"  placeholder="">
+                                    <span class="help-block"></span>
                                 </div>
 
-                            </div>
+                                <div class="form-group col-md-4">
+                                    <label for="quantidade">Quantidade</label>
+                                    <select id="quantidade" name="quantidade" class="form-control">
+                                        <option value="" selected>Escolher...</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                        <option value="">3</option>
+                                        <option value="">4</option>
+                                        <option value="">5</option>                                       
+                                    </select>
+                                </div>              
+                   
+                                <div id="list1" class="dropdown-check-list form-group col-md-6" tabindex="100">
+                                    <span class="anchor">Produtos Específico</span>
+                                    <ul class="items">
+                                        <li><input type="checkbox" />Apple </li>
+                                        <li><input type="checkbox" />Orange</li>
+                                        <li><input type="checkbox" />Grapes </li>
+                                        <li><input type="checkbox" />Berry </li>
+                                        <li><input type="checkbox" />Mango </li>
+                                        <li><input type="checkbox" />Banana </li>
+                                        <li><input type="checkbox" />Tomato</li>
+                                        <li><input type="checkbox" />Apple </li>
+                                        <li><input type="checkbox" />Orange</li>
+                                        <li><input type="checkbox" />Grapes </li>
+                                        <li><input type="checkbox" />Berry </li>
+                                        <li><input type="checkbox" />Mango </li>
+                                        <li><input type="checkbox" />Banana </li>
+                                        <li><input type="checkbox" />Tomato</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="observacao">Observação</label>
+                                    <textarea maxlength="150" class="form-control" id="observacao" name="observacao" rows="3"></textarea>
+                                    Caractetres Restantes: <span class="caracteres">150</span><br>
+                                </div>                            
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
@@ -231,7 +302,6 @@
 
             </div>
         </div>  <!-- end Rent Modal -->  
-
 
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
