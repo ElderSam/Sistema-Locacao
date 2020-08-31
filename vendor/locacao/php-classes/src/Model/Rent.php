@@ -18,8 +18,28 @@ class Rent extends Generator{
         return json_encode($results);
     }
 
+    public function createNewCode(){
+        
+        $ano = date("Y", $this->getdtinicio());
+
+        $sql = new Sql();
+
+        $query = "SELECT MAX(*) FROM historicoalugueis 
+            WHERE (YEAR(dtInicio) = :ano)";
+
+        $ultimo = $sql->select($query, array(
+            ":ano"=>$ano
+        ));
+
+        $nextCode = $ultimo + 1;
+
+        return $nextCode;
+
+    }
+
     public function insert(){
     
+        $this->setcodigo($this->createNewCode());
         
         $sql = new Sql();
         
@@ -27,7 +47,8 @@ class Rent extends Generator{
 
         if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_historicoalugueis_save(:contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            $results = $sql->select("CALL sp_historicoalugueis_save(:codigo, :contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+                ":codigo"=>$this->getcodigo(),
                 ":contrato_idContrato"=>$this->getcontrato_idContrato(),
                 ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
                 ":status"=>$this->getstatus(),
@@ -75,18 +96,6 @@ class Rent extends Generator{
             $this->setData($results[0]);
 
         }
-    }
-
- 
-    public static function searchName($nome){ //search if name or desc already exists
-
-        $sql = new Sql();
-
-        $results = $sql->select("SELECT * FROM historicoalugueis WHERE (nome = :nome)", array(
-            ":nome"=>$nome
-        ));
-
-        return $results;
     }
 
     public function get_datatable($requestData, $column_search, $column_order){
