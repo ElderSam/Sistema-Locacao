@@ -85,6 +85,22 @@ class Contract extends Budget{
         }
     }
 
+    public function getContractsCostumer($idCliente){
+
+        //echo "Entrou";
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT a.idContrato, a.codContrato FROM contratos a
+                    INNER JOIN obras b ON(a.obra_idObra = b.idObra)
+                    WHERE b.id_fk_cliente = :idCliente)", array(
+            ":idCliente"=>$idCliente
+        ));
+
+        //print_r($results);
+        return json_encode($results);
+
+    }
+
     public function get_datatable_contracts($requestData, $column_search, $column_order){
 
         $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 

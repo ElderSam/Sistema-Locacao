@@ -7,16 +7,19 @@ $(function() { //quando a página carrega
 	$("#btnAddRent").click(function(){
 		let i = 0
 		clearFieldsValues();
+		loadCostumers("");
 
-		if(i == 0){
-			showsNextNumber()
-		}
+		// if(i == 0){
+		// 	showsNextNumber();
+		// }
 		
 	});
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
 	$("#btnSaveRent").click(function(e) { //quando enviar o formulário de Locacao
 		e.preventDefault(); 
+
+		//loadCostumers('');
 		
 		let form = $('#formRent');
 		let formData = new FormData(form[0]);
@@ -449,3 +452,77 @@ checkList.getElementsByClassName('anchor')[0].onclick = function (evt) {
 }
 
 
+//carrega os Clientes 
+function loadCostumers(idCliente = '') {
+
+	//console.log('loading costumers')
+
+	$("#idCliente").html(`<option value="">(escolha)</option>`);
+	let costumers
+
+	$.getJSON(`/costumers/json`, function (data) { //ajax
+
+
+		data.forEach(function (item) {
+			//console.log(item)
+			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
+		});
+
+		$('#clientes').append(costumers)
+
+
+	}).then(() => {
+
+		if(idCliente !== ''){ //se já tem um cliente escolhido
+			$("#clientes").val(idCliente).prop('disabled', true);
+		}
+
+	}).fail(function () {
+		console.log("Rota não encontrada!");
+		return false
+	});
+	
+	$("select").on("change", function() {
+		var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
+		//alert("evento disparado e o valor é: " + valor);
+		loadContracts(valor);
+	})
+
+}
+
+//carrega os Contratos
+function loadContracts(idCliente = ''){
+
+	//console.log("Id Cliente: " + idCliente);
+	$("#contratos").html(`<option value="">(escolha)</option>`);
+
+	
+	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
+
+		//alert("Lista: " + data)
+		if(data.length == 0){
+			contracts = `<option value="">Sem contratos cadastrados</option>`
+		}else{
+			data.forEach(function (item) {
+				console.log(item)
+				contracts += `<option value="${item.idContrato}">${item.codContrato}</option>`
+			});
+		}
+
+		$("#contratos").append(contracts)
+
+	}).then(() => {
+
+		var comboNome = document.getElementById("contratos");
+
+        if (comboNome.options[comboNome.selectedIndex].value != "" ){
+			var codigo = comboNome.options[comboNome.selectedIndex].value;
+			$("#contratos").val(codigo).prop('disabled', true);
+		}	
+
+	}).fail(function () {
+		console.log("Rota não encontrada! (//contracts/json/${idCliente}/contracts");
+		return false
+	});
+
+}

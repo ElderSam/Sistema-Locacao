@@ -124,3 +124,14 @@ $app->get("/contracts/:id/pdf/show", function($id){ //o destino pode ser a visua
 	echo $contractController->getPDF($id, 'show');
 
 });
+
+
+$app->get("/contracts/json/:idCliente/contracts", function($idCliente){
+	
+    User::verifyLogin();
+
+	$contract = new Contract();
+
+	echo $contract->getContractsCostumer((int)$idCliente);
+
+});
