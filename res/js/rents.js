@@ -4,7 +4,7 @@ $(function() { //quando a página carrega
 
 	//loadTableRents()
 
-	$("#btnAddRent").click(function(){
+	$("#btnAddRent").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 		let i = 0
 		clearFieldsValues();
 		loadCostumers("");
@@ -476,30 +476,34 @@ function loadCostumers(idCliente = '') {
 		if(idCliente !== ''){ //se já tem um cliente escolhido
 			$("#clientes").val(idCliente).prop('disabled', true);
 		}
+				
+		$("#clientes").on("change", function() {
+			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
+			//alert("evento disparado e o valor é: " + valor);
+			loadContracts(valor);
+		})
+
 
 	}).fail(function () {
 		console.log("Rota não encontrada!");
 		return false
 	});
-	
-	$("select").on("change", function() {
-		var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
-		//alert("evento disparado e o valor é: " + valor);
-		loadContracts(valor);
-	})
 
 }
 
 //carrega os Contratos
 function loadContracts(idCliente = ''){
 
-	//console.log("Id Cliente: " + idCliente);
+	console.log(`Id Cliente: ${idCliente}, buscando contratos ...`);
 	$("#contratos").html(`<option value="">(escolha)</option>`);
 
 	
 	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
+		console.log(data)
 
 		//alert("Lista: " + data)
+		contracts = ""; //esvazia a lista de opções
+
 		if(data.length == 0){
 			contracts = `<option value="">Sem contratos cadastrados</option>`
 		}else{
@@ -521,7 +525,7 @@ function loadContracts(idCliente = ''){
 		}	
 
 	}).fail(function () {
-		console.log("Rota não encontrada! (//contracts/json/${idCliente}/contracts");
+		console.log(`Rota não encontrada! (//contracts/json/${idCliente}/contracts`);
 		return false
 	});
 
