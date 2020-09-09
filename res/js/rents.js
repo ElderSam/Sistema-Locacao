@@ -495,8 +495,10 @@ function loadCostumers(idCliente = '') {
 function loadContracts(idCliente = ''){
 
 	console.log(`Id Cliente: ${idCliente}, buscando contratos ...`);
-	$("#contratos").html(`<option value="">(escolha)</option>`);
 
+	txtEscolha = `<option value="">(escolha)</option>`;
+	$("#contratos").html("");
+	$("#itens").html(txtEscolha)
 	
 	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
 		console.log(data)
@@ -507,8 +509,11 @@ function loadContracts(idCliente = ''){
 		if(data.length == 0){
 			contracts = `<option value="">Sem contratos cadastrados</option>`
 		}else{
+
+			$("#contratos").html(txtEscolha);
+
 			data.forEach(function (item) {
-				console.log(item)
+				//console.log(item)
 				contracts += `<option value="${item.idContrato}">${item.codContrato}</option>`
 			});
 		}
@@ -524,9 +529,51 @@ function loadContracts(idCliente = ''){
 			$("#contratos").val(codigo).prop('disabled', true);
 		}	
 
+		$("#contratos").on("change", function() {
+			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
+			
+			loadContractItens(valor);
+		})
+
 	}).fail(function () {
 		console.log(`Rota não encontrada! (//contracts/json/${idCliente}/contracts`);
 		return false
 	});
 
+}
+
+//carrega itens do Contrato selecionado
+function loadContractItens(idContract = false){
+
+	console.log(`carregando itens para o contrato id: ${idContract}`);
+
+	$.getJSON(`/contract_itens/json/contract/${idContract}`, (data) => {
+		console.log(data)
+		
+		$("#itens").html("");
+
+	}).then((data) => {
+
+
+		listItens = ""; //esvazia a lista de opções
+
+		if(data.length == 0){
+			listItens = `<option value="">Sem itens neste contrato</option>`;
+		}else{
+
+			listItens = `<option value="">(escolha)</option>`;
+			
+			data.forEach(function (item) {
+				//console.log(item)
+				listItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
+			});	
+		}
+
+		$("#itens").append(listItens);
+
+	}).catch(() => {
+
+		console.log(`Rota não encontrada! (/contract_itens/json/contract/${idContract}`);
+		return false
+	})
 }
