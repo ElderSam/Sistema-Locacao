@@ -419,7 +419,7 @@ function clearFieldsValues(){
 	$('#clientes').val('');
 	$('#contratos').val('');
 	$('#itens').val('');
-	$('#status').val('');
+	$('#status').val('0');
 	$('#vlAluguel').val('');
 	$('#dtInicio').val('');
 	$('#dtFim').val('');
@@ -555,21 +555,50 @@ function loadContractItens(idContract = false){
 	}).then((data) => {
 
 
-		listItens = ""; //esvazia a lista de opções
+		txtListItens = ""; //esvazia a lista de opções
 
 		if(data.length == 0){
-			listItens = `<option value="">Sem itens neste contrato</option>`;
+			txtListItens = `<option value="">Sem itens neste contrato</option>`;
 		}else{
 
-			listItens = `<option value="">(escolha)</option>`;
-			
+			txtListItens = `<option value="">(escolha)</option>`;
+			arrItens = [];
+
 			data.forEach(function (item) {
 				//console.log(item)
-				listItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
+				arrItens.push(item);
+				txtListItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
 			});	
 		}
 
-		$("#itens").append(listItens);
+		$("#itens").append(txtListItens);
+
+		$("#itens").on("change", function() { //quando é escolhido um item
+
+			let item; //item selecionado
+
+			item = arrItens.find((item) => item.idItem == $("#itens").val());
+
+			console.log("item selecionado:");
+			console.log(item)
+
+			//atribuindo valores do Item para os campos; vlAluguel, custoEntrega, custoRetirada e quantidade.
+			$("#vlAluguel").val(item.vlAluguel);
+			$("#custoEntrega").val(item.custoEntrega);
+			$("#custoRetirada").val(item.custoRetirada);
+			
+			$("#quantidade").html("");
+			txtQuantidade = "<option value=''>(escolha)</option>";
+
+			for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
+				txtQuantidade += `<option value="${item.idItem}">${i}</option>`;
+			}
+
+			$("#quantidade").append(txtQuantidade);
+			  
+			
+
+		});
 
 	}).catch(() => {
 
