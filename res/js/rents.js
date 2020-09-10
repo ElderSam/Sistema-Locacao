@@ -274,7 +274,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 		//console.log('load View Locacao idLocacao: ' + $("#idLocacao").val())
 
 		$("#formRent #codigo").val(data.codigo).prop('disabled', true);
-		$("#formRent #clientes").val(data.cliente_idCliente).prop('disabled', true);		
+		$("#formRent #cliente").val(data.cliente_idCliente).prop('disabled', true);		
         $("#formRent #contratos").val(data.contrato_idContrato).prop('disabled', true);
 		$("#formRent #itens").val(data.produto_idProduto).prop('disabled', true);
 		$("#formRent #status").val(data.status).prop('disabled', true);
@@ -298,7 +298,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 			//$('#desImagePath').parent().show();
 
 			$("#formRent #codigo").prop('disabled', true);	
-			$("#formRent #clientes").prop('disabled', false);
+			$("#formRent #cliente").prop('disabled', false);
 			$("#formRent #contratoa").prop('disabled', false);
 			$("#formRent #itens").prop('disabled', false);
 			$("#formRent #status").prop('disabled', false);
@@ -402,12 +402,13 @@ function clearFieldsValues(){
 
 	$("#formRent #idHistoricoAluguel").prop('disabled', false);
 	$("#formRent #codigo").prop('disabled', false);
-	$("#formRent #clientes").prop('disabled', false);
+	$("#formRent #cliente").prop('disabled', false);
 	$("#formRent #contratos").prop('disabled', false);
 	$("#formRent #itens").prop('disabled', false);
 	$("#formRent #status").prop('disabled', false);
 	$("#formRent #vlAluguel").prop('disabled', false);
-	$("#formRent #group-dtInicio").hide();
+	//$("#formRent #group-dtInicio").hide();
+	$("#formRent #group-dtInicio").prop('disabled', false);
 	$("#formRent #dtFim").prop('disabled', false);
 	$("#formRent #vlEntrega").prop('disabled', false);
 	$("#formRent #vlRetirada").prop('disabled', false);
@@ -416,7 +417,7 @@ function clearFieldsValues(){
 
 	$('#id').val('');
 	$('#codigo').val('');
-	$('#clientes').val('');
+	$('#cliente').val('');
 	$('#contratos').val('');
 	$('#itens').val('');
 	$('#status').val('0');
@@ -457,8 +458,9 @@ function loadCostumers(idCliente = '') {
 
 	//console.log('loading costumers')
 
-	$("#idCliente").html(`<option value="">(escolha)</option>`);
-	let costumers
+	$('#cliente').html("");
+
+	let costumers = "<option value=''>(escolha)</option>";
 
 	$.getJSON(`/costumers/json`, function (data) { //ajax
 
@@ -468,16 +470,17 @@ function loadCostumers(idCliente = '') {
 			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
 		});
 
-		$('#clientes').append(costumers)
+		
+		$('#cliente').append(costumers)
 
 
 	}).then(() => {
 
 		if(idCliente !== ''){ //se já tem um cliente escolhido
-			$("#clientes").val(idCliente).prop('disabled', true);
+			$("#cliente").val(idCliente).prop('disabled', true);
 		}
 				
-		$("#clientes").on("change", function() {
+		$("#cliente").on("change", function() {
 			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
 			//alert("evento disparado e o valor é: " + valor);
 			loadContracts(valor);
@@ -562,47 +565,51 @@ function loadContractItens(idContract = false){
 		}else{
 
 			txtListItens = `<option value="">(escolha)</option>`;
-			arrItens = [];
+			let arrItens = [];
 
 			data.forEach(function (item) {
 				//console.log(item)
 				arrItens.push(item);
 				txtListItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
 			});	
+
+			$("#itens").on("change", function() { //quando é escolhido um item ----------------------------------
+				loadItemFields(arrItens);
+			}); // ---------------------------------- 
 		}
 
 		$("#itens").append(txtListItens);
 
-		$("#itens").on("change", function() { //quando é escolhido um item
 
-			let item; //item selecionado
-
-			item = arrItens.find((item) => item.idItem == $("#itens").val());
-
-			console.log("item selecionado:");
-			console.log(item)
-
-			//atribuindo valores do Item para os campos; vlAluguel, custoEntrega, custoRetirada e quantidade.
-			$("#vlAluguel").val(item.vlAluguel);
-			$("#custoEntrega").val(item.custoEntrega);
-			$("#custoRetirada").val(item.custoRetirada);
-			
-			$("#quantidade").html("");
-			txtQuantidade = "<option value=''>(escolha)</option>";
-
-			for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
-				txtQuantidade += `<option value="${item.idItem}">${i}</option>`;
-			}
-
-			$("#quantidade").append(txtQuantidade);
-			  
-			
-
-		});
 
 	}).catch(() => {
 
 		console.log(`Rota não encontrada! (/contract_itens/json/contract/${idContract}`);
 		return false
 	})
+}
+
+function loadItemFields(arrItens) {
+
+	let item; //item selecionado
+
+	item = arrItens.find((item) => item.idItem == $("#itens").val());
+
+	console.log("item selecionado:");
+	console.log(item)
+
+	//atribuindo valores do Item para os campos; vlAluguel, custoEntrega, custoRetirada e quantidade.
+	$("#vlAluguel").val(item.vlAluguel);
+	$("#custoEntrega").val(item.custoEntrega);
+	$("#custoRetirada").val(item.custoRetirada);
+	
+	$("#quantidade").html("");
+	txtQuantidade = "<option value=''>(escolha)</option>";
+
+	for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
+		txtQuantidade += `<option value="${item.idItem}">${i}</option>`;
+	}
+
+	$("#quantidade").append(txtQuantidade);
+	  
 }

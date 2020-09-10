@@ -163,8 +163,8 @@
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="clientes">Clientes</label>
-                                    <select id="clientes" name="clientes" class="form-control">
+                                    <label for="cliente">Cliente</label>
+                                    <select id="cliente" name="cliente" class="form-control">
                                         <option value="" selected>Escolher Cliente</option>
                                     </select>
                                 </div>
@@ -193,14 +193,8 @@
                                         <option value="3" style="color: red;"><b>Encerrado</b></option>                                        
                                     </select>
                                 </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="vlAluguel">Valor do Aluguel</label>
-                                    <input type="text" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="">
-                                    <span class="help-block"></span>
-                                </div>
                                 
-                                <div id="group-dtInicio" class="form-group col-lg-3">
+                                <div id="group-dtInicio" class="form-group col-lg-4">
                                     <label for="dtInicio">Data de Inicio</label>
                                     <input type="date" class="form-control" id="dtInicio" name="dtInicio">
                                 </div>
@@ -211,14 +205,20 @@
                                 </div>
 
                                 <div class="form-group col-lg-4">
+                                    <label for="vlAluguel">Valor do Aluguel</label>
+                                    <input type="text" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="0,00">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-4">
                                     <label for="custoEntrega">Valor de Entrega</label>
-                                    <input type="text" class="form-control" id="custoEntrega" name="custoEntrega"  placeholder="">
+                                    <input type="text" class="form-control" id="custoEntrega" name="custoEntrega"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-4">
                                     <label for="custoRetirada">Valor de Retirada</label>
-                                    <input type="text" class="form-control" id="custoRetirada" name="custoRetirada"  placeholder="">
+                                    <input type="text" class="form-control" id="custoRetirada" name="custoRetirada"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
@@ -231,21 +231,9 @@
                    
                                 <div id="list1" class="dropdown-check-list form-group col-md-6" tabindex="100">
                                     <span class="anchor">Produtos Específico</span>
-                                    <ul class="items">
-                                        <li><input type="checkbox" />Apple </li>
-                                        <li><input type="checkbox" />Orange</li>
-                                        <li><input type="checkbox" />Grapes </li>
-                                        <li><input type="checkbox" />Berry </li>
-                                        <li><input type="checkbox" />Mango </li>
-                                        <li><input type="checkbox" />Banana </li>
-                                        <li><input type="checkbox" />Tomato</li>
-                                        <li><input type="checkbox" />Apple </li>
-                                        <li><input type="checkbox" />Orange</li>
-                                        <li><input type="checkbox" />Grapes </li>
-                                        <li><input type="checkbox" />Berry </li>
-                                        <li><input type="checkbox" />Mango </li>
-                                        <li><input type="checkbox" />Banana </li>
-                                        <li><input type="checkbox" />Tomato</li>
+                                    <ul id="listProductsEsp" class="items">
+                                        <!--li><input type="checkbox" />Apple </li-->
+                                        
                                     </ul>
                                 </div>
                                 <div class="form-group col-md-6">
