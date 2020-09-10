@@ -612,4 +612,34 @@ function loadItemFields(arrItens) {
 
 	$("#quantidade").append(txtQuantidade);
 	  
+	loadListProductEsp(item.idProduto_gen);
+}
+
+function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produtos específicos */
+	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
+
+	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
+
+	$.getJSON($route)
+	.then((data) => {
+		console.log(data);
+		let txtListProducts;
+
+		const getTxtProducts = (txt, { idProduto_esp, codigoEsp }) => { //retorna uma string com os inputs para escolher produtos específicos
+			return txt + `<li><input type="checkbox" value=${idProduto_esp}/>${codigoEsp} </li>`
+		}
+		
+		txtListProducts = data.reduce(getTxtProducts, "");
+		console.log(txtListProducts)
+
+		$("#listProductsEsp")
+			.html("")
+			.append(txtListProducts)
+
+	})
+	.catch(() => {
+		console.log(`Rota não encontrada! ${route}`);
+		return false;
+	})
+	
 }

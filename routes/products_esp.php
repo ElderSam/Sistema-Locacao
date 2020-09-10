@@ -75,6 +75,17 @@ $app->get("/products_esp/json/:idproduct", function($idproduct){
 
 });
 
+
+$app->get("/products_esp/json/product_gen/:idproduct", function($idproduct){ /* carrega todos os produtos específicos relacionados a um produto genérico */
+	
+    User::verifyLogin();
+
+    $product = new ProductEsp();
+    
+	echo $product->loadProductEspByIdProductGen((int)$idproduct);
+
+});
+
 $app->get("/products_esp/addToContract/:codeProd", function($codeProd){
 	
     User::verifyLogin();
