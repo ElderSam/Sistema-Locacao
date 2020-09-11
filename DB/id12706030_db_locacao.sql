@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 11-Set-2020 às 23:47
+-- Tempo de geração: 12-Set-2020 às 00:24
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -289,13 +289,17 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_delete` (IN `pidHistoricoAluguel` INT)  BEGIN
   
-    DECLARE vidHistoricoAluguel INT;
+    DECLARE vidHistoricoAluguel, vidProdutoDevolvido INT;
     
-  SELECT idHistoricoAluguel INTO vidHistoricoAluguel
+  SELECT idHistoricoAluguel, produto_idProduto INTO vidHistoricoAluguel, vidProdutoDevolvido
     FROM historicoalugueis
     WHERE idHistoricoAluguel = pidHistoricoAluguel;
     
     DELETE FROM historicoalugueis WHERE idHistoricoAluguel = pidHistoricoAluguel;
+
+    UPDATE produtos_esp
+        SET status = 1
+        WHERE (idProduto_esp = vidProdutoDevolvido);
     
 END$$
 
