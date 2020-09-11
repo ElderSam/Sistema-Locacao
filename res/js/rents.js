@@ -625,7 +625,7 @@ function loadItemFields(arrItens) {
 	txtQuantidade = "<option value=''>(escolha)</option>";
 
 	for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
-		txtQuantidade += `<option value="${item.idItem}">${i}</option>`;
+		txtQuantidade += `<option value="${i}">${i}</option>`;
 	}
 
 	$("#quantidade").append(txtQuantidade);
