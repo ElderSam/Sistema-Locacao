@@ -23,13 +23,31 @@ $(function() { //quando a página carrega
 		
 		let form = $('#formRent');
 		let formData = new FormData(form[0]);
-
+		console.log(formData)
 		idLocacao = $('#id').val()
 		//console.log("idFornecedor:" + idFornecedor)
 
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
-			//console.log("você quer cadastrar")
+			console.log("você quer cadastrar")
+
+			listProductsEsp = document.querySelectorAll(".items input[type=checkbox]");
+			console.log(listProductsEsp)
+			let selectedProducts = [];
+
+			listProductsEsp.forEach((product, index) => {
+				if(product.checked){
+					console.log(parseInt(product.value), index)
+					selectedProducts.push({id: parseInt(product.value)})
+				}
+				
+			});
+			
+			console.log(selectedProducts)
+
+			//formData.append("field", "value")
+			formData.append("arrSelectedProductsEsp", JSON.stringify(selectedProducts)); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
+
 
 			$.ajax({
 				type: "POST",
@@ -641,8 +659,5 @@ function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produto
 		console.log(`Rota não encontrada! ${route}`);
 		return false;
 	})
-	
-		//lista = document.querySelectorAll(".items input[type=checkbox]");
 
-		//filter -> lista[0].checked
 }

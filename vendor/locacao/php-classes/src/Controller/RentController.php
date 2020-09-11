@@ -40,11 +40,24 @@ class RentController extends Generator
             return $upd;
             
 
-        } else { // se for cadastrar novo Fornecedor
-            $res = $rent->insert();
-            //print_r($res);
+        } else { // se for cadastrar novo Aluguel/Locação
+
             
-            return $res;
+        $x = json_decode($_POST["arrSelectedProductsEsp"]);
+
+        //print_r($x);
+
+        $res = [];
+
+        foreach($x as $item) {
+            //echo " id: $item->id";
+
+            $rent->setproduto_idProduto($item->id); //set atribute to Model
+
+            $res[] = ($rent->insert());
+        } 
+            
+            return json_encode($res);
                    
         }
     }
@@ -60,6 +73,7 @@ class RentController extends Generator
         if ($_POST["contrato_idContrato"] == "") {
                 $errors["#contrato"] = "Contrato é obrigatório!";
         }
+
 
         /*if ($_POST["produto_idProduto"] == "") { //produto específico
             $errors["#codeProduct"] = "Produto é obrigatório!";
