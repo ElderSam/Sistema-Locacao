@@ -61,24 +61,19 @@ class RentController extends Generator
                 $errors["#contrato"] = "Contrato é obrigatório!";
         }
 
-        if ($_POST["produto_idProduto_gen"] == "") {
+        /*if ($_POST["produto_idProduto"] == "") { //produto específico
             $errors["#codeProduct"] = "Produto é obrigatório!";
-        }
+        }*/
         
         if ($_POST["vlAluguel"] == "") {
             $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
         }
 
-        if ($_POST["periodoAluguel"] == "") {
-            $errors["#periodoAluguel"] = "Período é obrigatório!";
-        }
-
-
-       /* if ($_POST["dtInicio"] == "") {
+        if ($_POST["dtInicio"] == "") {
             $errors["#dtInicio"] = "Data início é obrigatória!";
         }
         
-        if ($_POST["dtFinal"] == "") {
+        /* if ($_POST["dtFinal"] == "") {
             $errors["#dtFinal"] = "Data final é obrigatória!";
         }*/
 

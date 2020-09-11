@@ -20,18 +20,21 @@ class Rent extends Generator{
 
     public function createNewCode(){
         
-        $ano = date("Y", $this->getdtinicio());
+        $ano = strtotime($this->getdtInicio());
+        $ano = date("Y", $ano);
 
         $sql = new Sql();
 
-        $query = "SELECT MAX(*) FROM historicoalugueis 
+        $query = "SELECT MAX(codigo) FROM historicoalugueis 
             WHERE (YEAR(dtInicio) = :ano)";
 
         $ultimo = $sql->select($query, array(
             ":ano"=>$ano
         ));
 
-        $nextCode = $ultimo + 1;
+        //print_r($ultimo);
+
+        $nextCode = intval($ultimo) + 1;
 
         return $nextCode;
 
@@ -43,14 +46,14 @@ class Rent extends Generator{
         
         $sql = new Sql();
         
-        //print_r($_POST);
+        print_r($_POST);
 
-        if(($this->getproduto_idProduto_gen() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
+        if(($this->getproduto_idProduto() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_historicoalugueis_save(:codigo, :contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            $results = $sql->select("CALL sp_historicoalugueis_save(:codigo, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
                 ":codigo"=>$this->getcodigo(),
                 ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-                ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
+                ":produto_idProduto"=>$this->getproduto_idProduto(),
                 ":status"=>$this->getstatus(),
                 ":vlAluguel"=>$this->getvlAluguel(),
                 ":periodoAluguel"=>$this->getperiodoAluguel(),
@@ -179,9 +182,9 @@ class Rent extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto_gen, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
             ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-            ":produto_idProduto_gen"=>$this->getproduto_idProduto_gen(),
+            ":produto_idProduto"=>$this->getproduto_idProduto(),
             ":status"=>$this->getstatus(),
             ":vlAluguel"=>$this->getvlAluguel(),
             ":periodoAluguel"=>$this->getperiodoAluguel(),

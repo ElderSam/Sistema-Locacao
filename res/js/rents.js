@@ -275,12 +275,12 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 
 		$("#formRent #codigo").val(data.codigo).prop('disabled', true);
 		$("#formRent #cliente").val(data.cliente_idCliente).prop('disabled', true);		
-        $("#formRent #contratos").val(data.contrato_idContrato).prop('disabled', true);
+        $("#formRent #contrato_idContrato").val(data.contrato_idContrato).prop('disabled', true);
 		$("#formRent #itens").val(data.produto_idProduto).prop('disabled', true);
 		$("#formRent #status").val(data.status).prop('disabled', true);
 		$("#formRent #vlAluguel").val(data.vlAluguel).prop('disabled', true);
 		$("#formRent #dtInicio").val(data.dtInicio).prop('disabled', true);
-		$("#formRent #dtFim").val(data.dtFinal).prop('disabled', true);
+		$("#formRent #dtFinal").val(data.dtFinal).prop('disabled', true);
 		$("#formRent #vlEntrega").val(data.custoEntrega).prop('disabled', true);
 		$("#formRent #vlRetirada").val(data.custoRetirada).prop('disabled', true);
 		// $("#formRent #quantidade").val(data."").prop('disabled', true);
@@ -304,7 +304,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 			$("#formRent #status").prop('disabled', false);
 			$("#formRent #vlAluguel").prop('disabled', false);
 			$("#formRent #dtInicio").prop('disabled', false);
-			$("#formRent #dtFim").prop('disabled', false);
+			$("#formRent #dtFinal").prop('disabled', false);
 			$("#formRent #vlEntrega").prop('disabled', false);
 			$("#formRent #vlRetirada").prop('disabled', false);
 			$("#formRent #quantidade").prop('disabled', false);
@@ -403,13 +403,13 @@ function clearFieldsValues(){
 	$("#formRent #idHistoricoAluguel").prop('disabled', false);
 	$("#formRent #codigo").prop('disabled', false);
 	$("#formRent #cliente").prop('disabled', false);
-	$("#formRent #contratos").prop('disabled', false);
+	$("#formRent #contrato_idContrato").prop('disabled', false);
 	$("#formRent #itens").prop('disabled', false);
 	$("#formRent #status").prop('disabled', false);
 	$("#formRent #vlAluguel").prop('disabled', false);
 	//$("#formRent #group-dtInicio").hide();
 	$("#formRent #group-dtInicio").prop('disabled', false);
-	$("#formRent #dtFim").prop('disabled', false);
+	$("#formRent #dtFinal").prop('disabled', false);
 	$("#formRent #vlEntrega").prop('disabled', false);
 	$("#formRent #vlRetirada").prop('disabled', false);
 	$("#formRent #quantidade").prop('disabled', false);
@@ -418,12 +418,12 @@ function clearFieldsValues(){
 	$('#id').val('');
 	$('#codigo').val('');
 	$('#cliente').val('');
-	$('#contratos').val('');
+	$('#contrato_idContrato').val('');
 	$('#itens').val('');
 	$('#status').val('0');
 	$('#vlAluguel').val('');
 	$('#dtInicio').val('');
-	$('#dtFim').val('');
+	$('#dtFinal').val('');
 	$('#vlEntrega').val('');
 	$('#vlRetirada').val('');
 	$('#quantidade').val('');
@@ -500,7 +500,7 @@ function loadContracts(idCliente = ''){
 	console.log(`Id Cliente: ${idCliente}, buscando contratos ...`);
 
 	txtEscolha = `<option value="">(escolha)</option>`;
-	$("#contratos").html("");
+	$("#contrato_idContrato").html("");
 	$("#itens").html(txtEscolha)
 	
 	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
@@ -513,7 +513,7 @@ function loadContracts(idCliente = ''){
 			contracts = `<option value="">Sem contratos cadastrados</option>`
 		}else{
 
-			$("#contratos").html(txtEscolha);
+			$("#contrato_idContrato").html(txtEscolha);
 
 			data.forEach(function (item) {
 				//console.log(item)
@@ -521,18 +521,18 @@ function loadContracts(idCliente = ''){
 			});
 		}
 
-		$("#contratos").append(contracts)
+		$("#contrato_idContrato").append(contracts)
 
 	}).then(() => {
 
-		var comboNome = document.getElementById("contratos");
+		var comboNome = document.getElementById("contrato_idContrato");
 
         if (comboNome.options[comboNome.selectedIndex].value != "" ){
 			var codigo = comboNome.options[comboNome.selectedIndex].value;
-			$("#contratos").val(codigo).prop('disabled', true);
+			$("#contrato_idContrato").val(codigo).prop('disabled', true);
 		}	
 
-		$("#contratos").on("change", function() {
+		$("#contrato_idContrato").on("change", function() {
 			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
 			
 			loadContractItens(valor);
@@ -642,4 +642,7 @@ function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produto
 		return false;
 	})
 	
+		//lista = document.querySelectorAll(".items input[type=checkbox]");
+
+		//filter -> lista[0].checked
 }
