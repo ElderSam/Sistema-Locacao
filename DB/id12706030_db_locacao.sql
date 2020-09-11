@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 11-Set-2020 às 15:12
+-- Tempo de geração: 11-Set-2020 às 20:13
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -255,28 +255,34 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueisUpdate_save` (IN `pidHistoricoAluguel` INT(11), IN `pcontrato_idContrato` INT(11), IN `pproduto_idProduto` INT(11), IN `pstatus` TINYINT(4), IN `pvlAluguel` FLOAT, IN `pdtInicio` DATE, IN `pdtFinal` DATE, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
   
-    DECLARE vidHistoricoAluguel INT;
+    DECLARE vidHistoricoAluguel, vidProdutoDevolvido INT;
     
-    SELECT idHistoricoAluguel INTO vidHistoricoAluguel
-    FROM historicoalugueis
-    WHERE idHistoricoAluguel = pidHistoricoAluguel;
+    SELECT idHistoricoAluguel, produto_idProduto INTO vidHistoricoAluguel, vidProdutoDevolvido
+        FROM historicoalugueis
+        WHERE idHistoricoAluguel = pidHistoricoAluguel;
 
     UPDATE historicoalugueis
-    SET
-      idHistoricoAluguel = pidHistoricoAluguel,
-      contrato_idContrato = pcontrato_idContrato,
-      produto_idProduto = pproduto_idProduto,
-      status = pstatus,
-      vlAluguel = pvlAluguel,
-      dtInicio = pdtInicio,
-      dtFinal = pdtFinal,
-      custoEntrega = pcustoEntrega,
-      custoRetirada = pcustoRetirada,
-      observacao = pobservacao
+        SET
+            contrato_idContrato = pcontrato_idContrato,
+            produto_idProduto = pproduto_idProduto,
+            status = pstatus,
+            vlAluguel = pvlAluguel,
+            dtInicio = pdtInicio,
+            dtFinal = pdtFinal,
+            custoEntrega = pcustoEntrega,
+            custoRetirada = pcustoRetirada,
+            observacao = pobservacao
+        WHERE idHistoricoAluguel = vidHistoricoAluguel;
 
+    UPDATE produtos_esp
+        SET status = 1
+        WHERE (idProduto_esp = vidProdutoDevolvido);
+
+    UPDATE produtos_esp
+        SET status = 0
+        WHERE (idProduto_esp = pproduto_idProduto);
     
-    WHERE idHistoricoAluguel = vidHistoricoAluguel;
-    
+
     SELECT * FROM historicoalugueis WHERE idHistoricoAluguel = pidHistoricoAluguel;
     
 END$$
@@ -301,6 +307,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueis_save` (IN `pco
     VALUES(pcodigo, pcontrato_idContrato, pproduto_idProduto, pstatus, pvlAluguel, pdtInicio, pdtFinal, pcustoEntrega, pcustoRetirada, pobservacao);
     
     SET vidHistoricoAluguel = LAST_INSERT_ID();
+
+    UPDATE produtos_esp
+        SET status = 0
+        WHERE (idProduto_esp = pproduto_idProduto);
     
     SELECT * FROM historicoalugueis WHERE idHistoricoAluguel = LAST_INSERT_ID();
     
@@ -954,7 +964,7 @@ CREATE TABLE `produtos_esp` (
   `idProduto_gen` int(11) NOT NULL,
   `codigoEsp` varchar(24) NOT NULL,
   `valorCompra` float DEFAULT NULL,
-  `status` tinyint(4) NOT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '0-Alugado \r\n  1-Disponível \r\n  2-Manutenção',
   `dtFabricacao` date DEFAULT NULL,
   `numSerie` varchar(4) DEFAULT NULL,
   `anotacoes` varchar(100) DEFAULT NULL,
@@ -967,18 +977,18 @@ CREATE TABLE `produtos_esp` (
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
-(1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
+(1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
 (2, 1, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
 (3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
 (7, 2, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
-(8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
+(8, 1, '001.01.01.01.01.002-0004', 15477.2, 0, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
 (9, 3, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
 (11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
-(12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
+(12, 8, '001.03.01.02.01.002-0005', 9870.65, 0, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 0, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15');
 
 -- --------------------------------------------------------
@@ -1376,7 +1386,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
