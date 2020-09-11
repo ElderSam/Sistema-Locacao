@@ -82,7 +82,7 @@ $app->get("/products_esp/json/product_gen/:idproduct", function($idproduct){ /* 
 
     $product = new ProductEsp();
     
-	echo $product->loadProductEspByIdProductGen((int)$idproduct);
+	echo $product->loadProductEspByIdProductGen((int)$idproduct); //retorna produtos disponíveis (status=1)
 
 });
 

@@ -340,9 +340,15 @@ class ProductEsp extends Generator{
 
     }
 
-    public function loadProductEspByIdProductGen($idProduto_gen) { /* carrega todos os produtos específicos relacionados a um produto genérico */
+    public function loadProductEspByIdProductGen($idProduto_gen) { /* carrega todos os produtos específicos que estão disponíveis (status=1), relacionados a um produto genérico */
         
-        $query = "SELECT a.idProduto_esp, a.codigoEsp, a.status, b.idProduto_gen, b.descricao, c.descCategoria FROM produtos_esp a INNER JOIN produtos_gen b ON(a.idProduto_gen = b.idProduto_gen) INNER JOIN prod_categorias c ON(b.idCategoria = c.idCategoria) WHERE a.idProduto_gen = $idProduto_gen";
+        $query = "SELECT a.idProduto_esp, a.codigoEsp, a.status,
+            b.idProduto_gen, b.descricao,
+            c.descCategoria
+            FROM produtos_esp a
+            INNER JOIN produtos_gen b ON(a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON(b.idCategoria = c.idCategoria)
+            WHERE (a.idProduto_gen = $idProduto_gen AND a.status = 1)";
 
         return json_encode($this->searchAll($query));
     }

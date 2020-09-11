@@ -633,7 +633,7 @@ function loadItemFields(arrItens) {
 	loadListProductEsp(item.idProduto_gen);
 }
 
-function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produtos específicos */
+function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
 	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
 
 	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
