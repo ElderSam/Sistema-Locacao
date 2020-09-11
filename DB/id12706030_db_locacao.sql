@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25-Ago-2020 às 02:47
+-- Tempo de geração: 11-Set-2020 às 15:12
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -785,7 +785,8 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (14, 6, 180, 450.34, '3', 200.73, 185.98, '4', 'Entrega em Piracicaba-SP (em 5DD úteis)', '2020-05-30 18:39:38'),
 (15, 9, 1, 450, '1', 200, 200, '4', 'Entrega em 3DD', '2020-06-26 19:23:13'),
 (16, 9, 4, 500.78, '3', 347.89, 310.64, '2', 'Entrega em 5DD úteis', '2020-06-26 19:25:16'),
-(17, 7, 1, 450, '2', 250, 250, '4', 'Entrega em 3DD úteis', '2020-08-03 09:58:28');
+(17, 7, 1, 450, '2', 250, 250, '4', 'Entrega em 3DD úteis', '2020-08-03 09:58:28'),
+(18, 6, 8, 600, '2', 120, 120, '4', '', '2020-09-09 16:08:37');
 
 -- --------------------------------------------------------
 
@@ -908,7 +909,9 @@ CREATE TABLE `historicoalugueis` (
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
 (1, '1', 2, 1, 1, 560.45, '2020-08-24', NULL, NULL, NULL, 'cadastro teste pelo PHPMyAmin', '2020-08-24 21:42:45'),
-(2, '2', 3, 8, 2, 100.54, '2020-08-10', NULL, NULL, NULL, 'cadastro teste pelo PHPMyAdmin', '2020-08-24 21:43:47');
+(2, '2', 3, 8, 2, 100.54, '2020-08-10', NULL, NULL, NULL, 'cadastro teste pelo PHPMyAdmin', '2020-08-24 21:43:47'),
+(7, '2', 6, 12, 0, 600, '2020-12-31', '2020-12-31', 120, 120, '', '2020-09-11 10:03:01'),
+(8, '2', 6, 13, 0, 600, '2020-12-31', '2020-12-31', 120, 120, '', '2020-09-11 10:03:45');
 
 -- --------------------------------------------------------
 
@@ -974,7 +977,9 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
 (9, 3, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
-(11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30');
+(11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
+(12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
+(13, 8, '001.03.01.02.01.001-0006', 9000, 0, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15');
 
 -- --------------------------------------------------------
 
@@ -1064,7 +1069,9 @@ INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelas
 (1, 1, 'Marítima', 1, 0, 1, 1, 1, 1, 1, 0, 0, '2020-04-22 09:49:52'),
 (2, 2, 'Marítma', 2, 0, 1, 1, 2, 2, 1, 0, 0, '2020-04-22 09:51:18'),
 (3, 3, 'Marítma', 1, 0, 1, 0, 1, 1, 1, 0, 0, '2020-04-22 09:57:53'),
-(4, 8, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07');
+(4, 8, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07'),
+(5, 12, 'marítima', 0, 1, 1, 1, 1, 1, 1, 0, 0, '2020-09-10 11:51:55'),
+(6, 13, 'normal', 2, 0, 0, 0, 1, 2, 1, 0, 0, '2020-09-10 12:02:15');
 
 -- --------------------------------------------------------
 
@@ -1345,7 +1352,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1369,7 +1376,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
@@ -1381,7 +1388,7 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
-  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_gen`
@@ -1399,7 +1406,7 @@ ALTER TABLE `prod_categorias`
 -- AUTO_INCREMENT de tabela `prod_containers`
 --
 ALTER TABLE `prod_containers`
-  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `prod_tipos`
@@ -1440,7 +1447,7 @@ ALTER TABLE `faturas`
 --
 ALTER TABLE `historicoalugueis`
   ADD CONSTRAINT `fk_contrato_has_produto_contrato2` FOREIGN KEY (`contrato_idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_contrato_has_produto_produto2` FOREIGN KEY (`produto_idProduto`) REFERENCES `produtos_gen` (`idProduto_gen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_contrato_has_produto_produto2` FOREIGN KEY (`produto_idProduto`) REFERENCES `produtos_esp` (`idProduto_esp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `produtos_esp`

@@ -46,17 +46,16 @@ class Rent extends Generator{
         
         $sql = new Sql();
         
-        print_r($_POST);
+        //print_r($_POST);
 
         if(($this->getproduto_idProduto() != "") && ($this->getcontrato_idContrato() != "") && ($this->getstatus() != "")){
-           
-            $results = $sql->select("CALL sp_historicoalugueis_save(:codigo, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+
+            $results = $sql->select("CALL sp_historicoalugueis_save(:codigo, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
                 ":codigo"=>$this->getcodigo(),
                 ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-                ":produto_idProduto"=>$this->getproduto_idProduto(),
+                ":produto_idProduto"=>$this->getproduto_idProduto(), //produto específico
                 ":status"=>$this->getstatus(),
                 ":vlAluguel"=>$this->getvlAluguel(),
-                ":periodoAluguel"=>$this->getperiodoAluguel(),
                 ":dtInicio"=>$this->getdtInicio(),
                 ":dtFinal"=>$this->getdtFinal(),
                 ":custoEntrega"=>$this->getcustoEntrega(),
@@ -182,12 +181,11 @@ class Rent extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :periodoAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
             ":contrato_idContrato"=>$this->getcontrato_idContrato(),
             ":produto_idProduto"=>$this->getproduto_idProduto(),
             ":status"=>$this->getstatus(),
             ":vlAluguel"=>$this->getvlAluguel(),
-            ":periodoAluguel"=>$this->getperiodoAluguel(),
             ":dtInicio"=>$this->getdtInicio(),
             ":dtFinal"=>$this->getdtFinal(),
             ":custoEntrega"=>$this->getcustoEntrega(),
