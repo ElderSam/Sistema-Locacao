@@ -63,8 +63,38 @@ class RentController extends Generator
 
         //print_r($_POST);
 
+        //CAMPOS OBRIGATÓRIOS: cliente, contrato_idContrato, itens, status, dtInicio, vlAluguel, custoEntrega, custoRetirada, quantidade, arrSelectedProductsEsp
+
+        if($_POST["cliente"] == "") {
+            $errors["#cliente"] = "Cliente é obrigatório";
+        }
+
         if (!isset($_POST["contrato_idContrato"]) || ($_POST["contrato_idContrato"] == "")) {
                 $errors["#contrato_idContrato"] = "Contrato é obrigatório!";
+        }
+
+        if($_POST["itens"] == "") {
+            $errors["#itens"] = "Itens é obrigatório";
+        }
+
+        if($_POST["status"] == "") {
+            $errors["#status"] = "Status é obrigatório";
+        }
+
+        if ($_POST["dtInicio"] == "") {
+            $errors["#dtInicio"] = "Data início é obrigatória!";
+        }
+        
+        if ($_POST["vlAluguel"] == "") {
+            $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
+        }
+
+        if($_POST["custoEntrega"] == "") {
+            $errors["#custoEntrega"] = "Valor de Entrega é obrigatório";
+        }
+        
+        if($_POST["custoRetirada"] == "") {
+            $errors["#custoRetirada"] = "Valor de Retirada é obrigatório";
         }
 
         $this->setarrProductsEsp(json_decode($_POST["arrSelectedProductsEsp"])); //JSON -> array()
@@ -79,16 +109,8 @@ class RentController extends Generator
             // $quant = $_POST["quantidade"];       
             // echo "quantidadde:  $quant, count: $count";
             $errors["#list1"] = "Precisa selecionar a quantidade de produtos escolhida!";
-        }
-        
-        if ($_POST["vlAluguel"] == "") {
-            $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
-        }
+        }  
 
-        if ($_POST["dtInicio"] == "") {
-            $errors["#dtInicio"] = "Data início é obrigatória!";
-        }
-        
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
 

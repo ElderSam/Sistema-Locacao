@@ -299,7 +299,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 		$("#formRent #vlAluguel").val(data.vlAluguel).prop('disabled', true);
 		$("#formRent #dtInicio").val(data.dtInicio).prop('disabled', true);
 		$("#formRent #dtFinal").val(data.dtFinal).prop('disabled', true);
-		$("#formRent #vlEntrega").val(data.custoEntrega).prop('disabled', true);
+		$("#formRent #custoEntrega").val(data.custoEntrega).prop('disabled', true);
 		$("#formRent #vlRetirada").val(data.custoRetirada).prop('disabled', true);
 		// $("#formRent #quantidade").val(data."").prop('disabled', true);
 		$("#formRent #prodEpecifico").val(data.status).prop('disabled', true);
@@ -323,7 +323,7 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 			$("#formRent #vlAluguel").prop('disabled', false);
 			$("#formRent #dtInicio").prop('disabled', false);
 			$("#formRent #dtFinal").prop('disabled', false);
-			$("#formRent #vlEntrega").prop('disabled', false);
+			$("#formRent #custoEntrega").prop('disabled', false);
 			$("#formRent #vlRetirada").prop('disabled', false);
 			$("#formRent #quantidade").prop('disabled', false);
 			$("#formRent #prodEspecifico").prop('disabled', false);
@@ -428,7 +428,7 @@ function clearFieldsValues(){
 	//$("#formRent #group-dtInicio").hide();
 	$("#formRent #group-dtInicio").prop('disabled', false);
 	$("#formRent #dtFinal").prop('disabled', false);
-	$("#formRent #vlEntrega").prop('disabled', false);
+	$("#formRent #custoEntrega").prop('disabled', false);
 	$("#formRent #vlRetirada").prop('disabled', false);
 	$("#formRent #quantidade").prop('disabled', false);
 	$("#formRent #observacao").prop('disabled', false);
@@ -442,7 +442,7 @@ function clearFieldsValues(){
 	$('#vlAluguel').val('');
 	$('#dtInicio').val('');
 	$('#dtFinal').val('');
-	$('#vlEntrega').val('');
+	$('#custoEntrega').val('');
 	$('#vlRetirada').val('');
 	$('#quantidade').val('');
 	$('#obseracao').val('');
