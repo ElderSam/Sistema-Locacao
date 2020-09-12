@@ -163,28 +163,28 @@
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="cliente">Cliente</label>
+                                    <label for="cliente">Cliente *</label>
                                     <select id="cliente" name="cliente" class="form-control">
                                         <option value="" selected>Escolher Cliente</option>
                                     </select>
                                 </div>
                                 
                                 <div class="form-group col-md-3">
-                                    <label for="contrato_idContrato">Contratos</label>
+                                    <label for="contrato_idContrato">Contrato *</label>
                                     <select id="contrato_idContrato" name="contrato_idContrato" class="form-control">
                                         <option value="" selected>Escolher Contrato</option> 
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="itens">Itens</label>
+                                    <label for="itens">Item *</label>
                                     <select id="itens" name="itens" class="form-control">
                                         <option value="">Escolher...</option>                                      
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="status">Status</label>
+                                    <label for="status">Status *</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="">Escolher...</option>
                                         <option value="0" selected style="color: yellow;"><b>Entrega Pendente</b></option>
@@ -195,7 +195,7 @@
                                 </div>
                                 
                                 <div id="group-dtInicio" class="form-group col-lg-4">
-                                    <label for="dtInicio">Data de Inicio</label>
+                                    <label for="dtInicio">Data de Inicio *</label>
                                     <input type="date" class="form-control" id="dtInicio" name="dtInicio">
                                 </div>
 
@@ -205,33 +205,34 @@
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="vlAluguel">Valor do Aluguel</label>
+                                    <label for="vlAluguel">Valor do Aluguel *</label>
                                     <input type="text" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="custoEntrega">Valor de Entrega</label>
+                                    <label for="custoEntrega">Valor de Entrega *</label>
                                     <input type="text" class="form-control" id="custoEntrega" name="custoEntrega"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="custoRetirada">Valor de Retirada</label>
+                                    <label for="custoRetirada">Valor de Retirada *</label>
                                     <input type="text" class="form-control" id="custoRetirada" name="custoRetirada"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="quantidade">Quantidade</label>
+                                    <label for="quantidade">Quantidade (restante) *</label>
                                     <select id="quantidade" name="quantidade" class="form-control">
                                         <option value="" selected>Escolher...</option>                                                     
                                     </select>
                                 </div>              
                    
                                 <div id="list1" class="dropdown-check-list form-group col-md-6" tabindex="100">
-                                    <span class="anchor">Produtos Específico</span>
+                                    <span class="anchor">Produtos Específicos *</span>
                                     <ul id="listProductsEsp" class="items">
+                                        <span>Produtos disponíveis (código);</span>
                                         <!--li><input type="checkbox" />Apple </li-->
                                     </ul>
                                 </div>
@@ -246,7 +247,7 @@
                                 <label for="idLocacao">Id</label>
                                 <input type="text" id="idLocacao" name="idLocacao" >
                             </div>
-
+                            <span class="text-danger">* campos obrigatórios</span>
                          </form>
 
                          <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
