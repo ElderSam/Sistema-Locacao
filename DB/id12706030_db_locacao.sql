@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Set-2020 às 00:24
+-- Tempo de geração: 12-Set-2020 às 17:06
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -754,7 +754,7 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, NULL, '', '2020-05-24 08:27:46'),
 (4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:45:42'),
-(6, '20200530-001', 'Construtora Forte', 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, 'teste', '2020-05-25 08:16:14');
+(6, '20200530-001', 'ConstPira', 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, 'teste', '2020-05-25 08:16:14');
 
 -- --------------------------------------------------------
 
@@ -780,7 +780,7 @@ CREATE TABLE `contrato_itens` (
 --
 
 INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
-(1, 2, 1, 600, '1', 200, 200, '4', 'TESTE', '2020-09-11 18:27:04');
+(1, 6, 1, 600, '2', 200, 200, '4', 'TESTE', '2020-09-11 18:27:04');
 
 -- --------------------------------------------------------
 
@@ -887,15 +887,24 @@ CREATE TABLE `historicoalugueis` (
   `codigo` varchar(11) NOT NULL,
   `contrato_idContrato` int(11) NOT NULL,
   `produto_idProduto` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '0-Entrega Pendente\r\n1-Ativo\r\n2-Retirada Pendente\r\n3-Encerrado    ',
   `vlAluguel` float NOT NULL,
-  `dtInicio` date DEFAULT NULL,
+  `dtInicio` date NOT NULL,
   `dtFinal` date DEFAULT NULL,
   `custoEntrega` float DEFAULT NULL,
   `custoRetirada` float DEFAULT NULL,
   `observacao` text DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `historicoalugueis`
+--
+
+INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
+(5, '2', 6, 2, 0, 600, '2020-09-11', '0000-00-00', 200, 200, '', '2020-09-11 23:12:44'),
+(6, '2', 6, 1, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57'),
+(7, '2', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57');
 
 -- --------------------------------------------------------
 
@@ -951,9 +960,9 @@ CREATE TABLE `produtos_esp` (
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
-(1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(2, 1, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
-(3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
+(1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
+(2, 1, '001.01.01.01.01.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(3, 1, '001.01.01.01.01.002-0003', 13899.8, 0, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
@@ -1360,7 +1369,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
