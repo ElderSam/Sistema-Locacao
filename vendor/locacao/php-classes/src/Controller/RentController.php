@@ -151,8 +151,8 @@ class RentController extends Generator
     public function ajax_list_rents($requestData)
     {
 
-        $column_search = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //ordem que vai aparecer (o codigo primeiro)
+    $column_search = array("codigo"/*, "produto"*/, "status", "dtInicio", "dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
+    $column_order = array("codigo"/*, "produto"*/, "status", "dtInicio", "dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $rent = new Rent(); //model
@@ -162,31 +162,28 @@ class RentController extends Generator
         $data = array();
 
         foreach ($datatable['data'] as $rent) { //para cada registro retornado
-
-            if ($rent['status'] == 1) {
-                $status = "Ativo";
-            } else{
-                $status = "Inativo";
-            }
-
-            $id = $rent['idFornecedor'];
+            //print_r($rent);
 
             // Ler e criar o array de dados ---------------------
             $row = array();
+                        
+            $row = [
+                "id"=>$rent['idHistoricoAluguel'],
+                "codigo"=>$rent['codigo'],
+                
+                //produto
+                "idProduto_gen"=>$rent['idProduto_gen'],
+                "codigoEsp"=>$rent['codigoEsp'],
 
-            $row[] = $rent['codFornecedor'];
-            $row[] = $rent['nome'];
-            $row[] = $status;
-            $row[] = $rent['telefone1'];
-            $row[] = $rent['cidade'];
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadRent($id);'>
-                    <i class='fas fa-bars sm'></i>
-                </button>
-                <button type='button' title='excluir' onclick='deleteRent($id);'
-                    class='btn btn-danger btnDelete'>
-                    <i class='fas fa-trash'></i>
-                </button>";
+                "status"=>$rent['status'],
+                "dtInicio"=>$rent['dtInicio'],
+                "dtFinal"=>$rent['dtFinal'],
+                /*"status"=>$rent['status'],
+                "status"=>$rent['status'],*/
+                /*cliente
+                contrato*/               
+            ];
+
 
             $data[] = $row;
         } //

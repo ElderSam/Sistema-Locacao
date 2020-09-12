@@ -32,9 +32,7 @@ class Rent extends Generator{
             ":ano"=>$ano
         ));
 
-        //print_r($ultimo);
-
-        $nextCode = intval($ultimo) + 1;
+        $nextCode = $ultimo[0]['MAX(codigo)'] + 1;
 
         return $nextCode;
 
@@ -102,31 +100,16 @@ class Rent extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT * FROM historicoalugueis";
+        $query = "SELECT a.*, b.idProduto_esp, b.idProduto_gen, b.codigoEsp FROM historicoalugueis a
+            INNER JOIN produtos_esp b ON(a.produto_idProduto = b.idProduto_esp)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
             $first = TRUE;
 
-            foreach ($column_search as $field) {
-                
+            foreach ($column_search as $field) {     
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
-
-
-                /*if ($field == "status") {
-                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
-
-                    if (($search == "ATIV")) {
-                        $search = 1;
-                    } else if ($search == "INAT") {
-                        $search = 0;
-                    }
-
-                    //echo "status: ".$search;
-                }*/
-
-
 
                 //filtra no banco
                 if ($first) {

@@ -2,7 +2,7 @@ var myTable = null
 
 $(function() { //quando a página carrega
 
-	//loadTableRents()
+	loadTableRents()
 
 	$("#btnAddRent").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 		let i = 0
@@ -217,7 +217,7 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 			"url": "/rents/list_datatables", //chama a rota para carregar os dados 
 			"type": "POST",
 			dataSrc: function (json) {
-				
+				console.log(json)
 				rows = [];
 
 				json.data.forEach(element => {
@@ -230,17 +230,43 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 					//row['id'] = element.id
 
-					row['codLocacao'] = element.codigo
-					row['produto'] = element.produto_idProduto
-					row['status'] = element.status
-					row['dataInicio'] = dtInicio
-					row['cliente'] = element.cliente_idCliente
-					row['contrato'] = element.contrato_idContrato
+					if(element.dtFinal == "0000-00-00") {
+						dtFinal = " - ";
+
+					} else {
+						dtFinal = formatDateToShow(element.dtFinal);
+					}
+
+					if (element.status == 0) {
+						txtStatus = 'Entrega Pendente';
+						color = 'red';
+		
+					} else if (element.status == 1) {
+						txtStatus = 'Ativo ';
+						color = 'green';
+		
+					} else if (element.status == 2) {
+						txtStatus = 'Retirada Pendente';
+						color = 'orange';
+		
+					} else if (element.status == 3) {
+						txtStatus = 'Encerrado';
+						color = 'grey';
+					}
+					
+
+					row['codigo'] = element.codigo
+					row['produto'] = `<a href="./products_esp/${element.idProduto_gen}" target="_blank">${element.codigoEsp}</a>` //código do produto específico
+					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
+					row['dtInicio'] = formatDateToShow(element.dtInicio)
+					row['dtFinal'] = dtFinal
+					//row['cliente'] = element.cliente_idCliente
+					//row['contrato'] = element.contrato_idContrato
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-					onclick='loadRent(${element.idHistoricoAluguel});'>
+					onclick='loadRent(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteRent(${element.idHistoricoAluguel});'
+					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
@@ -255,12 +281,13 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 		},
 		"columns": [
-			{ "data": "codLocacao" },
-			{ "data": "Produto" },
+			{ "data": "codigo" },
+			{ "data": "produto" },
 			{ "data": "status" },
-			{ "data": "dataInicio" },
-			{ "data": "cliente" },
-			{ "data": "contrato" },
+			{ "data": "dtInicio" },
+			{ "data": "dtFinal" },
+			/*{ "data": "cliente" },
+			{ "data": "contrato" },*/
 			{ "data": "options" },
 			        
 		],

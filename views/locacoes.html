@@ -80,14 +80,15 @@
                                     <th>Código</th>
                                     <th>Produto</th>
 									<th>Status</th>
-									<th>Data Início</th>
-									<th>Cliente</th>
-                                    <th>Contrato</th>
-                                    <th>Opções</th>
+                                    <th>Data Início</th>
+                                    <th>Dt Final</th>
+									<!--th>Cliente</th>
+                                    <th>Contrato</th-->
+                                    <th>Opções</th>                                
                                 </tr>
                             </thead>
                             <tbody id="listRents">
-                              <tr>
+                              <!--tr>
 								  <td>1</td>
 								  <td>Container X</td>
 								  <td style="color: green;"><b>Alugado</b></td>
@@ -114,16 +115,17 @@
 								<td>Construções LTDA</td>
 								<td>...</td>
 								<td>...</td>
-							</tr>
+							</tr-->
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
                                     <th>Código</th>
                                     <th>Produto</th>
 									<th>Status</th>
-									<th>Data Início</th>
-									<th>Cliente</th>
-                                    <th>Contrato</th>
+                                    <th>Data Início</th>
+                                    <th>Dt Final</th>
+									<!--th>Cliente</th>
+                                    <th>Contrato</th-->
                                     <th>Opções</th>
                                 </tr>
                             </tfoot>
@@ -187,10 +189,10 @@
                                     <label for="status">Status *</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="">Escolher...</option>
-                                        <option value="0" selected style="color: yellow;"><b>Entrega Pendente</b></option>
+                                        <option value="0" selected style="color: red;"><b>Entrega Pendente</b></option>
                                         <option value="1" style="color: green;"><b>Ativo</b></option>
                                         <option value="2" style="color: orange;"><b>Retirada Pendente</b></option>
-                                        <option value="3" style="color: red;"><b>Encerrado</b></option>                                        
+                                        <option value="3" style="color: grey;"><b>Encerrado</b></option>                                        
                                     </select>
                                 </div>
                                 

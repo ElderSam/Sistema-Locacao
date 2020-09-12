@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Set-2020 às 17:06
+-- Tempo de geração: 12-Set-2020 às 18:57
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -902,9 +902,10 @@ CREATE TABLE `historicoalugueis` (
 --
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(5, '2', 6, 2, 0, 600, '2020-09-11', '0000-00-00', 200, 200, '', '2020-09-11 23:12:44'),
+(5, '1', 6, 2, 0, 600, '2020-09-11', '0000-00-00', 200, 200, '', '2020-09-11 23:12:44'),
 (6, '2', 6, 1, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57'),
-(7, '2', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57');
+(7, '3', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57'),
+(8, '2', 6, 8, 0, 600, '2020-09-12', '0000-00-00', 200, 200, '', '2020-09-12 13:16:43');
 
 -- --------------------------------------------------------
 
@@ -972,7 +973,8 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
 (11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
-(13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15');
+(13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
+(14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36');
 
 -- --------------------------------------------------------
 
@@ -1064,7 +1066,8 @@ INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelas
 (3, 3, 'Marítma', 1, 0, 1, 0, 1, 1, 1, 0, 0, '2020-04-22 09:57:53'),
 (4, 8, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07'),
 (5, 12, 'marítima', 0, 1, 1, 1, 1, 1, 1, 0, 0, '2020-09-10 11:51:55'),
-(6, 13, 'normal', 2, 0, 0, 0, 1, 2, 1, 0, 0, '2020-09-10 12:02:15');
+(6, 13, 'normal', 2, 0, 0, 0, 1, 2, 1, 0, 0, '2020-09-10 12:02:15'),
+(7, 14, 'normal', 0, 1, 0, 0, 0, 0, 0, 0, 0, '2020-09-12 13:52:36');
 
 -- --------------------------------------------------------
 
@@ -1369,7 +1372,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
@@ -1381,7 +1384,7 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
-  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_gen`
@@ -1399,7 +1402,7 @@ ALTER TABLE `prod_categorias`
 -- AUTO_INCREMENT de tabela `prod_containers`
 --
 ALTER TABLE `prod_containers`
-  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `prod_tipos`
