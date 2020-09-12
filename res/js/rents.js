@@ -91,7 +91,7 @@ $(function() { //quando a página carrega
 						//console.log(response)
 						Swal.fire(
 							'Sucesso!',
-							'Aluguel cadastrado!',
+							'Aluguel(is) cadastrado(s)!',
 							'success'
 							)
 	

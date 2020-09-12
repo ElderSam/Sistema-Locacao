@@ -47,7 +47,15 @@ class RentController extends Generator
 
                 $rent->setproduto_idProduto($item->id); //set atribute to Model
 
-                $res[] = ($rent->insert());
+                $insert = ($rent->insert());
+                $res[] = $insert;
+
+                $aux = json_decode($insert);
+
+                if (isset($aux->error) && $aux->error) {
+                    //print_r($aux);
+                    break;
+                }
             } 
                 
             return json_encode($res);
