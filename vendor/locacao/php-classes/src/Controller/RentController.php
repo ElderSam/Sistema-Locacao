@@ -211,7 +211,7 @@ class RentController extends Generator
     public function delete($idrent){
        
         $rent = new Rent();
-        echo "id: " . $idrent;
+        //echo "id: " . $idrent;
         $rent->get((int)$idrent); //carrega o usuário, para ter certeza que ainda existe no banco
        
         return $rent->delete();

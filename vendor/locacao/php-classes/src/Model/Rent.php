@@ -84,12 +84,12 @@ class Rent extends Generator{
     }
 
     
-    public function get($idFornecedor){
+    public function get($id){
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis WHERE idFornecedor = :idFornecedor", array(
-            ":idFornecedor"=>$idFornecedor
+        $results = $sql->select("SELECT * FROM historicoalugueis WHERE idHistoricoAluguel = :id", array(
+            ":id"=>$id
         ));
 
         if(count($results) > 0){
@@ -194,14 +194,13 @@ class Rent extends Generator{
     public function delete(){
       
         $sql = new Sql();
-
+        
         try{
-
-            $sql->query("CALL sp_historicoalugueis_delete(:idFornecedor)", array(
-                ":idFornecedor"=>$this->getidFornecedor()
+            $sql->query("CALL sp_historicoalugueis_delete(:idHistoricoAluguel)", array(
+                ":idHistoricoAluguel"=>$this->getidHistoricoAluguel()
             ));
 
-            if($this->get($this->getidFornecedor())){
+            if($this->get($this->getidHistoricoAluguel())){
 
                 return json_encode([
                     "error"=>true,
