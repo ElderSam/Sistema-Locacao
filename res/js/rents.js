@@ -25,7 +25,7 @@ $(function() { //quando a página carrega
 		let formData = new FormData(form[0]);
 		console.log(formData)
 		idLocacao = $('#id').val()
-		//console.log("idFornecedor:" + idFornecedor)
+		//console.log("id:" + idHistoricoAluguel)
 
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
@@ -111,7 +111,7 @@ $(function() { //quando a página carrega
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o Fornecedor: ' + idFornecedor)
+			//console.log('você quer editar o Aluguel: ' + idHistoricoAluguel)
 			
 			$.ajax({
 				type: "POST",
@@ -177,27 +177,6 @@ $(function() { //quando a página carrega
 	});
 
 });
-/*
-function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
-    console.log('shows next number')
-    $.ajax({
-        type: "POST",
-        url: `/rents/showsNextNumber`,
-        contentType: false,
-        processData: false,
-        
-        success: function (response) {
-    
-            //console.log('próximo código de fornecedor: ' + response)
-            $('#codigo').val(response)						
-                                
-        },
-        error: function (response) {
-
-            console.log(`Erro! Mensagem: ${response}`);		
-        }
-    });	
-}*/
 
 
 function loadTableRents(){ //carrega a tabela de Locações/Aluguéis

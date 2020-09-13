@@ -224,6 +224,32 @@ class Rent extends Generator{
         }
        
     }
+
+    public function loadRent($id) {
+        //echo "loadRent id: $id";
+
+        $sql = new Sql();
+
+        $query = "SELECT a.*, b.idContrato, b.codContrato, 
+            d.idCliente, d.codigo as codigoCliente, d.nome as nomeCliente, 
+            e.idProduto_esp, e.codigoEsp, 
+            f.descricao, g.descCategoria 
+            FROM historicoalugueis a
+            INNER JOIN contratos b ON(b.idContrato = a.contrato_idContrato)
+            INNER JOIN obras c ON(c.idObra = b.obra_idObra)
+            INNER JOIN clientes d ON(d.idCliente = c.id_fk_cliente)
+            INNER JOIN produtos_esp e ON(a.produto_idProduto = e.idProduto_esp)
+            INNER JOIN produtos_gen f ON (f.idProduto_gen = e.idProduto_gen)
+            INNER JOIN prod_categorias g ON (g.idCategoria = f.idCategoria)
+            WHERE idHistoricoAluguel = :id";
+
+        $rent = $sql->select($query, array(
+            ":id"=>$id
+        ));
+
+        return json_encode($rent);
+
+    }
     
 }
 
