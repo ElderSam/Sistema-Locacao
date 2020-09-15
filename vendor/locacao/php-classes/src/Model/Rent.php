@@ -180,6 +180,18 @@ class Rent extends Generator{
 
             $this->setData($results[0]); //carrega atributos desse objeto com o retorno da atualização no banco
 
+            if($this->getstatus() == 3){ //aluguel encerrado, então devolve o produto
+
+                $query = "UPDATE produtos_esp
+                    SET status = 1 /* status 1 = disponível */
+                    WHERE (idProduto_esp = :idProduto_esp)";
+
+                $sql->query($query, array(
+                    ":idProduto_esp"=>$this->getproduto_idProduto()
+                ));
+
+            }
+
             return json_encode($results[0]);
 
         }else{

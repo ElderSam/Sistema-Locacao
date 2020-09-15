@@ -33,14 +33,80 @@ $(function() { //quando a página carrega
 			JSON.stringify(getSelectedProducts() //valor do array
 		)); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
 
+		
+		function sendForm() {
+
+			console.log('sendForm')
+
+			$.ajax({
+				type: "POST",
+				url: `/rents/${route}`, 
+				data: formData,
+				contentType: false,
+				processData: false,
+				beforeSend: function() {
+					clearErrors();
+					$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+				
+				},
+				success: function (response) {
+					clearErrors();
+	
+					if (JSON.parse(response).error) {
+						console.log(`erro ao ${msgError} Locação!`)
+	
+						response = JSON.parse(response)
+	
+						Swal.fire(
+							'Erro!',
+							`Ocorreu algum erro ao ${msgError}`,
+							'error'
+						);
+	
+						if(response['error_list']){
+							
+							showErrorsModal(response['error_list'])
+	
+							Swal.fire(
+								'Atenção!',
+								'Por favor verifique os campos',
+								'error'
+							);
+						}
+	
+					} else {
+						$('#RentModal').modal('hide');
+	
+						Swal.fire(
+							'Sucesso!',
+							msgSuccess,
+							'success'
+						);
+	
+						loadTableRents();
+						$('#formRent').trigger("reset");
+					}
+	
+				},
+				error: function (response) {
+	
+					//$('#RentModal').modal('hide');
+					$('#formRent').trigger("reset");
+					console.log(`Erro! Mensagem: ${response}`);
+	
+				}
+			});
+		}			
 
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
 			console.log("você quer cadastrar")
-
+		
 			route = "create";
 			msgError = "Cadastrar";
 			msgSuccess = "Locação(ões) Cadastrada(s)";
+
+			sendForm();
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
@@ -49,67 +115,36 @@ $(function() { //quando a página carrega
 			route = idLocacao //parte rota para editar (/rents/:id)
 			msgError = "Atualizar";
 			msgSuccess = "Locação Atualizada";
+
+			if($("#status").val() == 3) { //aluguel status=encerrado
+
+				Swal.fire({
+					title: 'Você tem certeza de Encerrar essa locação?',
+					text: "Você não será capaz de reverter isso! OBS: o produto específico relacionado se tornará disponível para outras locações",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#d33',
+					cancelButtonColor: '#3085d6',
+					confirmButtonText: 'Sim, encerrar!'
+			
+				}).then((result) => {
+
+					if(result.value) {
+						console.log('atualizar, continua ...')
+						sendForm();
+					} else {
+						console.log('atualizar, NÃO')
+						return;
+					}
+				});
+
+				$('.swal2-cancel').html('Cancelar');
+
+			}else {
+				sendForm();
+			}
 		}	
 
-					
-		$.ajax({
-			type: "POST",
-			url: `/rents/${route}`, 
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function() {
-				clearErrors();
-				$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-			
-			},
-			success: function (response) {
-				clearErrors();
-
-				if (JSON.parse(response).error) {
-					console.log(`erro ao ${msgError} Locação!`)
-
-					response = JSON.parse(response)
-
-					Swal.fire(
-						'Erro!',
-						`Ocorreu algum erro ao ${msgError}`,
-						'error'
-					);
-
-					if(response['error_list']){
-						
-						showErrorsModal(response['error_list'])
-
-						Swal.fire(
-							'Atenção!',
-							'Por favor verifique os campos',
-							'error'
-						);
-					}
-
-				} else {
-					$('#RentModal').modal('hide');
-
-					Swal.fire(
-						'Sucesso!',
-						msgSuccess,
-						'success'
-					);
-
-					loadTableRents();
-					$('#formRent').trigger("reset");
-				}
-
-			},
-			error: function (response) {
-
-				//$('#RentModal').modal('hide');
-				$('#formRent').trigger("reset");
-				console.log(`Erro! Mensagem: ${response}`);
-
-			}
-		});
 
 		return false;
 	});
