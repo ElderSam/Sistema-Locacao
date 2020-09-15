@@ -24,159 +24,114 @@ $(function() { //quando a página carrega
 		let form = $('#formRent');
 		let formData = new FormData(form[0]);
 		console.log(formData)
-		idLocacao = $('#id').val()
+		idLocacao = $('#idHistoricoAluguel').val()
 		//console.log("id:" + idHistoricoAluguel)
+
+		//formData.append("field", "value")
+		formData.append(
+			"arrSelectedProductsEsp", //nome do array
+			JSON.stringify(getSelectedProducts() //valor do array
+		)); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
+
 
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
 			console.log("você quer cadastrar")
 
-			listProductsEsp = document.querySelectorAll(".items input[type=checkbox]");
-			console.log(listProductsEsp)
-			let selectedProducts = [];
-
-			listProductsEsp.forEach((product, index) => {
-				if(product.checked){
-					console.log(parseInt(product.value), index)
-					selectedProducts.push({id: parseInt(product.value)})
-				}
-				
-			});
-			
-			console.log(selectedProducts)
-
-			//formData.append("field", "value")
-			formData.append("arrSelectedProductsEsp", JSON.stringify(selectedProducts)); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
-
-
-			$.ajax({
-				type: "POST",
-				url: '/rents/create',
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-					
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log('erro ao cadastrar nova Locação!')
-						response = JSON.parse(response)
-						
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum problema ao cadastrar',
-							'error'
-						)
-	
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'error'
-							)
-						}
-						
-					} else { // Se cadastrou com sucesso
-
-						$('#RentModal').modal('hide');
-						
-						//console.log(response)
-						Swal.fire(
-							'Sucesso!',
-							'Aluguel(is) cadastrado(s)!',
-							'success'
-							)
-	
-						loadTableRents();
-						$('#formRent').trigger("reset");
-						
-					}
-					
-				},
-				error: function (response) {
-					//$('#RentModal').modal('hide');
-					$('#formRent').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
-				}
-			});
+			route = "create";
+			msgError = "Cadastrar";
+			msgSuccess = "Locação(ões) Cadastrada(s)";
 
 		}else{ /* se for para Editar -------------------------------------------------- */
 
-			//console.log('você quer editar o Aluguel: ' + idHistoricoAluguel)
+			console.log('você quer editar o Aluguel: ' + idLocacao)
 			
-			$.ajax({
-				type: "POST",
-				url: `/rents/${idLocacao}`, //rota para editar
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
-				},
-				success: function (response) {
-					clearErrors();
+			route = idLocacao //parte rota para editar (/rents/:id)
+			msgError = "Atualizar";
+			msgSuccess = "Locação Atualizada";
+		}	
 
-					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Locação!')
+					
+		$.ajax({
+			type: "POST",
+			url: `/rents/${route}`, 
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function() {
+				clearErrors();
+				$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+			
+			},
+			success: function (response) {
+				clearErrors();
 
-						response = JSON.parse(response)
+				if (JSON.parse(response).error) {
+					console.log(`erro ao ${msgError} Locação!`)
+
+					response = JSON.parse(response)
+
+					Swal.fire(
+						'Erro!',
+						`Ocorreu algum erro ao ${msgError}`,
+						'error'
+					);
+
+					if(response['error_list']){
+						
+						showErrorsModal(response['error_list'])
 
 						Swal.fire(
-							'Erro!',
-							'Ocorreu algum erro ao Atualizar',
+							'Atenção!',
+							'Por favor verifique os campos',
 							'error'
 						);
-
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'error'
-							);
-						}
-
-					} else {
-						$('#RentModal').modal('hide');
-
-						Swal.fire(
-							'Sucesso!',
-							'Locação atualizada!',
-							'success'
-						);
-
-						loadTableRents();
-						$('#formRent').trigger("reset");
 					}
-	
-				},
-				error: function (response) {
-	
-					//$('#RentModal').modal('hide');
+
+				} else {
+					$('#RentModal').modal('hide');
+
+					Swal.fire(
+						'Sucesso!',
+						msgSuccess,
+						'success'
+					);
+
+					loadTableRents();
 					$('#formRent').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
 				}
-			});
-		}	
+
+			},
+			error: function (response) {
+
+				//$('#RentModal').modal('hide');
+				$('#formRent').trigger("reset");
+				console.log(`Erro! Mensagem: ${response}`);
+
+			}
+		});
 
 		return false;
 	});
 
 });
+
+function getSelectedProducts() { //pega os produtos selecionados (checkboxes) e retorna um array
+	listProductsEsp = document.querySelectorAll(".items input[type=checkbox]");
+	console.log(listProductsEsp)
+	let selectedProducts = [];
+
+	listProductsEsp.forEach((product, index) => {
+		if(product.checked){
+			console.log(parseInt(product.value), index)
+			selectedProducts.push({id: parseInt(product.value)})
+		}
+
+	});
+	
+	console.log(selectedProducts)
+	return selectedProducts;
+}
 
 
 function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
@@ -283,6 +238,8 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 //detalhes do Locacao
 function loadRent(idLocacao) { //carrega todos os campos do modal referente ao Locacao escolhido
+	
+	console.log(`load rent id: ${idLocacao}`)
 	clearFieldsValues();
 	clearErrors();
 
@@ -292,23 +249,39 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 	$('#btnUpdate').show();
 
 	$.getJSON(`/rents/json/${idLocacao}`, function (data) { //ajax
+		
 		console.log(data)
+			
+		$("#idHistoricoAluguel").val(data.idHistoricoAluguel);
+		console.log('load View Locacao idLocacao: ' + $("#idHistoricoAluguel").val())
 
-		$("#idLocacao").val(data.idHistoricoAluguel);
-		//console.log('load View Locacao idLocacao: ' + $("#idLocacao").val())
-
+		//cliente (codigoCliente + nomeCliente), contrato (codContrato), item (descCategoria + descricao) 
 		$("#formRent #codigo").val(data.codigo).prop('disabled', true);
-		$("#formRent #cliente").val(data.cliente_idCliente).prop('disabled', true);		
-        $("#formRent #contrato_idContrato").val(data.contrato_idContrato).prop('disabled', true);
-		$("#formRent #itens").val(data.produto_idProduto).prop('disabled', true);
+		
+		$("#cliente").parent().hide();
+		$("#contrato_idContrato").parent().hide();
+		$("#itens").parent().hide();
+		$("#formRent #quantidade").val("").prop('disabled', true).parent().hide();
+
+		$("#divDetailsRent").html(`
+			<div id="divCliente">Cliente: <b>${data.codigoCliente} - ${data.nomeCliente}</b></div>
+			<div id="divContrato">Contrato: <b>${data.codContrato}</b></div>
+			<div id="divItem">Item: <b>${data.descCategoria} ${data.descricao}</b></div>
+			<div id="divProduto">Cod. produto: <b>${data.codigoEsp}</b></div>
+		`).show();
+
+		$("#list1").prop('disabled', true).hide();
+		/*loadListProductEsp(data.idProduto_gen, {
+			idProduto_esp: data.idProduto_esp, //manda o produto atual para ser selecionado por padrão
+			codigo: data.codigoEsp
+		})*/
+
 		$("#formRent #status").val(data.status).prop('disabled', true);
 		$("#formRent #vlAluguel").val(data.vlAluguel).prop('disabled', true);
 		$("#formRent #dtInicio").val(data.dtInicio).prop('disabled', true);
 		$("#formRent #dtFinal").val(data.dtFinal).prop('disabled', true);
 		$("#formRent #custoEntrega").val(data.custoEntrega).prop('disabled', true);
-		$("#formRent #vlRetirada").val(data.custoRetirada).prop('disabled', true);
-		// $("#formRent #quantidade").val(data."").prop('disabled', true);
-		$("#formRent #prodEpecifico").val(data.status).prop('disabled', true);
+		$("#formRent #custoRetirada").val(data.custoRetirada).prop('disabled', true);
 		$("#formRent #observacao").val(data.observacao).prop('disabled', true);
 		
 		/* Atualizar Locacao ------------------------------------------------------------------ */
@@ -321,28 +294,25 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 		
 			//$('#desImagePath').parent().show();
 
-			$("#formRent #codigo").prop('disabled', true);	
-			$("#formRent #cliente").prop('disabled', false);
-			$("#formRent #contratoa").prop('disabled', false);
-			$("#formRent #itens").prop('disabled', false);
+			$("#formRent #idHistoricoAluguel").prop('disabled', false);
+			//$("#formRent #codigo").prop('disabled', true);	
 			$("#formRent #status").prop('disabled', false);
 			$("#formRent #vlAluguel").prop('disabled', false);
 			$("#formRent #dtInicio").prop('disabled', false);
 			$("#formRent #dtFinal").prop('disabled', false);
 			$("#formRent #custoEntrega").prop('disabled', false);
-			$("#formRent #vlRetirada").prop('disabled', false);
-			$("#formRent #quantidade").prop('disabled', false);
-			$("#formRent #prodEspecifico").prop('disabled', false);
+			$("#formRent #custoRetirada").prop('disabled', false);
+			//$("#formRent #quantidade").prop('disabled', false);
 			$("#formRent #observacao").prop('disabled', false);
 				
 		}); /* Fim Atualizar Locacao ---------------------------------------------------------- */
 			
-
 	}).then(() => { 
 
 		$("#RentModal").modal();
-	}).fail(function () {
-		console.log("Rota não encontrada! (/rents/json/:idLocacao)");
+
+	}).catch(function () {
+		console.log(`Rota não encontrada! (/rents/json/${idLocacao})`);
 	});
 
 }
@@ -424,6 +394,13 @@ function clearFieldsValues(){
 	//$('#dtInicio').parent().hide(); //aparece a data de cadastro (só para visualizar)
 	//$('#desImagePath').parent().show();
 
+	$("#divDetailsRent").html("").hide();
+	$("#cliente").parent().show();
+	$("#contrato_idContrato").parent().show();
+	$("#itens").parent().show();
+	$("#quantidade").parent().show();
+	$("#list1").prop('disabled', false).show();
+
 	$("#formRent #idHistoricoAluguel").prop('disabled', false);
 	$("#formRent #codigo").prop('disabled', false);
 	$("#formRent #cliente").prop('disabled', false);
@@ -432,10 +409,10 @@ function clearFieldsValues(){
 	$("#formRent #status").prop('disabled', false);
 	$("#formRent #vlAluguel").prop('disabled', false);
 	//$("#formRent #group-dtInicio").hide();
-	$("#formRent #group-dtInicio").prop('disabled', false);
+	$("#formRent #dtInicio").prop('disabled', false);
 	$("#formRent #dtFinal").prop('disabled', false);
 	$("#formRent #custoEntrega").prop('disabled', false);
-	$("#formRent #vlRetirada").prop('disabled', false);
+	$("#formRent #custoRetirada").prop('disabled', false);
 	$("#formRent #quantidade").prop('disabled', false);
 	$("#formRent #observacao").prop('disabled', false);
 
@@ -639,8 +616,14 @@ function loadItemFields(arrItens) {
 	loadListProductEsp(item.idProduto_gen);
 }
 
-function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
+function loadListProductEsp(idProduto_gen, selected=false) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
 	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
+
+	$("#listProductsEsp").html("") //esvazia a lista
+
+	if(selected) {  //seleciona o produto
+		$("#listProductsEsp").append(`<li><input type="checkbox" checked="true" value=${selected.idProduto_esp}/>${selected.codigo} <b>(atual)</b></li>`)
+	}
 
 	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
 
@@ -656,9 +639,7 @@ function loadListProductEsp(idProduto_gen) { /* carrega os checkboxes de produto
 		txtListProducts = data.reduce(getTxtProducts, "");
 		console.log(txtListProducts)
 
-		$("#listProductsEsp")
-			.html("")
-			.append(txtListProducts)
+		$("#listProductsEsp").append(txtListProducts)
 
 	})
 	.catch(() => {

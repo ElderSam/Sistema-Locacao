@@ -152,11 +152,11 @@
                         <form id="formRent">
                             <div class="form-row">
                                 
-                                <div id="idHistoricoAluguel" class="form-group col-lg-2">
+                                <!--div id="id" class="form-group col-lg-2">
                                     <label for="id">ID</label>
                                     <input type="text" class="form-control" id="id" name="id">
                                     <span class="help-block"></span>
-                                </div>
+                                </div-->
 
                                 <div class="form-group col-lg-2">
                                     <label for="codigo">Código</label>
@@ -177,6 +177,8 @@
                                         <option value="" selected>Escolher Contrato</option> 
                                     </select>
                                 </div>
+
+                                <div id="divDetailsRent" class="col-lg-9 ml-2 mb-2" style="background-color: lightgrey;"></div> <!-- div de detalhes de um aluguel (cliente, contrato e item)-->
 
                                 <div class="form-group col-md-4">
                                     <label for="itens">Item *</label>
@@ -241,13 +243,13 @@
                                 <div class="form-group col-md-6">
                                     <label for="observacao">Observação</label>
                                     <textarea maxlength="150" class="form-control" id="observacao" name="observacao" rows="3"></textarea>
-                                    Caractetres Restantes: <span class="caracteres">150</span><br>
+                                    <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
                                 </div>                            
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
-                                <label for="idLocacao">Id</label>
-                                <input type="text" id="idLocacao" name="idLocacao" >
+                                <label for="idHistoricoAluguel">Id</label>
+                                <input type="text" id="idHistoricoAluguel" name="idHistoricoAluguel" >
                             </div>
                             <span class="text-danger">* campos obrigatórios</span>
                          </form>

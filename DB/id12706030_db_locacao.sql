@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Set-2020 às 19:59
+-- Tempo de geração: 15-Set-2020 às 03:08
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -253,7 +253,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_save` (IN `pcodForn
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueisUpdate_save` (IN `pidHistoricoAluguel` INT(11), IN `pcontrato_idContrato` INT(11), IN `pproduto_idProduto` INT(11), IN `pstatus` TINYINT(4), IN `pvlAluguel` FLOAT, IN `pdtInicio` DATE, IN `pdtFinal` DATE, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueisUpdate_save` (IN `pidHistoricoAluguel` INT(11), IN `pstatus` TINYINT(4), IN `pvlAluguel` FLOAT, IN `pdtInicio` DATE, IN `pdtFinal` DATE, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pobservacao` TEXT)  BEGIN
   
     DECLARE vidHistoricoAluguel, vidProdutoDevolvido INT;
     
@@ -263,8 +263,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueisUpdate_save` (I
 
     UPDATE historicoalugueis
         SET
-            contrato_idContrato = pcontrato_idContrato,
-            produto_idProduto = pproduto_idProduto,
             status = pstatus,
             vlAluguel = pvlAluguel,
             dtInicio = pdtInicio,
@@ -272,16 +270,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_historicoalugueisUpdate_save` (I
             custoEntrega = pcustoEntrega,
             custoRetirada = pcustoRetirada,
             observacao = pobservacao
-        WHERE idHistoricoAluguel = vidHistoricoAluguel;
-
-    UPDATE produtos_esp
-        SET status = 1
-        WHERE (idProduto_esp = vidProdutoDevolvido);
-
-    UPDATE produtos_esp
-        SET status = 0
-        WHERE (idProduto_esp = pproduto_idProduto);
-    
+        WHERE idHistoricoAluguel = vidHistoricoAluguel;    
 
     SELECT * FROM historicoalugueis WHERE idHistoricoAluguel = pidHistoricoAluguel;
     
@@ -902,11 +891,8 @@ CREATE TABLE `historicoalugueis` (
 --
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(6, '2', 6, 1, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57'),
-(7, '3', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57'),
-(9, '5', 6, 8, 0, 600, '2020-09-11', '0000-00-00', 200, 200, '', '2020-09-12 14:22:53'),
-(11, '6', 6, 2, 0, 600, '2020-09-10', '0000-00-00', 200, 200, '', '2020-09-12 14:57:21'),
-(12, '7', 6, 14, 0, 600, '2020-09-10', '0000-00-00', 200, 200, '', '2020-09-12 14:57:22');
+(6, '2', 6, 1, 0, 1260.99, '2020-09-18', '2020-09-18', 265.65, 98999.3, 'TESTE ATUALIZAR', '2020-09-11 23:47:57'),
+(7, '3', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57');
 
 -- --------------------------------------------------------
 
@@ -963,19 +949,19 @@ CREATE TABLE `produtos_esp` (
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
 (1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(2, 1, '001.01.01.01.01.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(2, 1, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
 (3, 1, '001.01.01.01.01.002-0003', 13899.8, 0, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
 (7, 2, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
-(8, 1, '001.01.01.01.01.002-0004', 15477.2, 0, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
+(8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
 (9, 3, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
 (11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
-(14, 1, '001.01.01.01.01.002-0007', 5000, 0, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36');
+(14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36');
 
 -- --------------------------------------------------------
 

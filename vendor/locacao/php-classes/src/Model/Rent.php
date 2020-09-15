@@ -164,9 +164,9 @@ class Rent extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :contrato_idContrato, :produto_idProduto, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
-            ":contrato_idContrato"=>$this->getcontrato_idContrato(),
-            ":produto_idProduto"=>$this->getproduto_idProduto(),
+        $results = $sql->select("CALL sp_historicoalugueisUpdate_save(:idHistoricoAluguel, :status, :vlAluguel, :dtInicio, :dtFinal, :custoEntrega, :custoRetirada, :observacao)", array(
+            //":produto_idProduto"=>$this->getproduto_idProduto(),
+            ":idHistoricoAluguel"=>$this->getidHistoricoAluguel(),
             ":status"=>$this->getstatus(),
             ":vlAluguel"=>$this->getvlAluguel(),
             ":dtInicio"=>$this->getdtInicio(),
@@ -233,7 +233,8 @@ class Rent extends Generator{
         $query = "SELECT a.*, b.idContrato, b.codContrato, 
             d.idCliente, d.codigo as codigoCliente, d.nome as nomeCliente, 
             e.idProduto_esp, e.codigoEsp, 
-            f.descricao, g.descCategoria 
+            f.idProduto_gen, f.descricao, 
+            g.descCategoria 
             FROM historicoalugueis a
             INNER JOIN contratos b ON(b.idContrato = a.contrato_idContrato)
             INNER JOIN obras c ON(c.idObra = b.obra_idObra)
@@ -247,7 +248,7 @@ class Rent extends Generator{
             ":id"=>$id
         ));
 
-        return json_encode($rent);
+        return json_encode($rent[0]);
 
     }
     

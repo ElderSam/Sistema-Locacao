@@ -73,16 +73,18 @@ class RentController extends Generator
 
         //CAMPOS OBRIGATÓRIOS: cliente, contrato_idContrato, itens, status, dtInicio, vlAluguel, custoEntrega, custoRetirada, quantidade, arrSelectedProductsEsp
 
-        if($_POST["cliente"] == "") {
-            $errors["#cliente"] = "Cliente é obrigatório";
-        }
-
-        if (!isset($_POST["contrato_idContrato"]) || ($_POST["contrato_idContrato"] == "")) {
-                $errors["#contrato_idContrato"] = "Contrato é obrigatório!";
-        }
-
-        if($_POST["itens"] == "") {
-            $errors["#itens"] = "Itens é obrigatório";
+        if(!$update){
+            if($_POST["cliente"] == "") {
+                $errors["#cliente"] = "Cliente é obrigatório";
+            }
+    
+            if (!isset($_POST["contrato_idContrato"]) || ($_POST["contrato_idContrato"] == "")) {
+                    $errors["#contrato_idContrato"] = "Contrato é obrigatório!";
+            }
+    
+            if($_POST["itens"] == "") {
+                $errors["#itens"] = "Itens é obrigatório";
+            }
         }
 
         if($_POST["status"] == "") {
@@ -105,19 +107,27 @@ class RentController extends Generator
             $errors["#custoRetirada"] = "Valor de Retirada é obrigatório";
         }
 
-        $this->setarrProductsEsp(json_decode($_POST["arrSelectedProductsEsp"])); //JSON -> array()
+        if(!$update){
+            $this->setarrProductsEsp(json_decode($_POST["arrSelectedProductsEsp"])); //JSON -> array()
         
-        $count = count($this->getarrProductsEsp());
+            $count = count($this->getarrProductsEsp());
+    
+            if($_POST["quantidade"] == "") {
+                $errors["#quantidade"] = "Quantidade é obrigatória";
+    
+            }else if ($count != $_POST["quantidade"]) { //produto específico
+                           
+                // $quant = $_POST["quantidade"];       
+                // echo "quantidadde:  $quant, count: $count";
+                $errors["#list1"] = "Precisa selecionar a quantidade de produtos escolhida!";
+            }  
+    
+        }/*else {
+            print_r($_POST);
 
-        if($_POST["quantidade"] == "") {
-            $errors["#quantidade"] = "Quantidade é obrigatória";
-
-        }else if ($count != $_POST["quantidade"]) { //produto específico
-                       
-            // $quant = $_POST["quantidade"];       
-            // echo "quantidadde:  $quant, count: $count";
-            $errors["#list1"] = "Precisa selecionar a quantidade de produtos escolhida!";
-        }  
+            //verificar se existe apenas um produto selecionado (checkbox)
+        }*/
+        
 
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
