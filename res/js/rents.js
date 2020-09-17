@@ -225,6 +225,7 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 					
 
 					row['codigo'] = element.codigo
+					row['codContrato'] = element.codContrato
 					row['produto'] = `<a href="./products_esp/${element.idProduto_gen}" target="_blank">${element.codigoEsp}</a>` //código do produto específico
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
 					row['dtInicio'] = formatDateToShow(element.dtInicio)
@@ -251,6 +252,7 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 		},
 		"columns": [
 			{ "data": "codigo" },
+			{ "data": "codContrato"},
 			{ "data": "produto" },
 			{ "data": "status" },
 			{ "data": "dtInicio" },

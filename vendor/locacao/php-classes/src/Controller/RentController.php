@@ -161,8 +161,8 @@ class RentController extends Generator
     public function ajax_list_rents($requestData)
     {
 
-    $column_search = array("codigo"/*, "produto"*/, "status", "dtInicio", "dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
-    $column_order = array("codigo"/*, "produto"*/, "status", "dtInicio", "dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("a.codigo", "c.codContrato"/*, "produto"*/, "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
+        $column_order = array("a.codigo", "c.codContrato"/*, "produto"*/, "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $rent = new Rent(); //model
@@ -180,7 +180,8 @@ class RentController extends Generator
             $row = [
                 "id"=>$rent['idHistoricoAluguel'],
                 "codigo"=>$rent['codigo'],
-                
+                "codContrato"=>$rent['codContrato'],
+                //"contrato"=>$rent['']
                 //produto
                 "idProduto_gen"=>$rent['idProduto_gen'],
                 "codigoEsp"=>$rent['codigoEsp'],
@@ -196,7 +197,7 @@ class RentController extends Generator
 
 
             $data[] = $row;
-        } //
+        } 
 
         //Cria o array de informações a serem retornadas para o Javascript
         $json = array(

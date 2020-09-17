@@ -100,8 +100,11 @@ class Rent extends Generator{
 
     public function get_datatable($requestData, $column_search, $column_order){
         
-        $query = "SELECT a.*, b.idProduto_esp, b.idProduto_gen, b.codigoEsp FROM historicoalugueis a
-            INNER JOIN produtos_esp b ON(a.produto_idProduto = b.idProduto_esp)";
+        $query = "SELECT a.*, 
+            b.idProduto_esp, b.idProduto_gen, b.codigoEsp,
+            c.codContrato FROM historicoalugueis a
+            INNER JOIN produtos_esp b ON(a.produto_idProduto = b.idProduto_esp)
+            INNER JOIN contratos c ON(c.idContrato = a.contrato_idContrato)";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -124,6 +127,7 @@ class Rent extends Generator{
             }
 
         }
+        //print_r($query);
         
         $res = $this->searchAll($query);
         $this->setTotalFiltered(count($res));
