@@ -216,8 +216,6 @@ class RentController extends Generator
         return Rent::total();
     }
 
-
-
     public function delete($idrent){
        
         $rent = new Rent();

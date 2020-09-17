@@ -300,7 +300,7 @@ class ContractItem extends Generator{
         INNER JOIN `prod_categorias` c ON (b.idCategoria = c.idCategoria)
         WHERE (a.idContrato = $idContract)";
 
-        return json_encode($this->searchAll($query));
+        return $this->searchAll($query); //retorna um array de itens
     }
 
 }

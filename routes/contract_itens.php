@@ -65,7 +65,7 @@ $app->get("/contract_itens/json/contract/:idContract", function($idContract){
 	
     User::verifyLogin();
 
-    $contractItem = new ContractItem();
+    $contractItem = new ContractItemController();
 
 	echo $contractItem->getContractItens((int)$idContract);
 

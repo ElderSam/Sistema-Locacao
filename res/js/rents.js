@@ -640,11 +640,18 @@ function loadItemFields(arrItens) {
 	$("#custoRetirada").val(item.custoRetirada);
 	
 	$("#quantidade").html("");
-	txtQuantidade = "<option value=''>(escolha)</option>";
 
-	for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
-		txtQuantidade += `<option value="${i}">${i}</option>`;
+	if(item.quantidade > 0) {
+		txtQuantidade = "<option value=''>(escolha)</option>";
+
+		for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
+			txtQuantidade += `<option value="${i}">${i}</option>`;
+		}
+
+	} else {
+		txtQuantidade = "<option value=''>0</option>"; //Não possue mais quantidade disponível do contrato
 	}
+
 
 	$("#quantidade").append(txtQuantidade);
 	  
