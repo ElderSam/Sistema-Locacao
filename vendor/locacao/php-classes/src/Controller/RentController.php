@@ -160,9 +160,9 @@ class RentController extends Generator
 
     public function ajax_list_rents($requestData)
     {
-
-        $column_search = array("a.codigo", "c.codContrato"/*, "produto"*/, "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
-        $column_order = array("a.codigo", "c.codContrato"/*, "produto"*/, "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
+                                  /* codigo, codContrato, codigo do produto, status, dtInicio, dtFinal */
+        $column_search = array("a.codigo", "c.codContrato", "b.codigoEsp", "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
+        $column_order = array("a.codigo", "c.codContrato", "b.codigoEsp", "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $rent = new Rent(); //model

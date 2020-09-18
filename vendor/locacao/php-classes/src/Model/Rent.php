@@ -123,7 +123,7 @@ class Rent extends Generator{
                     if($field == "a.status") {
                         $aux = strtoupper($search);
                         $aux = substr($aux, 0, 5);
-                        //echo " $aux ";
+                        
                         if($aux ==  "ENTRE") { //entrega pendente
                             $search = 0;
 
@@ -137,8 +137,16 @@ class Rent extends Generator{
 
                         $query .= " OR $field = $search";
                         
-                    }else{
+                    }else if($field == "b.codigoEsp") {
+                        
                         $query .= " OR $field LIKE '%$search%'";
+
+                    }else if((strlen($search) == 10) && (($field == "a.dtInicio") || ($field == "a.dtFinal"))){ //dtInicio e dtFinal
+                        $aux = explode("-", $search);
+                        $aux = str_replace("/", "-", $search);
+                        $data = date('Y-m-d', strtotime($aux));
+                        //echo "$field " .$data;
+                        $query .= " OR $field = '$data'";
                     }
                     
                 }
