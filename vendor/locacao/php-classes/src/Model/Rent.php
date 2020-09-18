@@ -119,7 +119,28 @@ class Rent extends Generator{
                     $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
                     $first = FALSE;
                 } else {
-                    $query .= " OR $field LIKE '%$search%'";
+
+                    if($field == "a.status") {
+                        $aux = strtoupper($search);
+                        $aux = substr($aux, 0, 5);
+                        //echo " $aux ";
+                        if($aux ==  "ENTRE") { //entrega pendente
+                            $search = 0;
+
+                        }else if($aux ==  "ATIVO") { //ativo
+                            $search = 1;
+                        }else if($aux ==  "RETIR") { //retirada pendente
+                            $search = 2;
+                        }else if($aux ==  "ENCER") { //encerrado
+                            $search = 3;
+                        }
+
+                        $query .= " OR $field = $search";
+                        
+                    }else{
+                        $query .= " OR $field LIKE '%$search%'";
+                    }
+                    
                 }
             } //fim do foreach
             if (!$first) {
