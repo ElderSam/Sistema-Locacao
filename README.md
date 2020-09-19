@@ -1,6 +1,7 @@
 # Sistema-Locacao
 Sistema de Locação de Equipamentos para Locação
-
+    Projeto desenvolvido para o TCC (trabalho de conclusão de curso), do curso de Sistemas de Informação.
+    
 Módulos/cadastros;
 
 - Usuários
@@ -17,6 +18,10 @@ Módulos/cadastros;
     </ul>
 
 - Locações
+    <ul>
+        <li>Gerenciamento de Locações</li>
+        <li>Entregas e Retiradas</li>
+    </ul>
 
 - Faturas
 
