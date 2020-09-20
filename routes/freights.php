@@ -4,7 +4,7 @@ use \Locacao\Page;
 use \Locacao\Model\User;
 
 /* rota para página de locações/alugueis --------------*/
-$app->get('/rents', function(){
+$app->get('/freights', function(){
 
     User::verifyLogin();
 
