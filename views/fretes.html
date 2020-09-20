@@ -64,9 +64,9 @@
                 <li class="breadcrumb-item active"><a href="/">home</a>/Locações/Entregas e Retiradas</li>
 
                 <!-- Button trigger modal -->
-                <!-- <button id="btnAddRent" type="button" class="btn btn-success" data-toggle="modal" data-target="#RentModal">
-                    Nova Locação
-                </button>            -->
+                <button id="btnAddRent" type="button" class="btn btn-success" data-toggle="modal" data-target="#freightModal">
+                    Novo Frete
+                </button>           
             </ol>
 
            
@@ -105,7 +105,7 @@
            
         <!-- Rent Modal------------------------------------------------------------------------------->
         <div class="modal fade" id="freightModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Frete" aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div style="margin-bottom: -1rem;" class="modal-header">
                         <h3 class="modal-title"><b id="modalTitle">Detalhes do Frete</b></h3>
@@ -123,13 +123,19 @@
                                     <input type="text" class="form-control" id="id" name="id">
                                     <span class="help-block"></span>
                                 </div>
+                                
+                                <div class="form-group col-lg-6">
+                                    <label for="locacao">Locação</label>
+                                    <input type="text" class="form-control" id="locacao" name="locacao">
+                                    <span class="help-block"></span>
+                                </div>
 
                                 <div class="form-group col-md-6">
                                     <label for="status">Tipo Frete*</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="">Escolher...</option>
-                                        <option value="0" selected style="color: green;"><b>Entrega</b></option>
-                                        <option value="1" style="color: red;"><b>Retirada</b></option>                                        
+                                        <option value="0" selected style="color: green;">Entrega</option>
+                                        <option value="1" style="color: red;">Retirada</option>                                        
                                     </select>
                                 </div>
 
@@ -137,13 +143,13 @@
                                     <label for="status">Status *</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="">Escolher...</option>
-                                        <option value="0" selected style="color: green;"><b>Cluída</b></option>
-                                        <option value="1" style="color: red;"><b>Retirada</b></option>           
+                                        <option value="0" selected style="color: green;">Concluída</option>
+                                        <option value="1" style="color: red;">Retirada</option>           
                                     </select>
                                 </div>
                                 
                                 <div class="form-group col-lg-6">
-                                    <label for="meeting-time">Choose a time for your appointment:</label>
+                                    <label for="meeting-time">Data e Hora</label>
                                 <input type="datetime-local" id="meeting-time"
                                     name="meeting-time" value="2018-06-12T19:30">
                                 </div>
@@ -173,21 +179,4 @@
     <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
     <script src="../res/js/util.js"></script>
-    <script src="../res/js/rents.js"></script>
-        
-<!--
-<script>
-	$(document).ready(function() {
-
-  	$("#linkLocacoes").addClass("active"); 
-	
-});
-
-</script>
--->
-
-
-
-    <!--script>
-        $("#linkLocacoes").addClass("active"); 
-    </script-->
+    <!-- <script src="../res/js/rents.js"></script> -->
