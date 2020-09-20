@@ -13,3 +13,10 @@ $app->get('/freights', function(){
     $page = new Page();
     $page->setTpl("fretes");
 });
+
+$app->get('/freights/json', function() {
+
+    User::verifyLogin();
+
+    echo Freight::listAll();
+});
