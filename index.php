@@ -29,6 +29,7 @@ require_once("./routes/budgetItens.php"); //itens de orçamento (produtos adicio
 require_once("./routes/contracts.php"); //contratos
 require_once("./routes/contract_itens.php"); //itens de contrato
 require_once("./routes/rents.php"); //alugueis
+require_once("./routes/freights.php"); //fretes (entregas e retiradas)
 require_once("./routes/construction.php");
 
 $app->get('/', function(){
