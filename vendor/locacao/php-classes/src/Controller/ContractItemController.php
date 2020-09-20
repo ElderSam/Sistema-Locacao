@@ -5,6 +5,7 @@ namespace Locacao\Controller;
 use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\ContractItem;
+use \Locacao\Model\Rent;
 
 class ContractItemController extends Generator
 {
@@ -212,6 +213,34 @@ class ContractItemController extends Generator
         }
 
         return json_encode($listItems);
+    }
+
+
+    function getContractItens($idContract) {
+        $item = new ContractItem();
+
+        $resItem = $item->getContractItens($idContract);
+        
+    
+        for($i=0; $i<count($resItem); $i++) { //para cada item do array, vai diminuir o campo quantidade restante do produto
+            
+            $idContrato = $resItem[$i]['idContrato'];
+            $idProduto_gen = $resItem[$i]['idProduto_gen'];
+    
+            $query = "SELECT COUNT(a.idHistoricoAluguel) as total FROM historicoalugueis a
+                    INNER JOIN produtos_esp b ON(b.idProduto_esp = a.produto_idProduto)
+                    INNER JOIN produtos_gen c ON(c.idProduto_gen = b.idProduto_gen)
+                WHERE (a.contrato_idContrato = $idContrato AND c.idProduto_gen = $idProduto_gen)";
+    
+            $rent = new Rent();
+    
+            $qtdAlugueis = $rent->searchAll($query);
+    
+            $resItem[$i]['quantidade'] -= $qtdAlugueis[0]['total']; //diminiu da quantidade de locações cadastradas*/
+    
+        }
+
+        return json_encode($resItem);
     }
 
 }//end class ContractItemController

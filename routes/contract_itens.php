@@ -59,6 +59,17 @@ $app->get("/contract_itens/json/:idItem", function($idItem){
 	echo $contractItem->loadContractItem((int)$idItem);
 
 });
+
+
+$app->get("/contract_itens/json/contract/:idContract", function($idContract){
+	
+    User::verifyLogin();
+
+    $contractItem = new ContractItemController();
+
+	echo $contractItem->getContractItens((int)$idContract);
+
+});
 /*
 $app->get("/contract_itens/addToContract/:codContractItem", function($codContractItem){
 	

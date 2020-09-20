@@ -53,9 +53,10 @@ $app->get("/rents/json/:idrent", function($idrent){
 
 	$rent = new Rent();
 
-	$rent->get((int)$idrent);
-
-	echo $rent->loadRent((int)$idrent);
+	/*$rent->get((int)$idrent);
+    echo json_encode($rent->getValues());*/
+    
+    echo $rent->loadRent((int)$idrent);
 
 });
 

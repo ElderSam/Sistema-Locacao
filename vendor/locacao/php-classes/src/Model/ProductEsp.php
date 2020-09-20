@@ -189,21 +189,6 @@ class ProductEsp extends Generator{
                     //echo "status: ".$search;
                 }
 
-                /*if ($field == "tipo1") {
-                  
-                    if (($search == "3M")) {
-                        $search = 1;
-                    } else if ($search == "4M") {
-                        $search = 2;
-                    } else if ($search == "6M") {
-                        $search = 3;
-                    } else if ($search == "12M") {
-                        $search = 4;
-                    }
-
-                    //echo "tipo1: ".$search;
-                }*/
-
                 //filtra no banco
                 if ($first) {
                     $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
@@ -353,6 +338,19 @@ class ProductEsp extends Generator{
 
        return $nextNumber; //retorna o próximo número de série da categoria
 
+    }
+
+    public function loadProductEspByIdProductGen($idProduto_gen) { /* carrega todos os produtos específicos que estão disponíveis (status=1), relacionados a um produto genérico */
+        
+        $query = "SELECT a.idProduto_esp, a.codigoEsp, a.status,
+            b.idProduto_gen, b.descricao,
+            c.descCategoria
+            FROM produtos_esp a
+            INNER JOIN produtos_gen b ON(a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON(b.idCategoria = c.idCategoria)
+            WHERE (a.idProduto_gen = $idProduto_gen AND a.status = 1)";
+
+        return json_encode($this->searchAll($query));
     }
     
 } //end class ProductEsp

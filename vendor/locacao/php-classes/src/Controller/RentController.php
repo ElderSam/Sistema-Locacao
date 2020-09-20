@@ -35,16 +35,30 @@ class RentController extends Generator
         if ($update) { //se for atualizar
             
             $upd =  $rent->update();
+    
+            return $upd; 
 
-            
-            return $upd;
-            
+        } else { // se for cadastrar novo Aluguel/Locação
 
-        } else { // se for cadastrar novo Fornecedor
-            $res = $rent->insert();
-            //print_r($res);
-            
-            return $res;
+            $res = [];
+
+            foreach($this->getarrProductsEsp() as $item) {
+                //echo " id: $item->id";
+
+                $rent->setproduto_idProduto($item->id); //set atribute to Model
+
+                $insert = ($rent->insert());
+                $res[] = $insert;
+
+                $aux = json_decode($insert);
+
+                if (isset($aux->error) && $aux->error) {
+                    //print_r($aux);
+                    break;
+                }
+            } 
+                
+            return json_encode($res);
                    
         }
     }
@@ -57,30 +71,64 @@ class RentController extends Generator
 
         //print_r($_POST);
 
-        if ($_POST["contrato_idContrato"] == "") {
-                $errors["#contrato"] = "Contrato é obrigatório!";
+        //CAMPOS OBRIGATÓRIOS: cliente, contrato_idContrato, itens, status, dtInicio, vlAluguel, custoEntrega, custoRetirada, quantidade, arrSelectedProductsEsp
+
+        if(!$update){
+            if($_POST["cliente"] == "") {
+                $errors["#cliente"] = "Cliente é obrigatório";
+            }
+    
+            if (!isset($_POST["contrato_idContrato"]) || ($_POST["contrato_idContrato"] == "")) {
+                    $errors["#contrato_idContrato"] = "Contrato é obrigatório!";
+            }
+    
+            if($_POST["itens"] == "") {
+                $errors["#itens"] = "Itens é obrigatório";
+            }
         }
 
-        if ($_POST["produto_idProduto_gen"] == "") {
-            $errors["#codeProduct"] = "Produto é obrigatório!";
+        if($_POST["status"] == "") {
+            $errors["#status"] = "Status é obrigatório";
+        }
+
+        if ($_POST["dtInicio"] == "") {
+            $errors["#dtInicio"] = "Data início é obrigatória!";
         }
         
         if ($_POST["vlAluguel"] == "") {
             $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
         }
 
-        if ($_POST["periodoAluguel"] == "") {
-            $errors["#periodoAluguel"] = "Período é obrigatório!";
-        }
-
-
-       /* if ($_POST["dtInicio"] == "") {
-            $errors["#dtInicio"] = "Data início é obrigatória!";
+        if($_POST["custoEntrega"] == "") {
+            $errors["#custoEntrega"] = "Valor de Entrega é obrigatório";
         }
         
-        if ($_POST["dtFinal"] == "") {
-            $errors["#dtFinal"] = "Data final é obrigatória!";
+        if($_POST["custoRetirada"] == "") {
+            $errors["#custoRetirada"] = "Valor de Retirada é obrigatório";
+        }
+
+        if(!$update){
+            $this->setarrProductsEsp(json_decode($_POST["arrSelectedProductsEsp"])); //JSON -> array()
+        
+            $count = count($this->getarrProductsEsp());
+    
+            if($_POST["quantidade"] == "") {
+                $errors["#quantidade"] = "Quantidade é obrigatória";
+    
+            }else if ($count != $_POST["quantidade"]) { //produto específico
+                           
+                // $quant = $_POST["quantidade"];       
+                // echo "quantidadde:  $quant, count: $count";
+                $errors["#list1"] = "Precisa selecionar a quantidade de produtos escolhida!";
+            }  
+    
+        }/*else {
+            print_r($_POST);
+
+            //verificar se existe apenas um produto selecionado (checkbox)
         }*/
+        
+
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
 
@@ -112,9 +160,9 @@ class RentController extends Generator
 
     public function ajax_list_rents($requestData)
     {
-
-        $column_search = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codFornecedor", "nome", "status", "telefone1", "cidade"); //ordem que vai aparecer (o codigo primeiro)
+                                  /* codigo, codContrato, codigo do produto, status, dtInicio, dtFinal */
+        $column_search = array("a.codigo", "c.codContrato", "b.codigoEsp", "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //colunas pesquisáveis pelo datatables
+        $column_order = array("a.codigo", "c.codContrato", "b.codigoEsp", "a.status", "a.dtInicio", "a.dtFinal"/*, "cliente", "contrato"*/ ); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $rent = new Rent(); //model
@@ -124,34 +172,32 @@ class RentController extends Generator
         $data = array();
 
         foreach ($datatable['data'] as $rent) { //para cada registro retornado
-
-            if ($rent['status'] == 1) {
-                $status = "Ativo";
-            } else{
-                $status = "Inativo";
-            }
-
-            $id = $rent['idFornecedor'];
+            //print_r($rent);
 
             // Ler e criar o array de dados ---------------------
             $row = array();
+                        
+            $row = [
+                "id"=>$rent['idHistoricoAluguel'],
+                "codigo"=>$rent['codigo'],
+                "codContrato"=>$rent['codContrato'],
+                //"contrato"=>$rent['']
+                //produto
+                "idProduto_gen"=>$rent['idProduto_gen'],
+                "codigoEsp"=>$rent['codigoEsp'],
 
-            $row[] = $rent['codFornecedor'];
-            $row[] = $rent['nome'];
-            $row[] = $status;
-            $row[] = $rent['telefone1'];
-            $row[] = $rent['cidade'];
-            $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadRent($id);'>
-                    <i class='fas fa-bars sm'></i>
-                </button>
-                <button type='button' title='excluir' onclick='deleteRent($id);'
-                    class='btn btn-danger btnDelete'>
-                    <i class='fas fa-trash'></i>
-                </button>";
+                "status"=>$rent['status'],
+                "dtInicio"=>$rent['dtInicio'],
+                "dtFinal"=>$rent['dtFinal'],
+                /*"status"=>$rent['status'],
+                "status"=>$rent['status'],*/
+                /*cliente
+                contrato*/               
+            ];
+
 
             $data[] = $row;
-        } //
+        } 
 
         //Cria o array de informações a serem retornadas para o Javascript
         $json = array(
@@ -171,12 +217,10 @@ class RentController extends Generator
         return Rent::total();
     }
 
-
-
     public function delete($idrent){
        
         $rent = new Rent();
-        echo "id: " . $idrent;
+        //echo "id: " . $idrent;
         $rent->get((int)$idrent); //carrega o usuário, para ter certeza que ainda existe no banco
        
         return $rent->delete();

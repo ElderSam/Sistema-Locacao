@@ -78,16 +78,18 @@
                             
                                 <tr>
                                     <th>Código</th>
+                                    <th>Cod. Contrato</th>
                                     <th>Produto</th>
 									<th>Status</th>
-									<th>Data Início</th>
-									<th>Cliente</th>
-                                    <th>Contrato</th>
-                                    <th>Opções</th>
+                                    <th>Data Início</th>
+                                    <th>Dt Final</th>
+									<!--th>Cliente</th>
+                                    <th>Contrato</th-->
+                                    <th>Opções</th>                                
                                 </tr>
                             </thead>
                             <tbody id="listRents">
-                              <tr>
+                              <!--tr>
 								  <td>1</td>
 								  <td>Container X</td>
 								  <td style="color: green;"><b>Alugado</b></td>
@@ -95,35 +97,18 @@
 								  <td>João Félix S.A.</td>
 								  <td>...</td>
 								  <td>...</td>
-							  </tr>
-							  <tr>
-								<td>2</td>
-								<td>Container Y</td>
-								<td style="color: grey;"><b>Encerrado</b></td>
-								<td>01/02/2020</td>
-								<td>Construções LTDA</td>
-								<td>...</td>
-								<td>...</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Container Z</td>
-								<td style="color: red;"><b>Entrega pendente</b></td>
-								<td>10/08/2020</td>
-								<td>15/10/2020</td>
-								<td>Construções LTDA</td>
-								<td>...</td>
-								<td>...</td>
-							</tr>
+							  </tr-->				
                             </tbody>
                             <tfoot class="bg-dark text-white">
                                 <tr>
                                     <th>Código</th>
+                                    <th>Cod. Contrato</th>
                                     <th>Produto</th>
 									<th>Status</th>
-									<th>Data Início</th>
-									<th>Cliente</th>
-                                    <th>Contrato</th>
+                                    <th>Data Início</th>
+                                    <th>Dt Final</th>
+									<!--th>Cliente</th>
+                                    <th>Contrato</th-->
                                     <th>Opções</th>
                                 </tr>
                             </tfoot>
@@ -149,12 +134,6 @@
                     <div class="modal-body">
                         <form id="formRent">
                             <div class="form-row">
-                                
-                                <div id="idHistoricoAluguel" class="form-group col-lg-2">
-                                    <label for="id">ID</label>
-                                    <input type="text" class="form-control" id="id" name="id">
-                                    <span class="help-block"></span>
-                                </div>
 
                                 <div class="form-group col-lg-2">
                                     <label for="codigo">Código</label>
@@ -163,113 +142,93 @@
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <label for="clientes">Clientes</label>
-                                    <select id="clientes" name="clientes" class="form-control">
+                                    <label for="cliente">Cliente *</label>
+                                    <select id="cliente" name="cliente" class="form-control">
                                         <option value="" selected>Escolher Cliente</option>
                                     </select>
                                 </div>
                                 
                                 <div class="form-group col-md-3">
-                                    <label for="contratos">Contratos</label>
-                                    <select id="contratos" name="contratos" class="form-control">
+                                    <label for="contrato_idContrato">Contrato *</label>
+                                    <select id="contrato_idContrato" name="contrato_idContrato" class="form-control">
                                         <option value="" selected>Escolher Contrato</option> 
                                     </select>
                                 </div>
 
+                                <div id="divDetailsRent" class="col-lg-9 ml-2 mb-2" style="background-color: lightgrey;"></div> <!-- div de detalhes de um aluguel (cliente, contrato e item)-->
+
                                 <div class="form-group col-md-4">
-                                    <label for="itens">Itens</label>
+                                    <label for="itens">Item *</label>
                                     <select id="itens" name="itens" class="form-control">
-                                        <option value="" selected>Escolher...</option>
-                                        <option value="">Item blablabla</option>
-                                        <option value="">Item blablabla</option>
-                                        <option value="">Item blablabla</option>
-                                        <option value="">Item blablabla</option>
-                                        <option value="">Item blablabla</option>                                        
+                                        <option value="">Escolher...</option>                                      
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="status">Status</label>
+                                    <label for="status">Status *</label>
                                     <select id="status" name="status" class="form-control">
-                                        <option value="" selected>Escolher...</option>
-                                        <option value="" style="color: yellow;"><b>Entrega Pendente</b></option>
-                                        <option value="" style="color: green;"><b>Ativo</b></option>
-                                        <option value="" style="color: orange;"><b>Retirada Pendente</b></option>
-                                        <option value="" style="color: red;"><b>Encerrado</b></option>                                        
+                                        <option value="">Escolher...</option>
+                                        <option value="0" selected style="color: red;"><b>Entrega Pendente</b></option>
+                                        <option value="1" style="color: green;"><b>Ativo</b></option>
+                                        <option value="2" style="color: orange;"><b>Retirada Pendente</b></option>
+                                        <option value="3" style="color: grey;"><b>Encerrado</b></option>                                        
                                     </select>
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="vlAluguel">Valor do Aluguel</label>
-                                    <input type="text" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="">
-                                    <span class="help-block"></span>
                                 </div>
                                 
-                                <div id="group-dtInicio" class="form-group col-lg-3">
-                                    <label for="dtInicio">Data de Inicio</label>
+                                <div id="group-dtInicio" class="form-group col-lg-4">
+                                    <label for="dtInicio">Data de Inicio *</label>
                                     <input type="date" class="form-control" id="dtInicio" name="dtInicio">
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="dtFim">Data Final</label>
-                                    <input type="date" class="form-control" id="dtFim" name="dtFim">
+                                    <label for="dtFinal">Data Final</label>
+                                    <input type="date" class="form-control" id="dtFinal" name="dtFinal">
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="vlEntrega">Valor de Entrega</label>
-                                    <input type="text" class="form-control" id="vlEntrega" name="vlEntrega"  placeholder="">
+                                    <label for="vlAluguel">Valor do Aluguel *</label>
+                                    <input type="number" class="form-control" id="vlAluguel" name="vlAluguel"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-lg-4">
-                                    <label for="vlRetirada">Valor de Retirada</label>
-                                    <input type="text" class="form-control" id="vlRetirada" name="vlRetirada"  placeholder="">
+                                    <label for="custoEntrega">Valor de Entrega *</label>
+                                    <input type="number" class="form-control" id="custoEntrega" name="custoEntrega"  placeholder="0,00">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="custoRetirada">Valor de Retirada *</label>
+                                    <input type="number" class="form-control" id="custoRetirada" name="custoRetirada"  placeholder="0,00">
                                     <span class="help-block"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="quantidade">Quantidade</label>
+                                    <label for="quantidade">Quantidade (restante) *</label>
                                     <select id="quantidade" name="quantidade" class="form-control">
-                                        <option value="" selected>Escolher...</option>
-                                        <option value="">1</option>
-                                        <option value="">2</option>
-                                        <option value="">3</option>
-                                        <option value="">4</option>
-                                        <option value="">5</option>                                       
+                                        <option value="" selected>Escolher...</option>                                                     
                                     </select>
                                 </div>              
                    
-                                <div id="list1" class="dropdown-check-list form-group col-md-6" tabindex="100">
-                                    <span class="anchor">Produtos Específico</span>
-                                    <ul class="items">
-                                        <li><input type="checkbox" />Apple </li>
-                                        <li><input type="checkbox" />Orange</li>
-                                        <li><input type="checkbox" />Grapes </li>
-                                        <li><input type="checkbox" />Berry </li>
-                                        <li><input type="checkbox" />Mango </li>
-                                        <li><input type="checkbox" />Banana </li>
-                                        <li><input type="checkbox" />Tomato</li>
-                                        <li><input type="checkbox" />Apple </li>
-                                        <li><input type="checkbox" />Orange</li>
-                                        <li><input type="checkbox" />Grapes </li>
-                                        <li><input type="checkbox" />Berry </li>
-                                        <li><input type="checkbox" />Mango </li>
-                                        <li><input type="checkbox" />Banana </li>
-                                        <li><input type="checkbox" />Tomato</li>
+                                <div id="list1" class="bg-ligth dropdown-check-list form-group col-md-6" tabindex="100">
+                                    <span class="anchor">Produtos Específicos *</span>
+                                    <b>Produtos disponíveis (código);</b>
+                                    <ul id="listProductsEsp" class="items" style="background-color: lightgrey;">                       
+                                        <!--li><input type="checkbox" />Apple </li-->
                                     </ul>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="observacao">Observação</label>
                                     <textarea maxlength="150" class="form-control" id="observacao" name="observacao" rows="3"></textarea>
-                                    Caractetres Restantes: <span class="caracteres">150</span><br>
+                                    <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
                                 </div>                            
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
-                                <label for="idLocacao">Id</label>
-                                <input type="text" id="idLocacao" name="idLocacao" >
+                                <label for="idHistoricoAluguel">Id</label>
+                                <input type="text" id="idHistoricoAluguel" name="idHistoricoAluguel" >
                             </div>
-
+                            <span class="text-danger">* campos obrigatórios</span>
                          </form>
 
                          <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>

@@ -77,7 +77,7 @@ class ContractItem extends Generator{
     }
 
  
-    public static function searchName($nome){ //search if name or desc already exists
+    /*public static function searchName($nome){ //search if name or desc already exists
 
         $sql = new Sql();
 
@@ -86,7 +86,7 @@ class ContractItem extends Generator{
         ));
 
         return $results;
-    }
+    }*/
 
     public function get_datatable($requestData, $column_search, $column_order, $idContrato){
         
@@ -291,6 +291,16 @@ class ContractItem extends Generator{
         ));
         
         return $listItems; //array
+    }
+
+    public function getContractItens($idContract) {
+        
+        $query = "SELECT a.*, b.descricao, c.descCategoria FROM `contrato_itens` a
+        INNER JOIN `produtos_gen` b ON (a.idProduto_gen = b.idProduto_gen)
+        INNER JOIN `prod_categorias` c ON (b.idCategoria = c.idCategoria)
+        WHERE (a.idContrato = $idContract)";
+
+        return $this->searchAll($query); //retorna um array de itens
     }
 
 }

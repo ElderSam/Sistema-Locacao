@@ -2,9 +2,9 @@ var myTable = null
 
 $(function() { //quando a página carrega
 
-	//loadTableRents()
+	loadTableRents()
 
-	$("#btnAddRent").click(function(){
+	$("#btnAddRent").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 		let i = 0
 		clearFieldsValues();
 		loadCostumers("");
@@ -23,81 +23,24 @@ $(function() { //quando a página carrega
 		
 		let form = $('#formRent');
 		let formData = new FormData(form[0]);
+		console.log(formData)
+		idLocacao = $('#idHistoricoAluguel').val()
+		//console.log("id:" + idHistoricoAluguel)
 
-		idLocacao = $('#id').val()
-		//console.log("idFornecedor:" + idFornecedor)
+		//formData.append("field", "value")
+		formData.append(
+			"arrSelectedProductsEsp", //nome do array
+			JSON.stringify(getSelectedProducts() //valor do array
+		)); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
 
-		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
+		
+		function sendForm() {
 
-			//console.log("você quer cadastrar")
+			console.log('sendForm')
 
 			$.ajax({
 				type: "POST",
-				url: '/rents/create',
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveRent").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-					
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log('erro ao cadastrar nova Locação!')
-						response = JSON.parse(response)
-						
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum problema ao cadastrar',
-							'error'
-						)
-	
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'error'
-							)
-						}
-						
-					} else { // Se cadastrou com sucesso
-
-						$('#RentModal').modal('hide');
-						
-						//console.log(response)
-						Swal.fire(
-							'Sucesso!',
-							'Aluguel cadastrado!',
-							'success'
-							)
-	
-						loadTableRents();
-						$('#formRent').trigger("reset");
-						
-					}
-					
-				},
-				error: function (response) {
-					//$('#RentModal').modal('hide');
-					$('#formRent').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
-				}
-			});
-
-		}else{ /* se for para Editar -------------------------------------------------- */
-
-			//console.log('você quer editar o Fornecedor: ' + idFornecedor)
-			
-			$.ajax({
-				type: "POST",
-				url: `/rents/${idLocacao}`, //rota para editar
+				url: `/rents/${route}`, 
 				data: formData,
 				contentType: false,
 				processData: false,
@@ -108,38 +51,38 @@ $(function() { //quando a página carrega
 				},
 				success: function (response) {
 					clearErrors();
-
+	
 					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Locação!')
-
+						console.log(`erro ao ${msgError} Locação!`)
+	
 						response = JSON.parse(response)
-
+	
 						Swal.fire(
 							'Erro!',
-							'Ocorreu algum erro ao Atualizar',
+							`Ocorreu algum erro ao ${msgError}`,
 							'error'
 						);
-
+	
 						if(response['error_list']){
 							
 							showErrorsModal(response['error_list'])
-
+	
 							Swal.fire(
 								'Atenção!',
 								'Por favor verifique os campos',
 								'error'
 							);
 						}
-
+	
 					} else {
 						$('#RentModal').modal('hide');
-
+	
 						Swal.fire(
 							'Sucesso!',
-							'Locação atualizada!',
+							msgSuccess,
 							'success'
 						);
-
+	
 						loadTableRents();
 						$('#formRent').trigger("reset");
 					}
@@ -153,33 +96,77 @@ $(function() { //quando a página carrega
 	
 				}
 			});
+		}			
+		console.log(idLocacao)
+		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
+
+			console.log("você quer cadastrar")
+		
+			route = "create";
+			msgError = "Cadastrar";
+			msgSuccess = "Locação(ões) Cadastrada(s)";
+
+			sendForm();
+
+		}else{ /* se for para Editar -------------------------------------------------- */
+
+			console.log('você quer editar o Aluguel: ' + idLocacao)
+			
+			route = idLocacao //parte rota para editar (/rents/:id)
+			msgError = "Atualizar";
+			msgSuccess = "Locação Atualizada";
+
+			if($("#status").val() == 3) { //aluguel status=encerrado
+
+				Swal.fire({
+					title: 'Você tem certeza de Encerrar essa locação?',
+					text: "Você não será capaz de reverter isso! OBS: o produto específico relacionado se tornará disponível para outras locações",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#d33',
+					cancelButtonColor: '#3085d6',
+					confirmButtonText: 'Sim, encerrar!'
+			
+				}).then((result) => {
+
+					if(result.value) {
+						console.log('atualizar, continua ...')
+						sendForm();
+					} else {
+						console.log('atualizar, NÃO')
+						return;
+					}
+				});
+
+				$('.swal2-cancel').html('Cancelar');
+
+			}else {
+				sendForm();
+			}
 		}	
+
 
 		return false;
 	});
 
 });
-/*
-function showsNextNumber(){ //mostra o próximo número de série relacionado à categoria
-    console.log('shows next number')
-    $.ajax({
-        type: "POST",
-        url: `/rents/showsNextNumber`,
-        contentType: false,
-        processData: false,
-        
-        success: function (response) {
-    
-            //console.log('próximo código de fornecedor: ' + response)
-            $('#codigo').val(response)						
-                                
-        },
-        error: function (response) {
 
-            console.log(`Erro! Mensagem: ${response}`);		
-        }
-    });	
-}*/
+function getSelectedProducts() { //pega os produtos selecionados (checkboxes) e retorna um array
+	listProductsEsp = document.querySelectorAll(".items input[type=checkbox]");
+	console.log(listProductsEsp)
+	let selectedProducts = [];
+
+	listProductsEsp.forEach((product, index) => {
+		if(product.checked){
+			console.log(parseInt(product.value), index)
+			selectedProducts.push({id: parseInt(product.value)})
+		}
+
+	});
+	
+	console.log(selectedProducts)
+	return selectedProducts;
+}
 
 
 function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
@@ -199,7 +186,7 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 			"url": "/rents/list_datatables", //chama a rota para carregar os dados 
 			"type": "POST",
 			dataSrc: function (json) {
-				
+				console.log(json)
 				rows = [];
 
 				json.data.forEach(element => {
@@ -212,17 +199,44 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 					//row['id'] = element.id
 
-					row['codLocacao'] = element.codigo
-					row['produto'] = element.produto_idProduto
-					row['status'] = element.status
-					row['dataInicio'] = dtInicio
-					row['cliente'] = element.cliente_idCliente
-					row['contrato'] = element.contrato_idContrato
+					if(element.dtFinal == "0000-00-00") {
+						dtFinal = " - ";
+
+					} else {
+						dtFinal = formatDateToShow(element.dtFinal);
+					}
+
+					if (element.status == 0) {
+						txtStatus = 'Entrega Pendente';
+						color = 'red';
+		
+					} else if (element.status == 1) {
+						txtStatus = 'Ativo ';
+						color = 'green';
+		
+					} else if (element.status == 2) {
+						txtStatus = 'Retirada Pendente';
+						color = 'orange';
+		
+					} else if (element.status == 3) {
+						txtStatus = 'Encerrado';
+						color = 'grey';
+					}
+					
+
+					row['codigo'] = element.codigo
+					row['codContrato'] = element.codContrato
+					row['produto'] = `<a href="./products_esp/${element.idProduto_gen}" target="_blank">${element.codigoEsp}</a>` //código do produto específico
+					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
+					row['dtInicio'] = formatDateToShow(element.dtInicio)
+					row['dtFinal'] = dtFinal
+					//row['cliente'] = element.cliente_idCliente
+					//row['contrato'] = element.contrato_idContrato
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-					onclick='loadRent(${element.idHistoricoAluguel});'>
+					onclick='loadRent(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteRent(${element.idHistoricoAluguel});'
+					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
@@ -237,12 +251,14 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 		},
 		"columns": [
-			{ "data": "codLocacao" },
-			{ "data": "Produto" },
+			{ "data": "codigo" },
+			{ "data": "codContrato"},
+			{ "data": "produto" },
 			{ "data": "status" },
-			{ "data": "dataInicio" },
-			{ "data": "cliente" },
-			{ "data": "contrato" },
+			{ "data": "dtInicio" },
+			{ "data": "dtFinal" },
+			/*{ "data": "cliente" },
+			{ "data": "contrato" },*/
 			{ "data": "options" },
 			        
 		],
@@ -259,6 +275,8 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 
 //detalhes do Locacao
 function loadRent(idLocacao) { //carrega todos os campos do modal referente ao Locacao escolhido
+	
+	console.log(`load rent id: ${idLocacao}`)
 	clearFieldsValues();
 	clearErrors();
 
@@ -268,23 +286,39 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 	$('#btnUpdate').show();
 
 	$.getJSON(`/rents/json/${idLocacao}`, function (data) { //ajax
+		
 		console.log(data)
+			
+		$("#idHistoricoAluguel").val(data.idHistoricoAluguel);
+		console.log('load View Locacao idLocacao: ' + $("#idHistoricoAluguel").val())
 
-		$("#idLocacao").val(data.idHistoricoAluguel);
-		//console.log('load View Locacao idLocacao: ' + $("#idLocacao").val())
-
+		//cliente (codigoCliente + nomeCliente), contrato (codContrato), item (descCategoria + descricao) 
 		$("#formRent #codigo").val(data.codigo).prop('disabled', true);
-		$("#formRent #clientes").val(data.cliente_idCliente).prop('disabled', true);		
-        $("#formRent #contratos").val(data.contrato_idContrato).prop('disabled', true);
-		$("#formRent #itens").val(data.produto_idProduto).prop('disabled', true);
+		
+		$("#cliente").parent().hide();
+		$("#contrato_idContrato").parent().hide();
+		$("#itens").parent().hide();
+		$("#formRent #quantidade").val("").prop('disabled', true).parent().hide();
+
+		$("#divDetailsRent").html(`
+			<div id="divCliente">Cliente: <b>${data.codigoCliente} - ${data.nomeCliente}</b></div>
+			<div id="divContrato">Contrato: <b>${data.codContrato}</b></div>
+			<div id="divItem">Item: <b>${data.descCategoria} ${data.descricao}</b></div>
+			<div id="divProduto">Cod. produto: <b>${data.codigoEsp}</b></div>
+		`).show();
+
+		$("#list1").prop('disabled', true).hide();
+		/*loadListProductEsp(data.idProduto_gen, {
+			idProduto_esp: data.idProduto_esp, //manda o produto atual para ser selecionado por padrão
+			codigo: data.codigoEsp
+		})*/
+
 		$("#formRent #status").val(data.status).prop('disabled', true);
 		$("#formRent #vlAluguel").val(data.vlAluguel).prop('disabled', true);
 		$("#formRent #dtInicio").val(data.dtInicio).prop('disabled', true);
-		$("#formRent #dtFim").val(data.dtFinal).prop('disabled', true);
-		$("#formRent #vlEntrega").val(data.custoEntrega).prop('disabled', true);
-		$("#formRent #vlRetirada").val(data.custoRetirada).prop('disabled', true);
-		// $("#formRent #quantidade").val(data."").prop('disabled', true);
-		$("#formRent #prodEpecifico").val(data.status).prop('disabled', true);
+		$("#formRent #dtFinal").val(data.dtFinal).prop('disabled', true);
+		$("#formRent #custoEntrega").val(data.custoEntrega).prop('disabled', true);
+		$("#formRent #custoRetirada").val(data.custoRetirada).prop('disabled', true);
 		$("#formRent #observacao").val(data.observacao).prop('disabled', true);
 		
 		/* Atualizar Locacao ------------------------------------------------------------------ */
@@ -297,28 +331,25 @@ function loadRent(idLocacao) { //carrega todos os campos do modal referente ao L
 		
 			//$('#desImagePath').parent().show();
 
-			$("#formRent #codigo").prop('disabled', true);	
-			$("#formRent #clientes").prop('disabled', false);
-			$("#formRent #contratoa").prop('disabled', false);
-			$("#formRent #itens").prop('disabled', false);
+			$("#formRent #idHistoricoAluguel").prop('disabled', false);
+			//$("#formRent #codigo").prop('disabled', true);	
 			$("#formRent #status").prop('disabled', false);
 			$("#formRent #vlAluguel").prop('disabled', false);
 			$("#formRent #dtInicio").prop('disabled', false);
-			$("#formRent #dtFim").prop('disabled', false);
-			$("#formRent #vlEntrega").prop('disabled', false);
-			$("#formRent #vlRetirada").prop('disabled', false);
-			$("#formRent #quantidade").prop('disabled', false);
-			$("#formRent #prodEspecifico").prop('disabled', false);
+			$("#formRent #dtFinal").prop('disabled', false);
+			$("#formRent #custoEntrega").prop('disabled', false);
+			$("#formRent #custoRetirada").prop('disabled', false);
+			//$("#formRent #quantidade").prop('disabled', false);
 			$("#formRent #observacao").prop('disabled', false);
 				
 		}); /* Fim Atualizar Locacao ---------------------------------------------------------- */
 			
-
 	}).then(() => { 
 
 		$("#RentModal").modal();
-	}).fail(function () {
-		console.log("Rota não encontrada! (/rents/json/:idLocacao)");
+
+	}).catch(function () {
+		console.log(`Rota não encontrada! (/rents/json/${idLocacao})`);
 	});
 
 }
@@ -400,30 +431,38 @@ function clearFieldsValues(){
 	//$('#dtInicio').parent().hide(); //aparece a data de cadastro (só para visualizar)
 	//$('#desImagePath').parent().show();
 
+	$("#divDetailsRent").html("").hide();
+	$("#cliente").parent().show();
+	$("#contrato_idContrato").parent().show();
+	$("#itens").parent().show();
+	$("#quantidade").parent().show();
+	$("#list1").prop('disabled', false).show();
+
 	$("#formRent #idHistoricoAluguel").prop('disabled', false);
 	$("#formRent #codigo").prop('disabled', false);
-	$("#formRent #clientes").prop('disabled', false);
-	$("#formRent #contratos").prop('disabled', false);
+	$("#formRent #cliente").prop('disabled', false);
+	$("#formRent #contrato_idContrato").prop('disabled', false);
 	$("#formRent #itens").prop('disabled', false);
 	$("#formRent #status").prop('disabled', false);
 	$("#formRent #vlAluguel").prop('disabled', false);
-	$("#formRent #group-dtInicio").hide();
-	$("#formRent #dtFim").prop('disabled', false);
-	$("#formRent #vlEntrega").prop('disabled', false);
-	$("#formRent #vlRetirada").prop('disabled', false);
+	//$("#formRent #group-dtInicio").hide();
+	$("#formRent #dtInicio").prop('disabled', false);
+	$("#formRent #dtFinal").prop('disabled', false);
+	$("#formRent #custoEntrega").prop('disabled', false);
+	$("#formRent #custoRetirada").prop('disabled', false);
 	$("#formRent #quantidade").prop('disabled', false);
 	$("#formRent #observacao").prop('disabled', false);
 
-	$('#id').val('');
+	$('#idHistoricoAluguel').val('');
 	$('#codigo').val('');
-	$('#clientes').val('');
-	$('#contratos').val('');
+	$('#cliente').val('');
+	$('#contrato_idContrato').val('');
 	$('#itens').val('');
-	$('#status').val('');
+	$('#status').val('0');
 	$('#vlAluguel').val('');
 	$('#dtInicio').val('');
-	$('#dtFim').val('');
-	$('#vlEntrega').val('');
+	$('#dtFinal').val('');
+	$('#custoEntrega').val('');
 	$('#vlRetirada').val('');
 	$('#quantidade').val('');
 	$('#obseracao').val('');
@@ -457,8 +496,9 @@ function loadCostumers(idCliente = '') {
 
 	//console.log('loading costumers')
 
-	$("#idCliente").html(`<option value="">(escolha)</option>`);
-	let costumers
+	$('#cliente').html("");
+
+	let costumers = "<option value=''>(escolha)</option>";
 
 	$.getJSON(`/costumers/json`, function (data) { //ajax
 
@@ -468,61 +508,187 @@ function loadCostumers(idCliente = '') {
 			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
 		});
 
-		$('#clientes').append(costumers)
+		
+		$('#cliente').append(costumers)
 
 
 	}).then(() => {
 
 		if(idCliente !== ''){ //se já tem um cliente escolhido
-			$("#clientes").val(idCliente).prop('disabled', true);
+			$("#cliente").val(idCliente).prop('disabled', true);
 		}
+				
+		$("#cliente").on("change", function() {
+			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
+			//alert("evento disparado e o valor é: " + valor);
+			loadContracts(valor);
+		})
+
 
 	}).fail(function () {
 		console.log("Rota não encontrada!");
 		return false
 	});
-	
-	$("select").on("change", function() {
-		var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
-		//alert("evento disparado e o valor é: " + valor);
-		loadContracts(valor);
-	})
 
 }
 
 //carrega os Contratos
 function loadContracts(idCliente = ''){
 
-	//console.log("Id Cliente: " + idCliente);
-	$("#contratos").html(`<option value="">(escolha)</option>`);
+	console.log(`Id Cliente: ${idCliente}, buscando contratos ...`);
 
+	txtEscolha = `<option value="">(escolha)</option>`;
+	$("#contrato_idContrato").html("");
+	$("#itens").html(txtEscolha)
 	
 	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
+		console.log(data)
 
 		//alert("Lista: " + data)
+		contracts = ""; //esvazia a lista de opções
+
 		if(data.length == 0){
 			contracts = `<option value="">Sem contratos cadastrados</option>`
 		}else{
+
+			$("#contrato_idContrato").html(txtEscolha);
+
 			data.forEach(function (item) {
-				console.log(item)
+				//console.log(item)
 				contracts += `<option value="${item.idContrato}">${item.codContrato}</option>`
 			});
 		}
 
-		$("#contratos").append(contracts)
+		$("#contrato_idContrato").append(contracts)
 
 	}).then(() => {
 
-		var comboNome = document.getElementById("contratos");
+		var comboNome = document.getElementById("contrato_idContrato");
 
         if (comboNome.options[comboNome.selectedIndex].value != "" ){
 			var codigo = comboNome.options[comboNome.selectedIndex].value;
-			$("#contratos").val(codigo).prop('disabled', true);
+			$("#contrato_idContrato").val(codigo).prop('disabled', true);
 		}	
 
+		$("#contrato_idContrato").on("change", function() {
+			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
+			
+			loadContractItens(valor);
+		})
+
 	}).fail(function () {
-		console.log("Rota não encontrada! (//contracts/json/${idCliente}/contracts");
+		console.log(`Rota não encontrada! (//contracts/json/${idCliente}/contracts`);
 		return false
 	});
+
+}
+
+//carrega itens do Contrato selecionado
+function loadContractItens(idContract = false){
+
+	console.log(`carregando itens para o contrato id: ${idContract}`);
+
+	$.getJSON(`/contract_itens/json/contract/${idContract}`, (data) => {
+		console.log(data)
+		
+		$("#itens").html("");
+
+	}).then((data) => {
+
+
+		txtListItens = ""; //esvazia a lista de opções
+
+		if(data.length == 0){
+			txtListItens = `<option value="">Sem itens neste contrato</option>`;
+		}else{
+
+			txtListItens = `<option value="">(escolha)</option>`;
+			let arrItens = [];
+
+			data.forEach(function (item) {
+				//console.log(item)
+				arrItens.push(item);
+				txtListItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
+			});	
+
+			$("#itens").on("change", function() { //quando é escolhido um item ----------------------------------
+				loadItemFields(arrItens);
+			}); // ---------------------------------- 
+		}
+
+		$("#itens").append(txtListItens);
+
+
+
+	}).catch(() => {
+
+		console.log(`Rota não encontrada! (/contract_itens/json/contract/${idContract}`);
+		return false
+	})
+}
+
+function loadItemFields(arrItens) {
+
+	let item; //item selecionado
+
+	item = arrItens.find((item) => item.idItem == $("#itens").val());
+
+	console.log("item selecionado:");
+	console.log(item)
+
+	//atribuindo valores do Item para os campos; vlAluguel, custoEntrega, custoRetirada e quantidade.
+	$("#vlAluguel").val(item.vlAluguel);
+	$("#custoEntrega").val(item.custoEntrega);
+	$("#custoRetirada").val(item.custoRetirada);
+	
+	$("#quantidade").html("");
+
+	if(item.quantidade > 0) {
+		txtQuantidade = "<option value=''>(escolha)</option>";
+
+		for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
+			txtQuantidade += `<option value="${i}">${i}</option>`;
+		}
+
+	} else {
+		txtQuantidade = "<option value=''>0</option>"; //Não possue mais quantidade disponível do contrato
+	}
+
+
+	$("#quantidade").append(txtQuantidade);
+	  
+	loadListProductEsp(item.idProduto_gen);
+}
+
+function loadListProductEsp(idProduto_gen, selected=false) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
+	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
+
+	$("#listProductsEsp").html("") //esvazia a lista
+
+	if(selected) {  //seleciona o produto
+		$("#listProductsEsp").append(`<li><input type="checkbox" checked="true" value=${selected.idProduto_esp}/>${selected.codigo} <b>(atual)</b></li>`)
+	}
+
+	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
+
+	$.getJSON($route)
+	.then((data) => {
+		console.log(data);
+		let txtListProducts;
+
+		const getTxtProducts = (txt, { idProduto_esp, codigoEsp }) => { //retorna uma string com os inputs para escolher produtos específicos
+			return txt + `<li><input type="checkbox" value=${idProduto_esp}/>${codigoEsp} </li>`
+		}
+		
+		txtListProducts = data.reduce(getTxtProducts, "");
+		console.log(txtListProducts)
+
+		$("#listProductsEsp").append(txtListProducts)
+
+	})
+	.catch(() => {
+		console.log(`Rota não encontrada! ${route}`);
+		return false;
+	})
 
 }

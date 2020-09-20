@@ -87,12 +87,12 @@ class Contract extends Budget{
 
     public function getContractsCostumer($idCliente){
 
-        //echo "Entrou";
+        //echo "contratos do cliente $idCliente";
         $sql = new Sql();
 
         $results = $sql->select("SELECT a.idContrato, a.codContrato FROM contratos a
                     INNER JOIN obras b ON(a.obra_idObra = b.idObra)
-                    WHERE b.id_fk_cliente = :idCliente)", array(
+                    WHERE (b.id_fk_cliente = :idCliente AND a.statusOrcamento IN(2, 3, 4, 5))", array(
             ":idCliente"=>$idCliente
         ));
 

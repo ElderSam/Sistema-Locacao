@@ -282,7 +282,7 @@ async function setFieldsContract(idContrato) {
 function deleteContract(idContrato) {
 
 	if(idContrato == 0){ //se o orçamento acabou de ser cadastrado
-		alert('idContrato == 0')
+		console.log('idContrato == 0')
 		idContrato = $('#idContrato').val();
 		codigo = $("#codigo").val();
 	}

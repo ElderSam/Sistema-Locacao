@@ -251,7 +251,7 @@ class ContractPDF
             <div class='text-center bg-warning' style='background-color: yellow; text-align: center;'><small>$this->title</small></div><br>
             <div> <!-- CABEÇALHO DO CONTRATO -->
                 <div id='logo'>
-                    <img src='http://locacao.com/res/img/logo-COMFAL.jpg' alt='logo'>
+                    <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
                 </div>
             
                 <div id='direitaHeader'>
