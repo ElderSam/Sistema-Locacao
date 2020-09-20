@@ -147,6 +147,9 @@ class Rent extends Generator{
                         $data = date('Y-m-d', strtotime($aux));
                         //echo "$field " .$data;
                         $query .= " OR $field = '$data'";
+                        
+                    }else {
+                        $query .= " OR $field = $search";
                     }
                     
                 }
