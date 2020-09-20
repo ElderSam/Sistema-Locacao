@@ -1,0 +1,193 @@
+<style>
+
+    #list1{
+        top: 35px;
+        margin-bottom: 50px;
+    }
+
+    #list1 span{
+        width: 100%;
+    }
+  
+    .dropdown-check-list {
+    display: inline-block;
+    }
+    .dropdown-check-list .anchor {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 50px 5px 10px;
+    border: 1px solid #ccc;
+    }
+    .dropdown-check-list .anchor:after {
+    position: absolute;
+    content: "";
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    padding: 5px;
+    right: 10px;
+    top: 20%;
+    -moz-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+    }
+    .dropdown-check-list .anchor:active:after {
+    right: 8px;
+    top: 21%;
+    }
+    .dropdown-check-list ul.items {
+    padding: 2px;
+    display: none;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+    .dropdown-check-list ul.items li {
+    list-style: none;
+    }
+    .dropdown-check-list.visible .anchor {
+    color: #0094ff;
+    }
+    .dropdown-check-list.visible .items {
+    display: block;
+    }
+
+</style>
+
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <h1 class="mt-4">Entregas e Retiradas</h1>
+            <ol class="breadcrumb mb-4 justify-content-between">
+                <li class="breadcrumb-item active"><a href="/">home</a>/Locações/Entregas e Retiradas</li>
+
+                <!-- Button trigger modal -->
+                <!-- <button id="btnAddRent" type="button" class="btn btn-success" data-toggle="modal" data-target="#RentModal">
+                    Nova Locação
+                </button>            -->
+            </ol>
+
+           
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="bg-dark text-white">
+                            
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tipo Frete</th>
+                                    <th>Status</th>
+                                    <th>Data e Horário</th>
+									<th>Opções</th>                             
+                                </tr>
+                            </thead>
+                            <tbody id="listFreight">
+                            </tbody>
+                            <tfoot class="bg-dark text-white">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tipo Frete</th>
+                                    <th>Status</th>
+                                    <th>Data e Horário</th>
+									<th>Opções</th>       
+                                </tr>
+                            </tfoot>
+   
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+           
+        <!-- Rent Modal------------------------------------------------------------------------------->
+        <div class="modal fade" id="freightModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes do Frete" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div style="margin-bottom: -1rem;" class="modal-header">
+                        <h3 class="modal-title"><b id="modalTitle">Detalhes do Frete</b></h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formRent">
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-12">
+                                    <label for="id">id</label>
+                                    <input type="text" class="form-control" id="id" name="id">
+                                    <span class="help-block"></span>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="status">Tipo Frete*</label>
+                                    <select id="status" name="status" class="form-control">
+                                        <option value="">Escolher...</option>
+                                        <option value="0" selected style="color: green;"><b>Entrega</b></option>
+                                        <option value="1" style="color: red;"><b>Retirada</b></option>                                        
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="status">Status *</label>
+                                    <select id="status" name="status" class="form-control">
+                                        <option value="">Escolher...</option>
+                                        <option value="0" selected style="color: green;"><b>Cluída</b></option>
+                                        <option value="1" style="color: red;"><b>Retirada</b></option>           
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-lg-6">
+                                    <label for="meeting-time">Choose a time for your appointment:</label>
+                                <input type="datetime-local" id="meeting-time"
+                                    name="meeting-time" value="2018-06-12T19:30">
+                                </div>
+                                <br>
+                         </form>
+
+                         <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
+                         
+                         <div style="margin: 0px; width: 100%;" class="breadcrumb justify-content-between">
+                             
+                             <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                             <!-- btnCreateRent and btnEditRent-->
+                             <input id="btnSaveRent" type="submit" value="Cadastrar" class="btn btn-success">
+                             
+                             <!-- para desbloquear os camps para editar o procuto -->
+                             <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
+                             
+                         </div>
+                       
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  <!-- end Rent Modal -->  
+
+    <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <script src="../res/js/util.js"></script>
+    <script src="../res/js/rents.js"></script>
+        
+<!--
+<script>
+	$(document).ready(function() {
+
+  	$("#linkLocacoes").addClass("active"); 
+	
+});
+
+</script>
+-->
+
+
+
+    <!--script>
+        $("#linkLocacoes").addClass("active"); 
+    </script-->
