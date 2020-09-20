@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20-Set-2020 às 20:46
+-- Tempo de geração: 20-Set-2020 às 21:13
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -870,6 +870,22 @@ INSERT INTO `fornecedores` (`idFornecedor`, `codFornecedor`, `nome`, `cnpj`, `te
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `fretes`
+--
+
+CREATE TABLE `fretes` (
+  `id` int(11) NOT NULL,
+  `idLocacao` int(11) NOT NULL,
+  `tipo_frete` int(1) NOT NULL COMMENT '"0-Entrega" ou "1-Retirada"',
+  `status` int(1) NOT NULL COMMENT '"0-Pendente" ou "1-Concluída"',
+  `data_hora` datetime NOT NULL,
+  `observacao` int(11) DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `historicoalugueis`
 --
 
@@ -1245,6 +1261,13 @@ ALTER TABLE `fornecedores`
   ADD PRIMARY KEY (`idFornecedor`);
 
 --
+-- Índices para tabela `fretes`
+--
+ALTER TABLE `fretes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_frete_locacao` (`idLocacao`);
+
+--
 -- Índices para tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
@@ -1359,6 +1382,12 @@ ALTER TABLE `fornecedores`
   MODIFY `idFornecedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de tabela `fretes`
+--
+ALTER TABLE `fretes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
@@ -1434,6 +1463,12 @@ ALTER TABLE `contrato_itens`
 --
 ALTER TABLE `faturas`
   ADD CONSTRAINT `fk_fatura_contrato1` FOREIGN KEY (`contrato_idcontrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `fretes`
+--
+ALTER TABLE `fretes`
+  ADD CONSTRAINT `fk_frete_locacao` FOREIGN KEY (`idLocacao`) REFERENCES `historicoalugueis` (`idHistoricoAluguel`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `historicoalugueis`
