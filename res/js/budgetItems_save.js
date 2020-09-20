@@ -268,18 +268,20 @@ function clearFieldsItem() {
     $('#productModal #btnSaveItem').val('Cadastrar').show();
     $('#productModal #btnUpdate').hide();
 
+	$('#idItem').val('');
 	$("#produtoAdicionado").html('');
 	$("#prodCodigo").html('');
 	$("#prodDescricao").html('');
 
 	$('#idProduto_gen').val('');
+	$("#codeProduct").prop('disabled', false);
+	$('#vlAluguel').val('').prop('disabled', false);;
+	$('#quantidade').val('').prop('disabled', false);;
 
-	$('#vlAluguel').val('');
-	$('#quantidade').val('');
-
-	$('#custoEntrega').val('');
-	$('#custoRetirada').val('');
-	$('#observacao').val('');
+	$('#custoEntrega').val('').prop('disabled', false);;
+	$('#custoRetirada').val('').prop('disabled', false);
+	$("#periodoLocacao").prop('disabled', false);
+	$('#observacao').val('').prop('disabled', false);
 
 	$("#qtdEntrega, #qtdRetirada").html('0');
 	
@@ -314,7 +316,7 @@ $(function () {
 
         let route
 
-		if ((idItem == 0) || (idItem == undefined)) { //se for para cadastrar --------------------------------------------------
+		if ((idItem == '') || (idItem == undefined)) { //se for para cadastrar --------------------------------------------------
             route = 'create'
             msgError = 'adicionar'
             msgSuccess = 'adicionado'
