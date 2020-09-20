@@ -97,7 +97,7 @@ $(function() { //quando a página carrega
 				}
 			});
 		}			
-
+		console.log(idLocacao)
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
 			console.log("você quer cadastrar")
@@ -453,7 +453,7 @@ function clearFieldsValues(){
 	$("#formRent #quantidade").prop('disabled', false);
 	$("#formRent #observacao").prop('disabled', false);
 
-	$('#id').val('');
+	$('#idHistoricoAluguel').val('');
 	$('#codigo').val('');
 	$('#cliente').val('');
 	$('#contrato_idContrato').val('');
