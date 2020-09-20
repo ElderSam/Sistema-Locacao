@@ -125,31 +125,36 @@ class Rent extends Generator{
                         $aux = substr($aux, 0, 5);
                         
                         if($aux ==  "ENTRE") { //entrega pendente
-                            $search = 0;
+                            $value = 0;
 
                         }else if($aux ==  "ATIVO") { //ativo
-                            $search = 1;
+                            $value = 1;
                         }else if($aux ==  "RETIR") { //retirada pendente
-                            $search = 2;
+                            $value = 2;
                         }else if($aux ==  "ENCER") { //encerrado
-                            $search = 3;
+                            $value = 3;
                         }
 
-                        $query .= " OR $field = $search";
+                        if(isset($value)){
+                            $query .= " OR $field = $value";
+                        }           
                         
                     }else if($field == "b.codigoEsp") {
                         
                         $query .= " OR $field LIKE '%$search%'";
 
-                    }else if((strlen($search) == 10) && (($field == "a.dtInicio") || ($field == "a.dtFinal"))){ //dtInicio e dtFinal
-                        $aux = explode("-", $search);
-                        $aux = str_replace("/", "-", $search);
-                        $data = date('Y-m-d', strtotime($aux));
-                        //echo "$field " .$data;
-                        $query .= " OR $field = '$data'";
+                    }else if(($field == "a.dtInicio") || ($field == "a.dtFinal")){ //dtInicio e dtFinal
                         
-                    }else {
-                        $query .= " OR $field = $search";
+                        if(strlen($search) == 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
+                            $aux = explode("-", $search);
+                            $aux = str_replace("/", "-", $search);
+                            $data = date('Y-m-d', strtotime($aux));
+                            //echo "$field " .$data;
+                            $query .= " OR $field = '$data'";
+                        }
+                          
+                    }else { //codContrato
+                        $query .= " OR $field LIKE '$search%'";
                     }
                     
                 }
