@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 15-Set-2020 às 03:08
+-- Tempo de geração: 20-Set-2020 às 20:46
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -769,7 +769,9 @@ CREATE TABLE `contrato_itens` (
 --
 
 INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
-(1, 6, 1, 600, '2', 200, 200, '4', 'TESTE', '2020-09-11 18:27:04');
+(1, 6, 1, 450, '3', 190, 190, '4', '', '2020-09-11 18:27:04'),
+(2, 6, 5, 15470, '2', 215, 215, '4', 'Entrega em 2DD úteis', '2020-09-20 12:45:06'),
+(3, 4, 1, 450, '5', 190, 190, '4', '', '2020-09-20 15:43:21');
 
 -- --------------------------------------------------------
 
@@ -891,8 +893,9 @@ CREATE TABLE `historicoalugueis` (
 --
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(6, '2', 6, 1, 0, 1260.99, '2020-09-18', '2020-09-18', 265.65, 98999.3, 'TESTE ATUALIZAR', '2020-09-11 23:47:57'),
-(7, '3', 6, 3, 0, 600, '2020-09-18', '0000-00-00', 200, 200, '', '2020-09-11 23:47:57');
+(7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
+(13, '4', 6, 1, 0, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
+(14, '5', 6, 2, 0, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:05');
 
 -- --------------------------------------------------------
 
@@ -949,8 +952,8 @@ CREATE TABLE `produtos_esp` (
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
 (1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(2, 1, '001.01.01.01.01.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
-(3, 1, '001.01.01.01.01.002-0003', 13899.8, 0, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
+(2, 1, '001.01.01.01.01.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
@@ -1335,7 +1338,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1359,7 +1362,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
