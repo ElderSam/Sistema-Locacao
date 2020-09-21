@@ -146,7 +146,7 @@ class Rent extends Generator{
                     }else if(($field == "a.dtInicio") || ($field == "a.dtFinal")){ //dtInicio e dtFinal
                         
                         if(strlen($search) == 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
-                            $aux = explode("-", $search);
+                     
                             $aux = str_replace("/", "-", $search);
                             $data = date('Y-m-d', strtotime($aux));
                             //echo "$field " .$data;

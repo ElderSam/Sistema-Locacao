@@ -26,4 +26,97 @@ class Freight extends Generator {
 
         return count($results);
     }
+
+    public function get_datatable($requestData, $column_search, $column_order)
+    {
+        $query = "SELECT * FROM fretes";
+
+        if (!empty($requestData['search']['value'])) //verifica se eu digitei algo no campo de filtro
+        { 
+            $first = TRUE;
+
+            foreach ($column_search as $field)
+            {     
+                $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
+
+                //filtra no banco
+                if ($first) 
+                {
+                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
+                    $first = FALSE;
+
+                } else {
+                    
+                    if(($field == "tipo_frete") || ($field == "status")) //--------------
+                    {
+                        $aux = strtoupper($search); //deixa a string em maiúsculo
+                        $aux = substr($aux, 0, 5); //pega os 5 primeiros caracteres
+    
+                        if($field == "tipo_frete")
+                        {
+                            if($aux == "ENTRE") //entrega
+                            {
+                                $value = 0;
+
+                            }else if($aux == "RETIR") //retirada
+                            {
+                                $value = 1;
+                            }
+
+                        }else { //field == status
+                            if($aux == "PENDE") //pendente
+                            {
+                                $value = 0;
+             
+                            }else if($aux == "CONCL") //concluído
+                            {
+                                $value = 1;
+                            }
+                        } 
+
+                        if(isset($value)){
+                            $query .= " OR $field = $value";
+                        }
+
+                    } else if($field == "data_hora") //----------------------------
+                    {
+                        if(strlen($search) >= 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
+              
+                            //trata a data (dia/mes/ano -> ano-mes-dia)
+                            $aux = str_replace("/", "-", $search);
+                            $data = date('Y-m-d', strtotime($aux));
+
+                            $data .= substr($search, 10, strlen($search) ); //pega o resto da string (as horas)
+                            //echo "$field: $data";
+
+                            $query .= " OR $field = '$data'";
+                        }
+                    } //----------------------------
+ 
+                } //fim do primeiro else
+
+            } //fim do foreach
+            if (!$first) {
+                $query .= ")"; //termina o WHERE e a query
+            }
+        }
+
+        //print_r($query);
+
+        $res = $this->searchAll($query);
+        $this->setTotalFiltered(count($res));
+
+        //ordenar o resultado
+        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
+        
+        $freights = new Freight();
+        //echo $query;
+        return array(
+            'totalFiltered'=>$this->getTotalFiltered(),
+            'data'=>$freights->searchAll($query)
+        );
+
+    } // fim do método get_datatable()
+      
 }

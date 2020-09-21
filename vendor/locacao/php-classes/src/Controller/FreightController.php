@@ -3,6 +3,7 @@
 namespace Locacao\Controller;
 
 use \Locacao\Generator;
+use \Locacao\Model\User;
 use \Locacao\Model\Freight;
 
 class FreightController extends Generator
@@ -12,6 +13,28 @@ class FreightController extends Generator
     {
     }
 
+    public function save($update = false) //Add a new Freight or Update
+    {
+        User::verifyLogin();
+        
+        $error = $this->verifyFields($update); //verifica os campos do formulário
+        $aux = json_decode($error);
+
+        if ($aux->error) {
+            return $error;
+        }
+
+        $freight = new Freight(); //Model
+
+        $freight->setData($_POST); 
+
+        if ($update) { //se for atualizar
+            return  $freight->update(); 
+
+        } else { // se for cadastrar novo Frete
+            return json_encode($freight->insert());
+        }
+    }
 
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
 
