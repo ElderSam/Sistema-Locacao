@@ -412,7 +412,7 @@ function loadConstructions(idCliente = '', obra_idObra = '') { //Carrega as Obra
 
 		data.forEach(function (item) {
 			//console.log(item)
-			constructions += `<option value="${item.idObra}">${item.codObra} - ${item.descCategoria}</option>`
+			constructions += `<option value="${item.idObra}">${item.codObra}</option>`
 		});
 
 		$('#obra_idObra').html(constructions).prop('disabled', true);
