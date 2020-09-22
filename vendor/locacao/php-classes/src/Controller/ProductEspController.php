@@ -287,10 +287,13 @@ class ProductEspController extends Generator
 
             if ($product['status'] == 0) {
                 $status = "Alugado";
+                $color = "red";
             } else if ($product['status'] == 1){
                 $status = "Disponível";
+                $color = "green";
             }else if ($product['status'] == 2){
                 $status = "Manutenção";
+                $color = "orange";
             }
 
             $id = $product['idProduto_esp'];
@@ -300,7 +303,7 @@ class ProductEspController extends Generator
 
             $row[] = $product['codigoEsp'];
             $row[] = $product['descCategoria'];
-            $row[] = $status;
+            $row[] = "<strong style='color:$color'>$status</strong>";
             $row[] = $product['descricao'];
             $row[] = "<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
                 onclick='loadProductEsp($id);'>
