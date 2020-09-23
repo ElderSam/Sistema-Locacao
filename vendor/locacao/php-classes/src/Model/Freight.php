@@ -27,6 +27,70 @@ class Freight extends Generator {
         return count($results);
     }
 
+    public function insert()
+    {
+        $sql = new Sql();
+
+        if(($this->gettipo_frete() != "") && ($this->getstatus() != ""))
+        {
+            $results = $sql->select("CALL sp_fretes_save(:idLocacao, :tipo_frete, :status, :data_hora, :observacao)", array(
+                ":idLocacao"=>$this->getidLocacao(),
+                ":tipo_frete"=>$this->gettipo_frete(),
+                ":status"=>$this->getstatus(),
+                ":data_hora"=>$this->getdata_hora(),
+                ":observacao"=>$this->getobservacao(),
+            ));
+
+            if(count($results) > 0){
+
+                $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+
+                return json_encode($results[0]);
+
+            }else{
+                return json_encode([
+                    "error"=>true,
+                    "msg"=>"Erro ao inserir Frete!"
+                    ]);
+            }
+            
+        }else{
+
+            return json_encode([
+				'error' => true,
+				"msg" => "Campos incompletos!"
+			]);
+        }
+    }
+
+    public function updade()
+    {
+        $sql = new Sql();
+
+        $results = $sql->select("CALL sp_fretesUpdate_save(:id, :idLocacao, :tipo_frete, :status, :data_hora, :observacao)", array(
+            ":id"=>$this->getid(),
+            ":idLocacao"=>$this->getidLocacao(),
+            ":tipo_frete"=>$this->gettipo_frete(),
+            ":status"=>$this->getstatus(),
+            ":data_hora"=>$this->getdata_hora(),
+            ":observacao"=>$this->getobservacao(),
+        ));
+
+        if(count($results) > 0){
+
+            $this->setData($results[0]); //carrega atributos do objeto
+
+            return json_encode($results[0]);
+
+        }else{
+            return json_encode([
+                "error"=>true,
+                "msg"=>"Erro ao atualizar Frete!"
+                ]);
+        }
+
+    }
+
     public function get_datatable($requestData, $column_search, $column_order)
     {
         $query = "SELECT * FROM fretes";

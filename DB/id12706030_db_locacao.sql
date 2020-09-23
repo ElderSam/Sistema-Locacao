@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23-Set-2020 às 04:16
+-- Tempo de geração: 23-Set-2020 às 04:38
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -250,6 +250,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_save` (IN `pcodForn
     SET vidFornecedor = LAST_INSERT_ID();
     
     SELECT * FROM fornecedores WHERE idFornecedor = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT(11), IN `pidLocacao` INT(11), IN `ptipo_frete` INT(1), IN `pstatus` INT(1), IN `pdata_hora` DATETIME, IN `pobservacao` VARCHAR(150))  BEGIN
+  
+    DECLARE vidFrete INT;
+    
+    SELECT id INTO vidFrete
+        FROM fretes
+        WHERE id = pid;
+
+    UPDATE fretes
+        SET
+            idLocacao = pidLocacao,
+            tipo_frete = ptipo_frete,
+            status = pstatus,
+            data_hora = pdata_hora,
+            observacao = pobservacao
+        WHERE id = vidFrete;    
+
+    SELECT * FROM fretes WHERE id = pid;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretes_save` (IN `pidLocacao` INT(11), IN `ptipo_frete` INT(1), IN `pstatus` INT(1), IN `pdata_hora` DATETIME, IN `pobservacao` VARCHAR(150))  BEGIN
+  
+    DECLARE vidFrete INT;
+    
+  INSERT INTO fretes (idLocacao, tipo_frete, status, data_hora, observacao, custoRetirada, observacao)
+    VALUES(pidLocacao, ptipo_frete, pstatus, pdata_hora, pobservacao, pcustoRetirada, pobservacao);
+    
+    SET vidFrete = LAST_INSERT_ID();
+ 
+    SELECT * FROM fretes WHERE id = LAST_INSERT_ID();
     
 END$$
 
