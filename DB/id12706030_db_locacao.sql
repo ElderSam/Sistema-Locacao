@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20-Set-2020 às 21:13
+-- Tempo de geração: 23-Set-2020 às 04:16
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -739,7 +739,7 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(2, '17', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:26:52'),
+(2, '17', '', NULL, '2020-09-21', 'TESTE', '', '', NULL, '0000-00-00', '0000-00-00', 0, NULL, '', '2020-05-24 08:26:52'),
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, NULL, '', '2020-05-24 08:27:46'),
 (4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:45:42'),
@@ -771,7 +771,8 @@ CREATE TABLE `contrato_itens` (
 INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAluguel`, `quantidade`, `custoEntrega`, `custoRetirada`, `periodoLocacao`, `observacao`, `dtCadastro`) VALUES
 (1, 6, 1, 450, '3', 190, 190, '4', '', '2020-09-11 18:27:04'),
 (2, 6, 5, 15470, '2', 215, 215, '4', 'Entrega em 2DD úteis', '2020-09-20 12:45:06'),
-(3, 4, 1, 450, '5', 190, 190, '4', '', '2020-09-20 15:43:21');
+(3, 4, 1, 450, '5', 190, 190, '4', '', '2020-09-20 15:43:21'),
+(4, 2, 1, 450, '2', 190, 190, '4', 'Entrega em 2DD', '2020-09-21 18:45:10');
 
 -- --------------------------------------------------------
 
@@ -879,9 +880,16 @@ CREATE TABLE `fretes` (
   `tipo_frete` int(1) NOT NULL COMMENT '"0-Entrega" ou "1-Retirada"',
   `status` int(1) NOT NULL COMMENT '"0-Pendente" ou "1-Concluída"',
   `data_hora` datetime NOT NULL,
-  `observacao` int(11) DEFAULT NULL,
+  `observacao` varchar(150) DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `fretes`
+--
+
+INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `observacao`, `dtCadastro`) VALUES
+(1, 7, 0, 0, '2020-09-21 09:30:00', 'cadastro teste pelo Banco de Dados', '2020-09-20 17:38:51');
 
 -- --------------------------------------------------------
 
@@ -910,8 +918,8 @@ CREATE TABLE `historicoalugueis` (
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
 (7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
-(13, '4', 6, 1, 0, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
-(14, '5', 6, 2, 0, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:05');
+(13, '4', 6, 1, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
+(14, '5', 6, 2, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:05');
 
 -- --------------------------------------------------------
 
@@ -967,8 +975,8 @@ CREATE TABLE `produtos_esp` (
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
-(1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(2, 1, '001.01.01.01.01.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
+(2, 5, '001.04.05.02.02.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
 (3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
@@ -980,7 +988,9 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
-(14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36');
+(14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36'),
+(15, 5, '001.04.05.02.02.002-0008', 15000, 1, '2020-02-01', '0008', '', 2, '2020-09-21 19:30:52'),
+(16, 5, '001.04.05.02.02.002-0009', 15200, 1, '0000-00-00', '0009', '', 2, '2020-09-21 19:35:07');
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1083,9 @@ INSERT INTO `prod_containers` (`idContainer`, `idProduto`, `tipoPorta`, `janelas
 (4, 8, 'Marítima', 0, 0, 1, 1, 1, 2, 1, 1, 0, '2020-04-22 11:47:07'),
 (5, 12, 'marítima', 0, 1, 1, 1, 1, 1, 1, 0, 0, '2020-09-10 11:51:55'),
 (6, 13, 'normal', 2, 0, 0, 0, 1, 2, 1, 0, 0, '2020-09-10 12:02:15'),
-(7, 14, 'normal', 0, 1, 0, 0, 0, 0, 0, 0, 0, '2020-09-12 13:52:36');
+(7, 14, 'normal', 0, 1, 0, 0, 0, 0, 0, 0, 0, '2020-09-12 13:52:36'),
+(8, 15, 'normal', 1, 0, 0, 0, 1, 1, 1, 0, 0, '2020-09-21 19:30:52'),
+(9, 16, 'normal', 0, 0, 0, 0, 0, 0, 0, 0, 0, '2020-09-21 19:35:07');
 
 -- --------------------------------------------------------
 
@@ -1361,7 +1373,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1385,7 +1397,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
@@ -1403,7 +1415,7 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
-  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_gen`
@@ -1421,7 +1433,7 @@ ALTER TABLE `prod_categorias`
 -- AUTO_INCREMENT de tabela `prod_containers`
 --
 ALTER TABLE `prod_containers`
-  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idContainer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `prod_tipos`
