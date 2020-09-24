@@ -663,30 +663,30 @@ function loadItemFields(arrItens) {
 function loadListProductEsp(idProduto_gen, selected=false) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
 	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
 
-	$("#listProductsEsp").html("") //esvazia a lista
+	let txtListProducts = '';
 
 	if(selected) {  //seleciona o produto
-		$("#listProductsEsp").append(`<li><input type="checkbox" checked="true" value=${selected.idProduto_esp}/>${selected.codigo} <b>(atual)</b></li>`)
+		txtListProducts += `<li><input type="checkbox" checked="true" value=${selected.idProduto_esp}/>${selected.codigo} <b>(atual)</b></li>`;
 	}
 
 	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
 
-	$.getJSON($route)
-	.then((data) => {
+	$.getJSON($route, function (data) {
 		console.log(data);
-		let txtListProducts;
 
-		const getTxtProducts = (txt, { idProduto_esp, codigoEsp }) => { //retorna uma string com os inputs para escolher produtos específicos
-			return txt + `<li><input type="checkbox" value=${idProduto_esp}/>${codigoEsp} </li>`
+	}).then((data) => {
+
+		const getTxtProducts = (txt, data) => { //retorna uma string com os inputs para escolher produtos específicos
+			return txt + `<li><input type="checkbox" value=${data.idProduto_esp}/>${data.codigoEsp} </li>`;
 		}
 		
-		txtListProducts = data.reduce(getTxtProducts, "");
+		txtListProducts += data.reduce(getTxtProducts, "");
 		console.log(txtListProducts)
 
+		$("#listProductsEsp").html("") //esvazia a lista
 		$("#listProductsEsp").append(txtListProducts)
 
-	})
-	.catch(() => {
+	}).catch(() => {
 		console.log(`Rota não encontrada! ${route}`);
 		return false;
 	})
