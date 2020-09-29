@@ -54,6 +54,10 @@
     display: block;
     }
 
+    option {
+    font-weight:bold;
+    }
+
 </style>
 
 <div id="layoutSidenav_content">
@@ -64,7 +68,7 @@
                 <li class="breadcrumb-item active"><a href="/">home</a>/Locações/Entregas e Retiradas</li>
 
                 <!-- Button trigger modal -->
-                <button id="btnAddRent" type="button" class="btn btn-success" data-toggle="modal" data-target="#freightModal">
+                <button id="btnAddFreights" type="button" class="btn btn-success" data-toggle="modal" data-target="#freightModal">
                     Novo Frete
                 </button>           
             </ol>
@@ -118,11 +122,6 @@
                         <form id="formRent">
                             <div class="form-row">
 
-                                <div class="form-group col-lg-12">
-                                    <label for="id">id</label>
-                                    <input type="text" class="form-control" id="id" name="id">
-                                    <span class="help-block"></span>
-                                </div>
                                 
                                 <div class="form-group col-lg-6">
                                     <label for="locacao">Locação</label>
@@ -143,8 +142,8 @@
                                     <label for="status">Status *</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="">Escolher...</option>
-                                        <option value="0" selected style="color: green;">Concluída</option>
-                                        <option value="1" style="color: red;">Retirada</option>           
+                                        <option value="0" selected style="color: green;">Concluído</option>
+                                        <option value="1" style="color: red;">Pendente</option>           
                                     </select>
                                 </div>
                                 
@@ -154,6 +153,12 @@
                                     name="meeting-time" value="2018-06-12T19:30">
                                 </div>
                                 <br>
+
+                                 <!--Usado apenas para Editar -->
+                            <div hidden="true">
+                                <label for="idFreteAluguel">Id</label>
+                                <input type="text" id="idFreteAluguel" name="idFreteAluguel" >
+                            </div>
                          </form>
 
                          <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
