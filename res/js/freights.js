@@ -188,6 +188,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 			dataSrc: function (json) {
 				console.log(json)
 				rows = [];
+				cont = 0;
 
 				json.data.forEach(element => {
 					//console.log(element)
@@ -217,7 +218,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 						color = 'Red';
 		
 					} 	
-
+					row['#'] = cont++;
 					row['tipoFrete'] = `<b style='color: ${colorFrete}'>${tipoFrete}</b>`
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
 					row['data_hora'] = element.data_hora //Ainda precisa formatar
@@ -241,16 +242,12 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 
 		},
 		"columns": [
-			{ "data": "codigo" },
-			{ "data": "codContrato"},
-			{ "data": "produto" },
+			{ "data": "#" },
+			{ "data": "tipoFrete"},
 			{ "data": "status" },
-			{ "data": "dtInicio" },
-			{ "data": "dtFinal" },
-			/*{ "data": "cliente" },
-			{ "data": "contrato" },*/
+			{ "data": "data_hora" },
+			{ "data": "observacao" },
 			{ "data": "options" },
-			        
 		],
 		"columnDefs": [
 			{ targets: "no-sort", orderable: false }, //para não ordenar
