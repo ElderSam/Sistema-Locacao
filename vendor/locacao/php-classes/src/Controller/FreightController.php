@@ -60,14 +60,18 @@ class FreightController extends Generator
 
         $data = array();
 
+        $count = $requestData['start'];
         foreach ($datatable['data'] as $freight) { //para cada registro retornado
             //print_r($freight);
 
             // Ler e criar o array de dados ---------------------
             $row = array();
-                        
+          
+            $count++;
+                  
             $row = [
-                "id"=>$freight['id'],
+                "count"=>$count,
+                "id"=>$freight['id'],      
                 "idLocacao"=>$freight['idLocacao'],
                 "tipo_frete"=>$freight['tipo_frete'],
                 "status"=>$freight['status'],
