@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="formRent">
+                        <form id="formFreights">
                             <div class="form-row">
 
                                 
@@ -130,8 +130,8 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    <label for="status">Tipo Frete*</label>
-                                    <select id="status" name="status" class="form-control">
+                                    <label for="tipoFrete">Tipo Frete*</label>
+                                    <select id="tipoFrete" name="tipoFrete" class="form-control">
                                         <option value="">Escolher...</option>
                                         <option value="0" selected style="color: green;">Entrega</option>
                                         <option value="1" style="color: red;">Retirada</option>                                        
@@ -148,17 +148,23 @@
                                 </div>
                                 
                                 <div class="form-group col-lg-6">
-                                    <label for="meeting-time">Data e Hora</label>
-                                <input type="datetime-local" id="meeting-time"
-                                    name="meeting-time" value="2018-06-12T19:30">
+                                    <label for="dataHora">Data e Hora</label>
+                                <input type="datetime-local" id="dataHora"
+                                    name="dataHora" value="2018-06-12T19:30">
                                 </div>
                                 <br>
 
+                                <div class="form-group col-md-12">
+                                    <label for="observacao">Observação</label>
+                                    <textarea maxlength="150" class="form-control" id="observacao" name="observacao" rows="3"></textarea>
+                                    <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
+                                </div>   
+
                                  <!--Usado apenas para Editar -->
-                            <div hidden="true">
-                                <label for="idFreteAluguel">Id</label>
-                                <input type="text" id="idFreteAluguel" name="idFreteAluguel" >
-                            </div>
+                                <div hidden="true">
+                                    <label for="idFreteAluguel">Id</label>
+                                    <input type="text" id="idFreteAluguel" name="idFreteAluguel" >
+                                </div>
                          </form>
 
                          <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>
@@ -167,7 +173,7 @@
                              
                              <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                              <!-- btnCreateRent and btnEditRent-->
-                             <input id="btnSaveRent" type="submit" value="Cadastrar" class="btn btn-success">
+                             <input id="btnSaveFreights" type="submit" value="Cadastrar" class="btn btn-success">
                              
                              <!-- para desbloquear os camps para editar o procuto -->
                              <input id="btnUpdate" type="button" value="Editar" class="btn btn-primary">
