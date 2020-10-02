@@ -8,6 +8,10 @@ use \Locacao\Generator;
 
 class Freight extends Generator {
 
+    public static function searchAll($query) {
+        $sql = new Sql();
+        return $sql->select($query);
+    }
     
     public static function listAll()
     {
