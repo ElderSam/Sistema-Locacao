@@ -225,14 +225,20 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 						colorFrete = 'Red';
 					}
 
+
 					if (element.status == 0) {
 						txtStatus = 'Concluído';
 						color = 'green';
 		
 					} else if (element.status == 1) {
 						txtStatus = 'Pendente ';
-						color = 'Red';		
+						color = 'Red';
+		
 					}
+
+					//separa a string data_hora e trata campos data e hora, ex: 2020-10-02 09:30:00
+					data = element.data_hora.substr(0, 10) //2020-10-02
+					hora = element.data_hora.substr(11, 5) //09:30
 
 					row['#'] = element.count;
 					row['tipoFrete'] = `<b style='color: ${colorFrete}'>${tipoFrete}</b>`
