@@ -7,7 +7,7 @@ $(function() { //quando a página carrega
 	$("#btnAddFreights").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 		let i = 0
 		clearFieldsValues();
-		loadFreigths("");
+		loadFreight("");
 
 		// if(i == 0){
 		// 	showsNextNumber();
@@ -16,7 +16,7 @@ $(function() { //quando a página carrega
 	});
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
-	$("#btnSaveFreights").click(function(e) { //quando enviar o formulário de Locacao
+	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
 		e.preventDefault(); 
 		
 		let form = $('#formFreights');
@@ -44,7 +44,7 @@ $(function() { //quando a página carrega
 				processData: false,
 				beforeSend: function() {
 					clearErrors();
-					$("#btnSaveFreights").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 				
 				},
 				success: function (response) {
@@ -88,7 +88,7 @@ $(function() { //quando a página carrega
 				},
 				error: function (response) {
 	
-					//$('#RentModal').modal('hide');
+					//$('#FreightModal').modal('hide');
 					$('#formFreights').trigger("reset");
 					console.log(`Erro! Mensagem: ${response}`);
 	
@@ -117,7 +117,7 @@ $(function() { //quando a página carrega
 				processData: false,
 				beforeSend: function() {
 					clearErrors();
-					$("#btnSaveFreights").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 				
 				},
 				success: function (response) {
@@ -225,26 +225,25 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 						colorFrete = 'Red';
 					}
 
-
 					if (element.status == 0) {
 						txtStatus = 'Concluído';
 						color = 'green';
 		
 					} else if (element.status == 1) {
 						txtStatus = 'Pendente ';
-						color = 'Red';
-		
-					} 	
-					row['#'] = cont++;
+						color = 'Red';		
+					}
+
+					row['#'] = element.count;
 					row['tipoFrete'] = `<b style='color: ${colorFrete}'>${tipoFrete}</b>`
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
-					row['data_hora'] = element.data_hora //Ainda precisa formatar
-					row['observacao'] = element.obeservacao;
+					row['data_hora'] = `${formatDateToShow(data)} ${hora}` //Ainda precisa formatar
+					row['observacao'] = element.observacao;
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
 					onclick='loadFreight(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
+					<button type='button' title='excluir' onclick='deleteFreight(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
@@ -262,7 +261,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 			{ "data": "#" },
 			{ "data": "tipoFrete"},
 			{ "data": "status" },
-			{ "data": "dataHora" },
+			{ "data": "data_hora" },
 			{ "data": "observacao" },
 			{ "data": "options" },
 		],
@@ -280,13 +279,13 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 //detalhes do Locacao
 function loadFreight(idFreteAluguel) { //carrega todos os campos do modal referente ao Locacao escolhido
 	
-	//console.log(`load rent id: ${idFreteAluguel}`)
+	//console.log(`load freight id: ${idFreteAluguel}`)
 	clearFieldsValues();
 	clearErrors();
 
 	$('#modalTitle').html('Detalhes do Frete')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
-	$('#btnSaveRent').hide();
+	$('#btnSaveFreight').hide();
 	$('#btnUpdate').show();
 
 	$.getJSON(`/freights/json/${idFreteAluguel}`, function (data) { //ajax
@@ -297,7 +296,7 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 		$("#formFreights #locacao").val(data.idLocacao);
 		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
-		$("#formFreights #dataHora").val(data.data_hora).prop('disabled', true);
+		$("#formFreights #data_hora").val(data.data_hora).prop('disabled', true);
 		$("#formFreights #observacao").val(data.observacao).prop('disable', true);
 		
 	//Atualizar Frete	
@@ -305,7 +304,7 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 
 		$("#formFreights #tipoFrete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
-		$("#formFreights #dataHora").prop('disabled', false);
+		$("#formFreights #data_hora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
 
 	});
@@ -388,7 +387,7 @@ function deleteFreight(idFreteLocacao){
 //limpar campos do modal para Cadastrar
 function clearFieldsValues(){
 
-	//$("#formRent #codigo").prop('disabled', true)
+	//$("#formFreight #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Frete');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveFreight').val('Cadastrar').show();
@@ -398,28 +397,17 @@ function clearFieldsValues(){
 	$("#formFreights #locacao").prop('disabled', true);
 	$("#formFreights #tipoFrete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
-	$("#formFreights #dataHora").prop('disabled', false);
+	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#idFreteAluguel').val('');
 	$('#locacao').val('');
 	$('#tipoFrete').val(0);
 	$('#status').val('');
-	$('#dataHora').val(new Date());
+	$('#data_hora').val(new Date());
 	$('#observacao').val('');
 	
 }
-
-// function formatDate(dateX){ //format Date to input in Form
-//     var data = new Date(dateX),
-//         dia  = data.getDate().toString(),
-//         diaF = (dia.length == 1) ? '0'+dia : dia,
-//         mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
-//         mesF = (mes.length == 1) ? '0'+mes : mes,
-//         anoF = data.getFullYear();
-// 	//return diaF+"/"+mesF+"/"+anoF;
-// 	return anoF+"-"+mesF+"-"+diaF;
-// }
 
 //Usado para deixar visivel o itens do dropdown de produtos específicos
 // var checkList = document.getElementById('list1');
