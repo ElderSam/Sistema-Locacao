@@ -22,6 +22,15 @@ $app->get('/freights/json', function() {
     echo Freight::listAll();
 });
 
+$app->get('/freights/json/:id', function($id) {
+
+    User::verifyLogin();
+    $freight = new Freight();
+    echo $freight->loadFreight((int)$id);
+    
+
+});
+
 $app->post('/freights/list_datatables', function(){ //ajax list datatables
 
 	User::verifyLogin();

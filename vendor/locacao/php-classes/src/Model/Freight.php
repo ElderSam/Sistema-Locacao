@@ -186,5 +186,18 @@ class Freight extends Generator {
         );
 
     } // fim do método get_datatable()
+
+    function loadFreight($id) {
+        $sql = new Sql();
+
+        $query = "SELECT * FROM fretes
+            WHERE id = :id";
+        
+        $freight = $sql->select($query, array(
+            ":id"=>$id
+        ));
+
+        return json_encode($freight[0]);
+    }
       
 }
