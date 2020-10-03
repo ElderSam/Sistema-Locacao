@@ -2,6 +2,12 @@ var myTable = null
 
 $(function() { //quando a página carrega
 
+	idRent = parseInt($('#idRentToModal').val())
+
+	if((idRent != undefined) && (idRent != "")) { //se foi definido um id para abrir um modal
+		loadRent(idRent)
+	}
+
 	loadTableRents()
 
 	$("#btnAddRent").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
@@ -267,9 +273,6 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 			{ targets: "text-center", className: "text-center" },
 		]
 	});
-
-
-	
 }
 
 

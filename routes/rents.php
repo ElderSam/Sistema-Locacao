@@ -5,14 +5,22 @@ use \Locacao\Controller\RentController;
 use \Locacao\Model\User;
 use \Locacao\Model\Rent;
 
-/* rota para página de locações/alugueis --------------*/
-$app->get('/rents', function(){
-
+function getPage($id="") {
     User::verifyLogin();
 
     $page = new Page();
-    $page->setTpl("locacoes");
+    $page->setTpl("locacoes", array(
+        "idRentToModal"=>$id
+    ));
+}
 
+/* rota para página de locações, passando o id para abrir o modal direto --------------*/
+$app->get('/rents', function(){
+    getPage();
+});
+
+$app->get('/rents/:id', function($id){
+    getPage($id);
 });
 
 $app->get('/rents/json', function(){

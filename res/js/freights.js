@@ -8,11 +8,6 @@ $(function() { //quando a página carrega
 		let i = 0
 		clearFieldsValues();
 		loadFreight("");
-
-		// if(i == 0){
-		// 	showsNextNumber();
-		// }
-		
 	});
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
@@ -103,11 +98,9 @@ $(function() { //quando a página carrega
 			route = "create";
 			msgError = "Cadastrar";
 			msgSuccess = "Frete Cadastrado";
-
 			sendForm();
 
-		}else{  /* se for para Editar -------------------------------------------------- */
-
+		}else{  /* se for para Editar -------------------------------------------------- */			
 			
 			$.ajax({
 				type: "POST",
@@ -134,8 +127,7 @@ $(function() { //quando a página carrega
 							'error'
 						);
 	
-						if(response['error_list']){
-							
+						if(response['error_list']){							
 							showErrorsModal(response['error_list'])
 						}
 	
@@ -154,37 +146,16 @@ $(function() { //quando a página carrega
 	
 				},
 				error: function (response) {
-	
 					//$('#CostumerModal').modal('hide');
 					$('#formFreights').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
+					console.log(`Erro! Mensagem: ${response}`);	
 				}
 			});
 		}	
 		
 		return false;
 	});
-	
 });
-
-// function getSelectedProducts() { //pega os produtos selecionados (checkboxes) e retorna um array
-// 	listProductsEsp = document.querySelectorAll(".items input[type=checkbox]");
-// 	console.log(listProductsEsp)
-// 	let selectedProducts = [];
-
-// 	listProductsEsp.forEach((product, index) => {
-// 		if(product.checked){
-// 			console.log(parseInt(product.value), index)
-// 			selectedProducts.push({id: parseInt(product.value)})
-// 		}
-
-// 	});
-	
-// 	console.log(selectedProducts)
-// 	return selectedProducts;
-// }
-
 
 function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 
@@ -192,8 +163,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 		myTable.destroy(); //desfaz as paginações
 	}
 
-		//carrega a tabela de Freights
-	//function 
+	//carrega a tabela de Freights
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
 		"autoWidth": false, //largura
@@ -209,12 +179,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 
 				json.data.forEach(element => {
 					//console.log(element)
-
 					row = []
-
-					//Essa variavel você pode apresentar
-					// var telFormatado = mascaraTelefone(element.telefone1);
-
 					//row['id'] = element.id
 
 					if(element.tipo_frete == 0){
@@ -225,15 +190,13 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 						colorFrete = 'Red';
 					}
 
-
 					if (element.status == 0) {
 						txtStatus = 'Concluído';
 						color = 'green';
 		
 					} else if (element.status == 1) {
 						txtStatus = 'Pendente ';
-						color = 'Red';
-		
+						color = 'Red';	
 					}
 
 					//separa a string data_hora e trata campos data e hora, ex: 2020-10-02 09:30:00
@@ -254,14 +217,11 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 						<i class='fas fa-trash'></i>
 					</button>`
 
-					rows.push(row)
-				
+					rows.push(row)				
 				});
 				
 				return rows;
 			},
-
-
 		},
 		"columns": [
 			{ "data": "#" },
@@ -299,7 +259,7 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 		console.log(data)
 			
 		$("#idFreteAluguel").val(data.id);
-		$("#formFreights #locacao").val(data.idLocacao);
+		$("#idLocacao").attr('href', `/rents/${data.idLocacao}`)
 		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
 		$("#formFreights #data_hora").val(data.data_hora).prop('disabled', true);
@@ -399,15 +359,13 @@ function clearFieldsValues(){
 	$('#btnSaveFreight').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-	$("#formFreights #idFreteAluguel").hide();	
-	$("#formFreights #locacao").prop('disabled', true);
+	$("#formFreights #idFreteAluguel").hide();
 	$("#formFreights #tipoFrete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
 	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#idFreteAluguel').val('');
-	$('#locacao').val('');
 	$('#tipoFrete').val(0);
 	$('#status').val('');
 	$('#data_hora').val(new Date());
