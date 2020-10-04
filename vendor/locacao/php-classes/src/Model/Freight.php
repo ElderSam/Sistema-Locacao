@@ -95,6 +95,19 @@ class Freight extends Generator {
 
     }
 
+    public function get($id){
+
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM fretes WHERE id = :id", array(
+            ":id"=>$id
+        ));
+
+        if(count($results) > 0){
+            $this->setData($results[0]);
+        }
+    }
+
     public function get_datatable($requestData, $column_search, $column_order)
     {
         $query = "SELECT * FROM fretes";
@@ -199,5 +212,39 @@ class Freight extends Generator {
 
         return json_encode($freight[0]);
     }
+    
+    
+    public function delete($id){
       
+        $sql = new Sql();
+        
+        try{
+            $sql->query("CALL sp_fretes_delete(:id)", array(
+                ":id"=>$id
+            ));
+
+            if($this->get($id)){
+
+                return json_encode([
+                    "error"=>true,
+                    "msg"=>"Erro ao excluir Frete"
+                ]);
+
+            }else{
+
+                return json_encode([
+                    "error"=>false,
+                ]);
+            }
+
+        }catch(Exception $e){
+
+            return json_encode([
+                "error"=>true,
+                "msg"=>$e->getMessage()
+            ]);
+
+        }
+       
+    }
 }

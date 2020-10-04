@@ -242,7 +242,7 @@ function deleteFreight(idFrete){
 
 			$.ajax({
 				type: "POST",
-				url: `/freight/${idFrete}/delete`,
+				url: `/freights/${idFrete}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()

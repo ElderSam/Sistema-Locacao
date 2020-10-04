@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23-Set-2020 às 04:38
+-- Tempo de geração: 04-Out-2020 às 04:02
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -253,7 +253,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fornecedores_save` (IN `pcodForn
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT(11), IN `pidLocacao` INT(11), IN `ptipo_frete` INT(1), IN `pstatus` INT(1), IN `pdata_hora` DATETIME, IN `pobservacao` VARCHAR(150))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT(11), IN `ptipo_frete` INT(1), IN `pstatus` INT(1), IN `pdata_hora` DATETIME, IN `pobservacao` VARCHAR(150))  BEGIN
   
     DECLARE vidFrete INT;
     
@@ -263,7 +263,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT
 
     UPDATE fretes
         SET
-            idLocacao = pidLocacao,
             tipo_frete = ptipo_frete,
             status = pstatus,
             data_hora = pdata_hora,
@@ -271,6 +270,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT
         WHERE id = vidFrete;    
 
     SELECT * FROM fretes WHERE id = pid;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretes_delete` (IN `pid` INT)  BEGIN
+  
+    DECLARE vid INT;
+    
+  SELECT id INTO vid
+    FROM fretes
+    WHERE id = pid;
+    
+    DELETE FROM fretes WHERE id = pid;
     
 END$$
 
@@ -923,7 +934,7 @@ CREATE TABLE `fretes` (
 --
 
 INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `observacao`, `dtCadastro`) VALUES
-(1, 7, 0, 0, '2020-09-21 09:30:00', 'cadastro teste pelo Banco de Dados', '2020-09-20 17:38:51');
+(1, 7, 0, 1, '2020-10-03 22:47:00', 'teste ATUALIZAÇÃO', '2020-09-20 17:38:51');
 
 -- --------------------------------------------------------
 

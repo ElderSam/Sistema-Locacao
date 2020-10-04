@@ -141,4 +141,9 @@ class FreightController extends Generator
     {
         return Freight::total();
     }
+
+    public function delete($id){     
+        $freight = new Freight();
+        return $freight->delete($id);  
+    }
 }
