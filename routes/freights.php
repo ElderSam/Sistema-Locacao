@@ -29,6 +29,34 @@ $app->get('/freights/json/:id', function($id) {
     echo $freight->loadFreight((int)$id);
 });
 
+/* rota para criar frete (salva no banco) -----------*/
+$app->post("/rents/create", function(){
+    User::verifyLogin();
+
+	$freight = new FreightController();
+	echo $freight->save();
+});
+
+
+/* rota para atualizar frete --------------------------*/
+$app->post("/freights/:idfreight", function($idfreight){ //update
+	
+    User::verifyLogin();
+
+	$freight = new FreightController();
+	$update = true;
+	echo $freight->save($update);	
+});
+
+/* rota para deletar frete --------------------------*/
+$app->post("/freights/:idfreight/delete", function($idfreight){
+    
+    User::verifyLogin();
+
+    $freight = new FreightController();
+    echo $freight->delete($idfreight);
+});
+
 $app->post('/freights/list_datatables', function(){ //ajax list datatables
 
 	User::verifyLogin();
