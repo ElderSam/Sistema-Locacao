@@ -124,11 +124,17 @@
                         <form id="formFreights">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <a id="idLocacao" class="btn btn-warning mt-4" target="_blank">ir para a Locação</a>
+                                    <a id="linkLocacao" class="btn btn-warning mt-4" target="_blank">ir para a Locação</a>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="idLocacao">Id Locação</label>
+                                    <input type="datetime-local" id="idLocacao" name="idLocacao" class="form-control" hidden="true">
+                                </div>
+
                                 <div class="form-group col-md-6">
-                                    <label for="tipoFrete">Tipo Frete*</label>
-                                    <select id="tipoFrete" name="tipoFrete" class="form-control">
+                                    <label for="tipo_frete">Tipo Frete*</label>
+                                    <select id="tipo_frete" name="tipo_frete" class="form-control">
                                         <option value="">Escolher...</option>
                                         <option value="0" selected style="color: green;">Entrega</option>
                                         <option value="1" style="color: red;">Retirada</option>                                        

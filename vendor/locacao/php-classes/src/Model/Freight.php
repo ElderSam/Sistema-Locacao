@@ -67,13 +67,13 @@ class Freight extends Generator {
         }
     }
 
-    public function updade()
+    public function update()
     {
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_fretesUpdate_save(:id, :idLocacao, :tipo_frete, :status, :data_hora, :observacao)", array(
+        $results = $sql->select("CALL sp_fretesUpdate_save(:id, :tipo_frete, :status, :data_hora, :observacao)", array(
             ":id"=>$this->getid(),
-            ":idLocacao"=>$this->getidLocacao(),
+            //":idLocacao"=>$this->getidLocacao(),
             ":tipo_frete"=>$this->gettipo_frete(),
             ":status"=>$this->getstatus(),
             ":data_hora"=>$this->getdata_hora(),

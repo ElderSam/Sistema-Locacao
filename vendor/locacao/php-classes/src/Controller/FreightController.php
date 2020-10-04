@@ -29,12 +29,56 @@ class FreightController extends Generator
         $freight->setData($_POST); 
 
         if ($update) { //se for atualizar
-            return  $freight->update(); 
+            return $freight->update(); 
 
         } else { // se for cadastrar novo Frete
             return json_encode($freight->insert());
         }
     }
+
+    
+    public function verifyFields($update = false)
+    {/*Verifica todos os campos ---------------------------*/
+
+        $errors = array();
+
+        //print_r($_POST);
+
+        //CAMPOS OBRIGATÓRIOS: idLocacao, tipo_frete, status e data_hora
+
+        if(!$update){
+            if($_POST["idLocacao"] == "") {
+                $errors["#idLocacao"] = "Id Locação é obrigatório";
+            }
+        }
+
+        if ($_POST["tipo_frete"] == "") {
+            $errors["#tipo_frete"] = "Tipo de frete é obrigatório!";
+        }
+
+        if($_POST["status"] == "") {
+            $errors["#status"] = "Status é obrigatório";
+        }
+        
+        if ($_POST["data_hora"] == "") {
+            $errors["#data_hora"] = "Data e hora são obrigatórios!";
+        }
+
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
+
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors
+            ]);
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+
+        }
+    }/* --- fim verificaErros() ---------------------------*/
+
 
     /*-------------------------------- DataTables -------------------------------------------------------------------*/
 

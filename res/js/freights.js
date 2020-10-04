@@ -119,10 +119,10 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 					//row['id'] = element.id
 
 					if(element.tipo_frete == 0){
-						tipoFrete = 'Entrega';
+						tipo_frete = 'Entrega';
 						colorFrete = 'green';
 					}else if(element.tipo_frete == 1){
-						tipoFrete = 'Pendente';
+						tipo_frete = 'Pendente';
 						colorFrete = 'Red';
 					}
 
@@ -140,7 +140,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 					hora = element.data_hora.substr(11, 5) //09:30
 
 					row['#'] = element.count;
-					row['tipoFrete'] = `<b style='color: ${colorFrete}'>${tipoFrete}</b>`
+					row['tipo_frete'] = `<b style='color: ${colorFrete}'>${tipo_frete}</b>`
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
 					row['data_hora'] = `${formatDateToShow(data)} ${hora}` //Ainda precisa formatar
 					row['observacao'] = element.observacao;
@@ -161,7 +161,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 		},
 		"columns": [
 			{ "data": "#" },
-			{ "data": "tipoFrete"},
+			{ "data": "tipo_frete"},
 			{ "data": "status" },
 			{ "data": "data_hora" },
 			{ "data": "observacao" },
@@ -193,8 +193,9 @@ function loadFreight(idFrete) { //carrega todos os campos do modal referente ao 
 		data_hora = data.data_hora.replace(' ', 'T') //formata para o campo data e hora 'yyyy-mm-ddThh:mm'
 
 		$("#id").val(data.id);
-		$("#idLocacao").attr('href', `/rents/${data.idLocacao}`) //link
-		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
+		$("#linkLocacao").attr('href', `/rents/${data.idLocacao}`) //link
+		$("#idLocacao").val(data.idLocacao)
+		$("#formFreights #tipo_frete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
 		$("#formFreights #data_hora").val(data_hora).prop('disabled', true);
 		$("#formFreights #observacao").val(data.observacao).prop('disabled', true);
@@ -207,7 +208,8 @@ function loadFreight(idFrete) { //carrega todos os campos do modal referente ao 
 		$('#btnSaveFreight').val('Atualizar').show();
 		$('#btnUpdate').hide();
 
-		$("#formFreights #tipoFrete").prop('disabled', false);
+		$("#formFreights #idLocacao").prop('disabled', false);
+		$("#formFreights #tipo_frete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
 		$("#formFreights #data_hora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
@@ -298,13 +300,16 @@ function clearFieldsValues(){
 
 	$("#formFreights #id").hide();
 	$("#idLocacao").attr('href', `/rents/`)
-	$("#formFreights #tipoFrete").prop('disabled', false);
+
+	$("#formFreights #idLocacao").prop('disabled', false);
+	$("#formFreights #tipo_frete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
 	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#id').val('');
-	$('#tipoFrete').val(0);
+	$("#idLocacao").val('')
+	$('#tipo_frete').val(0);
 	$('#status').val('');
 	$('#data_hora').val(new Date());
 	$('#observacao').val('');	
