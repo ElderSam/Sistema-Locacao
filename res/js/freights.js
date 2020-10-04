@@ -4,11 +4,11 @@ $(function() { //quando a página carrega
 
 	loadTableFreights()
 
-	$("#btnAddFreights").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
-		let i = 0
-		clearFieldsValues();
-		loadFreight("");
-	});
+	// $("#btnAddFreights").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
+	// 	let i = 0
+	// 	clearFieldsValues();
+	// 	loadFreight("");
+	// });
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
 	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
@@ -17,141 +17,77 @@ $(function() { //quando a página carrega
 		let form = $('#formFreights');
 		let formData = new FormData(form[0]);
 		console.log(formData)
-		idFreteAluguel = $('#idFreteAluguel').val()
-		//console.log("id:" + idHistoricoAluguel)
+		idFrete = $('#id').val()
+		console.log('id', idFrete)
 
-		//formData.append("field", "value")
-		// formData.append(
-		// 	"arrSelectedProductsEsp", //nome do array
-		// 	JSON.stringify(getSelectedProducts() //valor do array
-		// )); //insere o array de produtos selecionados no 'array' do corpo do formulário à ser enviado para o backend
-
-		
-		function sendForm() {
-
-			console.log('sendForm')
-
-			$.ajax({
-				type: "POST",
-				url: `/freights/${route}`, 
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log(`erro ao ${msgError} Frete!`)
-	
-						response = JSON.parse(response)
-	
-						Swal.fire(
-							'Erro!',
-							`Ocorreu algum erro ao ${msgError}`,
-							'error'
-						);
-	
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-	
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'error'
-							);
-						}
-	
-					} else {
-						$('#freightModal').modal('hide');
-	
-						Swal.fire(
-							'Sucesso!',
-							msgSuccess,
-							'success'
-						);
-	
-						loadTableFreights();
-						$('#formFreights').trigger("reset");
-					}
-	
-				},
-				error: function (response) {
-	
-					//$('#FreightModal').modal('hide');
-					$('#formFreights').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
-				}
-			});
-		}			
-		console.log(idFreteAluguel)
 		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
 
-			console.log("você quer cadastrar")
-		
+			console.log("você quer cadastrar")	
 			route = "create";
 			msgError = "Cadastrar";
 			msgSuccess = "Frete Cadastrado";
-			sendForm();
 
 		}else{  /* se for para Editar -------------------------------------------------- */			
-			
-			$.ajax({
-				type: "POST",
-				url: `/freight/${idFreteAluguel}`, //rota para editar
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log('erro ao editar frete!')
-	
-						response = JSON.parse(response)
-	
+			console.log("você quer editar um frete existente")
+			route = idFrete;
+			msgError = "Atualizar";
+			msgSuccess = "Frete Atualizado";
+		}	
+
+		$.ajax({
+			type: "POST",
+			url: `/freights/${route}`, 
+			data: formData,
+			contentType: false,
+			processData: false,
+			beforeSend: function() {
+				clearErrors();
+				$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));	
+			},
+			success: function (response) {
+				clearErrors();
+
+				if (JSON.parse(response).error) {
+					console.log(`erro ao ${msgError} Frete!`)
+
+					response = JSON.parse(response)
+
+					Swal.fire(
+						'Erro!',
+						`Ocorreu algum erro ao ${msgError}`,
+						'error'
+					);
+
+					if(response['error_list']){
+						
+						showErrorsModal(response['error_list'])
+
 						Swal.fire(
-							'Erro!',
+							'Atenção!',
 							'Por favor verifique os campos',
 							'error'
 						);
-	
-						if(response['error_list']){							
-							showErrorsModal(response['error_list'])
-						}
-	
-					} else {
-						$('#freightModal').modal('hide');
-	
-						Swal.fire(
-							'Sucesso!',
-							'Frete atualizado!',
-							'success'
-						);
-	
-						loadTableFreights();
-						$('#formFreights').trigger("reset");
 					}
-	
-				},
-				error: function (response) {
-					//$('#CostumerModal').modal('hide');
+
+				} else {
+					$('#freightModal').modal('hide');
+
+					Swal.fire(
+						'Sucesso!',
+						msgSuccess,
+						'success'
+					);
+
+					loadTableFreights();
 					$('#formFreights').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);	
 				}
-			});
-		}	
+
+			},
+			error: function (response) {
+				$('#formFreights').trigger("reset");
+				console.log(`Erro! Mensagem: ${response}`);
+			}
+		});
 		
 		return false;
 	});
@@ -236,16 +172,13 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 			{ targets: "text-center", className: "text-center" },
 		]
 	});
-
-
-	
 }
 
 
 //detalhes do Locacao
-function loadFreight(idFreteAluguel) { //carrega todos os campos do modal referente ao Locacao escolhido
+function loadFreight(idFrete) { //carrega todos os campos do modal referente ao Locacao escolhido
 	
-	//console.log(`load freight id: ${idFreteAluguel}`)
+	//console.log(`load freight id: ${idFrete}`)
 	clearFieldsValues();
 	clearErrors();
 
@@ -254,12 +187,12 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 	$('#btnSaveFreight').hide();
 	$('#btnUpdate').show();
 
-	$.getJSON(`/freights/json/${idFreteAluguel}`, function (data) { //ajax
+	$.getJSON(`/freights/json/${idFrete}`, function (data) { //ajax
 		
 		console.log(data)
 		data_hora = data.data_hora.replace(' ', 'T') //formata para o campo data e hora 'yyyy-mm-ddThh:mm'
 
-		$("#idFreteAluguel").val(data.id);
+		$("#id").val(data.id);
 		$("#idLocacao").attr('href', `/rents/${data.idLocacao}`) //link
 		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
@@ -290,7 +223,7 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 }
 
 //Deletar um frete
-function deleteFreight(idFreteLocacao){
+function deleteFreight(idFrete){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -307,7 +240,7 @@ function deleteFreight(idFreteLocacao){
 
 			$.ajax({
 				type: "POST",
-				url: `/freight/${idFreteLocacao}/delete`,
+				url: `/freight/${idFrete}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()
@@ -347,7 +280,6 @@ function deleteFreight(idFreteLocacao){
 					console.log(`Erro! Mensagem: ${response}`);		
 				}
 			});		
-
 		}
 	})
 
@@ -364,229 +296,16 @@ function clearFieldsValues(){
 	$('#btnSaveFreight').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-	$("#formFreights #idFreteAluguel").hide();
+	$("#formFreights #id").hide();
+	$("#idLocacao").attr('href', `/rents/`)
 	$("#formFreights #tipoFrete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
 	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
-	$('#idFreteAluguel').val('');
+	$('#id').val('');
 	$('#tipoFrete').val(0);
 	$('#status').val('');
 	$('#data_hora').val(new Date());
-	$('#observacao').val('');
-	
+	$('#observacao').val('');	
 }
-
-//Usado para deixar visivel o itens do dropdown de produtos específicos
-// var checkList = document.getElementById('list1');
-
-// checkList.getElementsByClassName('anchor')[0].onclick = function (evt) {
-// 	if (checkList.classList.contains('visible'))
-// 		checkList.classList.remove('visible');
-// 	else
-// 		checkList.classList.add('visible');
-// }
-
-
-//carrega os Clientes 
-// function loadCostumers(idCliente = '') {
-
-// 	//console.log('loading costumers')
-
-// 	$('#cliente').html("");
-
-// 	let costumers = "<option value=''>(escolha)</option>";
-
-// 	$.getJSON(`/costumers/json`, function (data) { //ajax
-
-
-// 		data.forEach(function (item) {
-// 			//console.log(item)
-// 			costumers += `<option value="${item.idCliente}">${item.nome}</option>`
-// 		});
-
-		
-// 		$('#cliente').append(costumers)
-
-
-// 	}).then(() => {
-
-// 		if(idCliente !== ''){ //se já tem um cliente escolhido
-// 			$("#cliente").val(idCliente).prop('disabled', true);
-// 		}
-				
-// 		$("#cliente").on("change", function() {
-// 			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
-// 			//alert("evento disparado e o valor é: " + valor);
-// 			loadContracts(valor);
-// 		})
-
-
-// 	}).fail(function () {
-// 		console.log("Rota não encontrada!");
-// 		return false
-// 	});
-
-// }
-
-// //carrega os Contratos
-// function loadContracts(idCliente = ''){
-
-// 	console.log(`Id Cliente: ${idCliente}, buscando contratos ...`);
-
-// 	txtEscolha = `<option value="">(escolha)</option>`;
-// 	$("#contrato_idContrato").html("");
-// 	$("#itens").html(txtEscolha)
-	
-// 	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
-// 		console.log(data)
-
-// 		//alert("Lista: " + data)
-// 		contracts = ""; //esvazia a lista de opções
-
-// 		if(data.length == 0){
-// 			contracts = `<option value="">Sem contratos cadastrados</option>`
-// 		}else{
-
-// 			$("#contrato_idContrato").html(txtEscolha);
-
-// 			data.forEach(function (item) {
-// 				//console.log(item)
-// 				contracts += `<option value="${item.idContrato}">${item.codContrato}</option>`
-// 			});
-// 		}
-
-// 		$("#contrato_idContrato").append(contracts)
-
-// 	}).then(() => {
-
-// 		var comboNome = document.getElementById("contrato_idContrato");
-
-//         if (comboNome.options[comboNome.selectedIndex].value != "" ){
-// 			var codigo = comboNome.options[comboNome.selectedIndex].value;
-// 			$("#contrato_idContrato").val(codigo).prop('disabled', true);
-// 		}	
-
-// 		$("#contrato_idContrato").on("change", function() {
-// 			var valor = $(this).val();   // aqui vc pega cada valor selecionado com o this
-			
-// 			loadContractItens(valor);
-// 		})
-
-// 	}).fail(function () {
-// 		console.log(`Rota não encontrada! (//contracts/json/${idCliente}/contracts`);
-// 		return false
-// 	});
-
-// }
-
-// //carrega itens do Contrato selecionado
-// function loadContractItens(idContract = false){
-
-// 	console.log(`carregando itens para o contrato id: ${idContract}`);
-
-// 	$.getJSON(`/contract_itens/json/contract/${idContract}`, (data) => {
-// 		console.log(data)
-		
-// 		$("#itens").html("");
-
-// 	}).then((data) => {
-
-
-// 		txtListItens = ""; //esvazia a lista de opções
-
-// 		if(data.length == 0){
-// 			txtListItens = `<option value="">Sem itens neste contrato</option>`;
-// 		}else{
-
-// 			txtListItens = `<option value="">(escolha)</option>`;
-// 			let arrItens = [];
-
-// 			data.forEach(function (item) {
-// 				//console.log(item)
-// 				arrItens.push(item);
-// 				txtListItens += `<option value="${item.idItem}">${item.descCategoria} ${item.descricao}</option>`
-// 			});	
-
-// 			$("#itens").on("change", function() { //quando é escolhido um item ----------------------------------
-// 				loadItemFields(arrItens);
-// 			}); // ---------------------------------- 
-// 		}
-
-// 		$("#itens").append(txtListItens);
-
-
-
-// 	}).catch(() => {
-
-// 		console.log(`Rota não encontrada! (/contract_itens/json/contract/${idContract}`);
-// 		return false
-// 	})
-// }
-
-// function loadItemFields(arrItens) {
-
-// 	let item; //item selecionado
-
-// 	item = arrItens.find((item) => item.idItem == $("#itens").val());
-
-// 	console.log("item selecionado:");
-// 	console.log(item)
-
-// 	//atribuindo valores do Item para os campos; vlAluguel, custoEntrega, custoRetirada e quantidade.
-// 	$("#vlAluguel").val(item.vlAluguel);
-// 	$("#custoEntrega").val(item.custoEntrega);
-// 	$("#custoRetirada").val(item.custoRetirada);
-	
-// 	$("#quantidade").html("");
-
-// 	if(item.quantidade > 0) {
-// 		txtQuantidade = "<option value=''>(escolha)</option>";
-
-// 		for(i=1; i<=item.quantidade; i++){ //gera opções de 1 até a quantidade máxima
-// 			txtQuantidade += `<option value="${i}">${i}</option>`;
-// 		}
-
-// 	} else {
-// 		txtQuantidade = "<option value=''>0</option>"; //Não possue mais quantidade disponível do contrato
-// 	}
-
-
-// 	$("#quantidade").append(txtQuantidade);
-	  
-// 	loadListProductEsp(item.idProduto_gen);
-// }
-
-// function loadListProductEsp(idProduto_gen, selected=false) { /* carrega os checkboxes de produtos específicos (que estão disponíveis)*/
-// 	console.log(`buscando produtos específicos para o idProduto_gen: ${idProduto_gen}`);
-
-// 	let txtListProducts = '';
-
-// 	if(selected) {  //seleciona o produto
-// 		txtListProducts += `<li><input type="checkbox" checked="true" value=${selected.idProduto_esp}/>${selected.codigo} <b>(atual)</b></li>`;
-// 	}
-
-// 	$route = `/products_esp/json/product_gen/${idProduto_gen}`;
-
-// 	$.getJSON($route, function (data) {
-// 		console.log(data);
-
-// 	}).then((data) => {
-
-// 		const getTxtProducts = (txt, data) => { //retorna uma string com os inputs para escolher produtos específicos
-// 			return txt + `<li><input type="checkbox" value=${data.idProduto_esp}/>${data.codigoEsp} </li>`;
-// 		}
-		
-// 		txtListProducts += data.reduce(getTxtProducts, "");
-// 		console.log(txtListProducts)
-
-// 		$("#listProductsEsp").html("") //esvazia a lista
-// 		$("#listProductsEsp").append(txtListProducts)
-
-// 	}).catch(() => {
-// 		console.log(`Rota não encontrada! ${route}`);
-// 		return false;
-// 	})
-
-// }
