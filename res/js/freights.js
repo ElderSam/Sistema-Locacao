@@ -257,22 +257,27 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 	$.getJSON(`/freights/json/${idFreteAluguel}`, function (data) { //ajax
 		
 		console.log(data)
-			
+		data_hora = data.data_hora.replace(' ', 'T') //formata para o campo data e hora 'yyyy-mm-ddThh:mm'
+
 		$("#idFreteAluguel").val(data.id);
-		$("#idLocacao").attr('href', `/rents/${data.idLocacao}`)
+		$("#idLocacao").attr('href', `/rents/${data.idLocacao}`) //link
 		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
-		$("#formFreights #data_hora").val(data.data_hora).prop('disabled', true);
-		$("#formFreights #observacao").val(data.observacao).prop('disable', true);
+		$("#formFreights #data_hora").val(data_hora).prop('disabled', true);
+		$("#formFreights #observacao").val(data.observacao).prop('disabled', true);
 		
 	//Atualizar Frete	
 	$('#btnUpdate').click(function(){
+
+		$('#modalTitle').html('Editar Frete');
+		$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
+		$('#btnSaveFreight').val('Atualizar').show();
+		$('#btnUpdate').hide();
 
 		$("#formFreights #tipoFrete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
 		$("#formFreights #data_hora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
-
 	});
 	//Encerrar Frete
 
