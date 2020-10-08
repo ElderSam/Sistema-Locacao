@@ -242,6 +242,9 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 					onclick='loadRent(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
+					<button type='button' title='entrega' class='btn btn-success'>
+						<i class="fas fa-shipping-fast"></i>
+					</button>
 					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
