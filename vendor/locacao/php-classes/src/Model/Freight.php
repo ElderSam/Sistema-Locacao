@@ -5,6 +5,7 @@ namespace Locacao\Model;
 use Exception;
 use \Locacao\DB\Sql;
 use \Locacao\Generator;
+use \Locacao\Model\Rent;
 
 class Freight extends Generator {
 
@@ -44,6 +45,14 @@ class Freight extends Generator {
     public function insert()
     {
         $sql = new Sql();
+
+        $rent = new Rent();
+        $item = $rent->loadRent($this->getidLocacao());
+        $item = json_decode($item);
+
+        $auxOBS = "Cod. Prod.: $item->codigoEsp,  \n<b>Produto: $item->descricao</b>";
+        $auxObs = $auxOBS . ",  \n" . $this->getobservacao();
+        $this->setobservacao($auxObs);
 
         if(($this->gettipo_frete() != "") && ($this->getstatus() != ""))
         {
@@ -88,6 +97,10 @@ class Freight extends Generator {
     public function update()
     {
         $sql = new Sql();
+        
+        $oldRent = new Rent();
+        $oldRent->get($this->getidLocacao());
+
 
         $results = $sql->select("CALL sp_fretesUpdate_save(:id, :tipo_frete, :status, :data_hora, :observacao)", array(
             ":id"=>$this->getid(),
@@ -100,6 +113,19 @@ class Freight extends Generator {
 
         if(count($results) > 0){
 
+                $rent = new Rent();
+                $rent->get($this->getidLocacao());
+
+                if(($oldRent->getstatus() != 3) && ($rent->getstatus() == 3)) { //se foi modificado o status do aluguel para 3 (ENCERRADO), então devolve o produto (torna disponível)
+                    $query = "UPDATE produtos_esp
+                    SET status = 1 /* status 1 = disponível */
+                    WHERE (idProduto_esp = :idProduto_esp)";
+
+                    $sql->query($query, array(
+                        ":idProduto_esp"=>$rent->getproduto_idProduto()
+                    ));
+                }
+
             $this->setData($results[0]); //carrega atributos do objeto
 
             return json_encode($results[0]);
@@ -110,7 +136,6 @@ class Freight extends Generator {
                 "msg"=>"Erro ao atualizar Frete!"
                 ]);
         }
-
     }
 
     public function get($id){
@@ -216,11 +241,12 @@ class Freight extends Generator {
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
-        $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
+        $query .= " ORDER BY status, data_hora " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $freights = new Freight();
         //echo $query;
+        
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
             'data'=>$freights->searchAll($query)
