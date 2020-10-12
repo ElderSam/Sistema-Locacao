@@ -17,7 +17,7 @@ $(function() { //quando a página carrega
 	}
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
-	$("#btnSaveFreights").click(function(e) { //quando enviar o formulário de Locacao
+	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
 		e.preventDefault(); 
 		
 		let form = $('#formFreights');
@@ -47,7 +47,7 @@ $(function() { //quando a página carrega
 				processData: false,
 				beforeSend: function() {
 					clearErrors();
-					$("#btnSaveFreights").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 				
 				},
 				success: function (response) {
