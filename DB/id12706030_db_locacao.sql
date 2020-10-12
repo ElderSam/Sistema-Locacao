@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Out-2020 às 14:44
+-- Tempo de geração: 12-Out-2020 às 20:34
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -255,7 +255,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT(11), IN `ptipo_frete` INT(1), IN `pstatus` INT(1), IN `pdata_hora` DATETIME, IN `pobservacao` VARCHAR(150))  BEGIN
   
-    DECLARE vidFrete INT;
+    DECLARE vidFrete, vidLocacao, vtipo_frete, vstatusFrete, vstatusAluguel INT;
     
     SELECT id INTO vidFrete
         FROM fretes
@@ -269,8 +269,37 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretesUpdate_save` (IN `pid` INT
             observacao = pobservacao
         WHERE id = vidFrete;    
 
-    SELECT * FROM fretes WHERE id = pid;
     
+-- ------------- ALTERANDO O STATUS DO ALUGUEL QUANDO O FRETE É CONCLUÍDO  
+    SELECT a.id, a.idLocacao, a.tipo_frete, a.status, b.status
+        INTO vidFrete, vidLocacao, vtipo_frete, vstatusFrete, vstatusAluguel
+        FROM fretes a
+        INNER JOIN historicoalugueis b ON(a.idLocacao = b.idHistoricoAluguel)
+        WHERE id = pid;
+
+
+    IF (vstatusFrete = 1) THEN -- SE O STATUS DO FRETE FOR = 1 (CONCLUÍDO), ENTÃO DEVE MUDAR O STATUS DO ALUGUEL
+
+            IF(vtipo_frete = 0) THEN -- SE O TIPO_FRETE FOR 0 (ENTREGA),
+ 
+                -- ENTÃO MUDA O STATUS DO ALUGUEL PARA 1 (ATIVO)
+                UPDATE historicoalugueis 
+                    SET status = 1
+                WHERE idHistoricoAluguel = vidLocacao;
+            
+            ELSE -- SENAO SE O TIPO_FRETE FOR 1 (RETIRADA),
+            
+                -- ENTÃO MUDA O STATUS DO ALUGUEL PARA 3 (ENCERRADO)
+                UPDATE historicoalugueis 
+                    SET status = 3
+                WHERE idHistoricoAluguel = vidLocacao;
+            END IF;
+              
+    END IF;
+-- -------------
+
+    SELECT * FROM fretes WHERE id = pid;
+
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretes_delete` (IN `pid` INT)  BEGIN
@@ -936,7 +965,8 @@ CREATE TABLE `fretes` (
 INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `observacao`, `dtCadastro`) VALUES
 (1, 7, 0, 1, '2020-09-07 09:00:00', 'teste ATUALIZAÇÃO', '2020-09-20 17:38:51'),
 (5, 16, 0, 0, '2020-10-05 09:30:00', 'teste', '2020-10-12 09:23:37'),
-(6, 16, 1, 0, '2020-10-30 09:30:00', '', '2020-10-12 09:30:49');
+(6, 16, 1, 0, '2020-10-30 09:30:00', '', '2020-10-12 09:30:49'),
+(9, 7, 1, 1, '2020-10-15 15:31:00', '', '2020-10-12 15:31:59');
 
 -- --------------------------------------------------------
 
@@ -964,7 +994,7 @@ CREATE TABLE `historicoalugueis` (
 --
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(7, '3', 6, 3, 1, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
+(7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
 (13, '4', 6, 1, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
 (15, '5', 6, 2, 0, 15470, '2020-10-05', '2020-10-05', 215, 215, '', '2020-10-05 20:22:21'),
 (16, '6', 6, 15, 0, 15470, '2020-10-05', '2020-10-05', 215, 215, '', '2020-10-05 20:22:21');
@@ -1445,7 +1475,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
