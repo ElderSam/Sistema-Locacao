@@ -31,31 +31,47 @@ class Freight extends Generator {
         return count($results);
     }
 
+    public function verifyTable() {
+        $sql = new Sql();
+
+        return $sql->select("SELECT * FROM fretes WHERE tipo_frete = :TIPO_FRETE", array(
+            ":TIPO_FRETE"=>$this->gettipo_frete(),
+        ));
+    }
+
     public function insert()
     {
         $sql = new Sql();
 
         if(($this->gettipo_frete() != "") && ($this->getstatus() != ""))
         {
-            $results = $sql->select("CALL sp_fretes_save(:idLocacao, :tipo_frete, :status, :data_hora, :observacao)", array(
-                ":idLocacao"=>$this->getidLocacao(),
-                ":tipo_frete"=>$this->gettipo_frete(),
-                ":status"=>$this->getstatus(),
-                ":data_hora"=>$this->getdata_hora(),
-                ":observacao"=>$this->getobservacao(),
-            ));
+            if(count($this->verifyTable()) == 0) { //se já não existe um frete cadastrado com o mesmo status
+                $results = $sql->select("CALL sp_fretes_save(:idLocacao, :tipo_frete, :status, :data_hora, :observacao)", array(
+                    ":idLocacao"=>$this->getidLocacao(),
+                    ":tipo_frete"=>$this->gettipo_frete(),
+                    ":status"=>$this->getstatus(),
+                    ":data_hora"=>$this->getdata_hora(),
+                    ":observacao"=>$this->getobservacao(),
+                ));
+    
+                if(count($results) > 0){
+    
+                    $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+    
+                    return json_encode($results[0]);
+    
+                }else{
+                    return json_encode([
+                        "error"=>true,
+                        "msg"=>"Erro ao inserir Frete!"
+                    ]);
+                }
 
-            if(count($results) > 0){
-
-                $this->setData($results[0]); //carrega atributos desse objeto com o retorno da inserção no banco
-
-                return json_encode($results[0]);
-
-            }else{
+            }else {
                 return json_encode([
                     "error"=>true,
-                    "msg"=>"Erro ao inserir Frete!"
-                    ]);
+                    "msg"=>"Já existe um frete desse Tipo!"
+                ]);
             }
             
         }else{
@@ -184,6 +200,11 @@ class Freight extends Generator {
 
             if (!$first) {
                 $query .= ")"; //termina o WHERE e a query
+            }
+
+        }else {        
+            if($idRent) {
+                $query .= " WHERE (idLocacao = $idRent)";
             }
         }
 

@@ -55,21 +55,21 @@ $(function() { //quando a página carrega
 			success: function (response) {	
 				clearErrors();	
 
-				response = JSON.parse(response)
-				console.log(response)
+				let res = JSON.parse(response)
+				console.log(res)
 
-				if (response.error) {	
+				if (res.error) {	
 					console.log(`erro ao ${msgError} Frete!`)	
 					
 					Swal.fire(
 						'Erro!',	
-						`Ocorreu algum erro ao ${msgError}`,	
+						`${res.msg}`,	
 						'error'	
 					);	
 
-					if(response['error_list']){	
+					if(res['error_list']){	
 
-						showErrorsModal(response['error_list'])
+						showErrorsModal(res['error_list'])
 						Swal.fire(
 							'Atenção!',
 							'Por favor verifique os campos',

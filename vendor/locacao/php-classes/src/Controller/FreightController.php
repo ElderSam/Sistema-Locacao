@@ -32,7 +32,7 @@ class FreightController extends Generator
             return $freight->update(); 
 
         } else { // se for cadastrar novo Frete
-            return json_encode($freight->insert());
+            return $freight->insert();
         }
     }
 
