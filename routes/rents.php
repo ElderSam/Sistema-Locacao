@@ -100,30 +100,3 @@ $app->post("/rents/:idrent", function($idrent){ //update
 	echo $rent->save($update);
 	
 });
-
-/*
-$app->get('/rents/categories/json', function(){
-
-    User::verifyLogin();
-
-    echo Category::listAll();
-  
-});
-
-
-$app->get('/rents/types/json/:idCategory', function($idCategory){
-
-    User::verifyLogin();
-
-    echo Category::listTypes($idCategory);
-  
-});
-
-
-$app->post('/rents/showsNextNumber/:idCategory', function($idCategory){
-
-    User::verifyLogin();
-
-    echo Rent::showsNextNumber($idCategory);
-  
-});*/
