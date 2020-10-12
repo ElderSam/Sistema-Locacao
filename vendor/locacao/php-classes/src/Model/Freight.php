@@ -34,8 +34,10 @@ class Freight extends Generator {
     public function verifyTable() {
         $sql = new Sql();
 
-        return $sql->select("SELECT * FROM fretes WHERE tipo_frete = :TIPO_FRETE", array(
-            ":TIPO_FRETE"=>$this->gettipo_frete(),
+        return $sql->select("SELECT * FROM fretes 
+            WHERE (idLocacao = :IDLOCACAO AND tipo_frete = :TIPO_FRETE)", array(
+            ":IDLOCACAO"=>$this->getidLocacao(),
+            ":TIPO_FRETE"=>$this->gettipo_frete()
         ));
     }
 
