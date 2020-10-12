@@ -34,64 +34,64 @@ $(function() { //quando a página carrega
 			msgError = "Cadastrar";
 			msgSuccess = "Frete Cadastrado";
 
-			sendForm();
-
 		}else{  /* se for para Editar -------------------------------------------------- */
+			console.log("você quer editar um frete existente")	
+			route = idFrete;	
+			msgError = "Atualizar";	
+			msgSuccess = "Frete Atualizado";
+		}	
 
-			
-			$.ajax({
-				type: "POST",
-				url: `/freight/${idFreteAluguel}`, //rota para editar
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function() {
-					clearErrors();
-					$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-				
-				},
-				success: function (response) {
-					clearErrors();
-	
-					if (JSON.parse(response).error) {
-						console.log('erro ao editar frete!')
-	
-						response = JSON.parse(response)
-	
+		$.ajax({	
+			type: "POST",	
+			url: `/freights/${route}`, 	
+			data: formData,	
+			contentType: false,	
+			processData: false,	
+			beforeSend: function() {	
+				clearErrors();	
+				$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));		
+			},	
+			success: function (response) {	
+				clearErrors();	
+
+				if (JSON.parse(response).error) {	
+					console.log(`erro ao ${msgError} Frete!`)	
+
+					response = JSON.parse(response)
+					Swal.fire(
+						'Erro!',	
+						`Ocorreu algum erro ao ${msgError}`,	
+						'error'	
+					);	
+
+					if(response['error_list']){	
+
+						showErrorsModal(response['error_list'])
 						Swal.fire(
-							'Erro!',
+							'Atenção!',
 							'Por favor verifique os campos',
 							'error'
 						);
-	
-						if(response['error_list']){
-							
-							showErrorsModal(response['error_list'])
-						}
-	
-					} else {
-						$('#freightModal').modal('hide');
-	
+
+					}else {
+						$('#freightModal').modal('hide');					
+
 						Swal.fire(
-							'Sucesso!',
-							'Frete atualizado!',
-							'success'
-						);
-	
-						loadTableFreights();
+							'Sucesso!',	
+							msgSuccess,	
+							'success'	
+						);	
+
+						loadTableFreights();	
 						$('#formFreights').trigger("reset");
 					}
-	
-				},
-				error: function (response) {
-	
-					//$('#CostumerModal').modal('hide');
-					$('#formFreights').trigger("reset");
-					console.log(`Erro! Mensagem: ${response}`);
-	
 				}
-			});
-		}	
+			},
+			error: function (response) {	
+				$('#formFreights').trigger("reset");	
+				console.log(`Erro! Mensagem: ${response}`);	
+			}	
+		});
 		
 		return false;
 	});
@@ -113,7 +113,7 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 	}
 
 		//carrega a tabela de Freights
-	//function 
+
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
 		"autoWidth": false, //largura
@@ -132,13 +132,8 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 
 					row = []
 
-					//Essa variavel você pode apresentar
-					// var telFormatado = mascaraTelefone(element.telefone1);
-
-					//row['id'] = element.id
-
 					if(element.tipo_frete == 0){
-						tipoFrete = 'Entrega';
+						tipo_frete = 'Entrega';
 						colorFrete = 'green';
 
 					}else if(element.tipo_frete == 1){
@@ -161,13 +156,13 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 					row['#'] = element.count;
 					row['tipo_frete'] = `<b style='color: ${colorFrete}'>${tipo_frete}</b>`
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
-					row['data_hora'] = element.data_hora //Ainda precisa formatar
-					row['observacao'] = element.obeservacao;
+					row['data_hora'] = `${formatDateToShow(data)} ${hora}`
+					row['observacao'] = element.observacao;
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
 					onclick='loadFreight(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
+					<button type='button' title='excluir' onclick='deleteFreight(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
@@ -183,9 +178,9 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 		},
 		"columns": [
 			{ "data": "#" },
-			{ "data": "tipoFrete"},
+			{ "data": "tipo_frete"},
 			{ "data": "status" },
-			{ "data": "dataHora" },
+			{ "data": "data_hora" },
 			{ "data": "observacao" },
 			{ "data": "options" },
 		],
@@ -199,34 +194,44 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 
 
 //detalhes do Locacao
-function loadFreight(idFreteAluguel) { //carrega todos os campos do modal referente ao Locacao escolhido
+function loadFreight(idFrete) { //carrega todos os campos do modal referente ao Locacao escolhido
 	
-	//console.log(`load rent id: ${idFreteAluguel}`)
+	//console.log(`load rent id: ${idFrete}`)
 	clearFieldsValues();
 	clearErrors();
 
 	$('#modalTitle').html('Detalhes do Frete')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
-	$('#btnSaveRent').hide();
+	$('#btnSaveFreight').hide();
 	$('#btnUpdate').show();
 
-	$.getJSON(`/freights/json/${idFreteAluguel}`, function (data) { //ajax
+	$.getJSON(`/freights/json/${idFrete}`, function (data) { //ajax
 		
 		console.log(data)
-			
+		data_hora = data.data_hora.replace(' ', 'T') //formata para o campo data e hora 'yyyy-mm-ddThh:mm'	
+
 		$("#idFreteAluguel").val(data.id);
-		$("#formFreights #locacao").val(data.idLocacao);
-		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
+		$("#id").val(data.id);
+		$("#linkLocacao").attr('href', `/rents/${data.idLocacao}`) //link
+		$("#idLocacao").val(data.idLocacao)	
+		$("#formFreights #tipo_frete").val(data.tipo_frete).prop('disabled', true);	
 		$("#formFreights #status").val(data.status).prop('disabled', true);
-		$("#formFreights #dataHora").val(data.data_hora).prop('disabled', true);
-		$("#formFreights #observacao").val(data.observacao).prop('disable', true);
-		
+		$("#formFreights #data_hora").val(data_hora).prop('disabled', true);
+		$("#formFreights #observacao").val(data.observacao).prop('disabled', true);
+
+
 	//Atualizar Frete	
 	$('#btnUpdate').click(function(){
 
-		$("#formFreights #tipoFrete").prop('disabled', false);
+		$('#modalTitle').html('Editar Frete');
+		$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
+		$('#btnSaveFreight').val('Atualizar').show();
+		$('#btnUpdate').hide();	
+
+		$("#formFreights #idLocacao").prop('disabled', false);
+		$("#formFreights #tipo_frete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
-		$("#formFreights #dataHora").prop('disabled', false);
+		$("#formFreights #data_hora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
 
 	});
@@ -241,7 +246,7 @@ function loadFreight(idFreteAluguel) { //carrega todos os campos do modal refere
 }
 
 //Deletar um frete
-function deleteFreight(idFreteLocacao){
+function deleteFreight(idFrete){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -258,7 +263,7 @@ function deleteFreight(idFreteLocacao){
 
 			$.ajax({
 				type: "POST",
-				url: `/freight/${idFreteLocacao}/delete`,
+				url: `/freights/${idFrete}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()
@@ -309,17 +314,19 @@ function deleteFreight(idFreteLocacao){
 //limpar campos do modal para Cadastrar
 function clearFieldsValues(){
 
-	//$("#formRent #codigo").prop('disabled', true)
+	//$("#formFreight #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Frete');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveFreight').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-	$("#formFreights #idFreteAluguel").hide();	
-	$("#formFreights #locacao").prop('disabled', true);
-	$("#formFreights #tipoFrete").prop('disabled', false);
+	$("#formFreights #id").hide();	
+	$("#idLocacao").attr('href', `/rents/`)
+
+	$("#formFreights #idLocacao").prop('disabled', true);
+	$("#formFreights #tipo_frete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
-	$("#formFreights #dataHora").prop('disabled', false);
+	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#id').val(0);
