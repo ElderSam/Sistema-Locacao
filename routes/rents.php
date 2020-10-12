@@ -5,7 +5,7 @@ use \Locacao\Controller\RentController;
 use \Locacao\Model\User;
 use \Locacao\Model\Rent;
 
-function getPage($id="") {
+function getPageRent($id="") {
     User::verifyLogin();
 
     $page = new Page();
@@ -16,11 +16,11 @@ function getPage($id="") {
 
 /* rota para página de locações, passando o id para abrir o modal direto --------------*/
 $app->get('/rents', function(){
-    getPage();
+    getPageRent();
 });
 
 $app->get('/rents/:id', function($id){
-    getPage($id);
+    getPageRent($id);
 });
 
 $app->get('/rents/json', function(){

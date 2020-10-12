@@ -238,7 +238,11 @@ function loadTableRents(){ //carrega a tabela de Locações/Aluguéis
 					row['dtFinal'] = dtFinal
 					//row['cliente'] = element.cliente_idCliente
 					//row['contrato'] = element.contrato_idContrato
-					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+					
+					row['options'] = `<a title='ver fretes' class='btn btn-success' href='/freights/rent/${element.id}'>
+						<i class='fas fa-truck sm'></i>
+					</a>
+					<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
 					onclick='loadRent(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>

@@ -92,7 +92,7 @@ class FreightController extends Generator
 		$_POST['length'] = Qual posição começar
     */
 
-    public function ajax_list_freights($requestData)
+    public function ajax_list_freights($requestData, $idRent)
     {
         $column_search = array("tipo_frete", "status", "data_hora"); //colunas pesquisáveis pelo datatables
         $column_order = array("tipo_frete", "status", "data_hora"); //ordem que vai aparecer
@@ -100,7 +100,7 @@ class FreightController extends Generator
         //faz a pesquisa no banco de dados
         $freight = new Freight(); //model
 
-        $datatable = $freight->get_datatable($requestData, $column_search, $column_order);
+        $datatable = $freight->get_datatable($requestData, $column_search, $column_order, $idRent);
 
         $data = array();
 

@@ -6,13 +6,22 @@ use \Locacao\Controller\FreightController;
 use \Locacao\Model\Freight;
 
 
-/* rota para página de fretes (entrega e retirada) --------------*/
-$app->get('/freights', function(){
-
+function getPageFreight($idRent=false) {
     User::verifyLogin();
 
     $page = new Page();
-    $page->setTpl("fretes");
+    $page->setTpl("fretes", array(
+        "idRentURL"=>$idRent
+    ));
+}
+
+/* rota para página de fretes (entrega e retirada) --------------*/
+$app->get('/freights', function(){
+    getPageFreight();
+});
+
+$app->get('/freights/rent/:idRent', function($idRent) {
+    getPageFreight($idRent);
 });
 
 $app->get('/freights/json', function() {
@@ -29,17 +38,25 @@ $app->get('/freights/json/:id', function($id) {
     echo $freight->loadFreight((int)$id);
 });
 
-$app->post('/freights/list_datatables', function(){ //ajax list datatables
-
-	User::verifyLogin();
+//---------------------------------------------
+function loadTable($idRent=false) {
+    User::verifyLogin();
 	
 	//Receber a requisão da pesquisa 
 	$requestData = $_REQUEST;
 
 	$freights = new FreightController();
-	echo $freights->ajax_list_freights($requestData);
-	
+	echo $freights->ajax_list_freights($requestData, $idRent);
+}
+
+$app->post('/freights/list_datatables', function(){ //ajax list datatables
+	loadTable();
 });
+
+$app->post('/freights/list_datatables/rent/:idRent', function($idRent){ //ajax list datatables
+	loadTable($idRent);
+});
+//---------------------------------------------
 
 /* rota para criar frete (salva no banco) -----------*/
 $app->post("/rents/create", function(){

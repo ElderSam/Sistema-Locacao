@@ -108,7 +108,7 @@ class Freight extends Generator {
         }
     }
 
-    public function get_datatable($requestData, $column_search, $column_order)
+    public function get_datatable($requestData, $column_search, $column_order, $idRent)
     {
         $query = "SELECT * FROM fretes";
 
@@ -177,6 +177,11 @@ class Freight extends Generator {
                 } //fim do primeiro else
 
             } //fim do foreach
+
+            if($idRent) {
+                $query .= " AND idLocacao = $idRent";
+            }
+
             if (!$first) {
                 $query .= ")"; //termina o WHERE e a query
             }

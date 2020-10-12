@@ -2,7 +2,8 @@ var myTable = null
 
 $(function() { //quando a página carrega
 
-	loadTableFreights()
+	idRent = parseInt($('#idRentURL').val()) //receives a number or false
+	loadTableFreights(idRent)
 
 	// $("#btnAddFreights").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 	// 	let i = 0
@@ -93,7 +94,15 @@ $(function() { //quando a página carrega
 	});
 });
 
-function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
+function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Aluguéis
+
+	let route;
+
+	if(idRent) {
+		route = `/freights/list_datatables/rent/${idRent}`;
+	}else {
+		route = '/freights/list_datatables';
+	}
 
 	if(myTable != null){
 		myTable.destroy(); //desfaz as paginações
@@ -106,7 +115,7 @@ function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 		"processing": true, //mensagem 'processando'
 		"serverSide": true, 
 		"ajax": {
-			"url": "/freights/list_datatables", //chama a rota para carregar os dados 
+			"url": route, //chama a rota para carregar os dados 
 			"type": "POST",
 			dataSrc: function (json) {
 				console.log(json)
