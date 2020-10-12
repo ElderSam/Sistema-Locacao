@@ -1,9 +1,10 @@
 var myTable = null
+let idRent;
 
 $(function() { //quando a página carrega
 
 	idRent = parseInt($('#idRentURL').val()) //receives a number or false
-	loadTableFreights(idRent)
+	loadTableFreights()
 
 	if(idRent) {
 		$("#idLocacao").val(idRent);
@@ -100,7 +101,7 @@ $(function() { //quando a página carrega
 	
 });
 
-function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Aluguéis
+function loadTableFreights(){ //carrega a tabela de Locações/Aluguéis
 
 	let route;
 
@@ -248,7 +249,7 @@ function loadFreight(idFrete) { //carrega todos os campos do modal referente ao 
 }
 
 //Deletar um frete
-function deleteFreight(idFrete){
+function deleteFreight(idFreight){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -265,7 +266,7 @@ function deleteFreight(idFrete){
 
 			$.ajax({
 				type: "POST",
-				url: `/freights/${idFrete}/delete`,
+				url: `/freights/${idFreight}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()
@@ -323,7 +324,7 @@ function clearFieldsValues(){
 	$('#btnUpdate').hide();
 
 	$("#formFreights #id").hide();	
-	$("#idLocacao").attr('href', `/rents/`)
+	//").attr('href', `/rents/`)
 
 	//$("#formFreights #idLocacao").prop('disabled', true);
 	$("#formFreights #tipo_frete").prop('disabled', false);
