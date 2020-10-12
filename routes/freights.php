@@ -59,7 +59,7 @@ $app->post('/freights/list_datatables/rent/:idRent', function($idRent){ //ajax l
 //---------------------------------------------
 
 /* rota para criar frete (salva no banco) -----------*/
-$app->post("/rents/create", function(){
+$app->post("/freights/create", function(){
     User::verifyLogin();
 
 	$freight = new FreightController();

@@ -5,11 +5,16 @@ $(function() { //quando a página carrega
 	idRent = parseInt($('#idRentURL').val()) //receives a number or false
 	loadTableFreights(idRent)
 
-	// $("#btnAddFreights").click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
-	// 	let i = 0
-	// 	clearFieldsValues();
-	// 	loadFreight("");
-	// });
+	if(idRent) {
+		$("#idLocacao").val(idRent);
+
+		$("#btnAddFreights")
+			.attr('hidden', false)
+			.click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
+				let i = 0
+				clearFieldsValues();
+			});
+	}
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
 	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
@@ -18,10 +23,10 @@ $(function() { //quando a página carrega
 		let form = $('#formFreights');
 		let formData = new FormData(form[0]);
 		console.log(formData)
-		idFrete = $('#id').val()
+		let idFrete = $('#id').val()
 		console.log('id', idFrete)
 
-		if((idLocacao == 0) || (idLocacao == undefined)){ //se for para cadastrar --------------------------------------------------
+		if((idFrete == 0) || (idFrete == undefined)){ //se for para cadastrar --------------------------------------------------
 
 			console.log("você quer cadastrar")	
 			route = "create";
@@ -130,18 +135,18 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 					if(element.tipo_frete == 0){
 						tipo_frete = 'Entrega';
 						colorFrete = 'green';
+
 					}else if(element.tipo_frete == 1){
-						tipo_frete = 'Pendente';
+						tipo_frete = 'Retirada';
 						colorFrete = 'Red';
 					}
 
 					if (element.status == 0) {
-						txtStatus = 'Concluído';
-						color = 'green';
-		
-					} else if (element.status == 1) {
 						txtStatus = 'Pendente ';
 						color = 'Red';	
+					}else if (element.status == 1) {
+						txtStatus = 'Concluído';
+						color = 'green';
 					}
 
 					//separa a string data_hora e trata campos data e hora, ex: 2020-10-02 09:30:00
@@ -316,10 +321,10 @@ function clearFieldsValues(){
 	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
-	$('#id').val('');
-	$("#idLocacao").val('')
-	$('#tipo_frete').val(0);
-	$('#status').val('');
+	$('#id').val(0);
+	//$("#idLocacao").val('')
+	$('#tipo_frete').val('');
+	$('#status').val('0');
 	$('#data_hora').val(new Date());
 	$('#observacao').val('');	
 }

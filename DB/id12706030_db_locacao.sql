@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 04-Out-2020 às 04:02
+-- Tempo de geração: 12-Out-2020 às 02:51
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -289,8 +289,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fretes_save` (IN `pidLocacao` IN
   
     DECLARE vidFrete INT;
     
-  INSERT INTO fretes (idLocacao, tipo_frete, status, data_hora, observacao, custoRetirada, observacao)
-    VALUES(pidLocacao, ptipo_frete, pstatus, pdata_hora, pobservacao, pcustoRetirada, pobservacao);
+  INSERT INTO fretes (idLocacao, tipo_frete, status, data_hora, observacao)
+    VALUES(pidLocacao, ptipo_frete, pstatus, pdata_hora, pobservacao);
     
     SET vidFrete = LAST_INSERT_ID();
  
@@ -934,7 +934,8 @@ CREATE TABLE `fretes` (
 --
 
 INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `observacao`, `dtCadastro`) VALUES
-(1, 7, 0, 1, '2020-10-03 22:47:00', 'teste ATUALIZAÇÃO', '2020-09-20 17:38:51');
+(1, 7, 0, 1, '2020-10-11 21:49:00', 'teste ATUALIZAÇÃO', '2020-09-20 17:38:51'),
+(3, 7, 1, 0, '2020-11-28 08:30:00', 'cadastro teste pelo sistema (LOCALHOST)', '2020-10-11 21:46:24');
 
 -- --------------------------------------------------------
 
@@ -964,7 +965,8 @@ CREATE TABLE `historicoalugueis` (
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
 (7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
 (13, '4', 6, 1, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
-(14, '5', 6, 2, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:05');
+(15, '5', 6, 2, 0, 15470, '2020-10-05', '2020-10-05', 215, 215, '', '2020-10-05 20:22:21'),
+(16, '6', 6, 15, 0, 15470, '2020-10-05', '2020-10-05', 215, 215, '', '2020-10-05 20:22:21');
 
 -- --------------------------------------------------------
 
@@ -1021,7 +1023,7 @@ CREATE TABLE `produtos_esp` (
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
 (1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
-(2, 5, '001.04.05.02.02.002-0002', 10000, 1, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
+(2, 5, '001.04.05.02.02.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
 (3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
@@ -1034,7 +1036,7 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
 (14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36'),
-(15, 5, '001.04.05.02.02.002-0008', 15000, 1, '2020-02-01', '0008', '', 2, '2020-09-21 19:30:52'),
+(15, 5, '001.04.05.02.02.002-0008', 15000, 0, '2020-02-01', '0008', '', 2, '2020-09-21 19:30:52'),
 (16, 5, '001.04.05.02.02.002-0009', 15200, 1, '0000-00-00', '0009', '', 2, '2020-09-21 19:35:07');
 
 -- --------------------------------------------------------
@@ -1442,13 +1444,13 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
