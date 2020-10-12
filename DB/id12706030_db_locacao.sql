@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Out-2020 às 20:34
+-- Tempo de geração: 12-Out-2020 às 22:16
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -963,10 +963,10 @@ CREATE TABLE `fretes` (
 --
 
 INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `observacao`, `dtCadastro`) VALUES
-(1, 7, 0, 1, '2020-09-07 09:00:00', 'teste ATUALIZAÇÃO', '2020-09-20 17:38:51'),
+(1, 7, 0, 1, '2020-09-07 09:00:00', 'Item: Container 3M almoxarifado com lavabo DC\r\nCod. produto: 001.01.01.01.01.002-0003\r\n', '2020-09-20 17:38:51'),
 (5, 16, 0, 0, '2020-10-05 09:30:00', 'teste', '2020-10-12 09:23:37'),
 (6, 16, 1, 0, '2020-10-30 09:30:00', '', '2020-10-12 09:30:49'),
-(9, 7, 1, 1, '2020-10-15 15:31:00', '', '2020-10-12 15:31:59');
+(13, 7, 1, 1, '2020-11-05 16:38:00', 'Cod. Prod.: 001.01.01.01.01.002-0003,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  TESTE ATUALIZAR\r\n', '2020-10-12 16:38:40');
 
 -- --------------------------------------------------------
 
@@ -1055,7 +1055,7 @@ CREATE TABLE `produtos_esp` (
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
 (1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
 (2, 5, '001.04.05.02.02.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
-(3, 1, '001.01.01.01.01.002-0003', 13899.8, 0, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
+(3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
@@ -1475,7 +1475,7 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
