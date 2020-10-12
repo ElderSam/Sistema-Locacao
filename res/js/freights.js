@@ -54,10 +54,12 @@ $(function() { //quando a página carrega
 			success: function (response) {	
 				clearErrors();	
 
-				if (JSON.parse(response).error) {	
-					console.log(`erro ao ${msgError} Frete!`)	
+				response = JSON.parse(response)
+				console.log(response)
 
-					response = JSON.parse(response)
+				if (response.error) {	
+					console.log(`erro ao ${msgError} Frete!`)	
+					
 					Swal.fire(
 						'Erro!',	
 						`Ocorreu algum erro ao ${msgError}`,	
@@ -72,19 +74,19 @@ $(function() { //quando a página carrega
 							'Por favor verifique os campos',
 							'error'
 						);
-
-					}else {
-						$('#freightModal').modal('hide');					
-
-						Swal.fire(
-							'Sucesso!',	
-							msgSuccess,	
-							'success'	
-						);	
-
-						loadTableFreights();	
-						$('#formFreights').trigger("reset");
 					}
+
+				}else {
+					$('#freightModal').modal('hide');					
+
+					Swal.fire(
+						'Sucesso!',	
+						msgSuccess,	
+						'success'	
+					);	
+
+					loadTableFreights();	
+					$('#formFreights').trigger("reset");
 				}
 			},
 			error: function (response) {	
@@ -323,7 +325,7 @@ function clearFieldsValues(){
 	$("#formFreights #id").hide();	
 	$("#idLocacao").attr('href', `/rents/`)
 
-	$("#formFreights #idLocacao").prop('disabled', true);
+	//$("#formFreights #idLocacao").prop('disabled', true);
 	$("#formFreights #tipo_frete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
 	$("#formFreights #data_hora").prop('disabled', false);
