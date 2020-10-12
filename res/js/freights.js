@@ -8,7 +8,7 @@ $(function() { //quando a página carrega
 	if(idRent) {
 		$("#idLocacao").val(idRent);
 
-		$("#btnAddFreights")
+		$("#btnAddFreight")
 			.attr('hidden', false)
 			.click(function(){ /* quando clica no botão para abrir o modal (cadastrar ou editar) */
 				let i = 0
@@ -17,7 +17,7 @@ $(function() { //quando a página carrega
 	}
 	 
 	/* Cadastrar ou Editar Locacao --------------------------------------------------------------*/	
-	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
+	$("#btnSaveFreights").click(function(e) { //quando enviar o formulário de Locacao
 		e.preventDefault(); 
 		
 		let form = $('#formFreights');
@@ -28,75 +28,74 @@ $(function() { //quando a página carrega
 
 		if((idFrete == 0) || (idFrete == undefined)){ //se for para cadastrar --------------------------------------------------
 
-			console.log("você quer cadastrar")	
+			console.log("você quer cadastrar")
+		
 			route = "create";
 			msgError = "Cadastrar";
 			msgSuccess = "Frete Cadastrado";
 
-		}else{  /* se for para Editar -------------------------------------------------- */			
-			console.log("você quer editar um frete existente")
-			route = idFrete;
-			msgError = "Atualizar";
-			msgSuccess = "Frete Atualizado";
-		}	
+			sendForm();
 
-		$.ajax({
-			type: "POST",
-			url: `/freights/${route}`, 
-			data: formData,
-			contentType: false,
-			processData: false,
-			beforeSend: function() {
-				clearErrors();
-				$("#btnSaveFreight").parent().siblings(".help-block").html(loadingImg("Verificando..."));	
-			},
-			success: function (response) {
-				clearErrors();
+		}else{  /* se for para Editar -------------------------------------------------- */
 
-				if (JSON.parse(response).error) {
-					console.log(`erro ao ${msgError} Frete!`)
-
-					response = JSON.parse(response)
-
-					Swal.fire(
-						'Erro!',
-						`Ocorreu algum erro ao ${msgError}`,
-						'error'
-					);
-
-					if(response['error_list']){
-						
-						showErrorsModal(response['error_list'])
-
+			
+			$.ajax({
+				type: "POST",
+				url: `/freight/${idFreteAluguel}`, //rota para editar
+				data: formData,
+				contentType: false,
+				processData: false,
+				beforeSend: function() {
+					clearErrors();
+					$("#btnSaveFreights").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+				
+				},
+				success: function (response) {
+					clearErrors();
+	
+					if (JSON.parse(response).error) {
+						console.log('erro ao editar frete!')
+	
+						response = JSON.parse(response)
+	
 						Swal.fire(
-							'Atenção!',
+							'Erro!',
 							'Por favor verifique os campos',
 							'error'
 						);
+	
+						if(response['error_list']){
+							
+							showErrorsModal(response['error_list'])
+						}
+	
+					} else {
+						$('#freightModal').modal('hide');
+	
+						Swal.fire(
+							'Sucesso!',
+							'Frete atualizado!',
+							'success'
+						);
+	
+						loadTableFreights();
+						$('#formFreights').trigger("reset");
 					}
-
-				} else {
-					$('#freightModal').modal('hide');
-
-					Swal.fire(
-						'Sucesso!',
-						msgSuccess,
-						'success'
-					);
-
-					loadTableFreights();
+	
+				},
+				error: function (response) {
+	
+					//$('#CostumerModal').modal('hide');
 					$('#formFreights').trigger("reset");
+					console.log(`Erro! Mensagem: ${response}`);
+	
 				}
-
-			},
-			error: function (response) {
-				$('#formFreights').trigger("reset");
-				console.log(`Erro! Mensagem: ${response}`);
-			}
-		});
+			});
+		}	
 		
 		return false;
 	});
+	
 });
 
 function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Aluguéis
@@ -113,7 +112,8 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 		myTable.destroy(); //desfaz as paginações
 	}
 
-	//carrega a tabela de Freights
+		//carrega a tabela de Freights
+	//function 
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
 		"autoWidth": false, //largura
@@ -129,11 +129,16 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 
 				json.data.forEach(element => {
 					//console.log(element)
+
 					row = []
+
+					//Essa variavel você pode apresentar
+					// var telFormatado = mascaraTelefone(element.telefone1);
+
 					//row['id'] = element.id
 
 					if(element.tipo_frete == 0){
-						tipo_frete = 'Entrega';
+						tipoFrete = 'Entrega';
 						colorFrete = 'green';
 
 					}else if(element.tipo_frete == 1){
@@ -156,28 +161,31 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 					row['#'] = element.count;
 					row['tipo_frete'] = `<b style='color: ${colorFrete}'>${tipo_frete}</b>`
 					row['status'] = `<b style='color: ${color}'>${txtStatus}</b>`
-					row['data_hora'] = `${formatDateToShow(data)} ${hora}` //Ainda precisa formatar
-					row['observacao'] = element.observacao;
+					row['data_hora'] = element.data_hora //Ainda precisa formatar
+					row['observacao'] = element.obeservacao;
 					row['options'] = `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
 					onclick='loadFreight(${element.id});'>
 						<i class='fas fa-bars sm'></i>
 					</button>
-					<button type='button' title='excluir' onclick='deleteFreight(${element.id});'
+					<button type='button' title='excluir' onclick='deleteRent(${element.id});'
 						class='btn btn-danger btnDelete'>
 						<i class='fas fa-trash'></i>
 					</button>`
 
-					rows.push(row)				
+					rows.push(row)
+				
 				});
 				
 				return rows;
 			},
+
+
 		},
 		"columns": [
 			{ "data": "#" },
-			{ "data": "tipo_frete"},
+			{ "data": "tipoFrete"},
 			{ "data": "status" },
-			{ "data": "data_hora" },
+			{ "data": "dataHora" },
 			{ "data": "observacao" },
 			{ "data": "options" },
 		],
@@ -186,47 +194,41 @@ function loadTableFreights(idRent=false){ //carrega a tabela de Locações/Alugu
 			{ targets: "text-center", className: "text-center" },
 		]
 	});
+	
 }
 
 
 //detalhes do Locacao
-function loadFreight(idFrete) { //carrega todos os campos do modal referente ao Locacao escolhido
+function loadFreight(idFreteAluguel) { //carrega todos os campos do modal referente ao Locacao escolhido
 	
-	//console.log(`load freight id: ${idFrete}`)
+	//console.log(`load rent id: ${idFreteAluguel}`)
 	clearFieldsValues();
 	clearErrors();
 
 	$('#modalTitle').html('Detalhes do Frete')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
-	$('#btnSaveFreight').hide();
+	$('#btnSaveRent').hide();
 	$('#btnUpdate').show();
 
-	$.getJSON(`/freights/json/${idFrete}`, function (data) { //ajax
+	$.getJSON(`/freights/json/${idFreteAluguel}`, function (data) { //ajax
 		
 		console.log(data)
-		data_hora = data.data_hora.replace(' ', 'T') //formata para o campo data e hora 'yyyy-mm-ddThh:mm'
-
-		$("#id").val(data.id);
-		$("#linkLocacao").attr('href', `/rents/${data.idLocacao}`) //link
-		$("#idLocacao").val(data.idLocacao)
-		$("#formFreights #tipo_frete").val(data.tipo_frete).prop('disabled', true);
+			
+		$("#idFreteAluguel").val(data.id);
+		$("#formFreights #locacao").val(data.idLocacao);
+		$("#formFreights #tipoFrete").val(data.tipo_frete).prop('disabled', true);
 		$("#formFreights #status").val(data.status).prop('disabled', true);
-		$("#formFreights #data_hora").val(data_hora).prop('disabled', true);
-		$("#formFreights #observacao").val(data.observacao).prop('disabled', true);
+		$("#formFreights #dataHora").val(data.data_hora).prop('disabled', true);
+		$("#formFreights #observacao").val(data.observacao).prop('disable', true);
 		
 	//Atualizar Frete	
 	$('#btnUpdate').click(function(){
 
-		$('#modalTitle').html('Editar Frete');
-		$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
-		$('#btnSaveFreight').val('Atualizar').show();
-		$('#btnUpdate').hide();
-
-		$("#formFreights #idLocacao").prop('disabled', false);
-		$("#formFreights #tipo_frete").prop('disabled', false);
+		$("#formFreights #tipoFrete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
-		$("#formFreights #data_hora").prop('disabled', false);
+		$("#formFreights #dataHora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
+
 	});
 	//Encerrar Frete
 
@@ -239,7 +241,7 @@ function loadFreight(idFrete) { //carrega todos os campos do modal referente ao 
 }
 
 //Deletar um frete
-function deleteFreight(idFrete){
+function deleteFreight(idFreteLocacao){
 
 	Swal.fire({
 		title: 'Você tem certeza?',
@@ -256,7 +258,7 @@ function deleteFreight(idFrete){
 
 			$.ajax({
 				type: "POST",
-				url: `/freights/${idFrete}/delete`,
+				url: `/freight/${idFreteLocacao}/delete`,
 				beforeSend: function() {
 					
 					$('.swal2-content').hide()
@@ -296,6 +298,7 @@ function deleteFreight(idFrete){
 					console.log(`Erro! Mensagem: ${response}`);		
 				}
 			});		
+
 		}
 	})
 
@@ -306,19 +309,17 @@ function deleteFreight(idFrete){
 //limpar campos do modal para Cadastrar
 function clearFieldsValues(){
 
-	//$("#formFreight #codigo").prop('disabled', true)
+	//$("#formRent #codigo").prop('disabled', true)
 	$('#modalTitle').html('Cadastrar Frete');
 	$('#btnClose').html('Fechar').removeClass('btn-danger').addClass('btn-secondary');
 	$('#btnSaveFreight').val('Cadastrar').show();
 	$('#btnUpdate').hide();
 
-	$("#formFreights #id").hide();
-	$("#idLocacao").attr('href', `/rents/`)
-
-	$("#formFreights #idLocacao").prop('disabled', false);
-	$("#formFreights #tipo_frete").prop('disabled', false);
+	$("#formFreights #idFreteAluguel").hide();	
+	$("#formFreights #locacao").prop('disabled', true);
+	$("#formFreights #tipoFrete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
-	$("#formFreights #data_hora").prop('disabled', false);
+	$("#formFreights #dataHora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#id').val(0);
