@@ -21,6 +21,7 @@ $(function() { //quando a página carrega
 	$("#btnSaveFreight").click(function(e) { //quando enviar o formulário de Locacao
 		e.preventDefault(); 
 		
+		$("#formFreights #tipo_frete").prop('disabled', false);
 		let form = $('#formFreights');
 		let formData = new FormData(form[0]);
 		console.log(formData)
@@ -95,7 +96,9 @@ $(function() { //quando a página carrega
 				console.log(`Erro! Mensagem: ${response}`);	
 			}	
 		});
-		
+
+		if(idFrete > 0) $("#formFreights #tipo_frete").prop('disabled', true);
+
 		return false;
 	});
 	
@@ -232,7 +235,7 @@ function loadFreight(idFrete) { //carrega todos os campos do modal referente ao 
 		$('#btnUpdate').hide();	
 
 		$("#formFreights #idLocacao").prop('disabled', false);
-		$("#formFreights #tipo_frete").prop('disabled', false);
+		//$("#formFreights #tipo_frete").prop('disabled', false);
 		$("#formFreights #status").prop('disabled', false);
 		$("#formFreights #data_hora").prop('disabled', false);
 		$("#formFreights #observacao").prop('disabled', false);
@@ -327,13 +330,13 @@ function clearFieldsValues(){
 	//").attr('href', `/rents/`)
 
 	//$("#formFreights #idLocacao").prop('disabled', true);
-	$("#formFreights #tipo_frete").prop('disabled', false);
+	//$("#formFreights #tipo_frete").prop('disabled', false);
 	$("#formFreights #status").prop('disabled', false);
 	$("#formFreights #data_hora").prop('disabled', false);
 	$("#formFreights #observacao").prop('disabled', false);
 
 	$('#id').val(0);
-	//$("#idLocacao").val('')
+	$("#idLocacao").val(idRent)
 	$('#tipo_frete').val('');
 	$('#status').val('0');
 	$('#data_hora').val(new Date());
