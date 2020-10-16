@@ -152,7 +152,11 @@ class Product extends Generator
     public function get_datatable($requestData, $column_search, $column_order)
     {
 
-        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao, b.descCategoria, count(c.idProduto_esp) as qtd FROM produtos_gen a
+        $query = "SELECT a.idProduto_gen, a.codigoGen, a.descricao,
+            b.descCategoria,
+            count(c.idProduto_esp) as qtdTotal,
+            SUM( IF(c.status = 1, 1, 0)) as qtdDisponivel
+            FROM produtos_gen a
             INNER JOIN prod_categorias b  ON(a.idCategoria = b.idCategoria)
             LEFT JOIN produtos_esp as c ON(a.idProduto_gen = c.idProduto_gen)";
 
@@ -162,23 +166,7 @@ class Product extends Generator
 
             foreach ($column_search as $field) {
 
-
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
-
-                /*if ($field == "tipo1") {
-                  
-                    if (($search == "3M")) {
-                        $search = 1;
-                    } else if ($search == "4M") {
-                        $search = 2;
-                    } else if ($search == "6M") {
-                        $search = 3;
-                    } else if ($search == "12M") {
-                        $search = 4;
-                    }
-
-                    //echo "tipo1: ".$search;
-                }*/
 
                 //filtra no banco
                 if ($first) {
@@ -203,6 +191,7 @@ class Product extends Generator
             " LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   ";
 
         $products = new Product();
+        //echo "query: $query";
 
         return array(
             'totalFiltered' => $this->getTotalFiltered(),

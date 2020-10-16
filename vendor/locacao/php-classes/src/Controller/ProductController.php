@@ -338,7 +338,8 @@ class ProductController extends Generator
                 "codigoGen"=>$product['codigoGen'],
                 "descCategoria"=>$product['descCategoria'],
                 "descricao"=>$product['descricao'],
-                "qtd"=>$product['qtd']
+                "qtdTotal"=>$product['qtdTotal'],
+                "qtdDisponivel"=>$product['qtdDisponivel']
             ];
 
             $data[] = $row;

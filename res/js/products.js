@@ -443,7 +443,8 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 					row['codigoGen'] = element.codigoGen
 					row['descCategoria'] = element.descCategoria
 					row['descricao'] = element.descricao
-					row['qtd'] = element.qtd
+					row['qtdTotal'] = element.qtdTotal
+					row['qtdDisponivel'] = `<b>${element.qtdDisponivel}</b>`
 					row['options'] = `<a type='button' title='ver produtos específicos' class='btn btn-success'
 						href='/products_esp/${element.id}'>
 							<i class='fas fa-plus-square'></i>
@@ -457,9 +458,7 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 							<i class='fas fa-trash'></i>
 						</button>`;
 
-
 					rows.push(row)
-
 				});
 
 				return rows;
@@ -469,7 +468,8 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 			{ "data": "codigoGen" },
 			{ "data": "descCategoria" },
 			{ "data": "descricao" },
-			{ "data": "qtd" },
+			{ "data": "qtdTotal" },
+			{ "data": "qtdDisponivel" },
 			{ "data": "options" }
 		],
 		"columnDefs": [
