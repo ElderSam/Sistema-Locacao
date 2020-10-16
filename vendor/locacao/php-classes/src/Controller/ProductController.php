@@ -332,36 +332,14 @@ class ProductController extends Generator
 
         foreach ($datatable['data'] as $product) { //para cada registro retornado
 
-            /*if ($product['status'] == 0) {
-                $status = "Alugado";
-            } else if ($product['status'] == 1){
-                $status = "Disponível";
-            }else if ($product['status'] == 2){
-                $status = "Manutenção";
-            }*/
-    
-
-            $id = $product['idProduto_gen'];
-
             // Ler e criar o array de dados ---------------------
-            $row = array();
-
-            $row[] = $product['codigoGen'];
-            $row[] = $product['descCategoria'];
-            $row[] = $product['descricao'];
-            $row[] = $product['qtd'];
-            $row[] = "<a type='button' title='ver produtos específicos' class='btn btn-success'
-                href='/products_esp/$id'>
-                    <i class='fas fa-plus-square'></i>
-                </a>
-                <button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-                onclick='loadProduct($id);'>
-                    <i class='fas fa-bars sm'></i>
-                </button>
-                <button type='button' title='excluir' onclick='deleteProduct($id);'
-                    class='btn btn-danger btnDelete'>
-                    <i class='fas fa-trash'></i>
-                </button>";
+            $row = [
+                "id"=>$product['idProduto_gen'],
+                "codigoGen"=>$product['codigoGen'],
+                "descCategoria"=>$product['descCategoria'],
+                "descricao"=>$product['descricao'],
+                "qtd"=>$product['qtd']
+            ];
 
             $data[] = $row;
         }
@@ -375,7 +353,6 @@ class ProductController extends Generator
         );
 
         return json_encode($json); //enviar dados como formato json
-
     }
 
     public function records_total()

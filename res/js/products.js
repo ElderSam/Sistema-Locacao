@@ -1,21 +1,8 @@
+var myTable = null
+
 $(function() { //quando a página carrega
 
-	//carrega a tabela de Products
-	myTable = $("#dataTable").DataTable({ 
-		"oLanguage": DATATABLE_PTBR, //tradução
-		"autoWidth": false, //largura
-		"processing": true, //mensagem 'processando'
-		"serverSide": true, 
-		"ajax": {
-			"url": "/products/list_datatables", //chama a rota para carregar os dados 
-			"type": "POST",
-
-		},
-		"columnDefs": [
-			{ targets: "no-sort", orderable: false }, //para não ordenar
-			{ targets: "text-center", className: "text-center" },
-		]
-	});
+	loadTableProducts();
 
 	$('#categoria').change(function(){
 		//loadContainer();
@@ -432,8 +419,10 @@ $(function() { //quando a página carrega
 
 function loadTableProducts(){ //carrega a tabela de Produtos
 
-	myTable.destroy(); //desfaz as paginações
-	
+	if(myTable != null){
+		myTable.destroy(); //desfaz as paginações
+	}
+
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR,
 		"autoWidth": false, //largura
@@ -442,7 +431,47 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 		"ajax": {
 			"url": "/products/list_datatables", //para chamar o método ajax_list_products
 			"type": "POST",
+			dataSrc: function (json) {
+				console.log(json)
+				rows = [];
+
+				json.data.forEach(element => {
+					//console.log(element)
+					
+					row = []		
+					
+					row['codigoGen'] = element.codigoGen
+					row['descCategoria'] = element.descCategoria
+					row['descricao'] = element.descricao
+					row['qtd'] = element.qtd
+					row['options'] = `<a type='button' title='ver produtos específicos' class='btn btn-success'
+						href='/products_esp/${element.id}'>
+							<i class='fas fa-plus-square'></i>
+						</a>
+						<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+						onclick='loadProduct(${element.id});'>
+							<i class='fas fa-bars sm'></i>
+						</button>
+						<button type='button' title='excluir' onclick='deleteProduct(${element.id});'
+							class='btn btn-danger btnDelete'>
+							<i class='fas fa-trash'></i>
+						</button>`;
+
+
+					rows.push(row)
+
+				});
+
+				return rows;
+			},
 		},
+		"columns": [
+			{ "data": "codigoGen" },
+			{ "data": "descCategoria" },
+			{ "data": "descricao" },
+			{ "data": "qtd" },
+			{ "data": "options" }
+		],
 		"columnDefs": [
 			{ targets: "no-sort", orderable: false }, //para não ordenar
 			{ targets: "text-center", className: "text-center" },
