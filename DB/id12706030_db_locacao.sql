@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Out-2020 às 22:16
+-- Tempo de geração: 17-Out-2020 às 22:21
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -87,7 +87,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_clientes_save` (IN `pcodigo` VAR
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidContrato` INT, IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4), IN `ptemMedicao` TINYINT(1), IN `pregraFatura` INT(2), IN `psemanaDoMes` INT(1), IN `pdiaFatura` INT(2))  BEGIN
   
     DECLARE vidContrato INT;
     
@@ -105,13 +105,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratosUpdate_save` (IN `pidCo
       email = pemail,
       dtAprovacao = pdtAprovacao,
       notas = pnotas,
-      valorTotal = pvalorTotal,
       dtInicio = pdtInicio,
       dtFim = pdtFim,
       statusOrcamento = pstatusOrcamento,
       codContrato = pcodContrato,
       nomeEmpresa = pnomeEmpresa,
-      obra_idObra = pobra_idObra
+      obra_idObra = pobra_idObra,
+      temMedicao = ptemMedicao,
+      regraFatura = pregraFatura,
+      semanaDoMes = psemanaDoMes,
+      diaFatura = pdiaFatura
     
     WHERE idContrato = vidContrato;
     
@@ -131,12 +134,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_delete` (IN `pidContra
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pvalorTotal` FLOAT, IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contratos_save` (IN `pcodContrato` VARCHAR(12), IN `pnomeEmpresa` VARCHAR(50), IN `pobra_idObra` INT, IN `pdtEmissao` DATETIME, IN `psolicitante` VARCHAR(50), IN `ptelefone` VARCHAR(15), IN `pemail` VARCHAR(40), IN `pdtAprovacao` DATETIME, IN `pnotas` VARCHAR(100), IN `pdtInicio` DATETIME, IN `pdtFim` DATE, IN `pstatusOrcamento` TINYINT(4), IN `ptemMedicao` TINYINT(1), IN `pregraFatura` INT(2), IN `psemanaDoMes` INT(1), IN `pdiaFatura` INT(2))  BEGIN
   
     DECLARE vidContrato INT;
     
-  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, valorTotal, dtInicio, dtFim, statusOrcamento)
-    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pvalorTotal, pdtInicio, pdtFim, pstatusOrcamento);
+  INSERT INTO contratos (codContrato, nomeEmpresa, obra_idObra, dtEmissao, solicitante, telefone, email, dtAprovacao, notas, dtInicio, dtFim, statusOrcamento, 
+        temMedicao, regraFatura, semanaDoMes, diaFatura)
+    VALUES(pcodContrato, pnomeEmpresa, pobra_idObra, pdtEmissao, psolicitante, ptelefone, pemail, pdtAprovacao, pnotas, pdtInicio, pdtFim, pstatusOrcamento, 
+    ptemMedicao, pregraFatura, psemanaDoMes, pdiaFatura);
     
     SET vidContrato = LAST_INSERT_ID();
     
@@ -803,7 +808,10 @@ CREATE TABLE `contratos` (
   `dtInicio` date DEFAULT NULL,
   `dtFim` date DEFAULT NULL,
   `statusOrcamento` tinyint(4) NOT NULL COMMENT 'ORÇAMENTO: \r\n0-pendente \r\n1-arquivado,\r\n CONTRATO: \r\n2-vencido  \r\n3-aprovado  \r\n4-em andamento \r\n5-encerrado',
-  `valorTotal` float DEFAULT NULL,
+  `temMedicao` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0- não\r\n1- sim',
+  `regraFatura` int(1) DEFAULT NULL COMMENT '1- dia fixo\r\n2- dia semana',
+  `semanaDoMes` int(1) DEFAULT NULL COMMENT 'número da semana dentro do mês',
+  `diaFatura` int(2) DEFAULT NULL COMMENT 'número do dia no mês OU\r\no número do dia dentro da semana;\r\n1- domingo\r\n2- segunda-feira\r\n...\r\n7-sábado',
   `notas` varchar(100) DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -812,12 +820,12 @@ CREATE TABLE `contratos` (
 -- Extraindo dados da tabela `contratos`
 --
 
-INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `valorTotal`, `notas`, `dtCadastro`) VALUES
-(2, '17', '', NULL, '2020-09-21', 'TESTE', '', '', NULL, '0000-00-00', '0000-00-00', 0, NULL, '', '2020-05-24 08:26:52'),
-(3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, NULL, '', '2020-05-24 08:27:46'),
-(4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:44:10'),
-(5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, NULL, '', '2020-05-24 08:45:42'),
-(6, '20200530-001', 'ConstPira', 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '0000-00-00', '0000-00-00', 3, NULL, 'teste', '2020-05-25 08:16:14');
+INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `temMedicao`, `regraFatura`, `semanaDoMes`, `diaFatura`, `notas`, `dtCadastro`) VALUES
+(2, '17', '', NULL, '2020-09-21', 'TESTE', '', '', NULL, '0000-00-00', '0000-00-00', 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:26:52'),
+(3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, 0, NULL, NULL, NULL, '', '2020-05-24 08:27:46'),
+(4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:44:10'),
+(5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:45:42'),
+(6, '20200530-002', NULL, 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '2020-10-16', '0000-00-00', 3, 1, 1, 4, 31, 'teste', '2020-05-25 08:16:14');
 
 -- --------------------------------------------------------
 
@@ -1061,9 +1069,7 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
 (7, 2, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
 (8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
-(9, 3, '004.03.xx.xx.xx.002-xxxx', 500, 1, '2010-03-15', NULL, 'cadastro teste', 2, '2020-04-22 15:15:35'),
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
-(11, 3, '004.03.xx.xx.xx.002-xxxx', 530, 1, '2019-12-31', NULL, '', 2, '2020-05-23 22:10:30'),
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
 (14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36'),

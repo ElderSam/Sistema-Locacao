@@ -42,11 +42,18 @@ $(function () {
 
 	loadTableItens() //carrega a tabela de itens de contrato (produtos adicionados)
 
+	setFieldsRegrasFatura();
+
+	$("#regraFatura").change(function() {
+		setFieldsRegrasFatura();
+	});
+
 	toggleFieldsMedicao();
 
 	$("#temMedicao").change(function() {
 		toggleFieldsMedicao();
 	});
+
 
 	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
 	$("#btnSaveContract").click(function (e) { //quando enviar o formulário de Contrato
@@ -144,15 +151,60 @@ $(function () {
 });
 
 function toggleFieldsMedicao() { //mostra ou esconde os campos de medição (regras de fatura)
-	let regraMedicao = true;
+	let escondeCampos = true;
 
 	if($("#temMedicao").prop('checked')) {
-		regraMedicao = false;
+		escondeCampos = false;
 	}
 
-	$("#formContract #regraFatura").parent().prop('hidden', regraMedicao);
-	$("#formContract #semanaDoMes").parent().prop('hidden', regraMedicao);
-	$("#formContract #diaFatura").parent().prop('hidden', regraMedicao);
+	$("#formContract #regraFatura").parent().prop('hidden', escondeCampos);
+	$("#formContract #semanaDoMes").parent().prop('hidden', escondeCampos);
+	$("#formContract #diaFatura").parent().prop('hidden', escondeCampos);
+}
+
+function setFieldsRegrasFatura(fields = {}) {
+	
+	if(JSON.stringify(fields) != '{}') {
+		$("#formContract #regraFatura").val(fields.regraFatura).prop('disabled', true);
+	}
+
+	let escondeSemana = true;
+	$("#diaFatura").parent().html();
+
+	if(($("#regraFatura").val() == '1')) { //dia fixo
+		$("#diaFatura").parent().html(`
+			<label for="diaFatura">Dia vencimento Fatura</label>
+			<input type="number" class="form-control" id="diaFatura" name="diaFatura">`
+		)
+			
+	}else {
+		escondeSemana = false;
+		
+		$("#diaFatura").parent().html(`
+			<label for="diaFatura">Dia vencimento Fatura</label>
+			<select class="form-control" id="diaFatura" name="diaFatura">
+				<option value="">escolha</option>
+				<option value="1">domingo</option>
+				<option value="2">segunda-feira</option> 
+				<option value="3">terça-feira</option> 
+				<option value="4">quarta-feira</option> 
+				<option value="5">quinta-feira</option> 
+				<option value="6">sexta-feira</option> 
+				<option value="7">sábado</option>
+			</select>`
+		)
+	}
+	
+	if(JSON.stringify(fields) != '{}') {
+		$("#formContract #semanaDoMes").val(fields.semanaDoMes).prop('disabled', true);
+		$("#formContract #diaFatura").val(fields.diaFatura).prop('disabled', true);	
+	}
+	
+	if(escondeSemana) {
+		$("#semanaDoMes").parent().hide()
+	}else {
+		$("#semanaDoMes").parent().show()
+	}
 }
 
 //detalhes do Contrato
@@ -243,11 +295,15 @@ async function setFieldsContract(idContrato) {
 		if(data.temMedicao == 1) $("#temMedicao").prop('checked', true);
 		$("#temMedicao").prop('disabled', true);
 
-		$("#formContract #regraFatura").val(data.regraFatura).prop('disabled', true);
-		$("#formContract #semanaDoMes").val(data.semanaDoMes).prop('disabled', true);
-		$("#formContract #diaFatura").val(data.diaFatura).prop('disabled', true);	
-	
 	}).then((data) => {
+
+		let fields = {
+			regraFatura: data.regraFatura,
+			semanaDoMes: data.semanaDoMes,
+			diaFatura: data.diaFatura
+		}
+
+		setFieldsRegrasFatura(fields);
 		
 		$("#telefone").mask('(00) 0000-00009');
 		
