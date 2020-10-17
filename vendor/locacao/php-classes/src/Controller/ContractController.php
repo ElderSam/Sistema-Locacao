@@ -16,9 +16,7 @@ class ContractController extends BudgetController
     }
 
     public function save($update = false) //Add a new Contract or Update
-    {   
-        
-        
+    {         
         User::verifyLogin();
         
         $error = $this->verifyFields($update); //verifica os campos do formulário
@@ -38,10 +36,10 @@ class ContractController extends BudgetController
 
        
         if ($update) { //se for atualizar
-           $auxcod = $contract->showsNextCode($_POST["dtEmsissao"]);
+           $auxcod = $contract->showsNextCode($_POST["dtEmissao"]);
            $contract->setcodigo($auxcod);
            
-           return $contract->update();
+           return $contract->update(); //do método pai 'Budget'
 
 
         } else { // se for cadastrar novo Contrato
@@ -90,6 +88,10 @@ class ContractController extends BudgetController
 
         if ($_POST["status"] == "") {
             $errors["#status"] = "Status é obrigatório!";
+        }
+
+        if(empty($_POST["temMedicao"])){
+            $_POST["temMedicao"] = 0;
         }
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário

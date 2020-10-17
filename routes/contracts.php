@@ -49,6 +49,12 @@ $app->get('/contracts/:id', function($id){
 		"dtAprovacao"=>$contract->getdtAprovacao(),
 		"dtInicio"=>$contract->getdtInicio(),
 		"dtFim"=>$contract->getdtFim(),
+
+		"temMedicao"=>$contract->gettemMedicao(),
+		"regraFatura"=>$contract->getregraFatura(),
+		"semanaDoMes"=>$contract->getsemanaDoMes(),
+		"diaFatura"=>$contract->getdiaFatura(),
+		
 		"notas"=>$contract->getnotas(),	
     ]);
 

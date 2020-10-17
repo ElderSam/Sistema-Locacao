@@ -115,6 +115,53 @@
                                 <input type="date" class="form-control" id="dtFim" name="dtFim" value="{$dtFim}">
                             </div>
 
+
+                            <!-- REGRA FATURA ------------------------------------------------->
+                            <div class="form-group col-lg-3">
+                                <div class="custom-control custom-switch ml-4">
+                                    <input type="checkbox" class="custom-control-input" id="temMedicao" name="temMedicao" value="{$temMedicao}">
+                                    <label for="temMedicao" class="custom-control-label mt-4">Tem medição</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-warning">
+                                <label for="regraFatura">Regra para Faturas</label>
+                                <select class="form-control" id="regraFatura" name="regraFatura" value="{$regraFatura}">
+                                    <option value="">escolha</option>
+                                    <option value="1">Dia Fixo</option>
+                                    <option value="2">Dia Semana</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-warning">
+                                <label for="semanaDoMes">Semana do mês</label>
+                                <select type="number" class="form-control" id="semanaDoMes" name="semanaDoMes" value="{$semanaDoMes}">
+                                    <option value="">escolha</option>
+                                    <option value="1">1- primeira semana</option>
+                                    <option value="2">2- segunda semana</option>
+                                    <option value="3">3- terceira semana</option>
+                                    <option value="4">4- quarta semana</option>
+                                    <option value="5">5- quinta semana</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-warning pb-2">
+                                <label for="diaFatura">Dia da Fatura</label>
+                                <input type="number" class="form-control" id="diaFatura" name="diaFatura" value="{$diaFatura}">
+
+                                <!--select>
+                                    <option value="">escolha</option>
+                                    <option value="1">domingo</option>
+                                    <option value="2">segunda-feira</option> 
+                                    <option value="3">terça-feira</option> 
+                                    <option value="4">quarta-feira</option> 
+                                    <option value="5">quinta-feira</option> 
+                                    <option value="6">sexta-feira</option> 
+                                    <option value="7">sábado</option>
+                                </select-->
+                            </div>
+                            <!-- FIM REGRA FATURA ------------------------------------------------->
+
                             <div class="form-group col-lg-12">
                                 <label for="notas">Notas (informação internas)</label>
                                 <textarea class="form-group col-lg-12" id="notas" name="notas" maxlength="50" value="{$notas}"></textarea>
@@ -125,7 +172,7 @@
                         <div id="divListItens" class="ml-2" hidden="true"> 
                             <div class="row"> <!--Header List -->
                                 <div class="col-lg-9">
-                                    <legend>Lista de Produtos no Aluguel:</legend>    
+                                    <legend>Lista de Produtos p/ Aluguel:</legend>    
                                 </div>
     
                                 <div class="col-lg-3">

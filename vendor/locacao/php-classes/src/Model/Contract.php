@@ -103,7 +103,7 @@ class Contract extends Budget{
 
     public function get_datatable_contracts($requestData, $column_search, $column_order){
 
-        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
+        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, b.codObra, c.nome FROM contratos a 
         LEFT JOIN obras b  ON(a.obra_idObra = b.idObra)
         LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE (a.statusOrcamento IN (2, 3, 4, 5)"; //pega contratos vencidos, aprovados, em andamento e encerrados
@@ -156,8 +156,6 @@ class Contract extends Budget{
         } else { //Se não pesquisou nada
             $query .= ")";
         }
-
-        //echo $query;
 
         $res = parent::searchAll($query);
         $this->setTotalFiltered(count($res));

@@ -42,10 +42,19 @@ $(function () {
 
 	loadTableItens() //carrega a tabela de itens de contrato (produtos adicionados)
 
+	toggleFieldsMedicao();
+
+	$("#temMedicao").change(function() {
+		toggleFieldsMedicao();
+	});
+
 	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
 	$("#btnSaveContract").click(function (e) { //quando enviar o formulário de Contrato
 
 		e.preventDefault();
+
+		let temMedicao = $("#temMedicao").prop('checked') == true ? 1 : 0;
+		$("#temMedicao").val(temMedicao)
 
 		//adiciona as máscaras
 		$("#telefone").unmask();
@@ -134,6 +143,17 @@ $(function () {
 	});
 });
 
+function toggleFieldsMedicao() { //mostra ou esconde os campos de medição (regras de fatura)
+	let regraMedicao = true;
+
+	if($("#temMedicao").prop('checked')) {
+		regraMedicao = false;
+	}
+
+	$("#formContract #regraFatura").parent().prop('hidden', regraMedicao);
+	$("#formContract #semanaDoMes").parent().prop('hidden', regraMedicao);
+	$("#formContract #diaFatura").parent().prop('hidden', regraMedicao);
+}
 
 //detalhes do Contrato
 async function loadContract(idContrato) {
@@ -220,6 +240,13 @@ async function setFieldsContract(idContrato) {
 		$("#formContract #dtFim").val(data.dtFim).prop('disabled', true);
 		$("#formContract #notas").val(data.notas).prop('disabled', true);
 
+		if(data.temMedicao == 1) $("#temMedicao").prop('checked', true);
+		$("#temMedicao").prop('disabled', true);
+
+		$("#formContract #regraFatura").val(data.regraFatura).prop('disabled', true);
+		$("#formContract #semanaDoMes").val(data.semanaDoMes).prop('disabled', true);
+		$("#formContract #diaFatura").val(data.diaFatura).prop('disabled', true);	
+	
 	}).then((data) => {
 		
 		$("#telefone").mask('(00) 0000-00009');
@@ -236,7 +263,8 @@ async function setFieldsContract(idContrato) {
 
 		loadCostumers(idCliente, obra_idObra); //carrega clientes
 
-		
+		toggleFieldsMedicao();
+
 		/* Atualizar formContract ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
 
@@ -259,8 +287,12 @@ async function setFieldsContract(idContrato) {
 			$("#formContract #dtAprovacao").prop('disabled', false);
 			$("#formContract #dtFim").prop('disabled', false);
 			$("#formContract #notas").prop('disabled', false);
-			
 
+			$("#formContract #temMedicao").prop('disabled', false);
+			$("#formContract #regraFatura").prop('disabled', false);
+			$("#formContract #semanaDoMes").prop('disabled', false);
+			$("#formContract #diaFatura").prop('disabled', false);	
+			
 
 			$('#btnCart').show();
 			$('#divListItens .btnEdit').show();
@@ -458,6 +490,8 @@ function clearFieldsValues() {
 	$('#telefone').val('');
 	$('#email').val('');
 	//$('#referencia').val('');
+
+	$("#temMedicao").prop('checked', false);
 }
 
 /************************************************** EMAIL ********************************************** */

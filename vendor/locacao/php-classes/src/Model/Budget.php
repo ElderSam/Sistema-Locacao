@@ -35,7 +35,7 @@ class Budget extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :dtFim, :statusOrcamento)", array(
+            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :dtInicio, :dtFim, :statusOrcamento)", array(
                 ":codContrato"=>$this->getcodigo(),
                 ":nomeEmpresa"=>$this->getnomeEmpresa(),
                 ":obra_idObra"=>$this->getobra_idObra(),
@@ -47,7 +47,6 @@ class Budget extends Generator{
                 /*":custoEntrega"=>$this->getcustoEntrega(),
                 ":custoRetirada"=>$this->getcustoRetirada(),*/
                 ":notas"=>$this->getnotas(),
-                ":valorTotal"=>$this->getvalorTotal(),
                 ":dtInicio"=>$this->getdtInicio(),
                 ":dtFim"=>$this->getdtFim(),
                 ":statusOrcamento"=>$this->getstatus()
@@ -102,7 +101,7 @@ class Budget extends Generator{
 
     public function get_datatable_budgets($requestData, $column_search, $column_order){
         
-        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, a.valorTotal, b.codObra, c.nome FROM contratos a 
+        $query = "SELECT a.idContrato, a.codContrato, a.nomeEmpresa, a.dtEmissao, a.statusOrcamento, b.codObra, c.nome FROM contratos a 
         LEFT JOIN obras b ON(a.obra_idObra = b.idObra)
         LEFT JOIN clientes c ON(b.id_fk_cliente = c.idCliente)
         WHERE (a.statusOrcamento IN (0, 1)"; //pega orçamentos pendentes e arquivados
@@ -202,7 +201,10 @@ class Budget extends Generator{
         
         $sql = new Sql();
     
-        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :valorTotal, :dtInicio, :dtFim, :statusOrcamento)", array(
+        $results = $sql->select("CALL sp_contratosUpdate_save(:idContrato, :codContrato, :nomeEmpresa, :obra_idObra,
+            :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :dtInicio, :dtFim, :statusOrcamento,
+            :temMedicao, :regraFatura, :semanaDoMes, :diaFatura)", array(
+
             ":idContrato"=>$this->getidContrato(),
             ":codContrato"=>$this->getcodigo(),
             ":nomeEmpresa"=>$this->getnomeEmpresa(),
@@ -215,13 +217,18 @@ class Budget extends Generator{
             /*":custoEntrega"=>$this->getcustoEntrega(),
             ":custoRetirada"=>$this->getcustoRetirada(),*/
             ":notas"=>$this->getnotas(),
-            ":valorTotal"=>$this->getvalorTotal(),
             ":dtInicio"=>$this->getdtInicio(),
             ":dtFim"=>$this->getdtFim(),
-            ":statusOrcamento"=>$this->getstatus()
+            ":statusOrcamento"=>$this->getstatus(),
+
+            ":temMedicao"=>$this->gettemMedicao(),
+            ":regraFatura"=>$this->getregraFatura(),
+            ":semanaDoMes"=>$this->getsemanaDoMes(),
+            ":diaFatura"=>$this->getdiaFatura()
         ));
 
-       // print_r($results);
+        //print_r($results);
+
         if(count($results) > 0){
 
             $this->setData($results[0]); //carrega atributos desse objeto com o retorno da atualização no banco
