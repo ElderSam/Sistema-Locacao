@@ -28,8 +28,11 @@ class Invoice extends Generator { //classe de Fatura
             foreach($contratos as $contrato) {
                 //print_r($contrato);
 
-                $query = "SELECT * FROM historicoalugueis
-                    WHERE contrato_idContrato = :IDCONTRATO";
+                $query = "SELECT a.*, c.periodoLocacao FROM `historicoalugueis` a
+                    INNER JOIN `produtos_esp` b ON(b.idProduto_esp = a.produto_idProduto)
+                    INNER JOIN `contrato_itens` c ON(c.idProduto_gen = b.idProduto_gen)
+                    WHERE a.contrato_idContrato = :IDCONTRATO
+                    GROUP BY a.idHistoricoAluguel";
 
                 $alugueis = $sql->select($query, array(
                     ":IDCONTRATO"=>$contrato['idContrato']

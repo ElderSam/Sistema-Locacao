@@ -4,7 +4,11 @@ namespace Locacao\Controller;
 
 use \Locacao\Generator;
 use \Locacao\Model\Invoice;
+use stdClass;
 use DateTime;
+use DateInterval;
+
+//https://www.ramosdainformatica.com.br/programacao/php/como-manipular-data-hora-com-php/
 
 class InvoiceController extends Generator //controller de Fatura
 {
@@ -30,7 +34,8 @@ class InvoiceController extends Generator //controller de Fatura
 
     }
 
-    function getAlugueisParaFaturar($arrContrato) { //para cada Contrato
+    function getAlugueisParaFaturar($arrContrato) //para cada Contrato
+    {
         $contrato = $arrContrato['contrato'];
         print_r($contrato);
         echo "<br><br>";
