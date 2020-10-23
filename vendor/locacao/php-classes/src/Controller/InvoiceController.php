@@ -62,6 +62,21 @@ class InvoiceController extends Generator //controller de Fatura
         if($contrato['temMedicao']) // se o contrato tiver regra para faturar
         {
 
+            if($dtUltimaFatura < $hoje) //se a última fatura foi antes de hoje
+            {
+                echo "<br>regraFatura: ".$contrato['regraFatura'];
+                $diaVencFatura = $contrato['diaFatura'];
+                if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
+                {        
+                    //NÃO FAZ NADA
+
+                }else if($contrato['regraFatura'] == 2)
+                { //se a regra para faturar for dia da semana
+                    $diaVencFatura = $this->getExactDate($contrato['semanaDoMes'], $diaVencFatura, $hoje);
+                    $diaVencFatura = $diaVencFatura->format('Y-m-d');
+                }
+
+            }
 
         } else {
             echo "<br>NÃO TEM MEDIÇÃO<br>";
