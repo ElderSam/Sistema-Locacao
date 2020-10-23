@@ -43,51 +43,42 @@ class InvoiceController extends Generator //controller de Fatura
         $hoje = new DateTime();
         echo "HOJE: ". $hoje->format('Y-m-d');
 
-        $ultimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
-        echo "<br>". $ultimaFatura;
-        //DEVE VERIFICAR SE JÁ NÃO TEVE UMA FATURA NESSE MÊS
-        //PEGA A DATA DE EMISSÃO DA FATURA
-        //$dtUltimaFatura = $ultimaFatura['fatura']['dtEmissao'];
-        $dtUltimaFatura = '2020-09-03';
-
-        $dtUltimaFatura = new DateTime($dtUltimaFatura);
-
-        /*
-        PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO;
-
-        PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-
-        VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
-        */ 
-
-        if($contrato['temMedicao']) // se o contrato tiver regra para faturar
+        $arrUltimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
+        echo "<br>". $arrUltimaFatura;
+        $arrUltimaFatura = json_decode($arrUltimaFatura, true);
+        
+        if(count($arrUltimaFatura['fatura']) > 0) //se esse contrato tem alguma fatura
         {
-
-            if($dtUltimaFatura < $hoje) //se a última fatura foi antes de hoje
+            $fatura = $arrUltimaFatura['fatura']['0'];
+   
+            //PEGA A DATA DE EMISSÃO DA ÚLTIMA FATURA
+            $dtUltimaFatura = new Datetime($fatura['dtEmissao']);
+            echo "<br><br>dtUltimaFatura: ".$dtUltimaFatura->format('Y-m-d');    
+            
+            //VERIFICA SE JÁ TEVE UMA FATURA NESSE MÊS
+            if($dtUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
             {
-                echo "<br>regraFatura: ".$contrato['regraFatura'];
-                $diaVencFatura = $contrato['diaFatura'];
-
-                if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
-                {        
-                    //NÃO FAZ NADA
-
-                }else if($contrato['regraFatura'] == 2) //se a regra para faturar for dia da semana
-                {
-                    $diaVencFatura = $this->getExactDate($contrato['semanaDoMes'], $diaVencFatura, $hoje);
-                    $diaVencFatura = $diaVencFatura->format('Y-m-d');
-                    echo "<br>diaVencFatura calculado: $diaVencFatura";
-                }
-
+                echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
             }
 
-
-        } else {
-            echo "<br>NÃO TEM MEDIÇÃO<br>";
-            /* PARA A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL, 
-                A PARTIR DA DATA DE INICIO DESTE CONTA 30 DIAS PARA O VENCIMENTO */   
+        } else
+        {
+            echo "<br>CONTRATO SEM FATURA"; 
+            $dtUltimaFatura = false;    
         }
 
+        if($contrato['temMedicao']) // se o contrato tiver regra para faturar
+        {   
+            //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
+            $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
+
+        } else {
+            //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
+            $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+        }
+
+        /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
+        */     
     }
 
     function getExactDate($numSemana, $diaSemana, $hoje) // retorna a data Y-m-d a partir do número da semana dentro do mês e do dia dentro da semana
@@ -122,6 +113,53 @@ class InvoiceController extends Generator //controller de Fatura
         }
 
         return $auxDate;
+    }
+
+    function getDataFaturaNormal($alugueis, $fatura=[])
+    {
+
+        echo "<br>NÃO TEM MEDIÇÃO<br>";
+        //SE NÃO TEVE FATURA ANTERIOR
+        if(count($fatura) == 0)
+        {
+            print_r($alugueis);
+
+            echo "<br>FAZER A PRIMEIRA FATURA";
+            /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL,
+
+                A PARTIR DA DATA DE INICIO DESTE CONTA 30 DIAS PARA O VENCIMENTO */ 
+
+        } else {}
+    }
+
+    function getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje)
+    {
+
+        if($dtUltimaFatura) //se teve alguma fatura
+        {
+            if($dtUltimaFatura < $hoje) //se a última fatura foi antes de hoje
+            {
+                echo "<br>regraFatura: ".$contrato['regraFatura'];
+                $diaVencFatura = $contrato['diaFatura'];
+    
+                if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
+                {        
+                    //NÃO FAZ NADA
+    
+                }else if($contrato['regraFatura'] == 2) //se a regra para faturar for dia da semana
+                {
+                    $diaVencFatura = $this->getExactDate($contrato['semanaDoMes'], $diaVencFatura, $hoje);
+                    $diaVencFatura = $diaVencFatura->format('Y-m-d');
+                    echo "<br>diaVencFatura calculado: $diaVencFatura";
+                }
+    
+            }
+
+        }else
+        {
+            echo "<br>FAZER PRIMEIRA FATURA COM MEDIÇÃO";
+        }
+
     }
 
 }

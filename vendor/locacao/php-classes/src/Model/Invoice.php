@@ -55,9 +55,9 @@ class Invoice extends Generator { //classe de Fatura
     function getultimaFatura($idContrato) {
         $sql = new Sql();
         $query = "SELECT DISTINCT * FROM `faturas`
-        WHERE idContrato = :IDCONTRATO
-        ORDER BY dtEmissao DESC
-        LIMIT 1";
+            WHERE idContrato = :IDCONTRATO
+            ORDER BY dtEmissao DESC
+            LIMIT 1";
 
         $fatura = [];
         $fatura = $sql->select($query, array(
