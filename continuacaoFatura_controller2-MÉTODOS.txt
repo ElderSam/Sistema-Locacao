@@ -1,0 +1,189 @@
+
+    function getDtNovaFatura($diaFatura, $hoje) {
+        $dia = $diaFatura;
+        $mes = $hoje->format('m');
+        $ano = $hoje->format('Y');
+        $dtVenc = new DateTime("$ano-$mes-$dia");
+        echo "<br>data vencimento: ". $dtVenc->format('Y-m-d');
+
+        $dtNewFatura = $dtVenc->sub(new DateInterval('P15D')); //subtrai 15 dias da data de vencimento
+        echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "\n";
+
+        return $dtNewFatura;
+    }
+
+    function getNumWeekdayInMonth($data) // retorna o número da semana dentro do mês (que tem aquele dia da semana)
+    {
+        $weekdayInMonth = 1;
+      
+        $dia = $data->format('d');
+
+        while(($dia - 7) >= 1)
+        {  //15 - 7 -> 8 - 7 = 1 
+            $dia -= 7;
+            $weekdayInMonth++;
+        }
+
+        return $weekdayInMonth;
+    }
+
+    function getExactDate($numSemana, $diaSemana, $hoje) // retorna a data Y-m-d a partir do número da semana dentro do mês e do dia dentro da semana
+    {
+        //PERCORRER O MÊS, ATÉ CHEGAR NA SEMANA DO CONTRATO
+         //PERCORRER A SEMANA ATÉ CHEGAR NO DIA DA SEMANA -> ENCONTRAR A DATA EXATA
+
+        $auxDate = new DateTime($hoje->format('Y-m') . '-01'); //primeiro dia do mês
+        $auxDayInWeek = $auxDate->format('N') + 1;
+        $auxNumWeek = 0;
+
+        if($diaSemana >= $auxDayInWeek) { //se o dia da semana desejado for maior que o primeiro dia do mês
+            $auxNumWeek += 1;
+            echo "dia da semana do contrato é maior que o dia 01 do mês";
+        }
+
+        $auxNumWeek += 1;
+        $auxDif = abs($auxDayInWeek - $diaSemana); //retorna o valor absoluto da diferença
+        echo "<br><br>auxDayInWeek: $auxDayInWeek diaSemana: $diaSemana, diferença: $auxDif";
+
+        $auxDate = $auxDate->add(new DateInterval('P0'.(7 - $auxDif).'D'));
+
+        echo "<br>date: ". $auxDate->format('Y-m-d') . " auxNumWeek: " .$auxNumWeek;
+
+        //$auxDate = $auxDate->add(new DateInterval('P07D'));
+
+        while($auxNumWeek < $numSemana)
+        {
+            $auxDate = $auxDate->add(new DateInterval('P07D'));
+            $auxNumWeek += 1;
+        }
+
+        return $auxDate;
+    }
+
+    function paraCadaAluguel($aluguel) {
+        $status = $aluguel['status'];
+
+        //VERIFICAR SE O ALUGUEL JÁ NÃO ESTÁ ENCERRADO
+
+         // PEGAR O ITEM DE FATURA REFERENTE A ESSE ALUGUEL, SE EXISTIR
+                    
+        //PEGA A DATA FIM DO PERÍODO COBRADO DO ITEM DE FATURA
+
+
+
+        $itensFatura = '[
+            { "valorAluguelProporcional":"560.89",
+                "frete":"200" ,
+                "tipoFrete":"ENTREGA",
+                "dtEmissao": "2020-09-18"
+            }
+        ]';
+
+        $itensFatura = json_decode($itensFatura, true); //transforma JSON em array
+
+        
+        if(count($itensFatura) > 0) //deve verificar se existem faturas anteriores com esse aluguel (a última), 
+        {
+            //$periodo = getPeriodo($itensFatura, $dtNovaFatura) ;
+            
+            /* considerar (dtFaturaAntiga + 1) -> dtInicioNovaFatura
+                        15/08    + 1 dia -> 16/08  */
+
+            $dtFaturaAntiga = $itensFatura[0]['dtEmissao'];
+
+            $dtInicioPeriodo = $dtFaturaAntiga->add(new DateInterval('P01D')); //calcula data do novo período para cobrar
+            //echo "PERIODO: $dtInicioPeriodo - $dtNovaFatura <BR>";
+
+            //$dtFimPeriodo = $dtNovaFatura;
+            
+        }else
+        { // então não tinha fatura anterior, deve então iniciar uma nova
+            echo "ERRO";
+        }
+
+        if($status == 1) //aluguel ativo
+        {    
+            echo "ATIVO";
+
+        }else if($status == 2) //aluguel 'retirada pendente'
+        {  
+            echo "RETIRADA PENDENTE";
+            /* deve verificar a última fatura */
+
+            //se o status do aluguel for retirada pendente, faz a mesma coisa, porém … deve ter valor de retirada, ou seja;
+            /*if(dtInicioFatura <= dtFimAluguel) { 
+                qtdDias = dtFimAluguel - dtInicioFatura
+                //ex: aluguel encerrou dia 14/09, mas a fatura começa antes, então pega esses dias
+                //...
+            }*/
+
+        }else if($status == 3) //status=3 (encerrado)
+        { 
+            echo "ENCERRADO";
+
+            /* deve verificar a última fatura */
+        }
+
+    }
+
+    function getItemFatura($aluguel)
+    {     
+        /* PEGAR TODOS OS ALUGUEIS QUE DEVE FATURAR*/
+
+        /* PÁGINA 6 */
+
+        $dtNovaFatura = "2020-10-18";
+        //$dtNovaFatura = new DateTime($dtNovaFatura);
+
+        $alugueis = '[
+            {"id":"7","codigo":"3","codContrato":"20200530-002","idProduto_gen":"1","codigoEsp":"001.01.01.01.01.002-0003","status":"3","dtInicio":"2020-09-07","dtFinal":"2020-09-15"},
+            {"id":"13","codigo":"4","codContrato":"20200530-002","idProduto_gen":"1","codigoEsp":"001.01.01.01.01.002-0001","status":"3","dtInicio":"2020-09-20","dtFinal":"2020-10-20"},
+            {"id":"15","codigo":"5","codContrato":"20200530-002","idProduto_gen":"5","codigoEsp":"001.04.05.02.02.002-0002","status":"1","dtInicio":"2020-10-18","dtFinal":"2020-11-25"},
+            {"id":"16","codigo":"6","codContrato":"20200530-002","idProduto_gen":"5","codigoEsp":"001.04.05.02.02.002-0008","status":"1","dtInicio":"2020-10-05","dtFinal":"2020-12-05"}
+        ]';
+
+        print_r($alugueis);
+        $alugueis = json_decode($alugueis);
+
+        /*print_r($alugueis[0]);
+        echo "<br>status aluguel: " . $alugueis[0]->status;
+        */
+
+        foreach($alugueis as $aluguel)
+        { //para cada aluguel
+            //print_r(json_encode($aluguel));
+            $this->getPeriodo($aluguel->status);
+            
+            $this->calculaValorCobrado();
+        }
+
+        /*ex; JSON
+        {
+            vlAluguelCobrado: 100,
+            valorFrete: 0,
+            periodoLocacao: 'mensal',
+            dtInicio: '16/08/2020',
+            dtFim: '15/09/2020'
+        }*/
+    }
+
+    function getPeriodo($status) {  }
+
+    function calculaValorCobrado()
+    {
+        /* CÁLCULO DO VALOR COBRADO */
+        /*se (periodoLocacao == ‘diario’)
+        {   valorTotal = (qtdDias * vlAluguel)
+
+        } senao se(periodoLocacao == ‘semanal’)
+        {   valorTotal = (qtdDias/7 * vlAluguel)
+
+        }senao se (periodoLocacao == ‘quinzenal’)
+        {   valorTotal = (qtdDias/15 * vlAluguel)
+
+        }senao se (periodoLocacao == ‘mensal’)
+        {   valorTotal = (qtdDias/30 * vlAluguel)  //ou pegar a diferença de dias
+        
+        }*/
+        
+    }

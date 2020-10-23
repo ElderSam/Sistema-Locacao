@@ -1,0 +1,26 @@
+//CONTINUAÇÃO DO MÉTODO getAlugueisParaFaturar, DEPOIS DO ELSE 'NÃO TEM MEDIÇÃO'
+        
+        $dtNovaFatura = $this->getDtNovaFatura($diaVencFatura, $hoje);
+
+if($dtNovaFatura <= $dtUltimaFatura) //se já foi emitida uma fatura nessa data
+{
+    //AUMENTA O MES E CALCULA DE NOVO A DTNOVAFATURA
+    $aux = $hoje->add(new DateInterval('P01M')); //aumenta 1 mês de hoje
+    $dtNovaFatura = $this->getDtNovaFatura($diaVencFatura, $aux);
+}
+
+if($dtNovaFatura <= $hoje) //COMPARA AS DATAS
+{
+    //ENTÃO ENTRA NA LISTA PARA FATURAR
+    echo "FAZER FATURA";  
+
+    if(count($arrContrato['alugueis']) > 0) //se existirem alugueis vigentes nesse contrato
+    {
+        foreach($arrContrato['alugueis'] as $aluguel)
+        {
+            //$this->paraCadaAluguel($aluguel);
+        }
+    }
+}
+
+// return $aluguelParaFaturar;
