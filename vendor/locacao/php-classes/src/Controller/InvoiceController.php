@@ -40,6 +40,25 @@ class InvoiceController extends Generator //controller de Fatura
         print_r($contrato);
         echo "<br><br>";
 
+        $hoje = new DateTime();
+        echo "HOJE: ". $hoje->format('Y-m-d');
+
+        //$ultimaFatura = $this->fatura->getultimaFatura(); //BUSCA A ÚLTIMA FATURA DO CONTRATO
+        //DEVE VERIFICAR SE JÁ NÃO TEVE UMA FATURA NESSE MÊS
+        //PEGA A DATA DE EMISSÃO DA FATURA
+        //$dtUltimaFatura = $ultimaFatura['fatura']['dtEmissao'];
+        $dtUltimaFatura = '2020-09-03';
+
+        $dtUltimaFatura = new DateTime($dtUltimaFatura);
+
+        /*
+        PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO;
+
+        PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
+
+        VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
+        */ 
+
         if($contrato['temMedicao']) // se o contrato tiver regra para faturar
         {
 
