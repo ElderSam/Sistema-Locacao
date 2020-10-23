@@ -44,6 +44,7 @@ class InvoiceController extends Generator //controller de Fatura
         echo "HOJE: ". $hoje->format('Y-m-d');
 
         $ultimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
+        echo "<br>". $ultimaFatura;
         //DEVE VERIFICAR SE JÁ NÃO TEVE UMA FATURA NESSE MÊS
         //PEGA A DATA DE EMISSÃO DA FATURA
         //$dtUltimaFatura = $ultimaFatura['fatura']['dtEmissao'];

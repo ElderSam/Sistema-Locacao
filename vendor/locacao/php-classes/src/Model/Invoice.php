@@ -46,9 +46,46 @@ class Invoice extends Generator { //classe de Fatura
             }
         }
 
+
         $arrContratos = json_encode($arrContratos);
         //print_r($arrContratos);
         return $arrContratos;
+    }
+
+    function getultimaFatura($idContrato) {
+        $sql = new Sql();
+        $query = "SELECT DISTINCT * FROM `faturas`
+        WHERE idContrato = :IDCONTRATO
+        ORDER BY dtEmissao DESC
+        LIMIT 1";
+
+        $fatura = [];
+        $fatura = $sql->select($query, array(
+            ":IDCONTRATO"=>$idContrato
+        ));
+
+        $itensFatura = [];
+
+        if(count($fatura) > 0)
+        {              
+            $this->setidFatura($fatura[0]['idFatura']);
+
+            $query = "SELECT * FROM `fatura_itens`
+            WHERE idFatura = :IDFATURA";
+
+            $itensFatura = $sql->select($query, array(
+                ":IDFATURA"=>$this->getidFatura()
+            ));
+
+        }else {
+            //echo "CONTRATO SEM FATURA AINDA";
+           
+        }
+
+        return json_encode([
+            'fatura'=>$fatura,
+            'itens_fatura'=>$itensFatura
+        ]);
     }
 
 }
