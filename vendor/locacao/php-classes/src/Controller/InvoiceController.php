@@ -59,19 +59,19 @@ class InvoiceController extends Generator //controller de Fatura
         echo "<br>ÚLTIMA FATURA: ". $arrUltimaFatura;
         $arrUltimaFatura = json_decode($arrUltimaFatura, true);
 
-        $dtUltimaFatura = $this->calculaDtUltimaFatura($arrUltimaFatura);
+        $dtFimUltimaFatura = $this->getDtFimUltimaFatura($arrUltimaFatura);
 
-        if($dtUltimaFatura) //se teve fatura anterior
+        if($dtFimUltimaFatura) //se teve fatura anterior
         {
             //VERIFICA SE JÁ TEVE UMA FATURA NESSE MÊS
-            if($dtUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
+            if($dtFimUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
             {
                 echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
                 return false;
             }
         }
 
-        $dtInicio = $this->calculaDtInicio($dtUltimaFatura, $hoje, $arrContrato['alugueis']);
+        $dtInicio = $this->calculaDtInicio($dtFimUltimaFatura, $arrContrato['alugueis']);
 
         $dtVenc = $this->calculaDtVenc($dtInicio, $hoje, $contrato);
 
@@ -79,30 +79,36 @@ class InvoiceController extends Generator //controller de Fatura
         
         if(!$dtVenc) return false;
 
-        $this->calculaDtFim($dtVenc);
-        //CALCULA DTFIM (1 DIA ANTES DE DTVENC)
+        $dtVenc = $dtVenc->format('Y-m-d');
+        $dtFim = $this->calculaDtFim($dtVenc);
 
         $dtEmissao = $this->calculaDtEmissao($dtVenc);
 
         return json_encode([
             "idContrato"=>$contrato['idContrato'],
-            "dtEmissaoFatura"=>$dtEmissao->format('Y-m-d'),
-            "dtInicioFatura"=>$dtInicio->format('Y-m-d'),
-            "dtVencFatura"=>$dtVenc->format('Y-m-d')
+            "dtEmissao"=>$dtEmissao->format('Y-m-d'),
+            "dtInicio"=>$dtInicio->format('Y-m-d'),
+            "dtFim"=>$dtFim->format('Y-m-d'),
+            "dtVenc"=>$dtVenc
         ]);
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
         */     
     }
 
-    function calculaDtUltimaFatura($arrUltimaFatura)
+    function getDtFimUltimaFatura($arrUltimaFatura)
     {
         if(count($arrUltimaFatura['fatura']) > 0) //se esse contrato tem alguma fatura
         {
-            $fatura = $arrUltimaFatura['fatura'][0];
-
-            //PEGA A DATA DE EMISSÃO DA ÚLTIMA FATURA
-            return new Datetime($fatura['dtEmissao']);  
+            //PEGA O ITEM COM A MAIOR DATA FIM DO DA ÚLTIMA FATURA
+            if(count(['fatura_itens']) > 0)
+            {
+                $Itemfatura = $arrUltimaFatura['fatura_itens'][0]; //pega o item com a maior dtFim
+                return new Datetime($Itemfatura['dtFim']);  
+            }else
+            {
+                echo "ERRO: Fatura não possui itens";
+            }
 
         } else
         {
@@ -111,13 +117,13 @@ class InvoiceController extends Generator //controller de Fatura
         }
     }
 
-    function calculaDtInicio($dtUltimaFatura, $hoje, $alugueis)
+    function calculaDtInicio($dtFimUltimaFatura, $alugueis)
     {
         //CALCULA DTINICIO
             //ALUGUEL COM FATURA
             //ALUGUEL SEM FATURA
 
-        if(!$dtUltimaFatura) { //se não teve fatura anterior
+        if(!$dtFimUltimaFatura) { //se não teve fatura anterior
             echo "<br>NÃO TEM FATURA ANTERIOR
                 <br>FAZER A PRIMEIRA FATURA<br>";
 
@@ -130,9 +136,9 @@ class InvoiceController extends Generator //controller de Fatura
         }else
         {
             echo "<br>TEM FATURA ANTERIOR<br>
-                <br>dtUltimaFatura: ".$dtUltimaFatura->format('Y-m-d');  
+                <br>dtFimUltimaFatura: ".$dtFimUltimaFatura->format('Y-m-d');  
 
-            $dtInicioFatura = new DateTime($dtUltimaFatura->format('Y-m-d'));
+            $dtInicioFatura = new DateTime($dtFimUltimaFatura->format('Y-m-d'));
             $dtInicioFatura->add(new DateInterval('P01D')); //adiciona 1 dia
         }
 
@@ -156,9 +162,12 @@ class InvoiceController extends Generator //controller de Fatura
         return $dtVenc;
     }
 
-    function calculaDtFim()
+    function calculaDtFim($dtVenc)
     {
-
+        $dtFim = new DateTime($dtVenc);
+        //CALCULA DTFIM (1 DIA ANTES DE DTVENC)
+        $dtFim->sub(new DateInterval('P01D'));
+        return $dtFim;
     }
 
     function getDtVencFaturaMedicao($contrato, $hoje)
@@ -178,8 +187,7 @@ class InvoiceController extends Generator //controller de Fatura
         {
             $dtVenc = $this->getExactDate($contrato['semanaDoMes'], $dtVenc, $hoje);    
         }
-
-        echo "<br>dtVenc: ". $dtVenc->format('Y-m-d');              
+              
         return $dtVenc;
     }
 
@@ -233,7 +241,8 @@ class InvoiceController extends Generator //controller de Fatura
     function calculaDtEmissao($dtVenc) { // data de emissão da nova fatura
 
         //DTEMISSAO (10 DIAS ANTES DE DTVENC)
-        $dtNewFatura = $dtVenc->sub(new DateInterval('P10D')); //subtrai 10 dias da data de vencimento
+        $dtNewFatura = new DateTime($dtVenc);
+        $dtNewFatura = $dtNewFatura->sub(new DateInterval('P10D')); //subtrai 10 dias da data de vencimento
         echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "<br>";
 
         return $dtNewFatura;

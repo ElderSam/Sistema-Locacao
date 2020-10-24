@@ -71,8 +71,10 @@ class Invoice extends Generator { //classe de Fatura
         {              
             $this->setidFatura($fatura[0]['idFatura']);
 
-            $query = "SELECT * FROM `fatura_itens`
-            WHERE idFatura = :IDFATURA";
+            $query = "SELECT DISTINCT * FROM `fatura_itens`
+                WHERE idFatura = :IDFATURA
+                ORDER BY dtFim DESC
+                LIMIT 1";
 
             $itensFatura = $sql->select($query, array(
                 ":IDFATURA"=>$this->getidFatura()
