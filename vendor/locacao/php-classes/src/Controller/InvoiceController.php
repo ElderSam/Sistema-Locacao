@@ -27,9 +27,17 @@ class InvoiceController extends Generator //controller de Fatura
 
         $faturasPendentes = [];
 
-        foreach($arrContracts as $arrContrato)
-        { //para cada contrato
-            $paraFaturar = $this->getAlugueisParaFaturar($arrContrato);
+        foreach($arrContracts as $arrContrato)  //para cada contrato
+        {
+            $paraFaturar = false;
+            if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
+            {
+                $paraFaturar = $this->getAlugueisParaFaturar($arrContrato);
+            }else
+            {
+                echo "CONTRATO SEM ALUGUEL";
+            }
+            
             echo "----------------------------------------<br><br>";
             if($paraFaturar) $faturasPendentes[] = $paraFaturar; 
         }
@@ -74,28 +82,22 @@ class InvoiceController extends Generator //controller de Fatura
             $dtUltimaFatura = false;    
         }
 
-        if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
+        if($contrato['temMedicao']) // se o contrato tiver regra para faturar
+        {   
+            //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
+            $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
+
+        } else
         {
-            if($contrato['temMedicao']) // se o contrato tiver regra para faturar
-            {   
-                //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-                $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
-    
-            } else
-            {
-                //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
-                $dtEmissao = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
-    
-                return json_encode([
-                    "idContrato"=>$contrato['idContrato'],
-                    "dtEmissaoFatura"=>$dtEmissao
-                ]);
-            }
-        }else
-        {
-            echo "CONTRATO SEM ALUGUEL";
-            return false;
+            //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
+            $dtEmissao = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+
+            return json_encode([
+                "idContrato"=>$contrato['idContrato'],
+                "dtEmissaoFatura"=>$dtEmissao
+            ]);
         }
+
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
         */     
