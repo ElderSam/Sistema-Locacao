@@ -85,19 +85,21 @@ class InvoiceController extends Generator //controller de Fatura
         if($contrato['temMedicao']) // se o contrato tiver regra para faturar
         {   
             //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-            $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
+            $dtVenc = $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
 
         } else
         {
             //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
-            $dtEmissao = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
-
-            return json_encode([
-                "idContrato"=>$contrato['idContrato'],
-                "dtEmissaoFatura"=>$dtEmissao
-            ]);
+            $dtVenc = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
         }
 
+        $dtEmissao = $this->getDtNovaFatura($dtVenc, $hoje);
+
+        return json_encode([
+            "idContrato"=>$contrato['idContrato'],
+            "dtEmissaoFatura"=>$dtEmissao->format('Y-m-d'),
+            "dtVencFatura"=>$dtVenc->format('Y-m-d')
+        ]);
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
         */     
@@ -139,26 +141,28 @@ class InvoiceController extends Generator //controller de Fatura
 
     function getDataFaturaNormal($alugueis, $fatura=[])
     {
-
         echo "<br>NÃO TEM MEDIÇÃO<br>";
-        //SE NÃO TEVE FATURA ANTERIOR
-        if(count($fatura) == 0)
+
+        echo "Alugueis: ";
+        print_r($alugueis);
+
+        if(count($fatura) == 0) //SE NÃO TEVE FATURA ANTERIOR
         {
             echo "<br>FAZER A PRIMEIRA FATURA<br>";
 
             /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL, */
-            echo "Alugueis: ";
-            print_r($alugueis);
             $dtInicioFatura = new DateTime($alugueis[0]['dtInicio']);
 
              /* A PARTIR DA DATA DE INICIO DO PRIMEIRO ALUGUEL, CONTA 01 MÊS PARA O VENCIMENTO */ 
-            $dtFimFatura = new DateTime($dtInicioFatura->format('Y-m-d'));
-            $dtFimFatura->add(new DateInterval('P01M')); //adiciona 1 mês
-            echo "<br>inicio: " . $dtInicioFatura->format('Y-m-d') . ", fim: " . $dtFimFatura->format('Y-m-d');
+            $dtVencFatura = new DateTime($dtInicioFatura->format('Y-m-d'));
+            $dtVencFatura->add(new DateInterval('P01M')); //adiciona 1 mês
+            echo "<br>inicio: " . $dtInicioFatura->format('Y-m-d') . ", fim: " . $dtVencFatura->format('Y-m-d');
 
-            return $dtFimFatura->format('Y-m-d');
+            return $dtVencFatura;
 
-        } else {}
+        } else {
+
+        }
     }
 
     function getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje)
@@ -189,6 +193,19 @@ class InvoiceController extends Generator //controller de Fatura
             echo "<br>FAZER PRIMEIRA FATURA COM MEDIÇÃO";
         }
 
+    }
+
+    function getDtNovaFatura($dtVencFatura, $hoje) {
+        $dia = $dtVencFatura->format('d');
+        $mes = $hoje->format('m');
+        $ano = $hoje->format('Y');
+        $dtVenc = new DateTime("$ano-$mes-$dia");
+        echo "<br>data vencimento: ". $dtVenc->format('Y-m-d');
+
+        $dtNewFatura = $dtVenc->sub(new DateInterval('P15D')); //subtrai 15 dias da data de vencimento
+        echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "\n";
+
+        return $dtNewFatura;
     }
 
 }
