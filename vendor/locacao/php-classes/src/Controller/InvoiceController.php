@@ -29,8 +29,12 @@ class InvoiceController extends Generator //controller de Fatura
 
         foreach($arrContracts as $arrContrato)
         { //para cada contrato
-            $faturasPendentes[] = $this->getAlugueisParaFaturar($arrContrato);
+            $paraFaturar = $this->getAlugueisParaFaturar($arrContrato);
+            echo "----------------------------------------<br><br>";
+            if($paraFaturar) $faturasPendentes[] = $paraFaturar; 
         }
+
+        return json_encode($faturasPendentes);
 
     }
 
@@ -46,7 +50,9 @@ class InvoiceController extends Generator //controller de Fatura
         $arrUltimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
         echo "<br>". $arrUltimaFatura;
         $arrUltimaFatura = json_decode($arrUltimaFatura, true);
-        
+
+        $fatura = [];
+
         if(count($arrUltimaFatura['fatura']) > 0) //se esse contrato tem alguma fatura
         {
             $fatura = $arrUltimaFatura['fatura']['0'];
@@ -59,22 +65,36 @@ class InvoiceController extends Generator //controller de Fatura
             if($dtUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
             {
                 echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
+                return false;
             }
 
         } else
         {
-            echo "<br>CONTRATO SEM FATURA"; 
+            echo "<br>CONTRATO SEM FATURA<br>"; 
             $dtUltimaFatura = false;    
         }
 
-        if($contrato['temMedicao']) // se o contrato tiver regra para faturar
-        {   
-            //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-            $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
-
-        } else {
-            //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
-            $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+        if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
+        {
+            if($contrato['temMedicao']) // se o contrato tiver regra para faturar
+            {   
+                //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
+                $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
+    
+            } else
+            {
+                //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
+                $dtEmissao = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+    
+                return json_encode([
+                    "idContrato"=>$contrato['idContrato'],
+                    "dtEmissaoFatura"=>$dtEmissao
+                ]);
+            }
+        }else
+        {
+            echo "CONTRATO SEM ALUGUEL";
+            return false;
         }
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
@@ -122,12 +142,19 @@ class InvoiceController extends Generator //controller de Fatura
         //SE NÃO TEVE FATURA ANTERIOR
         if(count($fatura) == 0)
         {
+            echo "<br>FAZER A PRIMEIRA FATURA<br>";
+
+            /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL, */
+            echo "Alugueis: ";
             print_r($alugueis);
+            $dtInicioFatura = new DateTime($alugueis[0]['dtInicio']);
 
-            echo "<br>FAZER A PRIMEIRA FATURA";
-            /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL,
+             /* A PARTIR DA DATA DE INICIO DO PRIMEIRO ALUGUEL, CONTA 01 MÊS PARA O VENCIMENTO */ 
+            $dtFimFatura = new DateTime($dtInicioFatura->format('Y-m-d'));
+            $dtFimFatura->add(new DateInterval('P01M')); //adiciona 1 mês
+            echo "<br>inicio: " . $dtInicioFatura->format('Y-m-d') . ", fim: " . $dtFimFatura->format('Y-m-d');
 
-                A PARTIR DA DATA DE INICIO DESTE CONTA 30 DIAS PARA O VENCIMENTO */ 
+            return $dtFimFatura->format('Y-m-d');
 
         } else {}
     }

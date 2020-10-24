@@ -12,7 +12,7 @@ use \Locacao\Model\Invoice;
 /* rota para página de faturas --------------*/
 $app->get('/invoices', function(){
     //User::verifyLogin();
-    echo "rota faturas";
+    echo "rota faturas<br>";
     $faturaController = new InvoiceController();
     echo $faturaController->getFaturasParaFazer();
 });
