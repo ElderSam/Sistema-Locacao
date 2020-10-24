@@ -42,10 +42,26 @@ $(function () {
 
 	loadTableItens() //carrega a tabela de itens de contrato (produtos adicionados)
 
+	setFieldsRegrasFatura();
+
+	$("#regraFatura").change(function() {
+		setFieldsRegrasFatura();
+	});
+
+	toggleFieldsMedicao();
+
+	$("#temMedicao").change(function() {
+		toggleFieldsMedicao();
+	});
+
+
 	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
 	$("#btnSaveContract").click(function (e) { //quando enviar o formulário de Contrato
 
 		e.preventDefault();
+
+		let temMedicao = $("#temMedicao").prop('checked') == true ? 1 : 0;
+		$("#temMedicao").val(temMedicao)
 
 		//adiciona as máscaras
 		$("#telefone").unmask();
@@ -134,6 +150,62 @@ $(function () {
 	});
 });
 
+function toggleFieldsMedicao() { //mostra ou esconde os campos de medição (regras de fatura)
+	let escondeCampos = true;
+
+	if($("#temMedicao").prop('checked')) {
+		escondeCampos = false;
+	}
+
+	$("#formContract #regraFatura").parent().prop('hidden', escondeCampos);
+	$("#formContract #semanaDoMes").parent().prop('hidden', escondeCampos);
+	$("#formContract #diaFatura").parent().prop('hidden', escondeCampos);
+}
+
+function setFieldsRegrasFatura(fields = {}) {
+	
+	if(JSON.stringify(fields) != '{}') {
+		$("#formContract #regraFatura").val(fields.regraFatura).prop('disabled', true);
+	}
+
+	let escondeSemana = true;
+	$("#diaFatura").parent().html();
+
+	if(($("#regraFatura").val() == '1')) { //dia fixo
+		$("#diaFatura").parent().html(`
+			<label for="diaFatura">Dia vencimento Fatura</label>
+			<input type="number" class="form-control" id="diaFatura" name="diaFatura">`
+		)
+			
+	}else {
+		escondeSemana = false;
+		
+		$("#diaFatura").parent().html(`
+			<label for="diaFatura">Dia vencimento Fatura</label>
+			<select class="form-control" id="diaFatura" name="diaFatura">
+				<option value="">escolha</option>
+				<option value="1">domingo</option>
+				<option value="2">segunda-feira</option> 
+				<option value="3">terça-feira</option> 
+				<option value="4">quarta-feira</option> 
+				<option value="5">quinta-feira</option> 
+				<option value="6">sexta-feira</option> 
+				<option value="7">sábado</option>
+			</select>`
+		)
+	}
+	
+	if(JSON.stringify(fields) != '{}') {
+		$("#formContract #semanaDoMes").val(fields.semanaDoMes).prop('disabled', true);
+		$("#formContract #diaFatura").val(fields.diaFatura).prop('disabled', true);	
+	}
+	
+	if(escondeSemana) {
+		$("#semanaDoMes").parent().hide()
+	}else {
+		$("#semanaDoMes").parent().show()
+	}
+}
 
 //detalhes do Contrato
 async function loadContract(idContrato) {
@@ -220,7 +292,18 @@ async function setFieldsContract(idContrato) {
 		$("#formContract #dtFim").val(data.dtFim).prop('disabled', true);
 		$("#formContract #notas").val(data.notas).prop('disabled', true);
 
+		if(data.temMedicao == 1) $("#temMedicao").prop('checked', true);
+		$("#temMedicao").prop('disabled', true);
+
 	}).then((data) => {
+
+		let fields = {
+			regraFatura: data.regraFatura,
+			semanaDoMes: data.semanaDoMes,
+			diaFatura: data.diaFatura
+		}
+
+		setFieldsRegrasFatura(fields);
 		
 		$("#telefone").mask('(00) 0000-00009');
 		
@@ -236,7 +319,8 @@ async function setFieldsContract(idContrato) {
 
 		loadCostumers(idCliente, obra_idObra); //carrega clientes
 
-		
+		toggleFieldsMedicao();
+
 		/* Atualizar formContract ------------------------------------------------------------------ */
 		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
 
@@ -259,8 +343,12 @@ async function setFieldsContract(idContrato) {
 			$("#formContract #dtAprovacao").prop('disabled', false);
 			$("#formContract #dtFim").prop('disabled', false);
 			$("#formContract #notas").prop('disabled', false);
-			
 
+			$("#formContract #temMedicao").prop('disabled', false);
+			$("#formContract #regraFatura").prop('disabled', false);
+			$("#formContract #semanaDoMes").prop('disabled', false);
+			$("#formContract #diaFatura").prop('disabled', false);	
+			
 
 			$('#btnCart').show();
 			$('#divListItens .btnEdit').show();
@@ -458,6 +546,8 @@ function clearFieldsValues() {
 	$('#telefone').val('');
 	$('#email').val('');
 	//$('#referencia').val('');
+
+	$("#temMedicao").prop('checked', false);
 }
 
 /************************************************** EMAIL ********************************************** */

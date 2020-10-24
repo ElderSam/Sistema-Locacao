@@ -445,11 +445,19 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 					row['descricao'] = element.descricao
 					row['qtdTotal'] = element.qtdTotal
 					row['qtdDisponivel'] = `<b>${element.qtdDisponivel}</b>`
-					row['options'] = `<a type='button' title='ver produtos específicos' class='btn btn-success'
+
+					row['options'] = '';
+					
+					if((element.descCategoria != 'Andaime') && (element.descCategoria != 'Escora metálica')) {
+						row['options'] += `<a type='button' title='ver produtos específicos' class='btn btn-success'
 						href='/products_esp/${element.id}'>
 							<i class='fas fa-plus-square'></i>
-						</a>
-						<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
+						</a>`;
+					} else {
+						row['options'] += `<a class='btn btn-white ml-3' style='cursor:auto;'></a>`; //espaço em branco (quando só tem 2 botões)
+					}
+					 
+					row['options'] += `<button type='button' title='ver detalhes' class='btn btn-warning btnEdit'
 						onclick='loadProduct(${element.id});'>
 							<i class='fas fa-bars sm'></i>
 						</button>
@@ -477,6 +485,7 @@ function loadTableProducts(){ //carrega a tabela de Produtos
 			{ targets: "text-center", className: "text-center" },
 		]
 	});
+
 }
 
 
