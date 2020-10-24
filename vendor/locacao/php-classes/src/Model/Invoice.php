@@ -15,10 +15,10 @@ class Invoice extends Generator { //classe de Fatura
 
         $sql = new Sql();
 
-        $query = "SELECT idContrato, codContrato, statusOrcamento, obra_idObra, dtFim as dtFimContrato,
+        $query = "SELECT idContrato, codContrato, statusOrcamento as status, obra_idObra, dtFim as dtFimContrato,
             temMedicao, regraFatura, semanaDoMes, diaFatura
             FROM contratos
-            WHERE statusOrcamento IN(2, 3, 4)";
+            WHERE statusOrcamento IN(4)"; //somente contratos vigentes
 
         $contratos = $sql->select($query);
         //print_r($contratos);

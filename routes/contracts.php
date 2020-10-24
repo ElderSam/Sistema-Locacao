@@ -132,7 +132,7 @@ $app->get("/contracts/:id/pdf/show", function($id){ //o destino pode ser a visua
 });
 
 
-$app->get("/contracts/json/:idCliente/contracts", function($idCliente){
+$app->get("/contracts/json/costumer/:idCliente", function($idCliente){
 	
     User::verifyLogin();
 

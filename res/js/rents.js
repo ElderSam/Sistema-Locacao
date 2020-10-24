@@ -548,20 +548,22 @@ function loadContracts(idCliente = ''){
 	$("#contrato_idContrato").html("");
 	$("#itens").html(txtEscolha)
 	
-	$.getJSON(`/contracts/json/${idCliente}/contracts`, function (data) { //ajax
+	$.getJSON(`/contracts/json/costumer/${idCliente}`, function (data) { //ajax
 		console.log(data)
 
 		//alert("Lista: " + data)
 		contracts = ""; //esvazia a lista de opções
 
+		data = data.filter((item) => item.status == 4)
+
 		if(data.length == 0){
-			contracts = `<option value="">Sem contratos cadastrados</option>`
+			contracts = `<option value="">Sem contratos vigentes</option>`
 		}else{
 
 			$("#contrato_idContrato").html(txtEscolha);
 
 			data.forEach(function (item) {
-				//console.log(item)
+				//console.log(item)	
 				contracts += `<option value="${item.idContrato}">${item.codContrato}</option>`
 			});
 		}
@@ -584,7 +586,7 @@ function loadContracts(idCliente = ''){
 		})
 
 	}).fail(function () {
-		console.log(`Rota não encontrada! (//contracts/json/${idCliente}/contracts`);
+		console.log(`Rota não encontrada! (//contracts/json/costumer/${idCliente}`);
 		return false
 	});
 
