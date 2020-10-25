@@ -32,10 +32,13 @@ class InvoiceController extends Generator //controller de Fatura
             $paraFaturar = false;
             if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
             {
-                $paraFaturar = $this->getAlugueisParaFaturar($arrContrato);
+                $hoje = new DateTime();
+                echo "HOJE: ". $hoje->format('Y-m-d') . "<br>";
+        
+                $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
             }else
             {
-                echo "CONTRATO SEM ALUGUEL";
+                echo "CONTRATO SEM ALUGUEL INICIADO";
             }
             
             echo "----------------------------------------<br><br>";
@@ -46,14 +49,11 @@ class InvoiceController extends Generator //controller de Fatura
 
     }
 
-    function getAlugueisParaFaturar($arrContrato) //para cada Contrato
+    function getAlugueisParaFaturar($arrContrato, $hoje) //para cada Contrato
     {
         $contrato = $arrContrato['contrato'];
         print_r($contrato);
         echo "<br><br> <b>idContrato</b>=". $contrato['idContrato']."<br>";
-
-        $hoje = new DateTime();
-        echo "HOJE: ". $hoje->format('Y-m-d');
 
         $arrUltimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
         echo "<br>ÚLTIMA FATURA: ". $arrUltimaFatura;
