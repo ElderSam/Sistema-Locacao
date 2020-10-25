@@ -33,15 +33,15 @@ class InvoiceController extends Generator //controller de Fatura
             if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
             {
                 $hoje = new DateTime();
-                echo "HOJE: ". $hoje->format('Y-m-d') . "<br>";
+                //echo "HOJE: ". $hoje->format('Y-m-d') . "<br>";
         
                 $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
             }else
             {
-                echo "CONTRATO SEM ALUGUEL INICIADO";
+                //echo "CONTRATO SEM ALUGUEL INICIADO";
             }
             
-            echo "----------------------------------------<br><br>";
+            //echo "----------------------------------------<br><br>";
             if($paraFaturar) $faturasPendentes[] = $paraFaturar; //se retornou, coloca na lista
         }
 
@@ -52,11 +52,11 @@ class InvoiceController extends Generator //controller de Fatura
     function getAlugueisParaFaturar($arrContrato, $hoje) //para cada Contrato
     {
         $contrato = $arrContrato['contrato'];
-        print_r($contrato);
-        echo "<br><br> <b>idContrato</b>=". $contrato['idContrato']."<br>";
+        //print_r($contrato);
+        //echo "<br><br> <b>idContrato</b>=". $contrato['idContrato']."<br>";
 
         $arrUltimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
-        echo "<br>ÚLTIMA FATURA: ". $arrUltimaFatura;
+        //echo "<br>ÚLTIMA FATURA: ". $arrUltimaFatura;
         $arrUltimaFatura = json_decode($arrUltimaFatura, true);
 
         $dtFimUltimaFatura = $this->getDtFimUltimaFatura($arrUltimaFatura);
@@ -66,7 +66,7 @@ class InvoiceController extends Generator //controller de Fatura
             //VERIFICA SE JÁ TEVE UMA FATURA NESSE MÊS
             if($dtFimUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
             {
-                echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
+                //echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
                 return false;
             }
         }
@@ -75,7 +75,7 @@ class InvoiceController extends Generator //controller de Fatura
 
         $dtVenc = $this->calculaDtVenc($dtInicio, $hoje, $contrato);
 
-        echo "<br>inicio: " . $dtInicio->format('Y-m-d') . ", dtVenc: " . $dtVenc->format('Y-m-d');
+        //echo "<br>inicio: " . $dtInicio->format('Y-m-d') . ", dtVenc: " . $dtVenc->format('Y-m-d');
         
         if(!$dtVenc) return false;
 
@@ -84,13 +84,14 @@ class InvoiceController extends Generator //controller de Fatura
 
         $dtEmissao = $this->calculaDtEmissao($dtVenc);
 
-        return json_encode([
+        return [
             "idContrato"=>$contrato['idContrato'],
+            "codContrato"=>$contrato['codContrato'],
             "dtEmissao"=>$dtEmissao->format('Y-m-d'),
             "dtInicio"=>$dtInicio->format('Y-m-d'),
             "dtFim"=>$dtFim->format('Y-m-d'),
             "dtVenc"=>$dtVenc
-        ]);
+        ];
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
         */     
@@ -107,12 +108,12 @@ class InvoiceController extends Generator //controller de Fatura
                 return new Datetime($Itemfatura['dtFim']);  
             }else
             {
-                echo "ERRO: Fatura não possui itens";
+                //echo "ERRO: Fatura não possui itens";
             }
 
         } else
         {
-            echo "<br>CONTRATO SEM FATURA<br>"; 
+            //echo "<br>CONTRATO SEM FATURA<br>"; 
             return false;    
         }
     }
@@ -124,19 +125,19 @@ class InvoiceController extends Generator //controller de Fatura
             //ALUGUEL SEM FATURA
 
         if(!$dtFimUltimaFatura) { //se não teve fatura anterior
-            echo "<br>NÃO TEM FATURA ANTERIOR
+            /*echo "<br>NÃO TEM FATURA ANTERIOR
                 <br>FAZER A PRIMEIRA FATURA<br>";
 
             echo "Alugueis: ";
-            print_r($alugueis);
+            print_r($alugueis);*/
 
             /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL, */
             $dtInicioFatura = new DateTime($alugueis[0]['dtInicio']);
 
         }else
         {
-            echo "<br>TEM FATURA ANTERIOR<br>
-                <br>dtFimUltimaFatura: ".$dtFimUltimaFatura->format('Y-m-d');  
+            /*echo "<br>TEM FATURA ANTERIOR<br>
+                <br>dtFimUltimaFatura: ".$dtFimUltimaFatura->format('Y-m-d'); */
 
             $dtInicioFatura = new DateTime($dtFimUltimaFatura->format('Y-m-d'));
             $dtInicioFatura->add(new DateInterval('P01D')); //adiciona 1 dia
@@ -147,7 +148,7 @@ class InvoiceController extends Generator //controller de Fatura
 
     function calculaDtVenc($dtInicioFatura, $hoje, $contrato)
     {
-        echo "medição=".$contrato['temMedicao'];
+        //echo "medição=".$contrato['temMedicao'];
 
         if($contrato['temMedicao']) // CONTRATO COM MEDIÇÃO: se o contrato tiver regra para faturar
         {   
@@ -173,9 +174,9 @@ class InvoiceController extends Generator //controller de Fatura
     function getDtVencFaturaMedicao($contrato, $hoje)
     {
         //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-        echo "<br>TEM MEDIÇÃO<br>";
+        /*echo "<br>TEM MEDIÇÃO<br>";
 
-        echo "<br>regraFatura: ".$contrato['regraFatura'];
+        echo "<br>regraFatura: ".$contrato['regraFatura'];*/
         $dtVenc = $contrato['diaFatura'];
     
         if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
@@ -196,7 +197,7 @@ class InvoiceController extends Generator //controller de Fatura
         //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
         //$dtVenc = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
 
-        echo "<br>NÃO TEM MEDIÇÃO<br>";
+        //echo "<br>NÃO TEM MEDIÇÃO<br>";
 
         /* A PARTIR DA DATA DE INICIO DO PRIMEIRO ALUGUEL, CONTA 01 MÊS PARA O VENCIMENTO */ 
         $dtVenc = new DateTime($dtInicio);
@@ -215,7 +216,7 @@ class InvoiceController extends Generator //controller de Fatura
 
         if($diaSemana >= $auxDayInWeek) { //se o dia da semana desejado for maior que o primeiro dia do mês
             $auxNumWeek += 1;
-            echo "dia da semana do contrato é maior que o dia 01 do mês";
+            //echo "dia da semana do contrato é maior que o dia 01 do mês";
         }
 
         $auxNumWeek += 1;
@@ -243,7 +244,7 @@ class InvoiceController extends Generator //controller de Fatura
         //DTEMISSAO (10 DIAS ANTES DE DTVENC)
         $dtNewFatura = new DateTime($dtVenc);
         $dtNewFatura = $dtNewFatura->sub(new DateInterval('P10D')); //subtrai 10 dias da data de vencimento
-        echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "<br>";
+        //echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "<br>";
 
         return $dtNewFatura;
     }
