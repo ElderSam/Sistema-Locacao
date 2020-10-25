@@ -16,7 +16,7 @@ function loadTableFaturasParaFazer() {
 		"processing": true, //mensagem 'processando'
         "serverSide": false,
         "ajax": {
-            'url': '/invoices',
+            'url': '/invoices/json/pending',
             'type': 'GET',
             dataSrc: function (data) {
                 console.log(data)

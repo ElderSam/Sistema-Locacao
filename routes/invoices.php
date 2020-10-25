@@ -10,9 +10,9 @@ use \Locacao\Model\Invoice;
 
  */
 /* rota para página de faturas --------------*/
-$app->get('/invoices', function(){
+$app->get('/invoices/json/pending', function(){
     //User::verifyLogin();
-    echo "rota faturas<br>";
+    //echo "rota faturas<br>";
     $faturaController = new InvoiceController();
     echo $faturaController->getFaturasParaFazer();
 });
