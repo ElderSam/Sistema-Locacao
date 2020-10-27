@@ -33,10 +33,10 @@ function loadTableFaturasParaFazer() {
                     row['dtInicio'] = formatDateToShow(item.dtInicio)
                     row['dtFim'] = formatDateToShow(item.dtFim)
                     
-                    row['opcoes'] = `<button type='button' title='ver detalhes' class='btn btn-success'
-					onclick='loadFreight(${item.idContrato});'>
+                    row['opcoes'] = `<a type='button' title='gerar fatura' class='btn btn-success'
+					href='/invoices/contract/${item.idContrato}/create' target='_blank'>
                         <i class="fas fa-file-invoice-dollar fa-lg"></i>
-					</button>`
+					</a>`
 
                     rows.push(row)
                 });
