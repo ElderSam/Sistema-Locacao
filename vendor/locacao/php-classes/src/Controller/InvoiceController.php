@@ -4,6 +4,8 @@ namespace Locacao\Controller;
 
 use \Locacao\Generator;
 use \Locacao\Model\Invoice;
+use \Locacao\Controller\InvoiceItemController;
+
 use stdClass;
 use DateTime;
 use DateInterval;
@@ -262,6 +264,62 @@ class InvoiceController extends Generator //controller de Fatura
         }
 
         return $weekdayInMonth;
+    }
+
+    function getDataToFormFatura($idContract)
+    {
+        $this->ItemFatura = new InvoiceItemController();
+
+        $arrContrato = $this->fatura->getContracts($idContract);  // PEGA TODOS OS CONTRATOS QUE POSSUEM ALUGUEIS 
+        //print_r($arrContrato);
+        $arrContrato = json_decode($arrContrato, true);
+        $arrContrato = $arrContrato[0];
+
+        if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
+        {
+            $hoje = new DateTime();
+
+            $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
+            echo "<br> FATURA: ";
+            print_r($paraFaturar);
+
+            /*echo "<br>ALUGUEIS: ";
+            print_r($arrContrato['alugueis']);*/
+
+            //ENTÃO ENTRA NA LISTA PARA FATURAR
+
+            echo "<br><br>FAZER FATURA";  
+            $dataNewFatura = [];
+
+            foreach($arrContrato['alugueis'] as $aluguel) //para cada aluguel
+            {
+                $itemFatura = $this->ItemFatura->getItemFatura($paraFaturar, $aluguel);
+
+                /*if($itemFatura['error'])
+                {
+                    echo "<br><br>";
+
+                    return json_encode([
+                        'error'=>true,
+                        'msg'=>'ocorreu algum erro'
+                    ]);
+                }*/
+
+                if($itemFatura != false) {
+                    $dataNewFatura[] = $itemFatura;
+                }
+                
+            }
+
+            return json_encode($dataNewFatura);
+
+        }else
+        {
+            return json_encode([
+                'error'=>true,
+                'msg'=>"CONTRATO SEM ALUGUEL INICIADO",
+            ]);
+        }
     }
 
 }

@@ -28,3 +28,10 @@ $app->get('/invoices/json/pending', function(){
     echo $faturaController->getFaturasParaFazer();
 });
 
+$app->get('/invoices/contract/:idContract/create', function($idContract){   
+    echo "gerar fatura<br> idContract: $idContract <br>";
+
+    $faturaController = new InvoiceController();
+    //echo $faturaController->getFaturasParaFazer();
+    echo $faturaController->getDataToFormFatura($idContract);
+});
