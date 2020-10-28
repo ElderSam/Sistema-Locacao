@@ -280,15 +280,15 @@ class InvoiceController extends Generator //controller de Fatura
             $hoje = new DateTime();
 
             $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
-            echo "<br> FATURA: ";
-            print_r($paraFaturar);
+            //echo "<br> FATURA: ";
+            //print_r($paraFaturar);
 
             /*echo "<br>ALUGUEIS: ";
             print_r($arrContrato['alugueis']);*/
 
             //ENTÃO ENTRA NA LISTA PARA FATURAR
 
-            echo "<br><br>FAZER FATURA";  
+            //echo "<br><br>FAZER FATURA";  
             $dataNewFatura = [];
 
             foreach($arrContrato['alugueis'] as $aluguel) //para cada aluguel
@@ -311,7 +311,10 @@ class InvoiceController extends Generator //controller de Fatura
                 
             }
 
-            return json_encode($dataNewFatura);
+            return json_encode([
+                'fatura'=>$paraFaturar,
+                'fatura_itens'=>$dataNewFatura
+            ]);
 
         }else
         {

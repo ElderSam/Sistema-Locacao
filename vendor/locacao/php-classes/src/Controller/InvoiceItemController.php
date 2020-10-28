@@ -11,13 +11,18 @@ use DateTime;
 class InvoiceItemController extends Generator
 {
     function getItemFatura($fatura, $aluguel) {
-
-        echo "<br><br>-------------- ITEM DE FATURA: -----------------";
+       
+        /*
+            OBS: SE O ALUGUEL COMEÇAR NO MESMO DIA QUE A FATURA,
+                ENTÃO COBRA APENAS O FRETE
+        */
+    
+        //echo "<br><br>-------------- ITEM DE FATURA: -----------------";
 
         /* PREENCHER ITENS DA FATURA */
         if($fatura['dtFim'] < $aluguel['dtInicio']) //se a fatura encerra antes de iniciar o aluguel
         {
-            echo "<br>ALUGUEL COMEÇA DEPOIS DO FIM DA FATURA";
+            //echo "<br>ALUGUEL COMEÇA DEPOIS DO FIM DA FATURA";
             return false;
         }
 
@@ -29,18 +34,12 @@ class InvoiceItemController extends Generator
         if($valorCobrado === false) return false;
              
         $valorFrete = $this->calculaValorFrete($fatura, $aluguel);
-        
-        /*
-            E SE O ALUGUEL COMEÇAR NO MESMO DIA QUE A FATURA???
-                COBRA APENAS O FRETE?
-                COMO QUE VAI COBRAR O FRETE DEPOIS?
-        */
 
         return [
             'idAluguel'=>$aluguel['idHistoricoAluguel'],
             'periodoLocacao'=>$aluguel['periodoLocacao'],
             'vlAluguelCobrado'=>$valorCobrado,
-            'custoFrete'=>$valorFrete,
+            'frete'=>$valorFrete,
             //MOSTRAR QUAL O TIPO DE FRETE?? (ENTREGA OU RETIRADA)
             'dtInicio'=>$dtInicio,
             'dtFim'=>$dtFim
@@ -49,8 +48,8 @@ class InvoiceItemController extends Generator
         
     function calculaValorCobrado($dtInicio, $dtFim, $aluguel)
     {
-        echo "<br><br>calculaValorCobrado: <br>";
-        print_r($aluguel);
+        //echo "<br><br>calculaValorCobrado: <br>";
+        //print_r($aluguel);
         $qtdDias = $this->getQtdDias($dtInicio, $dtFim);
 
         if($qtdDias === false) return false;
@@ -63,7 +62,7 @@ class InvoiceItemController extends Generator
             $periodoLocacao = $aluguel['periodoLocacao'];
             $vlAluguel = $aluguel['vlAluguel'];
             
-            echo "<br> CALCULO DO VALOR COBRADO";
+            //echo "<br> CALCULO DO VALOR COBRADO";
             /* CÁLCULO DO VALOR COBRADO */
             if($periodoLocacao == 1) //diario
             {   $valorTotal = ($qtdDias * $vlAluguel);
@@ -79,13 +78,13 @@ class InvoiceItemController extends Generator
             }
         }
       
-        echo " VALOR COBRADO: $valorTotal";
+        //echo " VALOR COBRADO: $valorTotal";
         return $valorTotal; 
     }
 
     function calculaValorFrete($fatura, $aluguel)
     {
-        echo "<br>calculaValorFrete: ";
+        //echo "<br>calculaValorFrete: ";
 
         $custoEntrega = $this->getCustoEntrega($fatura, $aluguel);
 
@@ -97,7 +96,10 @@ class InvoiceItemController extends Generator
             $custoRetirada = 0;
         }
        
-        return [$custoEntrega, $custoRetirada];
+        return [
+            'custoEntrega'=>$custoEntrega,
+            'custoRetirada'=>$custoRetirada
+        ];
     }
 
     function getCustoEntrega($fatura, $aluguel)
@@ -107,7 +109,7 @@ class InvoiceItemController extends Generator
             return 0;
 
         }else{
-            echo " frete ENTREGA";
+            //echo " frete ENTREGA";
             return $aluguel['custoEntrega'];
         }
     }
@@ -116,7 +118,7 @@ class InvoiceItemController extends Generator
     {
         if($aluguel['dtFinal'] < $fatura['dtFim']) //se o aluguel encerra antes da data final da fatura
         {
-            echo " frete RETIRADA";
+            //echo " frete RETIRADA";
             return $aluguel['custoRetirada'];
 
         }else{
@@ -127,15 +129,15 @@ class InvoiceItemController extends Generator
     function getQtdDias($dtInicio, $dtFim) //calcula a quantidade de dias dentro do período cobrado na fatura
     {
         /* calcula a quantidade de dias de $dtInicio até $dtFim */
-        echo "<br>$dtInicio até $dtFim";
+        //echo "<br>$dtInicio até $dtFim";
         $dtInicio = new DateTime($dtInicio);
         $dtFim = new DateTime($dtFim);
         $interval = $dtInicio->diff($dtFim);
-        echo " -> quantidade de dias: " .$interval->format('%R%a days');
+        //echo " -> quantidade de dias: " .$interval->format('%R%a days');
 
         if($interval->format('%a') < 0)
         {
-            echo ' NEGATIVO';
+            //echo ' NEGATIVO';
             return false;
         }
 
