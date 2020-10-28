@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22-Out-2020 às 04:59
+-- Tempo de geração: 28-Out-2020 às 10:20
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -821,11 +821,11 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObra`, `dtEmissao`, `solicitante`, `telefone`, `email`, `dtAprovacao`, `dtInicio`, `dtFim`, `statusOrcamento`, `temMedicao`, `regraFatura`, `semanaDoMes`, `diaFatura`, `notas`, `dtCadastro`) VALUES
-(2, '17', '', NULL, '2020-09-21', 'TESTE', '', '', NULL, '0000-00-00', '0000-00-00', 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:26:52'),
+(2, '20201022-002', NULL, 17, '2020-10-22', 'TESTE', '19000000000', 'teste@gmail.com', '2020-10-23', '2020-10-23', '0000-00-00', 4, 0, NULL, NULL, NULL, '', '2020-05-24 08:26:52'),
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, 0, NULL, NULL, NULL, '', '2020-05-24 08:27:46'),
-(4, '20', '', NULL, '2020-12-31', 'TESTE2', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:44:10'),
+(4, '20201231-001', '', 16, '2020-12-31', 'JOÃO MIGUEL', '', 'eldersamuel98@gmail.com', '2020-10-26', '0000-00-00', '0000-00-00', 3, 0, NULL, NULL, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:45:42'),
-(6, '20200530-002', NULL, 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '2020-10-16', '0000-00-00', 3, 1, 2, 1, 3, 'teste', '2020-05-25 08:16:14');
+(6, '20200530-002', NULL, 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '2020-09-07', '0000-00-00', 4, 1, 2, 1, 3, 'teste', '2020-05-25 08:16:14');
 
 -- --------------------------------------------------------
 
@@ -854,7 +854,8 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (1, 6, 1, 450, '3', 190, 190, 4, '', '2020-09-11 18:27:04'),
 (2, 6, 5, 15470, '2', 215, 215, 4, 'Entrega em 2DD úteis', '2020-09-20 12:45:06'),
 (3, 4, 1, 450, '5', 190, 190, 4, '', '2020-09-20 15:43:21'),
-(4, 2, 1, 450, '2', 190, 190, 4, 'Entrega em 2DD', '2020-09-21 18:45:10');
+(4, 2, 1, 450, '2', 190, 190, 4, 'Entrega em 2DD', '2020-09-21 18:45:10'),
+(5, 2, 2, 234, '2', 150, 150, 2, '', '2020-10-23 19:00:30');
 
 -- --------------------------------------------------------
 
@@ -896,19 +897,18 @@ CREATE TABLE `faturas` (
   `idFatura` int(11) NOT NULL,
   `idContrato` int(11) NOT NULL,
   `numFatura` varchar(11) NOT NULL,
-  `formaPagamento` int(1) NOT NULL COMMENT '1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque e 6-outros',
-  `dtVencimento` date NOT NULL,
-  `especCobranca` varchar(60) DEFAULT NULL,
   `enviarPorEmail` tinyint(1) NOT NULL COMMENT '0-não 1-sim',
   `emailEnvio` varchar(40) NOT NULL,
-  `valorTotal` float NOT NULL,
   `observacoes` varchar(100) DEFAULT NULL,
   `dtEmissao` date NOT NULL,
   `dtEnvio` date NOT NULL,
+  `adicional` varchar(100) DEFAULT NULL,
+  `valorTotal` float NOT NULL,
+  `formaPagamento` int(1) NOT NULL COMMENT '1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque e 6-outros',
+  `dtVencimento` date NOT NULL,
+  `especCobranca` varchar(60) DEFAULT NULL,
   `dtCobranca` date NOT NULL,
   `statusPagamento` int(1) NOT NULL COMMENT ' 0-pendente, 1-pago, 2-parcial, 3-cancelado, 4-perdido',
-  `valorFrete` float DEFAULT NULL,
-  `adicional` varchar(100) DEFAULT NULL,
   `numNF` int(11) NOT NULL,
   `numBoletoInt` int(11) NOT NULL,
   `numBoletoBanco` int(11) NOT NULL,
@@ -996,7 +996,8 @@ INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `o
 (1, 7, 0, 1, '2020-09-07 09:00:00', 'Item: Container 3M almoxarifado com lavabo DC\r\nCod. produto: 001.01.01.01.01.002-0003\r\n', '2020-09-20 17:38:51'),
 (5, 16, 0, 1, '2020-10-05 09:30:00', 'teste', '2020-10-12 09:23:37'),
 (13, 7, 1, 1, '2020-11-05 16:38:00', 'Cod. Prod.: 001.01.01.01.01.002-0003,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  TESTE ATUALIZAR\r\n', '2020-10-12 16:38:40'),
-(14, 15, 0, 1, '2020-10-18 09:22:00', 'Cod. Prod.: 001.04.05.02.02.002-0002,  \r\n<b>Produto: 12M stand de vendas sem lavabo HC</b>,  \r\n', '2020-10-18 09:23:01');
+(14, 15, 0, 1, '2020-10-18 09:22:00', 'Cod. Prod.: 001.04.05.02.02.002-0002,  \r\n<b>Produto: 12M stand de vendas sem lavabo HC</b>,  \r\n', '2020-10-18 09:23:01'),
+(15, 18, 0, 1, '2020-10-25 00:06:00', 'Cod. Prod.: 001.01.01.01.01.002-0001,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  \r\n', '2020-10-25 00:06:55');
 
 -- --------------------------------------------------------
 
@@ -1027,7 +1028,9 @@ INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idCon
 (7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
 (13, '4', 6, 1, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
 (15, '5', 6, 2, 1, 15470, '2020-10-18', '2020-11-25', 215, 215, '', '2020-10-05 20:22:21'),
-(16, '6', 6, 15, 1, 15470, '2020-10-05', '2020-12-05', 215, 215, '', '2020-10-05 20:22:21');
+(16, '6', 6, 15, 1, 15470, '2020-10-05', '2020-12-05', 215, 215, '', '2020-10-05 20:22:21'),
+(18, '7', 2, 1, 1, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44'),
+(19, '8', 2, 3, 0, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44');
 
 -- --------------------------------------------------------
 
@@ -1083,9 +1086,9 @@ CREATE TABLE `produtos_esp` (
 --
 
 INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valorCompra`, `status`, `dtFabricacao`, `numSerie`, `anotacoes`, `idFornecedor`, `dtCadastro`) VALUES
-(1, 1, '001.01.01.01.01.002-0001', 12500, 1, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
+(1, 1, '001.01.01.01.01.002-0001', 12500, 0, '2020-04-22', '0001', '', 2, '2020-04-22 09:49:52'),
 (2, 5, '001.04.05.02.02.002-0002', 10000, 0, '2020-04-22', '0002', 'cadastro teste', 2, '2020-04-22 09:51:18'),
-(3, 1, '001.01.01.01.01.002-0003', 13899.8, 1, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
+(3, 1, '001.01.01.01.01.002-0003', 13899.8, 0, '2020-04-22', '0003', 'teste cadastro', 2, '2020-04-22 09:57:53'),
 (4, 2, '002.01.01.01.01.001-0001', 520.98, 1, '2020-04-22', '0001', 'cadastro teste', 1, '2020-04-22 10:45:04'),
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
@@ -1487,7 +1490,7 @@ ALTER TABLE `contratos`
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1517,13 +1520,13 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
