@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Out-2020 às 23:07
+-- Tempo de geração: 28-Out-2020 às 23:13
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `id12706030_db_locacao`
 --
+CREATE DATABASE IF NOT EXISTS `id12706030_db_locacao` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `id12706030_db_locacao`;
 
 DELIMITER $$
 --
@@ -268,6 +270,87 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
     SET vidFatura = LAST_INSERT_ID();
  
     SELECT * FROM faturas WHERE idFatura = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancasUpdate_save` (IN `idCobranca` INT(11), IN `idFatura` INT(11), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
+  
+    DECLARE vidCobranca INT;
+
+    SELECT idCobranca INTO vidCobranca
+        FROM fatura_cobrancas
+        WHERE idCobranca = pidCobranca;
+
+    UPDATE fatura_cobrancas
+        SET
+            idFatura = pidFatura,
+            formaPagamento = pformaPagamento,
+            dtVencimento = pdtVencimento,
+            especCobranca = pespecCobranca,          
+            dtCobranca = pdtCobranca,
+            statusPagamento = pstatusPagamento, 
+            numNF = pnumNF,
+            numBoletoInt = pnumBoletoInt,
+            numBoletoBanco = pnumBoletoBanco,
+            valorPago = pvalorPago,
+            dtPagamento = pdtPagamento,
+            dtVerificacao = pdtVerificacao
+
+        WHERE idCobranca = vidCobranca;    
+
+
+    SELECT * FROM fatura_cobrancas WHERE idCobranca = pidCobranca;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_delete` (IN `pidCobranca` INT)  BEGIN
+  
+    DECLARE vidCobranca INT;
+    
+  SELECT idCobranca INTO vidCobranca
+    FROM fatura_cobrancas
+    WHERE idCobranca = pidCobranca;
+    
+    DELETE FROM fatura_cobrancas WHERE idCobranca = pidCobranca;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_save` (IN `idFatura` INT(11), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
+    
+        DECLARE vidCobranca INT;
+
+    INSERT INTO fatura_cobrancas (
+        idFatura,
+        formaPagamento,
+        dtVencimento,
+        especCobranca,       
+        dtCobranca,
+        statusPagamento,     
+        numNF,
+        numBoletoInt,
+        numBoletoBanco,
+        valorPago,
+        dtPagamento,
+        dtVerificacao
+    )
+    VALUES(
+        pidFatura,
+        pformaPagamento,
+        pdtVencimento,
+        pespecCobranca, 
+        pdtCobranca,
+        pstatusPagamento,
+        pnumNF,
+        pnumBoletoInt,
+        pnumBoletoBanco,
+        pvalorPago,
+        pdtPagamento,
+        pdtVerificacao
+    );
+    
+    SET vidCobranca = LAST_INSERT_ID();
+ 
+    SELECT * FROM fatura_cobrancas WHERE idCobranca = LAST_INSERT_ID();
     
 END$$
 
