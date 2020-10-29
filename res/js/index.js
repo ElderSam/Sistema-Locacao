@@ -34,7 +34,7 @@ function loadTableFaturasParaFazer() {
                     row['dtFim'] = formatDateToShow(item.dtFim)
                     
                     row['opcoes'] = `<a type='button' title='gerar fatura' class='btn btn-success'
-					href='/invoices/contract/${item.idContrato}/create' target='_blank'>
+					href='/invoices/contract/${item.idContrato}/createForm' target='_blank'>
                         <i class="fas fa-file-invoice-dollar fa-lg"></i>
 					</a>`
 

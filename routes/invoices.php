@@ -6,13 +6,21 @@ use \Locacao\Controller\InvoiceController;
 use \Locacao\Model\Invoice;
 
 /* FATURA */
-function getPageInvoice($idInvoice=false) {
+function getPageInvoice($array=false/*$idInvoice=false*/) {
     User::verifyLogin();
 
     $page = new Page();
-    $page->setTpl("faturas", array(
-        "idInvoiceURL"=>$idInvoice
-    ));
+    if($array)
+    {
+        $page->setTpl("faturas", $array);
+            
+        /*$page->setTpl("faturas", array(
+            "idInvoiceURL"=>$idInvoice
+        ));*/
+
+    }else{
+        $page->setTpl("faturas", $array);
+    } 
 }
 
 /* rota para página de faturas --------------*/
@@ -28,10 +36,18 @@ $app->get('/invoices/json/pending', function(){
     echo $faturaController->getFaturasParaFazer();
 });
 
-$app->get('/invoices/contract/:idContract/create', function($idContract){   
-    echo "gerar fatura<br> idContract: $idContract <br>";
+$app->get('/invoices/contract/:idContract/createForm', function($idContract){   
+ 
+    $array = [
+        'idContract'=>$idContract
+    ];
 
+    getPageInvoice($array);
+});
+
+$app->get('/invoices/contract/:idContract/create', function($idContract){
+
+    //echo "gerar fatura<br> idContract: $idContract <br>";
     $faturaController = new InvoiceController();
-    //echo $faturaController->getFaturasParaFazer();
     echo $faturaController->getDataToFormFatura($idContract);
 });
