@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Out-2020 às 23:03
+-- Tempo de geração: 28-Out-2020 às 23:07
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `id12706030_db_locacao`
 --
-CREATE DATABASE IF NOT EXISTS `id12706030_db_locacao` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `id12706030_db_locacao`;
 
 DELIMITER $$
 --
@@ -198,6 +196,78 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidCon
     SET vidItem = LAST_INSERT_ID();
     
     SELECT * FROM contrato_itens WHERE idItem = LAST_INSERT_ID();
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+  
+    DECLARE vidFatura INT;
+
+    SELECT idFatura INTO vidFatura
+        FROM faturas
+        WHERE idFatura = pidFatura;
+
+    UPDATE faturas
+        SET
+            idContrato = pidContrato,
+            numFatura = pnumFatura,
+            dtEmissao = pdtEmissao,
+            enviarPorEmail = penviarPorEmail,
+            emailEnvio = pemailEnvio,
+            dtEnvio = pdtEnvio,
+            adicional = padicional,
+            valorTotal = pvalorTotal,
+            observacoes = pobservacoes
+
+        WHERE idFatura = vidFatura;    
+
+
+    SELECT * FROM faturas WHERE idFatura = pidFatura;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` INT)  BEGIN
+  
+    DECLARE vidFatura INT;
+    
+  SELECT idFatura INTO vidFatura
+    FROM faturas
+    WHERE idFatura = pidFatura;
+    
+    DELETE FROM faturas WHERE idFatura = pidFatura;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+    
+        DECLARE vidFatura INT;
+
+    INSERT INTO faturas (
+        idContrato,
+        numFatura,
+        dtEmissao,
+        enviarPorEmail,
+        emailEnvio,
+        dtEnvio,
+        adicional,
+        valorTotal,
+        observacoes
+    )
+    VALUES(
+        pidContrato,
+        pnumFatura,
+        pdtEmissao,
+        penviarPorEmail,
+        pemailEnvio,
+        pdtEnvio,
+        padicional,
+        pvalorTotal,
+        pobservacoes
+    );
+    
+    SET vidFatura = LAST_INSERT_ID();
+ 
+    SELECT * FROM faturas WHERE idFatura = LAST_INSERT_ID();
     
 END$$
 
