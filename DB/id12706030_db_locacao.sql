@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Out-2020 às 10:20
+-- Tempo de geração: 28-Out-2020 às 23:03
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -897,13 +897,25 @@ CREATE TABLE `faturas` (
   `idFatura` int(11) NOT NULL,
   `idContrato` int(11) NOT NULL,
   `numFatura` varchar(11) NOT NULL,
+  `dtEmissao` date NOT NULL,
   `enviarPorEmail` tinyint(1) NOT NULL COMMENT '0-não 1-sim',
   `emailEnvio` varchar(40) NOT NULL,
-  `observacoes` varchar(100) DEFAULT NULL,
-  `dtEmissao` date NOT NULL,
   `dtEnvio` date NOT NULL,
   `adicional` varchar(100) DEFAULT NULL,
   `valorTotal` float NOT NULL,
+  `observacoes` varchar(100) DEFAULT NULL,
+  `dtCadastro` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `fatura_cobrancas`
+--
+
+CREATE TABLE `fatura_cobrancas` (
+  `idCobranca` int(11) NOT NULL,
+  `idFatura` int(11) NOT NULL,
   `formaPagamento` int(1) NOT NULL COMMENT '1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque e 6-outros',
   `dtVencimento` date NOT NULL,
   `especCobranca` varchar(60) DEFAULT NULL,
@@ -1376,6 +1388,13 @@ ALTER TABLE `faturas`
   ADD KEY `fk_fatura_contrato1` (`idContrato`);
 
 --
+-- Índices para tabela `fatura_cobrancas`
+--
+ALTER TABLE `fatura_cobrancas`
+  ADD PRIMARY KEY (`idCobranca`),
+  ADD KEY `fk_cobranca_fatura` (`idFatura`);
+
+--
 -- Índices para tabela `fatura_itens`
 --
 ALTER TABLE `fatura_itens`
@@ -1505,6 +1524,12 @@ ALTER TABLE `faturas`
   MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de tabela `fatura_cobrancas`
+--
+ALTER TABLE `fatura_cobrancas`
+  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `fatura_itens`
 --
 ALTER TABLE `fatura_itens`
@@ -1598,6 +1623,12 @@ ALTER TABLE `contrato_itens`
 --
 ALTER TABLE `faturas`
   ADD CONSTRAINT `fk_fatura_contrato1` FOREIGN KEY (`idContrato`) REFERENCES `contratos` (`idContrato`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `fatura_cobrancas`
+--
+ALTER TABLE `fatura_cobrancas`
+  ADD CONSTRAINT `fk_cobranca_fatura` FOREIGN KEY (`idFatura`) REFERENCES `faturas` (`idFatura`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `fatura_itens`
