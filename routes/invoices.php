@@ -6,26 +6,22 @@ use \Locacao\Controller\InvoiceController;
 use \Locacao\Model\Invoice;
 
 /* FATURA */
-function getPageInvoice($array=false/*$idInvoice=false*/) {
+function getPage($fileName, $array=false) {
     User::verifyLogin();
 
     $page = new Page();
-    if($array)
-    {
-        $page->setTpl("faturas", $array);
-            
-        /*$page->setTpl("faturas", array(
-            "idInvoiceURL"=>$idInvoice
-        ));*/
+
+    if($array) {
+        $page->setTpl($fileName, $array);
 
     }else{
-        $page->setTpl("faturas", $array);
-    } 
+        $page->setTpl($fileName);
+    }
 }
 
 /* rota para página de faturas --------------*/
 $app->get('/invoices', function(){
-    getPageInvoice();
+    getPage('faturas');
 });
 
 /* rota para pegar lista de faturas pendentes (para fazer) */
@@ -36,13 +32,12 @@ $app->get('/invoices/json/pending', function(){
     echo $faturaController->getFaturasParaFazer();
 });
 
+/* entrar na página que tem o formulário para salvar fatura */
 $app->get('/invoices/contract/:idContract/createForm', function($idContract){   
- 
-    $array = [
-        'idContract'=>$idContract
-    ];
 
-    getPageInvoice($array);
+    getPage('fatura_salvar', array(
+        'idContrato'=>$idContract
+    ));
 });
 
 $app->get('/invoices/contract/:idContract/create', function($idContract){

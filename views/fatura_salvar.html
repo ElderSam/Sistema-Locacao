@@ -13,7 +13,7 @@
                     <br>
                     <div class="row">
                         <h3><b id="title">Cadastrar Fatura</b></h3>
-                        <a id="btnShowPDF" class="btn btn-danger ml-4" href="/invoice/{$idFatura}/pdf/show"
+                        <a id="btnShowPDF" class="btn btn-danger ml-4" href="/invoice/:idFatura/pdf/show"
                             title="ver PDF"> <i class="fas fa-file-pdf fa-lg"></i></a>
                         <button type="button" id="btnEmail" class="btn btn-warning ml-4" title="enviar PDF por e-mail"
                             data-toggle="modal" data-target="#emailModal">
@@ -60,6 +60,17 @@
                                 <span class="help-block" style="background-color: white"></span>
                             </div>
 
+                            <div class="form-group col-lg-3 bg-secondary">
+                                <label for="dtInicio">Data de Início</label>
+                                <input type="date" class="form-control" id="dtInicio" name="dtInicio" value="">
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-secondary">
+                                <label for="dtFim">Data Fim</label>
+                                <input type="date" class="form-control" id="dtFim" name="dtFim" value="">
+                            </div>
+                            
+
                             <div class="form-group col-lg-3">
                                 <label for="dtEmissao">Data de Emissão</label>
                                 <input type="date" class="form-control" id="dtEmissao" name="dtEmissao" value="">
@@ -84,13 +95,6 @@
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-3">
-                                <label for="contrato">Contrato</label>
-                                <input type="text" class="form-control" id="contrato" name="contrato" placeholder="000"
-                                    maxlength="12" value="">
-                                <span class="help-block"></span>
-                            </div>
-
                             <div class="form-group col-lg-12">
                                 <label for="especContrato">Especificação do contrato</label>
                                 <input type="text" class="form-control" id="especContrato" name="especContrato" value="">
@@ -102,6 +106,8 @@
                                     rows="3"></textarea>
                                 <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
                             </div>
+                            
+                            <input type="text" id="idContrato" name="idContrato" value="{$idContrato}" hidden="true">                              
 
                             <!--Usado apenas para Editar -->
                             <div hidden="true">
@@ -320,5 +326,6 @@
         </div>
 
         <script src="/res/plugins/jquery/jquery-3.4.1.min.js"></script>
-        <script src="../res/plugins/mask/jquery.mask.min.js"></script>
-        <script src="../res/js/util.js"></script>
+        <script src="/res/plugins/mask/jquery.mask.min.js"></script>
+        <script src="/res/js/util.js"></script>
+        <script src="/res/js/invoice_save.js"></script>
