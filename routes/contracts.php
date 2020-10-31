@@ -6,11 +6,9 @@ use \Locacao\Model\Contract;
 use \Locacao\Model\User;
 
 /* rota para página de contratos --------------*/
-
 $app->get('/contracts', function(){
 
     User::verifyLogin();
-	
 	
 	$page = new Page();
 	$page->setTpl("contratos");
