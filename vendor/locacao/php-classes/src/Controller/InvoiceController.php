@@ -2,6 +2,7 @@
 
 namespace Locacao\Controller;
 
+use \Locacao\Model\User;
 use \Locacao\Generator;
 use \Locacao\Model\Invoice;
 use \Locacao\Controller\InvoiceItemController;
@@ -19,6 +20,125 @@ class InvoiceController extends Generator //controller de Fatura
         date_default_timezone_set("America/Sao_Paulo");
 
         $this->fatura = new Invoice(); //model
+    }
+
+    public function save($update = false) //salva (insere/atualiza) uma Fatura
+    {
+        User::verifyLogin();
+        
+        $error = $this->verifyFields($update); //verifica os campos do formulário   
+        $aux = json_decode($error);
+
+        if ($aux->error) {
+            return $error;
+        }
+
+        $invoice = new Invoice(); //Model
+
+        $invoice->setData($_POST);
+
+        if ($update) { //se for atualizar
+            
+            $upd =  $invoice->update();
+    
+            return $upd; 
+
+        } else { // se for cadastrar nova Fatura
+
+            $res = [];
+                
+            $insert = $invoice->insert();
+            
+            $aux = json_decode($insert);
+
+            if (isset($aux->error) && $aux->error) {
+                //print_r($aux);
+                break;
+            }
+                
+            return json_encode($res);          
+        }
+    }
+
+    
+    public function verifyFields($update = false)
+    {/*Verifica todos os campos ---------------------------*/
+
+        $errors = array();
+
+        //print_r($_POST);
+
+        //CAMPOS OBRIGATÓRIOS:
+
+        
+        if(!$update){
+
+            if (!isset($_POST["idContrato"]) || ($_POST["idContrato"] == "")) {
+                    $errors["#idContrato"] = "Contrato é obrigatório!";
+            }
+
+            if($_POST["cliente"] == "") {
+                $errors["#cliente"] = "Cliente é obrigatório";
+            }
+
+        }
+
+        if($_POST["status"] == "") {
+            $errors["#status"] = "Status é obrigatório";
+        }
+
+        if ($_POST["dtInicio"] == "") {
+            $errors["#dtInicio"] = "Data início é obrigatória!";
+        }
+
+            
+        if ($_POST["vlAluguel"] == "") {
+            $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
+        }
+
+        if($_POST["custoEntrega"] == "") {
+            $errors["#custoEntrega"] = "Valor de Entrega é obrigatório";
+        }
+        
+        if($_POST["custoRetirada"] == "") {
+            $errors["#custoRetirada"] = "Valor de Retirada é obrigatório";
+        }
+
+        //...
+
+        
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors
+            ]);
+
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+        }
+    }/* --- fim verifyFields() ---------------------------*/
+
+    
+    public function ajax_list_invoices($requestData)
+    {
+        //...
+    }
+
+    public function records_total()
+    {
+        return Invoice::total();
+    }
+
+    public function delete($idInvoice){
+       
+        $invoice = new Invoice();
+        //echo "id: " . $idInvoice;
+        $invoice->get((int)$idInvoice); //carrega o registro, para ter certeza que ainda existe no banco
+       
+        return $invoice->delete();      
     }
 
     function getFaturasParaFazer() /* Retorna alugueis que devem ser faturados no dia OU que já deveriam ter sido faturados */
