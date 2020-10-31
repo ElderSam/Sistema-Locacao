@@ -10,6 +10,54 @@ use stdClass;
 
 class Invoice extends Generator { //classe de Fatura
 
+    public function insert($dataNewFatura)
+    {
+        echo "<br><br>INSERT: ";
+        $dataNewFatura = json_decode($dataNewFatura, true);
+        //print_r($dataNewFatura);
+        $fatura = $dataNewFatura['fatura'];
+        print_r($fatura);
+        $this->setData($fatura);
+       // print_r($dataNewFatura->fatura->idContrato);
+
+        $sql = new Sql();
+        $newFatura = $sql->select("CALL sp_faturas_save(
+            idContrato,
+            numFatura,
+            dtEmissao,
+            enviarPorEmail,
+            emailEnvio,
+            dtEnvio,
+            adicional,
+            valorTotal,
+            observacoes    
+            )", array(
+
+            //':idFatura'=>$this->getidFatura(),
+            ':idContrato'=>$this->getidContrato(),
+            ':numFatura'=>$this->getnumFatura(),
+            ':dtEmissao'=>$this->getdtEmissao(),
+            ':enviarPorEmail'=>$this->getenviarPorEmail(),
+            ':emailEnvio'=>$this->getemailEnvio(),
+            ':dtEnvio'=>$this->getdtEnvio(),
+            ':adicional'=>$this->getadicional(),
+            ':valorTotal'=>$this->getvalorTotal(),
+            ':observacoes'=>$this->getobservacoes()
+        ));
+
+        if(count($newFatura) > 0)
+        {
+            $this->setData($newFatura[0]); //carrega atributos desse objeto com o retorno da inserção no banco
+            return json_encode($newFatura[0]);
+
+        }else{
+            return json_encode([
+                "error"=>true,
+                "msg"=>"Erro ao inserir Fatura!"
+            ]);
+        }
+    }
+
     function getContracts($idContrato=false) { // pega todos os contratos que possuem alugueis
         $arrContratos = array();
 
