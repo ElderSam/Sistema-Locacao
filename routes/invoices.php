@@ -5,46 +5,49 @@ use \Locacao\Model\User;
 use \Locacao\Controller\InvoiceController;
 use \Locacao\Model\Invoice;
 
+/* FATURA */
+function getPageInvoice($array=false/*$idInvoice=false*/) {
+    User::verifyLogin();
+
+    $page = new Page();
+    if($array)
+    {
+        $page->setTpl("faturas", $array);
+            
+        /*$page->setTpl("faturas", array(
+            "idInvoiceURL"=>$idInvoice
+        ));*/
+
+    }else{
+        $page->setTpl("faturas", $array);
+    } 
+}
 
 /* rota para página de faturas --------------*/
 $app->get('/invoices', function(){
-
-    User::verifyLogin();
-	
-	$page = new Page();
-	$page->setTpl("faturas");
+    getPageInvoice();
 });
 
-/* rota para página de fatura_salvar --------------*/
-$app->get('/invoices/new', function(){
-
-    User::verifyLogin();
-	
-	$page = new Page();
-	$page->setTpl("fatura_salvar", [
-		"idFatura"=>'0'
-	]);
-  
+/* rota para pegar lista de faturas pendentes (para fazer) */
+$app->get('/invoices/json/pending', function(){
+    //User::verifyLogin();
+    //echo "rota faturas<br>";
+    $faturaController = new InvoiceController();
+    echo $faturaController->getFaturasParaFazer();
 });
 
-$app->post('/invoices/list_datatables', function(){ //ajax list datatables
+$app->get('/invoices/contract/:idContract/createForm', function($idContract){   
+ 
+    $array = [
+        'idContract'=>$idContract
+    ];
 
-	User::verifyLogin();
-	
-	//Receber a requisão da pesquisa 
-	$requestData = $_REQUEST;
-
-	$invoices = new InvoiceController();
-	echo $invoices->ajax_list_contracts($requestData);
-	
+    getPageInvoice($array);
 });
 
+$app->get('/invoices/contract/:idContract/create', function($idContract){
 
-// /* rota para página de faturas --------------*/
-// $app->get('/invoices', function(){
-//     //User::verifyLogin();
-//     // echo "rota faturas";
-//     $faturaController = new InvoiceController();
-//     echo $faturaController->getFaturasParaFazer();
-// });
-
+    //echo "gerar fatura<br> idContract: $idContract <br>";
+    $faturaController = new InvoiceController();
+    echo $faturaController->getDataToFormFatura($idContract);
+});

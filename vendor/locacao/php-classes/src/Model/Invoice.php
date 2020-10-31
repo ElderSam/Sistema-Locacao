@@ -10,15 +10,20 @@ use stdClass;
 
 class Invoice extends Generator { //classe de Fatura
 
-    function getContracts() { // pega todos os contratos que possuem alugueis
+    function getContracts($idContrato=false) { // pega todos os contratos que possuem alugueis
         $arrContratos = array();
 
         $sql = new Sql();
 
-        $query = "SELECT idContrato, codContrato, statusOrcamento, obra_idObra, dtFim as dtFimContrato,
+        $query = "SELECT idContrato, codContrato, statusOrcamento as status, obra_idObra, dtFim as dtFimContrato,
             temMedicao, regraFatura, semanaDoMes, diaFatura
             FROM contratos
-            WHERE statusOrcamento IN(2, 3, 4)";
+            WHERE statusOrcamento IN(4)"; //somente contratos vigentes
+
+        if($idContrato)
+        {
+            $query .= " AND idContrato = $idContrato";
+        }
 
         $contratos = $sql->select($query);
         //print_r($contratos);
@@ -27,16 +32,7 @@ class Invoice extends Generator { //classe de Fatura
 
             foreach($contratos as $contrato) {
                 //print_r($contrato);
-
-                $query = "SELECT a.*, c.periodoLocacao FROM `historicoalugueis` a
-                    INNER JOIN `produtos_esp` b ON(b.idProduto_esp = a.produto_idProduto)
-                    INNER JOIN `contrato_itens` c ON(c.idProduto_gen = b.idProduto_gen)
-                    WHERE a.contrato_idContrato = :IDCONTRATO
-                    GROUP BY a.idHistoricoAluguel";
-
-                $alugueis = $sql->select($query, array(
-                    ":IDCONTRATO"=>$contrato['idContrato']
-                ));
+                $alugueis = $this->getRentsByContract($contrato['idContrato']);
 
                 $obj = new stdClass();
                 $obj->contrato = $contrato;
@@ -50,6 +46,22 @@ class Invoice extends Generator { //classe de Fatura
         $arrContratos = json_encode($arrContratos);
         //print_r($arrContratos);
         return $arrContratos;
+    }
+
+    function getRentsByContract($idContrato)
+    {
+        $sql = new Sql();
+
+        $query = "SELECT a.*, c.periodoLocacao FROM `historicoalugueis` a
+        INNER JOIN `produtos_esp` b ON(b.idProduto_esp = a.produto_idProduto)
+        INNER JOIN `contrato_itens` c ON(c.idProduto_gen = b.idProduto_gen)
+        WHERE (a.contrato_idContrato = :IDCONTRATO AND a.status NOT IN(0))
+        GROUP BY a.idHistoricoAluguel
+        ORDER BY dtInicio ASC";
+
+        return $sql->select($query, array(
+            ":IDCONTRATO"=>$idContrato
+        ));
     }
 
     function getultimaFatura($idContrato) {
@@ -70,8 +82,10 @@ class Invoice extends Generator { //classe de Fatura
         {              
             $this->setidFatura($fatura[0]['idFatura']);
 
-            $query = "SELECT * FROM `fatura_itens`
-            WHERE idFatura = :IDFATURA";
+            $query = "SELECT DISTINCT * FROM `fatura_itens`
+                WHERE idFatura = :IDFATURA
+                ORDER BY dtFim DESC
+                LIMIT 1";
 
             $itensFatura = $sql->select($query, array(
                 ":IDFATURA"=>$this->getidFatura()

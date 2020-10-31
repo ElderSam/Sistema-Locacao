@@ -4,6 +4,8 @@ namespace Locacao\Controller;
 
 use \Locacao\Generator;
 use \Locacao\Model\Invoice;
+use \Locacao\Controller\InvoiceItemController;
+
 use stdClass;
 use DateTime;
 use DateInterval;
@@ -27,58 +29,182 @@ class InvoiceController extends Generator //controller de Fatura
 
         $faturasPendentes = [];
 
-        foreach($arrContracts as $arrContrato)
-        { //para cada contrato
-            $faturasPendentes[] = $this->getAlugueisParaFaturar($arrContrato);
+        foreach($arrContracts as $arrContrato)  //para cada contrato
+        {
+            $paraFaturar = false;
+            if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
+            {
+                $hoje = new DateTime();
+                //echo "HOJE: ". $hoje->format('Y-m-d') . "<br>";
+        
+                $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
+            }else
+            {
+                //echo "CONTRATO SEM ALUGUEL INICIADO";
+            }
+            
+            //echo "----------------------------------------<br><br>";
+            if($paraFaturar) $faturasPendentes[] = $paraFaturar; //se retornou, coloca na lista
         }
+
+        return json_encode($faturasPendentes);
 
     }
 
-    function getAlugueisParaFaturar($arrContrato) //para cada Contrato
+    function getAlugueisParaFaturar($arrContrato, $hoje) //para cada Contrato
     {
         $contrato = $arrContrato['contrato'];
-        print_r($contrato);
-        echo "<br><br>";
-
-        $hoje = new DateTime();
-        echo "HOJE: ". $hoje->format('Y-m-d');
+        //print_r($contrato);
+        //echo "<br><br> <b>idContrato</b>=". $contrato['idContrato']."<br>";
 
         $arrUltimaFatura = $this->fatura->getultimaFatura($contrato['idContrato']); //BUSCA A ÚLTIMA FATURA DO CONTRATO
-        echo "<br>". $arrUltimaFatura;
+        //echo "<br>ÚLTIMA FATURA: ". $arrUltimaFatura;
         $arrUltimaFatura = json_decode($arrUltimaFatura, true);
+
+        $dtFimUltimaFatura = $this->getDtFimUltimaFatura($arrUltimaFatura);
+
+        if($dtFimUltimaFatura) //se teve fatura anterior
+        {
+            //VERIFICA SE JÁ TEVE UMA FATURA NESSE MÊS
+            if($dtFimUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
+            {
+                //echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
+                return false;
+            }
+        }
+
+        $dtInicio = $this->calculaDtInicio($dtFimUltimaFatura, $arrContrato['alugueis']);
+
+        $dtVenc = $this->calculaDtVenc($dtInicio, $hoje, $contrato);
+
+        //echo "<br>inicio: " . $dtInicio->format('Y-m-d') . ", dtVenc: " . $dtVenc->format('Y-m-d');
         
+        if(!$dtVenc) return false;
+
+        $dtVenc = $dtVenc->format('Y-m-d');
+        $dtFim = $this->calculaDtFim($dtVenc);
+
+        $dtEmissao = $this->calculaDtEmissao($dtVenc);
+
+        return [
+            "idContrato"=>$contrato['idContrato'],
+            "codContrato"=>$contrato['codContrato'],
+            "dtEmissao"=>$dtEmissao->format('Y-m-d'),
+            "dtInicio"=>$dtInicio->format('Y-m-d'),
+            "dtFim"=>$dtFim->format('Y-m-d'),
+            "dtVenc"=>$dtVenc
+        ];
+
+        /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
+        */     
+    }
+
+    function getDtFimUltimaFatura($arrUltimaFatura)
+    {
         if(count($arrUltimaFatura['fatura']) > 0) //se esse contrato tem alguma fatura
         {
-            $fatura = $arrUltimaFatura['fatura']['0'];
-   
-            //PEGA A DATA DE EMISSÃO DA ÚLTIMA FATURA
-            $dtUltimaFatura = new Datetime($fatura['dtEmissao']);
-            echo "<br><br>dtUltimaFatura: ".$dtUltimaFatura->format('Y-m-d');    
-            
-            //VERIFICA SE JÁ TEVE UMA FATURA NESSE MÊS
-            if($dtUltimaFatura->format('Y-m') === $hoje->format('Y-m'))
+            //PEGA O ITEM COM A MAIOR DATA FIM DO DA ÚLTIMA FATURA
+            if(count(['fatura_itens']) > 0)
             {
-                echo "<br>JÁ TEVE FATURA NESTE MÊS: ".$hoje->format('Y-m');
+                $Itemfatura = $arrUltimaFatura['fatura_itens'][0]; //pega o item com a maior dtFim
+                return new Datetime($Itemfatura['dtFim']);  
+            }else
+            {
+                //echo "ERRO: Fatura não possui itens";
             }
 
         } else
         {
-            echo "<br>CONTRATO SEM FATURA"; 
-            $dtUltimaFatura = false;    
+            //echo "<br>CONTRATO SEM FATURA<br>"; 
+            return false;    
+        }
+    }
+
+    function calculaDtInicio($dtFimUltimaFatura, $alugueis)
+    {
+        //CALCULA DTINICIO
+            //ALUGUEL COM FATURA
+            //ALUGUEL SEM FATURA
+
+        if(!$dtFimUltimaFatura) { //se não teve fatura anterior
+            /*echo "<br>NÃO TEM FATURA ANTERIOR
+                <br>FAZER A PRIMEIRA FATURA<br>";
+
+            echo "Alugueis: ";
+            print_r($alugueis);*/
+
+            /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL, */
+            $dtInicioFatura = new DateTime($alugueis[0]['dtInicio']);
+
+        }else
+        {
+            /*echo "<br>TEM FATURA ANTERIOR<br>
+                <br>dtFimUltimaFatura: ".$dtFimUltimaFatura->format('Y-m-d'); */
+
+            $dtInicioFatura = new DateTime($dtFimUltimaFatura->format('Y-m-d'));
+            $dtInicioFatura->add(new DateInterval('P01D')); //adiciona 1 dia
         }
 
-        if($contrato['temMedicao']) // se o contrato tiver regra para faturar
+        return $dtInicioFatura;
+    }
+
+    function calculaDtVenc($dtInicioFatura, $hoje, $contrato)
+    {
+        //echo "medição=".$contrato['temMedicao'];
+
+        if($contrato['temMedicao']) // CONTRATO COM MEDIÇÃO: se o contrato tiver regra para faturar
         {   
-            //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
-            $this->getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje);
+            $dtVenc = $this->getDtVencFaturaMedicao($contrato, $hoje);
 
-        } else {
-            //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
-            $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+        } else //CONTRATO SEM MEDIÇÃO
+        {
+            $dtInicio = $dtInicioFatura->format('Y-m-d');
+            $dtVenc = $this->getDtVencFaturaNormal($dtInicio);
         }
 
-        /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA
-        */     
+        return $dtVenc;
+    }
+
+    function calculaDtFim($dtVenc)
+    {
+        $dtFim = new DateTime($dtVenc);
+        //CALCULA DTFIM (1 DIA ANTES DE DTVENC)
+        $dtFim->sub(new DateInterval('P01D'));
+        return $dtFim;
+    }
+
+    function getDtVencFaturaMedicao($contrato, $hoje)
+    {
+        //PEGAR LISTA QUANDO O CONTRATO TEM MEDIÇÃO
+        /*echo "<br>TEM MEDIÇÃO<br>";
+
+        echo "<br>regraFatura: ".$contrato['regraFatura'];*/
+        $dtVenc = $contrato['diaFatura'];
+    
+        if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
+        {
+            $txtDate = $dtVenc . $hoje->format("m-d");
+            $dtVenc = new DateTime($txtDate);
+            
+        }else if($contrato['regraFatura'] == 2) //se a regra para faturar for dia da semana
+        {
+            $dtVenc = $this->getExactDate($contrato['semanaDoMes'], $dtVenc, $hoje);    
+        }
+              
+        return $dtVenc;
+    }
+
+    function getDtVencFaturaNormal($dtInicio)
+    {
+        //PEGAR LISTA QUANDO O CONTRATO NÃO TEM MEDIÇÃO
+        //$dtVenc = $this->getDataFaturaNormal($arrContrato['alugueis'], $fatura);
+
+        //echo "<br>NÃO TEM MEDIÇÃO<br>";
+
+        /* A PARTIR DA DATA DE INICIO DO PRIMEIRO ALUGUEL, CONTA 01 MÊS PARA O VENCIMENTO */ 
+        $dtVenc = new DateTime($dtInicio);
+        $dtVenc->add(new DateInterval('P01M')); //adiciona 1 mês
+        return $dtVenc;
     }
 
     function getExactDate($numSemana, $diaSemana, $hoje) // retorna a data Y-m-d a partir do número da semana dentro do mês e do dia dentro da semana
@@ -92,7 +218,7 @@ class InvoiceController extends Generator //controller de Fatura
 
         if($diaSemana >= $auxDayInWeek) { //se o dia da semana desejado for maior que o primeiro dia do mês
             $auxNumWeek += 1;
-            echo "dia da semana do contrato é maior que o dia 01 do mês";
+            //echo "dia da semana do contrato é maior que o dia 01 do mês";
         }
 
         $auxNumWeek += 1;
@@ -115,51 +241,88 @@ class InvoiceController extends Generator //controller de Fatura
         return $auxDate;
     }
 
-    function getDataFaturaNormal($alugueis, $fatura=[])
-    {
+    function calculaDtEmissao($dtVenc) { // data de emissão da nova fatura
 
-        echo "<br>NÃO TEM MEDIÇÃO<br>";
-        //SE NÃO TEVE FATURA ANTERIOR
-        if(count($fatura) == 0)
-        {
-            print_r($alugueis);
+        //DTEMISSAO (10 DIAS ANTES DE DTVENC)
+        $dtNewFatura = new DateTime($dtVenc);
+        $dtNewFatura = $dtNewFatura->sub(new DateInterval('P10D')); //subtrai 10 dias da data de vencimento
+        //echo " -> data nova Fatura: ".$dtNewFatura->format('Y-m-d') . "<br>";
 
-            echo "<br>FAZER A PRIMEIRA FATURA";
-            /* PARA FAZER A PRIMEIRA FATURA, PEGA O PRIMEIRO ALUGUEL,
-
-                A PARTIR DA DATA DE INICIO DESTE CONTA 30 DIAS PARA O VENCIMENTO */ 
-
-        } else {}
+        return $dtNewFatura;
     }
 
-    function getDataFaturaMedicao($contrato, $dtUltimaFatura, $hoje)
+    function getNumWeekdayInMonth($date) // retorna o número da semana dentro do mês (que tem aquele dia da semana)
     {
+        $weekdayInMonth = 1;
+      
+        $dia = $date->format('d');
 
-        if($dtUltimaFatura) //se teve alguma fatura
+        while(($dia - 7) >= 1)
+        {  //15 - 7 -> 8 - 7 = 1 
+            $dia -= 7;
+            $weekdayInMonth++;
+        }
+
+        return $weekdayInMonth;
+    }
+
+    function getDataToFormFatura($idContract)
+    {
+        $this->ItemFatura = new InvoiceItemController();
+
+        $arrContrato = $this->fatura->getContracts($idContract);  // PEGA TODOS OS CONTRATOS QUE POSSUEM ALUGUEIS 
+        //print_r($arrContrato);
+        $arrContrato = json_decode($arrContrato, true);
+        $arrContrato = $arrContrato[0];
+
+        if(count($arrContrato['alugueis']) > 0) //se existir aluguel para faturar
         {
-            if($dtUltimaFatura < $hoje) //se a última fatura foi antes de hoje
+            $hoje = new DateTime();
+
+            $paraFaturar = $this->getAlugueisParaFaturar($arrContrato, $hoje);
+            //echo "<br> FATURA: ";
+            //print_r($paraFaturar);
+
+            /*echo "<br>ALUGUEIS: ";
+            print_r($arrContrato['alugueis']);*/
+
+            //ENTÃO ENTRA NA LISTA PARA FATURAR
+
+            //echo "<br><br>FAZER FATURA";  
+            $dataNewFatura = [];
+
+            foreach($arrContrato['alugueis'] as $aluguel) //para cada aluguel
             {
-                echo "<br>regraFatura: ".$contrato['regraFatura'];
-                $diaVencFatura = $contrato['diaFatura'];
-    
-                if($contrato['regraFatura'] == 1) // se tiver dia fixo, verificar se é o dia de hoje (dia atual) 
-                {        
-                    //NÃO FAZ NADA
-    
-                }else if($contrato['regraFatura'] == 2) //se a regra para faturar for dia da semana
+                $itemFatura = $this->ItemFatura->getItemFatura($paraFaturar, $aluguel);
+
+                /*if($itemFatura['error'])
                 {
-                    $diaVencFatura = $this->getExactDate($contrato['semanaDoMes'], $diaVencFatura, $hoje);
-                    $diaVencFatura = $diaVencFatura->format('Y-m-d');
-                    echo "<br>diaVencFatura calculado: $diaVencFatura";
+                    echo "<br><br>";
+
+                    return json_encode([
+                        'error'=>true,
+                        'msg'=>'ocorreu algum erro'
+                    ]);
+                }*/
+
+                if($itemFatura != false) {
+                    $dataNewFatura[] = $itemFatura;
                 }
-    
+                
             }
+
+            return json_encode([
+                'fatura'=>$paraFaturar,
+                'fatura_itens'=>$dataNewFatura
+            ]);
 
         }else
         {
-            echo "<br>FAZER PRIMEIRA FATURA COM MEDIÇÃO";
+            return json_encode([
+                'error'=>true,
+                'msg'=>"CONTRATO SEM ALUGUEL INICIADO",
+            ]);
         }
-
     }
 
 }
