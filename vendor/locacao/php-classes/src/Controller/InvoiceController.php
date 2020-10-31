@@ -22,7 +22,7 @@ class InvoiceController extends Generator //controller de Fatura
         $this->fatura = new Invoice(); //model
     }
 
-    public function save($update = false) //salva (insere/atualiza) uma Fatura
+    /*public function save($update = false) //salva (insere/atualiza) uma Fatura
     {
         User::verifyLogin();
         
@@ -58,7 +58,7 @@ class InvoiceController extends Generator //controller de Fatura
                 
             return json_encode($res);          
         }
-    }
+    }*/
 
     
     public function verifyFields($update = false)
@@ -127,10 +127,10 @@ class InvoiceController extends Generator //controller de Fatura
         //...
     }
 
-    public function records_total()
+    /*public function records_total()
     {
         return Invoice::total();
-    }
+    }*/
 
     public function delete($idInvoice){
        
