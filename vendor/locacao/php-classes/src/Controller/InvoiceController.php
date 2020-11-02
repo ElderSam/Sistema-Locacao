@@ -7,6 +7,7 @@ use \Locacao\Generator;
 use \Locacao\Model\Invoice;
 use \Locacao\Controller\InvoiceItemController;
 
+use Exception;
 use stdClass;
 use DateTime;
 use DateInterval;
@@ -261,14 +262,25 @@ class InvoiceController extends Generator //controller de Fatura
     {
         if(count($arrUltimaFatura['fatura']) > 0) //se esse contrato tem alguma fatura
         {
+            
             //PEGA O ITEM COM A MAIOR DATA FIM DO DA ÚLTIMA FATURA
-            if(count(['fatura_itens']) > 0)
+            if(count(['fatura_itens'][0]) > 0)
             {
-                $Itemfatura = $arrUltimaFatura['fatura_itens'][0]; //pega o item com a maior dtFim
-                return new Datetime($Itemfatura['dtFim']);  
-            }else
-            {
-                //echo "ERRO: Fatura não possui itens";
+                print_r($arrUltimaFatura);
+
+                try{
+                    
+                    $Itemfatura = $arrUltimaFatura['fatura_itens'][0]; //pega o item com a maior dtFim
+                    return new Datetime($Itemfatura['dtFim']);  
+
+                }catch(Exception $err) {
+                    //echo "ERRO: Fatura não possui itens";
+                    echo json_encode([
+                        "error"=>true,
+                        "msg"=>"Erro! Fatura sem itens. $err"
+                    ]);
+                }
+    
             }
 
         } else
