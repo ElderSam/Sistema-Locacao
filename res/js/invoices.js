@@ -132,20 +132,19 @@ function loadTableInvoices(){ //carrega a tabela de Faturas
 							break;
 						case 1:
 							statusPagamento = 'Parcial'
-							break;
 							color = 'orange'
+							break;
 						case 2:
 							statusPagamento = 'Pago'
-							break;
 							color = 'green'
 						case 3:
 							statusPagamento = 'Cancelado'
-							break;
 							color = 'black'
+							break;
 						case 4:
 							statusPagamento = 'Perdido'
-							break;
 							color = 'grey'
+							break;
 						default:
 							statusPagamento = ''
 							break;
