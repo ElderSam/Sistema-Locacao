@@ -21,6 +21,9 @@ function loadDataNewInvoice(idContract=false){ //carrega dados no formulário pa
     }else{
         console.log(`idContract=${idContract}`)
     }
+
+    $("#formInvoice #numeroFatura").prop('disabled', true );
+    $("#formInvoice #vlTotal").prop('disabled', true );
 }
 
 function loadFormInvoice(idInvoice, dataNewInvoice=false) {
@@ -71,7 +74,7 @@ $(function () {
 
 		$("#formInvoice #idFatura").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
 		$("#formInvoice #idContrato").prop('disabled', false);
-
+      
 		let form = $('#formInvoice');
 		let formData = new FormData(form[0]);
 
