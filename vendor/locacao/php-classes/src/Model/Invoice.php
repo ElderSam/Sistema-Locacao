@@ -204,16 +204,16 @@ class Invoice extends Generator { //classe de Fatura
                         $aux = strtoupper($search); //deixa a string em maiúsculo
                         $aux = substr($aux, 0, 5); //pega os 5 primeiros caracteres
 
-                        //0-pendente, 1-pago, 2-parcial, 3-cancelado, 4-perdido
+                        //0-pendente, 1-parcial, 2-pago, 3-cancelado, 4-perdido
                         switch($aux) { 
                             case "PEND": //pendente
                                 $value = 0;
                                 break;
-                            case "PAGO": //pago
+                            case "PARC": //parcial
                                 $value = 1;
                                 break;
-                            case "PARC": //parcial
-                                $value = 2;
+                            case "PAGO": //pago
+                                $value = 2;             
                                 break;
                             case "CANC": //cancelado
                                 $value = 3;

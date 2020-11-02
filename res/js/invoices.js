@@ -1,8 +1,11 @@
- //quando a página carrega
+/* Tabela de Faturas */
+var myTable = null
 
-	
+$(function() { //quando a página carrega
+	//carrega a tabela de Faturas
+	loadTableInvoices();
+});
 
-    
 // 	/* Cadastrar ou Editar Fatura --------------------------------------------------------------*/	
 // 	$("#btnSaveContract").click(function(e) { //quando enviar o formulário de Fatura
 // 		e.preventDefault();
@@ -91,14 +94,6 @@
 
 // });
 
-/* Tabela de Faturas */
-var myTable = null
-
-$(function() {
-	
-	//carrega a tabela de Faturas
-	loadTableInvoices();
-
 function loadTableInvoices(){ //carrega a tabela de Faturas
 
 	if(myTable != null){
@@ -127,34 +122,62 @@ function loadTableInvoices(){ //carrega a tabela de Faturas
 
 					row = []
 
+					let statusPagamento, color;
+					
+					//0-pendente, 1-pago, 2-parcial, 3-cancelado, 4-perdido
+					switch(parseInt(element.statusPagamento)) {
+						case 0:
+							statusPagamento = 'Pendente'
+							color = 'red'
+							break;
+						case 1:
+							statusPagamento = 'Parcial'
+							break;
+							color = 'orange'
+						case 2:
+							statusPagamento = 'Pago'
+							break;
+							color = 'green'
+						case 3:
+							statusPagamento = 'Cancelado'
+							break;
+							color = 'black'
+						case 4:
+							statusPagamento = 'Perdido'
+							break;
+							color = 'grey'
+						default:
+							statusPagamento = ''
+							break;
+					}
+
 					//row['id'] = element.id
 					row['numFatura'] = element.numFatura
-					row['dtEmissao'] = element.dtEmissao
-					row['dtVencimento'] = element.dtVencimento
+					row['statusPagamento'] = `<strong style='color: ${color}'>${statusPagamento}</strong>`
+					row['dtEmissao'] = formatDateToShow(element.dtEmissao)
+					row['dtVencimento'] = formatDateToShow(element.dtVencimento)
+					row['valorTotal'] = paraMoedaReal(Number(element.valorTotal))
 					row['nomeCliente'] = element.nomeCliente
-					row['statusPagamento'] = element.statusPagamento
+					
 					row['options'] = `<a type='button' title='ver detalhes' class='btn btn-warning btnEdit'
-					href='/contracts/${element.idFatura}'>
+					href='/invoices/${element.idFatura}'>
 						<i class='fas fa-bars sm'></i>
 					</a>`
-					
 
-					rows.push(row)
-				
+					rows.push(row)				
 				});
-				
+
 				return rows;
 			},
-
 		},
 		"columns": [
 			{ "data": "numFatura" },
+			{ "data": "statusPagamento" },
 			{ "data": "dtEmissao" },
 			{ "data": "dtVencimento" },
+			{ "data": "valorTotal" },
 			{ "data": "nomeCliente" },
-			{ "data": "statusPagamento" },
-			{ "data": "options" },
-			        
+			{ "data": "options" },			        
 		],
 		"columnDefs": [
 			{ targets: "no-sort", orderable: false }, //para não ordenar

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02-Nov-2020 às 16:15
+-- Tempo de geração: 02-Nov-2020 às 17:52
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -1068,6 +1068,14 @@ CREATE TABLE `faturas` (
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Extraindo dados da tabela `faturas`
+--
+
+INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `valorTotal`, `observacoes`, `dtCadastro`) VALUES
+(1, 6, '001-2020', '2020-11-02', '2020-10-07', '2020-11-07', 0, '', '2020-11-02', NULL, 0, NULL, '2020-11-02 17:26:36'),
+(2, 6, '001-2020', '2020-11-02', '2020-10-07', '2020-11-07', 0, '', '2020-11-02', NULL, 10034, NULL, '2020-11-02 17:27:18');
+
 -- --------------------------------------------------------
 
 --
@@ -1080,16 +1088,24 @@ CREATE TABLE `fatura_cobrancas` (
   `formaPagamento` int(1) NOT NULL COMMENT '1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque e 6-outros',
   `dtVencimento` date NOT NULL,
   `especCobranca` varchar(60) DEFAULT NULL,
-  `dtCobranca` date NOT NULL,
-  `statusPagamento` int(1) NOT NULL COMMENT ' 0-pendente, 1-pago, 2-parcial, 3-cancelado, 4-perdido',
-  `numNF` int(11) NOT NULL,
-  `numBoletoInt` int(11) NOT NULL,
-  `numBoletoBanco` int(11) NOT NULL,
-  `valorPago` float NOT NULL,
-  `dtPagamento` date NOT NULL,
-  `dtVerificacao` date NOT NULL,
+  `dtCobranca` date DEFAULT NULL,
+  `statusPagamento` int(1) NOT NULL COMMENT ' 0-pendente, 1-parcial, 2-pago, 3-cancelado, 4-perdido',
+  `numNF` int(11) DEFAULT NULL,
+  `numBoletoInt` int(11) DEFAULT NULL,
+  `numBoletoBanco` int(11) DEFAULT NULL,
+  `valorPago` float DEFAULT NULL,
+  `dtPagamento` date DEFAULT NULL,
+  `dtVerificacao` date DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `fatura_cobrancas`
+--
+
+INSERT INTO `fatura_cobrancas` (`idCobranca`, `idFatura`, `formaPagamento`, `dtVencimento`, `especCobranca`, `dtCobranca`, `statusPagamento`, `numNF`, `numBoletoInt`, `numBoletoBanco`, `valorPago`, `dtPagamento`, `dtVerificacao`, `dtCadastro`) VALUES
+(1, 1, 1, '2020-11-12', NULL, '2020-11-02', 0, 1, 0, 0, 0, '0000-00-00', '0000-00-00', '2020-11-02 17:32:34'),
+(2, 2, 1, '2020-11-12', NULL, '2020-11-02', 0, 1, 0, 0, 0, '0000-00-00', '0000-00-00', '2020-11-02 17:30:28');
 
 -- --------------------------------------------------------
 
@@ -1682,13 +1698,13 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `faturas`
 --
 ALTER TABLE `faturas`
-  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_cobrancas`
 --
 ALTER TABLE `fatura_cobrancas`
-  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_itens`
