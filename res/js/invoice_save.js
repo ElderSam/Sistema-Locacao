@@ -38,3 +38,112 @@ function loadFormInvoice(idInvoice, dataNewInvoice=false) {
         
     }
 }
+
+$(function () {	
+
+//    =========================== ALTERAR DEPOIS =================
+
+	if(idFatura !== '0'){ //se for para ver uma fatura existente
+		
+		// console.log(`idFatura: ${idFatura}`)
+		typeForm = 'view';
+
+		$("#fk_idContrato").val(idContrato)
+		$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
+
+		$('#btnCart').hide();
+
+		$('#btnDeleteInvoice').show();
+		$('#btnShowPDF').show();
+		$('#btnEmail').show();
+		
+		showsNextCode($("#formInvoice #dtEmissao").val());
+
+		$("#formInvoice #dtEmissao").change(function(){
+				showsNextCode($("#formInvoice #dtEmissao").val());
+			}
+		)
+		
+	}
+//============================================================
+
+//adiciona as máscaraS
+
+	loadInvoice(idFatura);
+
+	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
+	$("#btnSaveInvoice").click(function (e) { //quando enviar o formulário de Fatura
+
+		e.preventDefault();
+
+		$("#formInvoice #idFatura").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+		$("#formInvoice #idContrato").prop('disabled', false);
+
+		let form = $('#formInvoice');
+		let formData = new FormData(form[0]);
+
+		if ((idFatura == 0) || (idFatura == undefined)) { //se for para cadastrar --------------------------------------------------
+
+			alert("ERRO: Id da fatura não definido");
+
+		} else { /* se for para Editar -------------------------------------------------- */
+
+			$.ajax({
+				type: "POST",
+				url: `/invoice/${idFatura}`, //rota para editar
+				data: formData,
+				contentType: false,
+				processData: false,
+				beforeSend: function () {
+					clearErrors();
+					$("#btnSaveInvoice").parent().siblings(".help-block").html(loadingImg("Verificando..."));
+
+				},
+				success: function (response) {
+					clearErrors();
+					console.log(response);
+					if (JSON.parse(response).error) {
+						console.log('erro ao atualizar Fatura!')
+
+						response = JSON.parse(response)
+
+						Swal.fire(
+							'Erro!',
+							'Ocorreu algum erro ao Atualizar',
+							'error'
+						);
+
+						if (response['error_list']) {
+
+							showErrorsModal(response['error_list'])
+
+							Swal.fire(
+								'Atenção!',
+								'Por favor verifique os campos',
+								'warning'
+							);
+						}
+
+					} else {
+
+						msg = 'Fatura atualizada!';
+
+						Swal.fire(
+							'Sucesso!',
+							msg,
+							'success'
+						);
+					}
+
+				},
+				error: function (response) {
+
+                console.log(`Erro! Mensagem: ${response}`);
+
+				}
+			});
+		}
+
+		return false;
+    });
+});    
