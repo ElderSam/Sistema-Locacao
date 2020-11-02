@@ -172,12 +172,17 @@ class Invoice extends Generator { //classe de Fatura
 
     public function get_datatable($requestData, $column_search, $column_order, $idRent)
     {
-        $query = "SELECT a.idFatura, a.numFatura, a.dtEmissao, a.valorTotal, a.observacoes,
-            b.dtVencimento, b.statusPagamento, b.valorPago
+        $query = "SELECT a.idFatura, a.numFatura, a.dtEmissao, a.valorTotal,
+            b.dtVencimento, b.statusPagamento,
+            e.nome as nomeCliente
             FROM faturas a
-            INNER JOIN fatura_cobrancas b ON(b.idFatura = a.idFatura)";
-
-        $query = "SELECT * FROM faturas";
+            INNER JOIN fatura_cobrancas b ON(b.idFatura = a.idFatura)
+            INNER JOIN contratos c ON(c.idContrato = a.idContrato)
+            INNER JOIN obras d ON(d.idObra = c.obra_idObra)
+            INNER JOIN clientes e ON(e.idCliente = d.id_fk_cliente)";
+            
+            
+            //numFatura, statusPagamento, dtEmissao, dtVencimento, (vlTotal+adicional), cliente
 
         if (!empty($requestData['search']['value'])) //verifica se eu digitei algo no campo de filtro
         { 
@@ -195,38 +200,32 @@ class Invoice extends Generator { //classe de Fatura
                 
                 } else {
                      
-                    if(($field == /*"tipo_frete"*/) || ($field == /*"status"*/)) //--------------
+                    if($field == "statusPagamento") //--------------
                     {
                         $aux = strtoupper($search); //deixa a string em maiúsculo
                         $aux = substr($aux, 0, 5); //pega os 5 primeiros caracteres
-    
-                        if($field == /*"tipo_frete"*/)
-                        {
-                            /*if($aux == "ENTRE") //entrega
-                            {
+
+                        //0-pendente, 1-pago, 2-parcial, 3-cancelado, 4-perdido
+                        switch($aux) { 
+                            case "PEND": //pendente
                                 $value = 0;
-
-                            }else if($aux == "RETIR") //retirada
-                            {
+                                break;
+                            case "PAGO": //pago
                                 $value = 1;
-                            }*/
-
-                        }else { //field == status
-                            /*if($aux == "PENDE") //pendente
-                            {
-                                $value = 0;
-             
-                            }else if($aux == "CONCL") //concluído
-                            {
-                                $value = 1;
-                            }*/
-                        } 
-
+                                break;
+                            case "PARC": //parcial
+                                $value = 2;
+                                break;
+                            case "CANC": //cancelado
+                                $value = 3;
+                                break;
+                        }
+                
                         if(isset($value)){
                             $query .= " OR $field = $value";
                         }
-                    } else if($field == "data_hora") //----------------------------
-                    {
+                    } else if(($field == "dtEmissao") || ($field == "dtVencimento")) //----------------------------
+                    { 
                         if(strlen($search) >= 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
               
                             //trata a data (dia/mes/ano -> ano-mes-dia)
@@ -237,6 +236,9 @@ class Invoice extends Generator { //classe de Fatura
                             //echo "$field: $data";
 
                             $query .= " OR $field = '$data'";
+
+                        }else {
+                            $query .= " OR $field = '$search'";
                         }
                     } //----------------------------
  
@@ -259,12 +261,11 @@ class Invoice extends Generator { //classe de Fatura
         }
 
         //print_r($query);
-
         $res = $this->searchAll($query);
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
-        $query .= " ORDER BY status, data_hora " . $requestData['order'][0]['dir'] . 
+        $query .= " ORDER BY b.statusPagmento, b.dtVencimento " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $freights = new Freight();

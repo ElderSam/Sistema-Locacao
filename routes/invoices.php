@@ -32,6 +32,18 @@ $app->get('/invoices/json/pending', function(){
     echo $faturaController->getFaturasParaFazer();
 });
 
+$app->post('/invoices/list_datatables', function(){ //ajax list datatables
+
+	User::verifyLogin();
+	
+	//Receber a requisão da pesquisa 
+	$requestData = $_REQUEST;
+
+	$invoices = new InvoiceController();
+	echo $invoices->ajax_list_invoices($requestData);
+	
+});
+
 /* entrar na página que tem o formulário para salvar fatura */
 $app->get('/invoices/contract/:idContract/createForm', function($idContract){   
 
@@ -46,3 +58,4 @@ $app->get('/invoices/contract/:idContract/create', function($idContract){
     $faturaController = new InvoiceController();
     echo $faturaController->getDataToFormFatura($idContract);
 });
+

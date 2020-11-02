@@ -124,13 +124,49 @@ class InvoiceController extends Generator //controller de Fatura
     
     public function ajax_list_invoices($requestData)
     {
-        //...
+        $column_search = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "vlTotal", "nomeCliente"); //colunas pesquisáveis pelo datatables
+        $column_order = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "vlTotal", "nomeCliente"); //ordem que vai aparecer (o codigo primeiro)
+
+        //faz a pesquisa no banco de dados
+        $invoice = new Invoice(); //model
+        $datatable = $invoice->get_datatable_invoices($requestData, $column_search, $column_order);
+        $data = array();
+
+        foreach ($datatable['data'] as $rent) { //para cada registro retornado
+            //print_r($rent);
+
+            // Ler e criar o array de dados ---------------------
+            $row = array();
+
+            $row = [
+                "idFatura"=>$invoice['idFatura'],
+                "numFatura"=>$invoice['numFatura'],
+                "statusPagamento"=>$invoice['statusPagamento'],
+                "dtEmissao"=>$invoice['dtEmissao'],
+                "dtVencimento"=>$invoice['dtVencimento'],
+                "vlTotal"=>$invoice['vlTotal'],
+                "nomeCliente"=>$invoice['nomeCliente'],
+            ];
+
+            //print_r($row);
+            $data[] = $row;
+        }
+
+        //Cria o array de informações a serem retornadas para o Javascript
+        $json = array(
+            "draw" => intval($requestData['draw']), //para cada requisição é enviado um número como parâmetro
+            "recordsTotal" => $this->records_total(),  //Quantidade de registros que há no banco de dados
+            "recordsFiltered" => $datatable['totalFiltered'], //Total de registros quando houver pesquisa
+            "data" => $data,  //Array de dados completo dos dados retornados da tabela 
+        );
+
+        return json_encode($json); //enviar dados como formato json  
     }
 
-    /*public function records_total()
+    public function records_total()
     {
         return Invoice::total();
-    }*/
+    }
 
     public function delete($idInvoice){
        
