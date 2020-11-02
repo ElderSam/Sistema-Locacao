@@ -27,11 +27,26 @@
                         <!-- Formulário da Fatura -->
                         <div class="form-row">
 
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="numeroFatura">Número da Fatura</label>
                                 <input type="text" class="form-control" id="numeroFatura" name="numeroFatura"
                                     placeholder="000" maxlength="12" value="">
                                 <span class="help-block"></span>
+                            </div>
+                            
+                            <div class="form-group col-lg-3">
+                                <label for="dtEmissao">Data de Emissão</label>
+                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao" value="">
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-secondary">
+                                <label for="dtInicio">Data de Início</label>
+                                <input type="date" class="form-control" id="dtInicio" name="dtInicio" value="">
+                            </div>
+
+                            <div class="form-group col-lg-3 bg-secondary">
+                                <label for="dtFim">Data Fim</label>
+                                <input type="date" class="form-control" id="dtFim" name="dtFim" value="">
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -42,28 +57,23 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-lg-5">
+                            <div class="form-group col-lg-3">
                                 <label for="emailEnvio">Email para Envio</label>
                                 <input type="email" class="form-control" id="emailEnvio" name="emailEnvio"
                                     placeholder="exemplo@exemplo.com" value="">
                             </div>
 
-                            <div class="form-group col-lg-4">
-                                <label for="dtEmissao">Data de Emissão</label>
-                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao" value="">
-                            </div>
-
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="dtEnvio">Data de Envio</label>
                                 <input type="date" class="form-control" id="dtEnvio" name="dtEnvio" value="">
                             </div>
 
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="vlTotal">Valor Total</label>
                                 <input type="text" class="form-control" id="vlTotal" name="vlTotal" value="">
                             </div>
 
-                            <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-3">
                                 <label for="adicional">Adicional</label>
                                 <input type="text" class="form-control" id="adicional" name="adicional" value="">
                             </div>
@@ -83,7 +93,7 @@
                             </div>
 
                             <!-- CAMPOS DA COBRANÇA -->
-
+                            <h4 class="col-lg-12"> Dados de Cobrança</h4>
 
                             <div class="form-group col-lg-3">
                                 <label for="formaPagamento">Forma de pagamento</label>
@@ -110,16 +120,6 @@
                                     value="">
                                 <span class="help-block" style="background-color: white"></span>
                             </div>
-
-                            <!-- <div class="form-group col-lg-3 bg-secondary">
-                                <label for="dtInicio">Data de Início</label>
-                                <input type="date" class="form-control" id="dtInicio" name="dtInicio" value="">
-                            </div>
-
-                            <div class="form-group col-lg-3 bg-secondary">
-                                <label for="dtFim">Data Fim</label>
-                                <input type="date" class="form-control" id="dtFim" name="dtFim" value="">
-                            </div> -->
 
                             <div class="form-group col-lg-3">
                                 <label for="dtVencimento">Data de Vencimento</label>
@@ -165,8 +165,8 @@
                         <div id="divListItens" class="ml-2">
                             <div class="row">
                                 <!--Header List -->
-                                <div class="col-lg-9">
-                                    <legend>Lista de Alugueis da Fatura:</legend>
+                                <div class="col-lg-12" style="background-color: lightgrey;">
+                                    <legend>Lista de Itens da Fatura:</legend>
                                 </div>
 
                                 <div class="col-lg-3">

@@ -57,19 +57,12 @@ $(function () {
 		$('#btnShowPDF').show();
 		$('#btnEmail').show();
 		
-		showsNextCode($("#formInvoice #dtEmissao").val());
-
-		$("#formInvoice #dtEmissao").change(function(){
-				showsNextCode($("#formInvoice #dtEmissao").val());
-			}
-		)
-		
 	}
 //============================================================
 
 //adiciona as máscaraS
 
-	loadInvoice(idFatura);
+	loadFormInvoice(idFatura);
 
 	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
 	$("#btnSaveInvoice").click(function (e) { //quando enviar o formulário de Fatura

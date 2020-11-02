@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Out-2020 às 23:13
+-- Tempo de geração: 02-Nov-2020 às 16:15
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -201,7 +201,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidCon
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
   
     DECLARE vidFatura INT;
 
@@ -214,6 +214,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatur
             idContrato = pidContrato,
             numFatura = pnumFatura,
             dtEmissao = pdtEmissao,
+            dtInicio = pdtInicio,
+            dtFim = pdtFim,
             enviarPorEmail = penviarPorEmail,
             emailEnvio = pemailEnvio,
             dtEnvio = pdtEnvio,
@@ -240,7 +242,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` 
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
     
         DECLARE vidFatura INT;
 
@@ -248,6 +250,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
         idContrato,
         numFatura,
         dtEmissao,
+        dtInicio,
+        dtFim,
         enviarPorEmail,
         emailEnvio,
         dtEnvio,
@@ -259,6 +263,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
         pidContrato,
         pnumFatura,
         pdtEmissao,
+        dtInicio,
+        dtFim,
         penviarPorEmail,
         pemailEnvio,
         pdtEnvio,
@@ -1051,6 +1057,8 @@ CREATE TABLE `faturas` (
   `idContrato` int(11) NOT NULL,
   `numFatura` varchar(11) NOT NULL,
   `dtEmissao` date NOT NULL,
+  `dtInicio` date NOT NULL,
+  `dtFim` date NOT NULL,
   `enviarPorEmail` tinyint(1) NOT NULL COMMENT '0-não 1-sim',
   `emailEnvio` varchar(40) NOT NULL,
   `dtEnvio` date NOT NULL,
