@@ -170,7 +170,7 @@ class Invoice extends Generator { //classe de Fatura
         }
     }
 
-    public function get_datatable($requestData, $column_search, $column_order, $idRent)
+    public function get_datatable_invoices($requestData, $column_search, $idRent)
     {
         $query = "SELECT a.idFatura, a.numFatura, a.dtEmissao, a.valorTotal,
             b.dtVencimento, b.statusPagamento,
@@ -180,7 +180,6 @@ class Invoice extends Generator { //classe de Fatura
             INNER JOIN contratos c ON(c.idContrato = a.idContrato)
             INNER JOIN obras d ON(d.idObra = c.obra_idObra)
             INNER JOIN clientes e ON(e.idCliente = d.id_fk_cliente)";
-            
             
             //numFatura, statusPagamento, dtEmissao, dtVencimento, (vlTotal+adicional), cliente
 
@@ -246,18 +245,10 @@ class Invoice extends Generator { //classe de Fatura
 
             } //fim do foreach
 
-            if($idRent) {
-                $query .= " AND idLocacao = $idRent";
-            }
-
             if (!$first) {
                 $query .= ")"; //termina o WHERE e a query
             }
 
-        }else {        
-            if($idRent) {
-                $query .= " WHERE (idLocacao = $idRent)";
-            }
         }
 
         //print_r($query);
@@ -265,7 +256,7 @@ class Invoice extends Generator { //classe de Fatura
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
-        $query .= " ORDER BY b.statusPagmento, b.dtVencimento " . $requestData['order'][0]['dir'] . 
+        $query .= " ORDER BY b.statusPagamento, b.dtVencimento " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
         $freights = new Freight();

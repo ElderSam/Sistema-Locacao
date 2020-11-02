@@ -130,10 +130,12 @@ class InvoiceController extends Generator //controller de Fatura
         //faz a pesquisa no banco de dados
         $invoice = new Invoice(); //model
         $datatable = $invoice->get_datatable_invoices($requestData, $column_search, $column_order);
-        $data = array();
+        //print_r($datatable);
 
-        foreach ($datatable['data'] as $rent) { //para cada registro retornado
-            //print_r($rent);
+        $data = array();
+        
+        foreach ($datatable['data'] as $invoice) { //para cada registro retornado
+            //print_r($invoice);
 
             // Ler e criar o array de dados ---------------------
             $row = array();
@@ -144,7 +146,7 @@ class InvoiceController extends Generator //controller de Fatura
                 "statusPagamento"=>$invoice['statusPagamento'],
                 "dtEmissao"=>$invoice['dtEmissao'],
                 "dtVencimento"=>$invoice['dtVencimento'],
-                "vlTotal"=>$invoice['vlTotal'],
+                "vlTotal"=>$invoice['valorTotal'],
                 "nomeCliente"=>$invoice['nomeCliente'],
             ];
 
@@ -160,7 +162,7 @@ class InvoiceController extends Generator //controller de Fatura
             "data" => $data,  //Array de dados completo dos dados retornados da tabela 
         );
 
-        return json_encode($json); //enviar dados como formato json  
+        return json_encode($json); //enviar dados como formato json
     }
 
     public function records_total()
