@@ -27,13 +27,64 @@
                         <!-- Formulário da Fatura -->
                         <div class="form-row">
 
-                            <div class="form-group col-lg-3">
-                                <label for="codigoFatura">Código</label>
-                                <input type="text" class="form-control" id="codigoFatura" name="codigoFatura"
+                            <div class="form-group col-lg-4">
+                                <label for="numeroFatura">Número da Fatura</label>
+                                <input type="text" class="form-control" id="numeroFatura" name="numeroFatura"
                                     placeholder="000" maxlength="12" value="">
                                 <span class="help-block"></span>
                             </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="envioEmail">Envio por Email</label>
+                                <select class="form-control" id="envioEmail" name="envioEmail" value="">    
+                                    <option selected value="0">Sim</option>  
+                                    <option value="1">Não</option>                  
+                                </select>
+                            </div>
+
+                            <div class="form-group col-lg-5">
+                                <label for="emailEnvio">Email para Envio</label>
+                                <input type="email" class="form-control" id="emailEnvio" name="emailEnvio"
+                                    placeholder="exemplo@exemplo.com" value="">
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="dtEmissao">Data de Emissão</label>
+                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao" value="">
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="dtEnvio">Data de Envio</label>
+                                <input type="date" class="form-control" id="dtEnvio" name="dtEnvio" value="">
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label for="vlTotal">Valor Total</label>
+                                <input type="text" class="form-control" id="vlTotal" name="vlTotal" value="">
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <label for="adicional">Adicional</label>
+                                <input type="text" class="form-control" id="adicional" name="adicional" value="">
+                            </div>
+                           
+                            <div class="form-group col-md-12">
+                                <label for="observacao">Observação</label>
+                                <textarea maxlength="150" class="form-control" id="observacao" name="observacao"
+                                    rows="3"></textarea>
+                                <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
+                            </div>
                             
+
+                            <!--Usado apenas para Editar -->
+                            <div hidden="true">
+                                <input type="text" id="idFatura" name="idFatura" value="">
+                                <input type="text" id="idContrato" name="idContrato" value="{$idContrato}" hidden="true">                              
+                            </div>
+
+                            <!-- CAMPOS DA COBRANÇA -->
+
+
                             <div class="form-group col-lg-3">
                                 <label for="formaPagamento">Forma de pagamento</label>
                                 <input type="text" class="form-control" id="formaPagamento" name="formaPagamento" value="">
@@ -60,7 +111,7 @@
                                 <span class="help-block" style="background-color: white"></span>
                             </div>
 
-                            <div class="form-group col-lg-3 bg-secondary">
+                            <!-- <div class="form-group col-lg-3 bg-secondary">
                                 <label for="dtInicio">Data de Início</label>
                                 <input type="date" class="form-control" id="dtInicio" name="dtInicio" value="">
                             </div>
@@ -68,18 +119,7 @@
                             <div class="form-group col-lg-3 bg-secondary">
                                 <label for="dtFim">Data Fim</label>
                                 <input type="date" class="form-control" id="dtFim" name="dtFim" value="">
-                            </div>
-                            
-
-                            <div class="form-group col-lg-3">
-                                <label for="dtEmissao">Data de Emissão</label>
-                                <input type="date" class="form-control" id="dtEmissao" name="dtEmissao" value="">
-                            </div>
-
-                            <div class="form-group col-lg-3">
-                                <label for="dtEnvio">Data de Envio</label>
-                                <input type="date" class="form-control" id="dtEnvio" name="dtEnvio" value="">
-                            </div>
+                            </div> -->
 
                             <div class="form-group col-lg-3">
                                 <label for="dtVencimento">Data de Vencimento</label>
@@ -87,6 +127,21 @@
                             </div>
 
                             <div class="form-group col-lg-3">
+                                <label for="dtCobranca">Data de Cobrança</label>
+                                <input type="date" class="form-control" id="dtCobranca" name="dtCobranca" value="">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dtPagamento">Data de Pagamento</label>
+                                <input type="date" class="form-control" id="dtPagamento" name="dtPagamento" value="">
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="dtVerificacao">Data de Verificação</label>
+                                <input type="date" class="form-control" id="dtVerificacao" name="dtVerificacao" value="">
+                            </div>
+
+                            <div class="form-group col-lg-4">
                                 <label for="statusPagamento">Status do Pagamento</label>
                                 <select class="form-control" id="statusPagamento" name="statusPagamento" value="">    
                                     <option value="0">Pago</option>  
@@ -95,24 +150,14 @@
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-12">
-                                <label for="especContrato">Especificação do contrato</label>
-                                <input type="text" class="form-control" id="especContrato" name="especContrato" value="">
+                            <div class="form-group col-lg-4">
+                                <label for="especCobranca">Especificação da Cobrança</label>
+                                <input type="text" class="form-control" id="especCobranca" name="especCobranca" value="">
                             </div>
 
-                            <div class="form-group col-md-12">
-                                <label for="observacao">Observação</label>
-                                <textarea maxlength="150" class="form-control" id="observacao" name="observacao"
-                                    rows="3"></textarea>
-                                <!--Caractetres Restantes: <span class="caracteres">150</span--><br>
-                            </div>
-                            
-                            <input type="text" id="idContrato" name="idContrato" value="{$idContrato}" hidden="true">                              
-
-                            <!--Usado apenas para Editar -->
-                            <div hidden="true">
-                                <label for="idFatura">Id</label>
-                                <input type="text" id="idFatura" name="idFatura" value="">
+                            <div class="form-group col-lg-4">
+                                <label for="vlPago">Valor Pago</label>
+                                <input type="text" class="form-control" id="vlPago" name="vlPago" value="">
                             </div>
 
                         </div>
