@@ -124,8 +124,8 @@ class InvoiceController extends Generator //controller de Fatura
     
     public function ajax_list_invoices($requestData)
     {
-        $column_search = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "vlTotal", "nomeCliente"); //colunas pesquisáveis pelo datatables
-        $column_order = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "vlTotal", "nomeCliente"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "valorTotal", "nomeCliente"); //colunas pesquisáveis pelo datatables
+        $column_order = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "valorTotal", "nomeCliente"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $invoice = new Invoice(); //model
@@ -146,7 +146,7 @@ class InvoiceController extends Generator //controller de Fatura
                 "statusPagamento"=>$invoice['statusPagamento'],
                 "dtEmissao"=>$invoice['dtEmissao'],
                 "dtVencimento"=>$invoice['dtVencimento'],
-                "vlTotal"=>$invoice['valorTotal'],
+                "valorTotal"=>$invoice['valorTotal'],
                 "nomeCliente"=>$invoice['nomeCliente'],
             ];
 
