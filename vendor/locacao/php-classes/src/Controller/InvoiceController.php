@@ -50,49 +50,61 @@ class InvoiceController extends Generator //controller de Fatura
     public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
 
-        $errors = array();
-
         //print_r($_POST);
+        $errors = array();
 
         //CAMPOS OBRIGATÓRIOS:
 
-        
         if(!$update){
 
-            if (!isset($_POST["idContrato"]) || ($_POST["idContrato"] == "")) {
-                    $errors["#idContrato"] = "Contrato é obrigatório!";
+            if (!isset($_POST['idContrato']) || ($_POST['idContrato'] == '')) {
+                    $errors['#idContrato'] = 'Contrato é obrigatório!';
             }
 
-            if($_POST["cliente"] == "") {
-                $errors["#cliente"] = "Cliente é obrigatório";
+            if($_POST['idFatura'] == '') {
+                $errors['#idFatura'] = 'idFatura é obrigatória!';
             }
 
+            if($_POST['numFatura'] == '') {
+                $errors['#numFatura'] = 'número da Fatura é obrigatória!';
+            }
+
+            /* idCobranca */
         }
 
-        if($_POST["status"] == "") {
-            $errors["#status"] = "Status é obrigatório";
+        if($_POST['enviarPorEmail'] == 1) {
+            if($_POST['emailEnvio'] == '') {
+                $errors['#emailEnvio'] = 'Email é obrigatório!';
+            }
         }
 
-        if ($_POST["dtInicio"] == "") {
-            $errors["#dtInicio"] = "Data início é obrigatória!";
+        $camposObrigatorios = [
+            'idContrato',
+            'dtEmissao',
+            'dtInicio',
+            'dtFim',
+            'dtEnvio',
+            'valorTotal',
+
+            'formaPagamento', // (1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque, 6-outros)
+            'dtVencimento',
+            'statusPagamento', // (0-pendente, 1-parcial, 2-pago, 3-cancelado, 4-perdido)
+        ];
+
+        foreach($camposObrigatorios as $campo) { //verifica todos os itens do array se estão vazios
+            if($_POST[$campo] == '') {
+                $erros['#'.$campo] = 'campo obrigatório!';
+            }
         }
 
-            
-        if ($_POST["vlAluguel"] == "") {
-            $errors["#vlAluguel"] = "Valor do Aluguel é obrigatório!";
+        if(($_POST['formaPagamento'] < 1) || ($_POST['formaPagamento'] > 6)) {
+            $erros['#formaPagamento'] = 'valor inválido!';
         }
 
-        if($_POST["custoEntrega"] == "") {
-            $errors["#custoEntrega"] = "Valor de Entrega é obrigatório";
-        }
-        
-        if($_POST["custoRetirada"] == "") {
-            $errors["#custoRetirada"] = "Valor de Retirada é obrigatório";
+        if(($_POST['statusPagamento'] < 0) || ($_POST['statusPagamento'] > 4)) {
+            $erros['#statusPagamento'] = 'valor inválido!';
         }
 
-        //...
-
-        
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
             return json_encode([
                 'error' => true,
@@ -111,7 +123,7 @@ class InvoiceController extends Generator //controller de Fatura
     public function ajax_list_invoices($requestData)
     {
         $column_search = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "valorTotal", "nomeCliente"); //colunas pesquisáveis pelo datatables
-        $column_order = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "valorTotal", "nomeCliente"); //ordem que vai aparecer (o codigo primeiro)
+        $column_order = array("statusPagamento", "dtEmissao", "dtVencimento", "numFatura", "valorTotal", "nomeCliente"); //ordem que vai aparecer (o codigo primeiro)
 
         //faz a pesquisa no banco de dados
         $invoice = new Invoice(); //model
