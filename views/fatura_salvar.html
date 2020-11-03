@@ -74,8 +74,8 @@
                             </div>
 
                             <div class="form-group col-lg-3">
-                                <label for="adicional">Adicional</label>
-                                <input type="text" class="form-control" id="adicional" name="adicional" value="">
+                                <label for="adicional">Adicional (R$)</label>
+                                <input type="number" step=".01" class="form-control" id="adicional" name="adicional" value="">
                             </div>
                            
                             <div class="form-group col-md-12">
@@ -144,8 +144,11 @@
                             <div class="form-group col-lg-4">
                                 <label for="statusPagamento">Status do Pagamento</label>
                                 <select class="form-control" id="statusPagamento" name="statusPagamento" value="">    
-                                    <option value="0">Pago</option>  
-                                    <option selected value="1">Pendente</option>                    
+                                    <option selected value="0">Pago</option>  
+                                    <option value="1">Pago Parcialmente</option>   
+                                    <option value="2">Pago</option> 
+                                    <option value="3">Cancelado</option>
+                                    <option value="4">Perdido</option>                  
                                 </select>
                                 <span class="help-block"></span>
                             </div>
