@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02-Nov-2020 às 17:52
+-- Tempo de geração: 03-Nov-2020 às 23:10
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -201,7 +201,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidCon
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
   
     DECLARE vidFatura INT;
 
@@ -225,8 +225,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatur
 
         WHERE idFatura = vidFatura;    
 
+    UPDATE fatura_cobrancas
+        SET
+            idFatura = pidFatura,
+            formaPagamento = pformaPagamento,
+            dtVencimento = pdtVencimento,
+            especCobranca = pespecCobranca,          
+            dtCobranca = pdtCobranca,
+            statusPagamento = pstatusPagamento, 
+            numNF = pnumNF,
+            numBoletoInt = pnumBoletoInt,
+            numBoletoBanco = pnumBoletoBanco,
+            valorPago = pvalorPago,
+            dtPagamento = pdtPagamento,
+            dtVerificacao = pdtVerificacao
 
-    SELECT * FROM faturas WHERE idFatura = pidFatura;
+        WHERE idFatura = vidFatura;    
+
+
+    SELECT * FROM faturas a
+    INNER JOIN fatura_cobrancas b ON(a.idFatura = b.idFatura)
+    WHERE a.idFatura = pidFatura;
+
 
 END$$
 
@@ -239,12 +259,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` 
     WHERE idFatura = pidFatura;
     
     DELETE FROM faturas WHERE idFatura = pidFatura;
+    DELETE FROM fatura_cobrancas WHERE idFatura = pidFatura;
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
     
-        DECLARE vidFatura INT;
+        DECLARE vidFatura, vidCobranca INT;
 
     INSERT INTO faturas (
         idContrato,
@@ -272,58 +293,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
         pvalorTotal,
         pobservacoes
     );
-    
+
     SET vidFatura = LAST_INSERT_ID();
- 
-    SELECT * FROM faturas WHERE idFatura = LAST_INSERT_ID();
-    
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancasUpdate_save` (IN `idCobranca` INT(11), IN `idFatura` INT(11), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
-  
-    DECLARE vidCobranca INT;
-
-    SELECT idCobranca INTO vidCobranca
-        FROM fatura_cobrancas
-        WHERE idCobranca = pidCobranca;
-
-    UPDATE fatura_cobrancas
-        SET
-            idFatura = pidFatura,
-            formaPagamento = pformaPagamento,
-            dtVencimento = pdtVencimento,
-            especCobranca = pespecCobranca,          
-            dtCobranca = pdtCobranca,
-            statusPagamento = pstatusPagamento, 
-            numNF = pnumNF,
-            numBoletoInt = pnumBoletoInt,
-            numBoletoBanco = pnumBoletoBanco,
-            valorPago = pvalorPago,
-            dtPagamento = pdtPagamento,
-            dtVerificacao = pdtVerificacao
-
-        WHERE idCobranca = vidCobranca;    
 
 
-    SELECT * FROM fatura_cobrancas WHERE idCobranca = pidCobranca;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_delete` (IN `pidCobranca` INT)  BEGIN
-  
-    DECLARE vidCobranca INT;
-    
-  SELECT idCobranca INTO vidCobranca
-    FROM fatura_cobrancas
-    WHERE idCobranca = pidCobranca;
-    
-    DELETE FROM fatura_cobrancas WHERE idCobranca = pidCobranca;
-    
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_save` (IN `idFatura` INT(11), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
-    
-        DECLARE vidCobranca INT;
 
     INSERT INTO fatura_cobrancas (
         idFatura,
@@ -340,7 +313,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_save` (IN `idFa
         dtVerificacao
     )
     VALUES(
-        pidFatura,
+        vidFatura,
         pformaPagamento,
         pdtVencimento,
         pespecCobranca, 
@@ -355,8 +328,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_cobrancas_save` (IN `idFa
     );
     
     SET vidCobranca = LAST_INSERT_ID();
+   
  
-    SELECT * FROM fatura_cobrancas WHERE idCobranca = LAST_INSERT_ID();
+    SELECT * FROM faturas a
+    LEFT JOIN fatura_cobrancas b ON(a.idFatura = b.idFatura)
+    WHERE a.idFatura = LAST_INSERT_ID();
+    
     
 END$$
 
@@ -1068,14 +1045,6 @@ CREATE TABLE `faturas` (
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Extraindo dados da tabela `faturas`
---
-
-INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `valorTotal`, `observacoes`, `dtCadastro`) VALUES
-(1, 6, '001-2020', '2020-11-02', '2020-10-07', '2020-11-07', 0, '', '2020-11-02', NULL, 0, NULL, '2020-11-02 17:26:36'),
-(2, 6, '001-2020', '2020-11-02', '2020-10-07', '2020-11-07', 0, '', '2020-11-02', NULL, 10034, NULL, '2020-11-02 17:27:18');
-
 -- --------------------------------------------------------
 
 --
@@ -1098,14 +1067,6 @@ CREATE TABLE `fatura_cobrancas` (
   `dtVerificacao` date DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Extraindo dados da tabela `fatura_cobrancas`
---
-
-INSERT INTO `fatura_cobrancas` (`idCobranca`, `idFatura`, `formaPagamento`, `dtVencimento`, `especCobranca`, `dtCobranca`, `statusPagamento`, `numNF`, `numBoletoInt`, `numBoletoBanco`, `valorPago`, `dtPagamento`, `dtVerificacao`, `dtCadastro`) VALUES
-(1, 1, 1, '2020-11-12', NULL, '2020-11-02', 0, 1, 0, 0, 0, '0000-00-00', '0000-00-00', '2020-11-02 17:32:34'),
-(2, 2, 1, '2020-11-12', NULL, '2020-11-02', 0, 1, 0, 0, 0, '0000-00-00', '0000-00-00', '2020-11-02 17:30:28');
 
 -- --------------------------------------------------------
 

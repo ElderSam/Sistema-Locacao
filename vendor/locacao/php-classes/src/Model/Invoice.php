@@ -10,16 +10,8 @@ use stdClass;
 
 class Invoice extends Generator { //classe de Fatura
 
-    public function insert($dataNewFatura)
+    public function insert()
     {
-        echo "<br><br>INSERT: ";
-        $dataNewFatura = json_decode($dataNewFatura, true);
-        //print_r($dataNewFatura);
-        $fatura = $dataNewFatura['fatura'];
-        print_r($fatura);
-        $this->setData($fatura);
-       // print_r($dataNewFatura->fatura->idContrato);
-
         $sql = new Sql();
         $newFatura = $sql->select("CALL sp_faturas_save(
             idContrato,
@@ -32,7 +24,19 @@ class Invoice extends Generator { //classe de Fatura
             dtEnvio,
             adicional,
             valorTotal,
-            observacoes    
+            observacoes,
+
+            formaPagamento,
+            dtVencimento,
+            especCobranca,       
+            dtCobranca,
+            statusPagamento,     
+            numNF,
+            numBoletoInt,
+            numBoletoBanco,
+            valorPago,
+            dtPagamento,
+            dtVerificacao
             )", array(
 
             //':idFatura'=>$this->getidFatura(),
@@ -46,7 +50,20 @@ class Invoice extends Generator { //classe de Fatura
             ':dtEnvio'=>$this->getdtEnvio(),
             ':adicional'=>$this->getadicional(),
             ':valorTotal'=>$this->getvalorTotal(),
-            ':observacoes'=>$this->getobservacoes()
+            ':observacoes'=>$this->getobservacoes(),
+
+            //':idFatura'=>$this->getidFatura(),
+            ':formaPagamento'=>$this->getformaPagamento(),
+            ':dtVencimento'=>$this->getdtVencimento(),
+            ':especCobranca'=>$this->getespecCobranca(),
+            ':dtCobranca'=>$this->getdtCobranca(),
+            ':statusPagamento'=>$this->getstatusPagamento(),   
+            ':numNF'=>$this->getnumNF(),
+            ':numBoletoInt'=>$this->getnumBoletoInt(),
+            ':numBoletoBanco'=>$this->getnumBoletoBanco(),
+            ':valorPago'=>$this->getvalorPago(),
+            ':dtPagamento'=>$this->getdtPagamento(),
+            ':dtVerificacao'=>$this->getdtVerificacao()
         ));
 
         if(count($newFatura) > 0)
@@ -77,7 +94,19 @@ class Invoice extends Generator { //classe de Fatura
             dtEnvio,
             adicional,
             valorTotal,
-            observacoes    
+            observacoes,
+            
+            formaPagamento,
+            dtVencimento,
+            especCobranca,       
+            dtCobranca,
+            statusPagamento,     
+            numNF,
+            numBoletoInt,
+            numBoletoBanco,
+            valorPago,
+            dtPagamento,
+            dtVerificacao
             )", array(
 
             ':idFatura'=>$this->getidFatura(),
@@ -91,7 +120,20 @@ class Invoice extends Generator { //classe de Fatura
             ':dtEnvio'=>$this->getdtEnvio(),
             ':adicional'=>$this->getadicional(),
             ':valorTotal'=>$this->getvalorTotal(),
-            ':observacoes'=>$this->getobservacoes()
+            ':observacoes'=>$this->getobservacoes(),
+
+            //':idCobranca'=>$this->getidCobranca(),
+            ':formaPagamento'=>$this->getformaPagamento(),
+            ':dtVencimento'=>$this->getdtVencimento(),
+            ':especCobranca'=>$this->getespecCobranca(),
+            ':dtCobranca'=>$this->getdtCobranca(),
+            ':statusPagamento'=>$this->getstatusPagamento(),   
+            ':numNF'=>$this->getnumNF(),
+            ':numBoletoInt'=>$this->getnumBoletoInt(),
+            ':numBoletoBanco'=>$this->getnumBoletoBanco(),
+            ':valorPago'=>$this->getvalorPago(),
+            ':dtPagamento'=>$this->getdtPagamento(),
+            ':dtVerificacao'=>$this->getdtVerificacao()
         ));
 
         if(count($update) > 0)

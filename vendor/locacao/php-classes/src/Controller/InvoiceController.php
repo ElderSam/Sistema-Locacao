@@ -23,14 +23,14 @@ class InvoiceController extends Generator //controller de Fatura
         $this->fatura = new Invoice(); //model
     }
 
-    /*public function save($update = false) //salva (insere/atualiza) uma Fatura
+    public function save($update = false) //salva (insere/atualiza) uma Fatura
     {
         User::verifyLogin();
         
         $error = $this->verifyFields($update); //verifica os campos do formulário   
         $aux = json_decode($error);
 
-        if ($aux->error) {
+        if ($aux->error){
             return $error;
         }
 
@@ -38,28 +38,13 @@ class InvoiceController extends Generator //controller de Fatura
 
         $invoice->setData($_POST);
 
-        if ($update) { //se for atualizar
-            
-            $upd =  $invoice->update();
-    
-            return $upd; 
+        if ($update) { //se for atualizar   
+            return  $invoice->update();
 
-        } else { // se for cadastrar nova Fatura
-
-            $res = [];
-                
-            $insert = $invoice->insert();
-            
-            $aux = json_decode($insert);
-
-            if (isset($aux->error) && $aux->error) {
-                //print_r($aux);
-                break;
-            }
-                
-            return json_encode($res);          
+        } else { // se for cadastrar nova Fatura              
+            return $invoice->insert();
         }
-    }*/
+    }
 
     
     public function verifyFields($update = false)
