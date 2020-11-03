@@ -23,7 +23,7 @@ function loadDataNewInvoice(idContract=false){ //carrega dados no formulário pa
     }
 
     $("#formInvoice #numeroFatura").prop('disabled', true );
-    $("#formInvoice #vlTotal").prop('disabled', true );
+    $("#formInvoice #valorTotal").prop('disabled', true );
 }
 
 function loadFormInvoice(idInvoice, dataNewInvoice=false) {
