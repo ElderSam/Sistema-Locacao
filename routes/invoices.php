@@ -59,3 +59,18 @@ $app->get('/invoices/contract/:idContract/create', function($idContract){
     echo $faturaController->getDataToFormFatura($idContract);
 });
 
+/* rota para criar uma nova fatura --------------------------*/
+$app->post("/invoices/create", function() {
+    
+    $invoice = new InvoiceController();
+    echo $invoice->save();
+});
+
+/* rota para atualizar fatura -------------------------- */
+$app->post("/invoices/:idInvoice", function($idInvoice) { //update
+
+    $invoice = new InvoiceController();
+    $update = true;
+    echo $invoice->save($update);
+});
+
