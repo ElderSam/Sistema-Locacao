@@ -3,13 +3,94 @@
 namespace Locacao\Controller;
 
 use \Locacao\Generator;
-//use \Locacao\Model\InvoiceItem;
+use \Locacao\Model\User;
+use \Locacao\Model\InvoiceItem;
+
 use stdClass;
 use DateTime;
 //use DateInterval;
 
 class InvoiceItemController extends Generator
 {
+    function __construct()
+    {
+        date_default_timezone_set("America/Sao_Paulo");
+
+        $this->fatura = new InvoiceItem(); //model
+    }
+
+    public function save($update = false) //salva (insere/atualiza) um item de Fatura
+    {
+        User::verifyLogin();
+        
+        $error = $this->verifyFields($update); //verifica os campos do formulário   
+        $aux = json_decode($error);
+
+        if ($aux->error){
+            return $error;
+        }
+
+        $item = new InvoiceItem(); //Model
+        $item->setData($_POST);
+
+        if ($update) { //se for atualizar   
+            return  $item->update();
+
+        } else { // se for cadastrar nova Fatura              
+            return $item->insert();
+        }
+    }
+
+    public function verifyFields($update = false) /* Verifica todos os campos ---------------------------*/
+    {    
+        $errors = array();
+
+        //print_r($_POST);
+
+        //CAMPOS OBRIGATÓRIOS:
+
+        $camposObrigatorios = [
+            'idFatura',
+            'idAluguel',
+            'periodoLocacao', // (1-diário 2-semanal 3-quinzenal 4-mensal),
+            'vlAluguelCobrado',
+            'dtInicio',
+            'dtFim'
+        ];
+
+        foreach($camposObrigatorios as $campo) { //verifica todos os itens do array se estão vazios
+            if($_POST[$campo] == '') {
+                $erros['#'.$campo] = 'campo obrigatório!';
+            }
+        }
+
+        if(($_POST['periodoLocacao'] < 1) || ($_POST['periodoLocacao'] > 4)) {
+            $erros['#periodoLocacao'] = 'valor inválido!';
+        }
+        
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors
+            ]);
+
+        } else { //se ainda não tem erro
+
+            return json_encode([
+                'error' => false
+            ]);
+        }
+    }/* --- fim verifyFields() ---------------------------*/
+
+    public function delete($idInvoiceItem){
+       
+        $invoiceItem = new InvoiceItem();
+        echo "id: " . $idInvoiceItem;
+        $invoiceItem->get((int)$idInvoiceItem); //carrega o item de fatura, para ter certeza que ainda existe no banco   
+        return $invoiceItem->delete();      
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------- */
     function getItemFatura($fatura, $aluguel) {
        
         /*
