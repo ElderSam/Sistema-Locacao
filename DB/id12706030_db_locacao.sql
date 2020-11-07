@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 03-Nov-2020 às 23:10
+-- Tempo de geração: 07-Nov-2020 às 12:48
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -334,6 +334,70 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
     LEFT JOIN fatura_cobrancas b ON(a.idFatura = b.idFatura)
     WHERE a.idFatura = LAST_INSERT_ID();
     
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itensUpdate_save` (IN `pidItemFatura` INT(11), IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pvalorFrete` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
+
+    DECLARE vidItemFatura INT;
+    
+    SELECT idItemFatura INTO vidItemFatura
+        FROM fatura_itens
+        WHERE idItemFatura = pidItemFatura;
+
+    UPDATE fatura_itens
+        SET
+            idFatura = pidFatura,
+            idAluguel = pidAluguel,
+            periodoLocacao = pperiodoLocacao,
+            vlAluguelCobrado = pvlAluguelCobrado,
+            valorFrete = pvalorFrete,
+            dtInicio = pdtInicio,
+            dtFim = pdtFim  
+        WHERE idItemFatura = vidItemFatura;    
+
+    SELECT * FROM fatura_itens WHERE idItemFatura = pidItemFatura;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_delete` (IN `pidItemFatura` INT)  BEGIN
+  
+    DECLARE vidItemFatura INT;
+    
+  SELECT idItemFatura INTO vidItemFatura
+    FROM fatura_itens
+    WHERE idItemFatura = pidItemFatura;
+    
+    DELETE FROM fatura_itens WHERE idItemFatura = pidItemFatura;
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_save` (IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pvalorFrete` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
+  
+    DECLARE vidItemFatura INT;
+    
+  INSERT INTO fatura_itens (
+    idFatura,
+    idAluguel,
+    periodoLocacao,
+    vlAluguelCobrado,
+    valorFrete,
+    dtInicio,
+    dtFim
+  )
+  VALUES(pcodigo,
+    pidFatura,
+    pidAluguel,
+    pperiodoLocacao,
+    pvlAluguelCobrado,
+    pvalorFrete,
+    pdtInicio,
+    pdtFim
+  );
+    
+    SET vidItemFatura = LAST_INSERT_ID();
+
+    SELECT * FROM fatura_itens WHERE idItemFatura = LAST_INSERT_ID();
     
 END$$
 
