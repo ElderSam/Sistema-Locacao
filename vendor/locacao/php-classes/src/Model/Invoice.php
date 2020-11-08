@@ -14,29 +14,29 @@ class Invoice extends Generator { //classe de Fatura
     {
         $sql = new Sql();
         $newFatura = $sql->select("CALL sp_faturas_save(
-            idContrato,
-            numFatura,
-            dtEmissao,
-            dtInicio,
-            dtFim,
-            enviarPorEmail,
-            emailEnvio,
-            dtEnvio,
-            adicional,
-            valorTotal,
-            observacoes,
+            :idContrato,
+            :numFatura,
+            :dtEmissao,
+            :dtInicio,
+            :dtFim,
+            :enviarPorEmail,
+            :emailEnvio,
+            :dtEnvio,
+            :adicional,
+            :valorTotal,
+            :observacoes,
 
-            formaPagamento,
-            dtVencimento,
-            especCobranca,       
-            dtCobranca,
-            statusPagamento,     
-            numNF,
-            numBoletoInt,
-            numBoletoBanco,
-            valorPago,
-            dtPagamento,
-            dtVerificacao
+            :formaPagamento,
+            :dtVencimento,
+            :especCobranca,       
+            :dtCobranca,
+            :statusPagamento,     
+            :numNF,
+            :numBoletoInt,
+            :numBoletoBanco,
+            :valorPago,
+            :dtPagamento,
+            :dtVerificacao
             )", array(
 
             //':idFatura'=>$this->getidFatura(),
@@ -154,7 +154,6 @@ class Invoice extends Generator { //classe de Fatura
         return $sql->select($query);
     }
 
-    
     public function delete(){     
         $sql = new Sql();
         

@@ -34,19 +34,17 @@ class InvoiceController extends Generator //controller de Fatura
             return $error;
         }
 
-        $invoice = new Invoice(); //Model
-
-        $invoice->setData($_POST);
+        $this->fatura->setData($_POST);
 
         if ($update) { //se for atualizar   
-            return  $invoice->update();
+            return  $this->fatura->update();
 
-        } else { // se for cadastrar nova Fatura              
-            return $invoice->insert();
+        } else { // se for cadastrar nova Fatura
+            $this->fatura->setnumFatura($this->generateNumFatura());             
+            return $this->fatura->insert();
         }
     }
 
-    
     public function verifyFields($update = false)
     {/*Verifica todos os campos ---------------------------*/
 
@@ -61,6 +59,9 @@ class InvoiceController extends Generator //controller de Fatura
                     $errors['#idContrato'] = 'Contrato é obrigatório!';
             }
 
+            /* idCobranca */
+        }else {
+
             if($_POST['idFatura'] == '') {
                 $errors['#idFatura'] = 'idFatura é obrigatória!';
             }
@@ -68,8 +69,6 @@ class InvoiceController extends Generator //controller de Fatura
             if($_POST['numFatura'] == '') {
                 $errors['#numFatura'] = 'número da Fatura é obrigatória!';
             }
-
-            /* idCobranca */
         }
 
         if($_POST['enviarPorEmail'] == 1) {
@@ -93,16 +92,16 @@ class InvoiceController extends Generator //controller de Fatura
 
         foreach($camposObrigatorios as $campo) { //verifica todos os itens do array se estão vazios
             if($_POST[$campo] == '') {
-                $erros['#'.$campo] = 'campo obrigatório!';
+                $errors['#'.$campo] = 'campo obrigatório!';
             }
         }
 
-        if(($_POST['formaPagamento'] < 1) || ($_POST['formaPagamento'] > 6)) {
-            $erros['#formaPagamento'] = 'valor inválido!';
+        if(($_POST['formaPagamento'] == '') || ($_POST['formaPagamento'] < 1) || ($_POST['formaPagamento'] > 6)) {
+            $errors['#formaPagamento'] = 'valor inválido!';
         }
 
         if(($_POST['statusPagamento'] < 0) || ($_POST['statusPagamento'] > 4)) {
-            $erros['#statusPagamento'] = 'valor inválido!';
+            $errors['#statusPagamento'] = 'valor inválido!';
         }
 
         if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
@@ -119,7 +118,11 @@ class InvoiceController extends Generator //controller de Fatura
         }
     }/* --- fim verifyFields() ---------------------------*/
 
-    
+    public function generateNumFatura() {
+        $this->fatura->getMaxNumFatura();
+        
+    }
+
     public function ajax_list_invoices($requestData)
     {
         $column_search = array("numFatura", "statusPagamento", "dtEmissao", "dtVencimento", "valorTotal", "nomeCliente"); //colunas pesquisáveis pelo datatables
@@ -263,7 +266,7 @@ class InvoiceController extends Generator //controller de Fatura
             //PEGA O ITEM COM A MAIOR DATA FIM DO DA ÚLTIMA FATURA
             if(count(['fatura_itens'][0]) > 0)
             {
-                print_r($arrUltimaFatura);
+                //print_r($arrUltimaFatura);
 
                 try{
                     
