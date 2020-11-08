@@ -10,6 +10,7 @@ use \Locacao\Model\Product;
 $app->get('/products', function(){
 
     User::verifyLogin();
+    User::hasPermission();
 
     $page = new Page();
     $page->setTpl("produtos");

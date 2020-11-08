@@ -108,6 +108,11 @@ $app->get("/logout", function(){
 
 });
 
+$app->get("/accessDenied", function() {
+    $page = new Page();
+    $page->setTpl("accessDenied");
+});
+
 //executa
 $app->run();
 

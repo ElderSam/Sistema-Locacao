@@ -77,6 +77,16 @@ class User extends Generator{
         }
     }
 
+    public static function hasPermission(){
+        if($_SESSION[User::SESSION]["administrador"]) {
+            return;
+
+        }else{
+            header("Location: /accessDenied"); //página com mensgem de acesso negado
+            exit;
+        }
+    }
+
     public static function logout(){
         
         $_SESSION[User::SESSION] = NULL;

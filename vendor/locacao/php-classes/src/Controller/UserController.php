@@ -55,7 +55,7 @@ class UserController extends Generator
             $search = new User();
             //pega o caminho da imagem atual
             $res = $search->get((int) $_POST['idUsuario']);
-            $desOldImagePath = $res['foto'];
+            $desOldImagePath = $this->getfoto();
         }else{
             $desOldImagePath = "";
         }

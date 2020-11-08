@@ -13,7 +13,8 @@ use \Locacao\Model\User;
 $app->get('/users', function(){
 
     User::verifyLogin();
-	
+	User::hasPermission();
+
     //$users = User::listAll();
 	//$users = json_decode($users, false);
 	
