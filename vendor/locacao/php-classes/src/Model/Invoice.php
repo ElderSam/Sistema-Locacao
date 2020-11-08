@@ -10,6 +10,14 @@ use stdClass;
 
 class Invoice extends Generator { //classe de Fatura
 
+    public function getMaxNumFatura() {
+        //consulta no banco, pega o maior número de fatura no ano (numFatura-ano da dtEmissao)
+        $sql = new Sql();
+        $query = "SELECT MAX(numFatura) from faturas";
+        $res = $sql->select($query);
+
+        echo substr($res['0'], -4, 5);
+    }
     public function insert()
     {
         $sql = new Sql();
