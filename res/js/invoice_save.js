@@ -1,39 +1,83 @@
 /* Formulário de Fatura */
 
+let myTable = null;
+
 let idContract;
 let fatura;
 let fatura_itens;
 
+const idFatura = $("#idFatura").val();
+let typeForm = '';
+
 $(function() { 
     idContract = $('#idContrato').val();
-    loadDataNewInvoice(idContract);
-});
+	loadData(idContract);
 
-function loadDataNewInvoice(idContract=false){ //carrega dados no formulário para a nova fatura
+	//loadTableItens() //carrega a tabela de itens de fatura
+
+	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
+	$("#btnSaveInvoice").click(function (e) { //para enviar o formulário de Fatura
+		e.preventDefault();
+
+		/*$("#formInvoice #idFatura").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
+		$("#formInvoice #idContrato").prop('disabled', false);
+		/...
+		*/
+
+		$('#numFatura').prop('disabled', false);
+		$('#valorTotal').prop('disabled', false);
+
+		let form = $('#formInvoice');
+		let formData = new FormData(form[0]);
+
+		sendForm(formData)
+		return false;
+	});
+
+	/*$("#btnEmail").click(function () { //quando abrir o modal
+		loadEmailFields(idFatura);
+	});*/
+}); 
+
+function loadData(idContract) {
+
+	if((idFatura == '') || (idFatura == undefined)) { //se vai cadastrar uma nova fatura --------------------------------------------------
+		$('#btnSaveContract').show();
+		$('#btnUpdate').hide();
+
+		$('#divListItens').attr('hidden', true); //esconde a parte da lista de produtos para adicionar
+
+		loadDataNewInvoice(idContract)
+
+	}/*else { // se for para Editar -------------------------------------------------- 
+		$('#btnSaveContract').hide();
+		$('#btnUpdate').show();
+		loadInvoice(idFatura)
+	}*/
+	
+}
+
+function loadDataNewInvoice(idContract){ //carrega dados no formulário para a nova fatura
     
-    if(idContract){
-        $.getJSON(`/invoices/contract/${idContract}/create`, function(data) {
-            console.log(data)
+	$.getJSON(`/invoices/contract/${idContract}/create`, function(data) {
+		console.log(data)
 
-            loadFormInvoice(false, data);
-        });
-
-    }else{
-        console.log(`idContract=${idContract}`)
-    }
+		loadFormInvoice(false, data);
+	});
+    console.log(`idContract=${idContract}`)
 
     $("#formInvoice #numeroFatura").prop('disabled', true );
     $("#formInvoice #valorTotal").prop('disabled', true );
 }
 
-function loadFormInvoice(idInvoice, dataNewInvoice=false) {
+function loadFormInvoice(idFatura, dataNewInvoice=false) {
     fatura = dataNewInvoice.fatura;
     fatura_itens = dataNewInvoice.fatura_itens;
 
-    if(dataNewInvoice) { //carrega campos para cadastrar nova fatura
+    if(!idFatura) { //carrega campos para cadastrar nova fatura
 
-        $('#dtInicio').val(fatura.dtInicio);
-        $('#dtFim').val(fatura.dtFim);
+        $('#formInvoice #dtInicio').val(fatura.dtInicio);
+        $('#formInvoice #dtFim').val(fatura.dtFim);
         $('#dtEmissao').val(fatura.dtEmissao);
         $('#dtVencimento').val(fatura.dtVenc);
 
@@ -42,104 +86,72 @@ function loadFormInvoice(idInvoice, dataNewInvoice=false) {
     }
 }
 
-$(function () {	
+function sendForm(formData) {
+	console.log('sendForm')
 
-//    =========================== ALTERAR DEPOIS =================
+	if((idFatura == 0) || (idFatura == undefined)) {
+		route = 'create';
+		msg1 = 'cadastrar';
+		msg2 = 'Fatura cadastrada!';
 
-	if(idFatura !== '0'){ //se for para ver uma fatura existente
-		
-		// console.log(`idFatura: ${idFatura}`)
-		typeForm = 'view';
-
-		$("#fk_idContrato").val(idContrato)
-		$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
-
-		$('#btnCart').hide();
-
-		$('#btnDeleteInvoice').show();
-		$('#btnShowPDF').show();
-		$('#btnEmail').show();
-		
+	}else {
+		route = idFatura; //parte da rota para editar
+		msg1 = 'atualizar';
+		msg2 = 'Fatura atualizada!';
 	}
-//============================================================
 
-//adiciona as máscaraS
+	$.ajax({
+		type: "POST",
+		url: `/invoices/${route}`,
+		data: formData,
+		contentType: false,
+		processData: false,
+		beforeSend: function () {
+			clearErrors();
+			$("#btnSaveInvoice").parent().siblings(".help-block").html(loadingImg("Verificando..."));
 
-	loadFormInvoice(idFatura);
+		},
+		success: function (response) {
+			clearErrors();
 
-	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
-	$("#btnSaveInvoice").click(function (e) { //quando enviar o formulário de Fatura
+			response = JSON.parse(response)
+			console.log(response);
+			console.log(`error: ${response.error}`)
 
-		e.preventDefault();
+			if (response.error) {
+				console.log(`erro ao ${msg1} Fatura!`)
 
-		$("#formInvoice #idFatura").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
-		$("#formInvoice #idContrato").prop('disabled', false);
-      
-		let form = $('#formInvoice');
-		let formData = new FormData(form[0]);
+				Swal.fire(
+					'Erro!',
+					`Ocorreu algum erro ao ${msg1}`,
+					'error'
+				);
 
-		if ((idFatura == 0) || (idFatura == undefined)) { //se for para cadastrar --------------------------------------------------
+				if (response['error_list']) {
 
-			alert("ERRO: Id da fatura não definido");
+					showErrorsModal(response['error_list'])
 
-		} else { /* se for para Editar -------------------------------------------------- */
-
-			$.ajax({
-				type: "POST",
-				url: `/invoice/${idFatura}`, //rota para editar
-				data: formData,
-				contentType: false,
-				processData: false,
-				beforeSend: function () {
-					clearErrors();
-					$("#btnSaveInvoice").parent().siblings(".help-block").html(loadingImg("Verificando..."));
-
-				},
-				success: function (response) {
-					clearErrors();
-					console.log(response);
-					if (JSON.parse(response).error) {
-						console.log('erro ao atualizar Fatura!')
-
-						response = JSON.parse(response)
-
-						Swal.fire(
-							'Erro!',
-							'Ocorreu algum erro ao Atualizar',
-							'error'
-						);
-
-						if (response['error_list']) {
-
-							showErrorsModal(response['error_list'])
-
-							Swal.fire(
-								'Atenção!',
-								'Por favor verifique os campos',
-								'warning'
-							);
-						}
-
-					} else {
-
-						msg = 'Fatura atualizada!';
-
-						Swal.fire(
-							'Sucesso!',
-							msg,
-							'success'
-						);
-					}
-
-				},
-				error: function (response) {
-
-                console.log(`Erro! Mensagem: ${response}`);
-
+					Swal.fire(
+						'Atenção!',
+						'Por favor verifique os campos',
+						'warning'
+					);
 				}
-			});
-		}
 
-		return false;
-    });
-});    
+			} else {
+
+				Swal.fire(
+					'Sucesso!',
+					msg2,
+					'success'
+				);
+			}
+		},
+		error: function (response) {
+
+		console.log(`Erro! Mensagem: ${response}`);
+
+		}
+	});
+
+}
