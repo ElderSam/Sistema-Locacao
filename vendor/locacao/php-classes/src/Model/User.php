@@ -239,7 +239,19 @@ class User extends Generator{
         $results = $sql->select("SELECT * FROM usuarios");
 
         return count($results);		
-	}
+    }
+    
+    public function updatePassword() {
+        $sql = new Sql();
+        $query = "UPDATE usuarios
+            SET senha = :senha
+            WHERE idUsuario = :idUsuario";
+
+        $results = $sql->query($query, array(
+            ":idUsuario"=>$this->getidUsuario(),
+            ":senha"=>$this->getsenha(),
+        ));
+    }
     
 
     public function update(){
@@ -292,13 +304,6 @@ class User extends Generator{
                 "msg"=>$e->getMessage()
             ]);
 
-        }
-
-
-
-        
+        }      
     }
-
-
-
 }

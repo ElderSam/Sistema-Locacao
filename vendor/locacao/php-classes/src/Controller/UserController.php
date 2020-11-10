@@ -2,6 +2,8 @@
 
 namespace Locacao\Controller;
 
+use \Exception;
+
 use \Locacao\Generator;
 use \Locacao\Model\User;
 
@@ -54,7 +56,7 @@ class UserController extends Generator
 
             $search = new User();
             //pega o caminho da imagem atual
-            $res = $search->get((int) $_POST['idUsuario']);
+            $search->get((int) $_POST['idUsuario']);
             $desOldImagePath = $this->getfoto();
         }else{
             $desOldImagePath = "";
@@ -65,6 +67,10 @@ class UserController extends Generator
         $user->setfoto($image);
 
         if ($update) { //se for atualizar
+            if((isset($_POST['senha']) && $_POST['senha'] != '')) {
+                $user->updatePassword();
+            }
+
             return $user->update();
 
         } else { // se for cadastrar novo usuário
@@ -162,12 +168,20 @@ class UserController extends Generator
             return false;
         } else {
             //Valida o dominio
-            $dominio = explode('@', $email);
-            if (!checkdnsrr($dominio[1], 'A')) {
+            $email = "sdfsdf";
+            try{
+                $dominio = explode('@', $email);
+                return true;
+            }catch(Exception $err) {
+                
+                return false;
+            }
+            
+          /*if (!checkdnsrr($dominio[1], 'A')) { // a função checkdnsrr não é recomendado pois ela necessita de conexão à internet
                 return false;
             } else {
                 return true;
-            } // Retorno true para indicar que o e-mail é valido
+            }*/ // Retorno true para indicar que o e-mail é valido
         }
     }
 

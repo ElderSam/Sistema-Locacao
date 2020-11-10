@@ -1,5 +1,5 @@
 $(function() { //quando a página carrega
-
+	limparCampos();
 	//carrega a tabela de Usuários
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
@@ -24,11 +24,12 @@ $(function() { //quando a página carrega
 
 
 	$("#btnChangePassword").click(function() {
-		Swal.fire(
-			'OPS! :(',
-			'Essa função ainda não foi implementada!',
-			'info'
-		)
+		$("#btnChangePassword").parent().hide();
+		$("#senha")
+			.attr('placeholder', 'nova senha')
+			.attr('disabled', false)
+			.parent().show();
+
 	 });
 
 	 
@@ -188,6 +189,7 @@ function loadTableUsers(){ //carrega a tabela de Usuários
 //detalhes do usuário
 function loadUser(idUsuario) { //carrega todos os campos do modal referente ao usuário escolhido
 	clearErrors();
+	limparCampos();
 
 	$('#modalTitle').html('Detalhes do Usuário')
 	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
@@ -196,7 +198,6 @@ function loadUser(idUsuario) { //carrega todos os campos do modal referente ao u
 	
 
 	$('#senha').parent().hide();
-	$('#btnChangePassword').parent().show(); //botão para mudar senha
 	$('#dtCadastro').parent().show(); //aparece a data de cadastro (só para visualizar)
 	$('#desImagePath').parent().hide();
 
@@ -238,7 +239,8 @@ function loadUser(idUsuario) { //carrega todos os campos do modal referente ao u
 			//$("#formUser #senha").prop('disabled', false);
 			$("#formUser #email").prop('disabled', false);
 			$("#formUser #administrador").prop('disabled', false);
-				
+			
+			$('#btnChangePassword').parent().show(); //botão para mudar senha
 		}); /* Fim Atualizar Usuário ---------------------------------------------------------- */
 			
 
