@@ -199,7 +199,7 @@ class ProductEsp extends Generator{
                 
             } //fim do foreach
             if (!$first) {
-                $query .= ")"; //termina o WHERE e a query
+                $query .= ") AND a.idProduto_gen = $idProduct_gen"; //termina o WHERE e a query
             }
 
         }else{
@@ -212,7 +212,7 @@ class ProductEsp extends Generator{
         //ordenar o resultado
         $query .= " ORDER BY a." . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
-        
+        //echo $query;
         $products = new Product();
 
         return array(
