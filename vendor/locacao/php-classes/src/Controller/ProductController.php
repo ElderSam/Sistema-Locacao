@@ -320,8 +320,8 @@ class ProductController extends Generator
     public function ajax_list_products($requestData)
     {
 
-        $column_search = array("codigoGen", "descCategoria", "qtdTotal", "qtdDisponivel", "descricao"); //colunas pesquisáveis pelo datatables
-        $column_order = array("codigoGen", "descCategoria", "qtdTotal", "qtdDisponivel", "descricao"); //ordem que vai aparecer (o codigoGen primeiro)
+        $column_search = array("a.codigoGen", "b.descCategoria", "a.descricao"); //colunas pesquisáveis pelo datatables
+        $column_order = array("a.codigoGen", "b.descCategoria", "qtdTotal", "qtdDisponivel", "a.descricao"); //ordem que vai aparecer (o codigoGen primeiro)
 
         //faz a pesquisa no banco de dados
         $product = new Product(); //model
