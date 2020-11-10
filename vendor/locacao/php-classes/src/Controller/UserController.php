@@ -168,7 +168,7 @@ class UserController extends Generator
             return false;
         } else {
             //Valida o dominio
-            $email = "sdfsdf";
+
             try{
                 $dominio = explode('@', $email);
                 return true;
