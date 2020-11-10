@@ -53,23 +53,21 @@ class Costumer extends Generator{
 
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-                $val = strtoupper($search);
-
                 if ($field == "status") {
+                    $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
 
-                    if ($search == $val) {
+                    if ($search == 'INAT') { //inativo
                         $search = 0;
-                    } else if (($search == $val)) {
+                    } else if (($search == 'ATIV')) { //ativo
                         $search = 1;
                     }
                 }
 
-
                 if ($field == "tipoCliente") {
                     
-                    if (($val == "FISICA") || ($val == "FíSICA") || ($val == "FÍSICA")) {
-                        $val = "F";
-                    } else if (($val == "JURIDICA") || ($val == "JURíDICA") || ($val == "JURÍDICA")) {
+                    if (($search == "FISICA") || ($search == "FíSICA") || ($search == "FÍSICA")) {
+                        $search = "F";
+                    } else if (($search == "JURIDICA") || ($search == "JURíDICA") || ($search == "JURÍDICA")) {
                         $search = "J";
                     }
                 }
@@ -78,8 +76,14 @@ class Costumer extends Generator{
                 if ($first) {
                     $query .= " WHERE ($field LIKE '$search%'"; //primeiro caso
                     $first = FALSE;
+
                 } else {
-                    $query .= " OR $field LIKE '$search%'";
+                    if($field == 'nome') {
+                        $query .= " OR $field LIKE '%$search%'";
+                    }else {
+                        $query .= " OR $field LIKE '$search%'";
+                    }
+                    
                 }
             } //fim do foreach
             if (!$first) {
@@ -94,7 +98,7 @@ class Costumer extends Generator{
         //ordenar o resultado
         $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
-        
+        //echo $query;
         $costumers = new Costumer();
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
