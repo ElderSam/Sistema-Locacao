@@ -17,9 +17,9 @@ class ReposibleWorksController extends Generator
   
     public function ajax_list_costumers($requestData, $idCliente)
     {
+        $column_search = array("codigo", "respObra", "telefone1", "email1"); //colunas pesquisáveis pelo datatables
+        $column_order = array("codigo", "respObra", "telefone1", "email1"); //ordem que vai aparecer (o nome primeiro)
 
-        $column_search = array("respObra"); //colunas pesquisáveis pelo datatables
-        $column_order = array("respObra"); //ordem que vai aparecer (o nome primeiro)
 
         //faz a pesquisa no banco de dados
         $reposible = new ReposibleWorks(); //model
