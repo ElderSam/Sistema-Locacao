@@ -154,90 +154,95 @@ class Freight extends Generator {
     public function get_datatable($requestData, $column_search, $column_order, $idRent)
     {
         $query = "SELECT * FROM fretes";
+        $searchedFields = 1;
 
         if (!empty($requestData['search']['value'])) //verifica se eu digitei algo no campo de filtro
         { 
-            $first = TRUE;
+            $query .= " WHERE ";
+            $searchedFields = 0;
+            $first = true;
 
             foreach ($column_search as $field)
             {     
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-                //filtra no banco
-                if ($first) 
+                if(($field == "tipo_frete") || ($field == "status")) //--------------
                 {
-                    $query .= " WHERE ($field LIKE '%$search%'"; //primeiro caso
-                    $first = FALSE;
+                    $aux = substr($search, 0, 5); //pega os 5 primeiros caracteres
+                    //echo "<br> $aux";
+                    $value = -1;
 
-                } else {
-                    
-                    if(($field == "tipo_frete") || ($field == "status")) //--------------
+                    if($field == "tipo_frete")
                     {
-                        $aux = strtoupper($search); //deixa a string em maiúsculo
-                        $aux = substr($aux, 0, 5); //pega os 5 primeiros caracteres
-    
-                        if($field == "tipo_frete")
+                        if($aux == "ENTRE") //entrega
                         {
-                            if($aux == "ENTRE") //entrega
-                            {
-                                $value = 0;
+                            $value = 0;
 
-                            }else if($aux == "RETIR") //retirada
-                            {
-                                $value = 1;
-                            }
-
-                        }else { //field == status
-                            if($aux == "PENDE") //pendente
-                            {
-                                $value = 0;
-             
-                            }else if($aux == "CONCL") //concluído
-                            {
-                                $value = 1;
-                            }
-                        } 
-
-                        if(isset($value)){
-                            $query .= " OR $field = $value";
+                        }else if($aux == "RETIR") //retirada
+                        {
+                            $value = 1;
                         }
 
-                    } else if($field == "data_hora") //----------------------------
-                    {
-                        if(strlen($search) >= 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
-              
-                            //trata a data (dia/mes/ano -> ano-mes-dia)
-                            $aux = str_replace("/", "-", $search);
-                            $data = date('Y-m-d', strtotime($aux));
-
-                            $data .= substr($search, 10, strlen($search) ); //pega o resto da string (as horas)
-                            //echo "$field: $data";
-
-                            $query .= " OR $field = '$data'";
+                    }else { //field == status
+                        if($aux == "PENDE") //pendente
+                        {
+                            $value = 0;
+            
+                        }else if($aux == "CONCL") //concluído
+                        {
+                            $value = 1;
                         }
-                    } //----------------------------
- 
-                } //fim do primeiro else
+
+                        if(($value >= 0) && !$first) $query .= " OR";
+                    }
+
+                    if($value >= 0){
+                        $query .= " $field = $value";
+
+                        $searchedFields++;
+                        $first = false;
+                    }
+
+                } else if($field == "data_hora") //----------------------------
+                {
+                    if(strlen($search) >= 10){ //precisa digitar a data completa no campo pesquisar, ex: 20/09/2020
+            
+                        //trata a data (dia/mes/ano -> ano-mes-dia)
+                        $aux = str_replace("/", "-", $search);
+                        $data = date('Y-m-d', strtotime($aux));
+
+                        //echo "$field: $data";
+                        if(!$first) $query .= " OR";
+                        
+                        $query .= " DATE_FORMAT($field, '%Y-%m-%d') = '$data'";
+
+                        $searchedFields++;
+                    }
+                } //----------------------------
 
             } //fim do foreach
 
             if($idRent) {
-                $query .= " AND idLocacao = $idRent";
-            }
-
-            if (!$first) {
-                $query .= ")"; //termina o WHERE e a query
+                $query .= " AND (idLocacao = $idRent)";
             }
 
         }else {        
             if($idRent) {
                 $query .= " WHERE (idLocacao = $idRent)";
             }
+        }        
+
+        if($searchedFields == 0) {
+            $res = array();
+            $query .= " 1";
+            //echo "<br> res: 0";
+
+        }else {
+            $res = $this->searchAll($query);
+            //print_r($res);
         }
 
-        //print_r($query);
-
-        $res = $this->searchAll($query);
+        //echo $query;
         $this->setTotalFiltered(count($res));
 
         //ordenar o resultado
