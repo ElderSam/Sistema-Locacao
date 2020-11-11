@@ -118,7 +118,7 @@ class Contract extends Budget{
                
                 $search = strtoupper($requestData['search']['value']); //tranforma em maiúsculo
 
-                if ($field == "statusOrcamento") {
+                if ($field == "a.statusOrcamento") {
                     
                     $search = substr($search, 0, 4);  // retorna os 4 primeiros caracteres
                     
@@ -126,7 +126,7 @@ class Contract extends Budget{
                         $search = 2;
                     } else if (($search == "APRO")) { //Aprovado
                         $search = 3;
-                    } else if ($search == "EM A") { //Em andamento
+                    } else if ($search == "EM V") { //Em vigência
                         $search = 4;
                     } else if ($search == "ENCE") { //Encerrado
                         $search = 5;
@@ -134,7 +134,7 @@ class Contract extends Budget{
 
                     //echo "status: ".$search;
 
-                } else if ($field == "dtEmissao") {
+                } else if ($field == "a.dtEmissao") {
                                         
                     $ano= substr($search, 6);
                     $mes= substr($search, 3,-5);

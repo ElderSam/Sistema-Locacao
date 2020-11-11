@@ -125,8 +125,9 @@ class ContractController extends BudgetController
     public function ajax_list_contracts($requestData) //carrega tabela de contratos
     {
 
-        $column_search = array("statusOrcamento", "codContrato", "dtEmissao"); //colunas pesquisáveis pelo datatables
-        $column_order = array("statusOrcamento", "codContrato", "dtEmissao"); //ordem que vai aparecer (o codigo primeiro)
+        $column_search = array("a.statusOrcamento", "a.codContrato", "a.dtEmissao", "b.codObra", "a.nomeEmpresa", "c.nome"); //colunas pesquisáveis pelo datatables
+        $column_order = array("a.statusOrcamento", "a.codContrato", "a.dtEmissao"); //ordem que vai aparecer (o codigo primeiro)
+
 
         //faz a pesquisa no banco de dados
         $contract = new Contract(); //model
