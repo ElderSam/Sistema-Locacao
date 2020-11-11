@@ -79,7 +79,7 @@ class Construction extends Generator{
 
                 //filtra no banco
                 if ($first) {
-                    $query .= " WHERE (o.id_fk_cliente = $idCliente AND $field LIKE '$search%'"; //primeiro caso
+                    $query .= " WHERE o.id_fk_cliente = $idCliente AND ($field LIKE '$search%'"; //primeiro caso
                     $first = FALSE;
                 } else{
                     $query .= " OR $field LIKE '$search%'";
@@ -101,7 +101,7 @@ class Construction extends Generator{
         //ordenar o resultado
         $query .= " ORDER BY o." . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
-        
+        //echo $query;
 
         $construction = new Construction();
         return array(
