@@ -1,10 +1,4 @@
 /views-cache
 /.vscode
 /vendor/bin
-/vendor/composer
-/vendor/dompdf
-/vendor/phenx
-/vendor/phpmailer
-/vendor/rain
-/vendor/sabberworm
-/vendor/slim
+/vendor

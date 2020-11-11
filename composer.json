@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Locacao\\": "vendor\\locacao\\php-classes\\src"
+            "Locacao\\": "locacao\\php-classes\\src"
         }
     }
 }
