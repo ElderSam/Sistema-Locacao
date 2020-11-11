@@ -61,7 +61,7 @@ class ReposibleWorks extends Generator{
 
                 //filtra no banco
                 if ($first) {
-                    $query .= " WHERE (id_fk_cliente = $idCliente AND $field LIKE '$search%'"; //primeiro caso
+                    $query .= " WHERE id_fk_cliente = $idCliente AND ($field LIKE '$search%'"; //primeiro caso
                     $first = FALSE;
                 } else{
                     $query .= " OR $field LIKE '$search%'";
