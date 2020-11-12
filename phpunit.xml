@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="vendor/autoload.php" colors="true" verbose="true" stopOnFailure="false">
+  <coverage/>
+  <testsuites>
+    <testsuite name="TCC Rents Tests">
+      <directory suffix=".php">locacao/php-classes/tests/</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
