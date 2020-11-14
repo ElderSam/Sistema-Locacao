@@ -75,7 +75,7 @@ $app->get("/products/json/:idproduct", function($idproduct){
 $app->post("/products/create", function(){
 
 	$product = new ProductController();
-	echo $product->save();
+	echo $product->save($_POST);
 
 });
 
@@ -89,7 +89,7 @@ $app->post("/products/:idproduct", function($idproduct){ //update
 
 	$update = true;
 
-	echo $product->save($update);
+	echo $product->save($_POST, $update);
 	
 });
 
