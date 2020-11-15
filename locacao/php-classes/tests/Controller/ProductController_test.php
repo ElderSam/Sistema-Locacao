@@ -9,8 +9,6 @@ class ProductController_test extends TestCase
 {
     public function testCreateCode()
     {
-        $p = new ProductController();
-
         $arr["categoria"] = 1;
        
         $arr = [
@@ -21,7 +19,7 @@ class ProductController_test extends TestCase
             'tipo3'=>'01',
             'tipo4'=>'01'
         ];
-
+        $p = new ProductController();
         $p->setcodCategory($arr["codCategory"]);
 
         //$p->setData($arr);
@@ -47,5 +45,21 @@ class ProductController_test extends TestCase
         $this->assertEquals(false, $aux->error);
     }
 
+    public function testVerifyCodeExists() {
+        $arr = [
+            'categoria'=>1,
+            'codCategory'=>'001',
+            'tipo1'=>'01',
+            'tipo2'=>'01',
+            'tipo3'=>'01',
+            'tipo4'=>'01'
+        ];
+
+        $p = new ProductController();
+        $error = $p->verifyCodeExists($arr);
+        print_r($error);
+        $aux = json_decode($error, true);
+        $this->assertEquals(false, $aux->error);
+    }
 
 }

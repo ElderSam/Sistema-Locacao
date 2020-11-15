@@ -13,10 +13,7 @@ class ProductController extends Generator
 {
 
     //construtor
-    public function __construct()
-    {
-    }
-
+    public function __construct() {}
 
     public function save($arr, $update = false) //Add a new Product or Update
     {
@@ -208,10 +205,9 @@ class ProductController extends Generator
     }/* --- fim verificaErros() ---------------------------*/
 
     public function verifyCodeExists($arr, $update=false)
-    {
-        
+    { 
         $arr["codigoGen"] = $this->createCode($arr);
-        echo 'código: ' . $arr["codigoGen"];
+        //echo 'código: ' . $arr["codigoGen"];
     
         /* $category = new Category();
         $arr["categoria"] = $category->get(false, $arr["categoria"]); //manda o codcategoria em vez do id
