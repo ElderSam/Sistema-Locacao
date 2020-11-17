@@ -1,5 +1,4 @@
 /views-cache
 /.vscode
-/vendor/bin
-/vendor
+
 .phpunit.result.cache
