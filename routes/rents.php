@@ -26,11 +26,14 @@ $app->get('/rents/:id', function($id){
 $app->get('/rents/json', function(){
 
     User::verifyLogin();
-
     echo Rent::listAll();
   
 });
 
+$app->get('/rents/json/chart', function() {
+    $x = new RentController();
+    echo $x->getDataToChart();
+});
 
 $app->post('/rents/list_datatables', function(){ //ajax list datatables
 

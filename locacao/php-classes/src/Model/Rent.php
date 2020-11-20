@@ -13,7 +13,7 @@ class Rent extends Generator{
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM historicoalugueis ORDER BY nome");
+        $results = $sql->select("SELECT * FROM historicoalugueis ORDER BY dtInicio");
     
         return json_encode($results);
     }

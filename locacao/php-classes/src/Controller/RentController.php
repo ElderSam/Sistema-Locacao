@@ -6,19 +6,18 @@ use \Locacao\Generator;
 use \Locacao\Model\User;
 use \Locacao\Model\Rent;
 
+use DateTime;
+use DateInterval;
+
 class RentController extends Generator
 {
-
     //construtor
     public function __construct()
     {
     }
 
-
-
     public function save($update = false) //Add a new Rent or Update
-    {
-        
+    {  
         User::verifyLogin();
         
         $error = $this->verifyFields($update); //verifica os campos do formulário
@@ -213,7 +212,6 @@ class RentController extends Generator
 
     public function records_total()
     {
-
         return Rent::total();
     }
 
@@ -223,8 +221,49 @@ class RentController extends Generator
         //echo "id: " . $idrent;
         $rent->get((int)$idrent); //carrega o usuário, para ter certeza que ainda existe no banco
        
-        return $rent->delete();
-        
-        
+        return $rent->delete();        
     }
+
+    public function getDataToChart() {
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Sao_Paulo');
+
+        
+        $rents = json_decode(Rent::listAll(), true);
+        
+        $diffMonth = 5; //quantidade de meses anteriores que vai pegar para filtrar os aluguéis
+        
+        $today = new DateTime();
+        $start = $today->sub(new DateInterval('P'.$diffMonth.'M')); // pega a data x meses antes da data atual
+        //echo "<br>start: ". $start->format('Y-m-d') . "<br><br>";
+
+        $dataChart = [];
+
+        foreach($rents as $rent) {
+            //print_r($rent);
+
+            $dtInicioAluguel = new DateTime($rent['dtInicio']);
+            if($dtInicioAluguel >= $start) {
+                $yearMonth = $dtInicioAluguel->format('Y-m');
+                //echo "<br>".$yearMonth;
+                if(isset($dataChart[$yearMonth])) {
+                    $dataChart[$yearMonth]['qtd'] += 1;
+                }else {
+                    $dataChart[$yearMonth]['qtd'] = 1;
+
+                    $mesExtenso = strftime('%B/%Y', strtotime($dtInicioAluguel->format('Y-m-d')));
+                    $dataChart[$yearMonth]['month'] = $mesExtenso;
+                }
+                //echo "<BR>" .$dtInicioAluguel->format('Y-m-d');
+            }/*else {
+                echo "<BR><strong style='color: red'>" .$dtInicioAluguel->format('Y-m-d') . "</strong>"; 
+            }*/
+           
+        }
+        /*echo "<br>";
+        print_r($dataChart);*/
+
+        return json_encode($dataChart);
+    }
+
 }//end class RentController
