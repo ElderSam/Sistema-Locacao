@@ -1,4 +1,5 @@
 /views-cache
 /.vscode
-
+/vendor
+!vendor/autoload.php
 .phpunit.result.cache
