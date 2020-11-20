@@ -14,7 +14,7 @@ class Sql {
 
 		//echo "IP: " . $_SERVER['REMOTE_ADDR'];
 
-		if(($_SERVER['REMOTE_ADDR'] == '::1') || ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')){ //se estiver no Localhost
+		if(!isset($_SERVER['REMOTE_ADDR']) || ($_SERVER['REMOTE_ADDR'] == '::1') || ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')){ //se estiver no Localhost
 			
 			$username = "root";
 			$password = "";
