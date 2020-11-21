@@ -1,6 +1,6 @@
 <?php
 
-namespace Locacao;
+namespace Locacao\tests\Controller;
 use \Locacao\Controller\ProductController;
 
 use PHPUnit\Framework\TestCase;
@@ -46,6 +46,8 @@ class ProductController_test extends TestCase
     }
 
     public function testVerifyCodeExists() {
+        echo "testVerifyCodeExists <br>";
+
         $arr = [
             'categoria'=>1,
             'codCategory'=>'001',
@@ -56,10 +58,9 @@ class ProductController_test extends TestCase
         ];
 
         $p = new ProductController();
-        $error = $p->verifyCodeExists($arr);
-        print_r($error);
-        $aux = json_decode($error, true);
-        $this->assertEquals(false, $aux->error);
+        $aux = $p->verifyCodeExists($arr);
+        print_r($aux);
+        $this->assertEquals(false, json_decode($aux)->error);
     }
 
 }

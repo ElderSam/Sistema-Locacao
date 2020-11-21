@@ -228,7 +228,7 @@ class ProductController extends Generator
                         break; */
 
                         return json_encode([
-                            'error' => true,
+                            'error'=> true,
                             'msg'=> "Já existe um Produto com o código " . $arr['codigoGen']
                         ]);
                         
@@ -237,15 +237,17 @@ class ProductController extends Generator
             } else {
                 //$errors["#codigoGen"] = "Já existe um produto com essa Descrição";
                 return json_encode([
-                    'error' => true,
+                    'error'=> true,
                     'msg'=> "Já existe um Produto com o código " . $arr['codigoGen']
                 ]);
             }
-
+        }else {
+            
             return json_encode([
                 'error' => false
             ]);
         }
+
     }
 
     public function createCode($arr){
