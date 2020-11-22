@@ -35,7 +35,10 @@ class Budget extends Generator{
 
         if(($this->getcodigo() != "") && ($this->getdtEmissao() != "") && ($this->getstatus() != "")){
            
-            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, :solicitante, :telefone, :email, :dtAprovacao, :notas, :dtInicio, :dtFim, :statusOrcamento)", array(
+            $results = $sql->select("CALL sp_contratos_save(:codContrato, :nomeEmpresa, :obra_idObra, :dtEmissao, 
+            :solicitante, :telefone, :email, :dtAprovacao, :notas, :dtInicio, :dtFim, :statusOrcamento,
+            :temMedicao, :regraFatura, :semanaDoMes, :diaFatura)", array(
+
                 ":codContrato"=>$this->getcodigo(),
                 ":nomeEmpresa"=>$this->getnomeEmpresa(),
                 ":obra_idObra"=>$this->getobra_idObra(),
@@ -44,12 +47,14 @@ class Budget extends Generator{
                 ":telefone"=>$this->gettelefone(),
                 ":email"=>$this->getemail(),
                 ":dtAprovacao"=>$this->getdtAprovacao(),
-                /*":custoEntrega"=>$this->getcustoEntrega(),
-                ":custoRetirada"=>$this->getcustoRetirada(),*/
                 ":notas"=>$this->getnotas(),
                 ":dtInicio"=>$this->getdtInicio(),
                 ":dtFim"=>$this->getdtFim(),
-                ":statusOrcamento"=>$this->getstatus()
+                ":statusOrcamento"=>$this->getstatus(),
+                ":temMedicao"=>0,
+                ":regraFatura"=>NULL,
+                ":semanaDoMes"=>NULL,
+                ":diaFatura"=>NULL
             ));
 
             //print_r($results);
@@ -214,8 +219,6 @@ class Budget extends Generator{
             ":solicitante"=>$this->getsolicitante(),
             ":telefone"=>$this->gettelefone(),
             ":email"=>$this->getemail(),
-            /*":custoEntrega"=>$this->getcustoEntrega(),
-            ":custoRetirada"=>$this->getcustoRetirada(),*/
             ":notas"=>$this->getnotas(),
             ":dtInicio"=>$this->getdtInicio(),
             ":dtFim"=>$this->getdtFim(),
