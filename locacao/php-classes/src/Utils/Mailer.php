@@ -5,12 +5,14 @@ namespace Locacao\Utils;
 //require_once __DIR__ . '../vendor/autoload.php';
 
 //use PHPMailer as GlobalPHPMailer;
-use PHPMailer;
+use \PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . "/../../../../phpmailer/phpmailer/PHPMailerAutoload.php";
+//Load composer's autoloader
+require 'vendor/autoload.php';
 
     //You need enable less secure apps to access Gmail -> https://myaccount.google.com/lesssecureapps
-    const USERNAME = "sistemalocacao32@gmail.com";  //here your email
+    const USERNAME = "sistemalocacao2020@gmail.com";  //here your email
     const PASSWORD = "testetcc"; //here your password
     const NAME_FROM = "Sistema Locacao - TESTE";
 

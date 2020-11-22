@@ -4,7 +4,7 @@ namespace Locacao\Utils;
 
 use Exception;
 
-require __DIR__ . "/../../../../autoload.php"; //vendor/autoload
+require __DIR__ . "/../../../../vendor/autoload.php"; //vendor/autoload
 use Dompdf\Dompdf;
 
 //require __DIR__ . "/page.php"; //página HTML que será transformada em PDF
