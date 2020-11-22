@@ -83,6 +83,9 @@ function loadTableItens(){ //carrega a tabela de Itens
 	}
 
 	if(idContrato != "" && idContrato != undefined){
+		if(idContrato == 0) {
+			idContrato = $("#idOrcamento").val()
+		}
 
 		myTable = $("#dataTable").DataTable({ 
 			"createdRow": function( row, data, dataIndex){

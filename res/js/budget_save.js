@@ -5,7 +5,7 @@ let idCliente = '';
 let codigo = '0'
 
 let idOrcamento = $("#idOrcamento").val();
-const idContrato = $("#idOrcamento").val(); //para o arquivo budgetItems_save.js
+let idContrato = $("#idOrcamento").val(); //para o arquivo budgetItems_save.js
 let typeForm = '';
 
 //Somente para orçamento
