@@ -21,9 +21,8 @@ class Product extends Generator
 
     public function insert()
     {
-
         $sql = new Sql();
-
+        
         if (($this->getcodigoGen() != "") && ($this->getcategoria() != "")) {
 
             //insere
@@ -32,9 +31,9 @@ class Product extends Generator
                 ":descricao" => $this->getdescricao(),
                 ":vlBaseAluguel" => $this->getvlBaseAluguel(),
                 ":tipo1" => $this->gettipo1(),
-                ":tipo2" => $this->gettipo2(),
-                ":tipo3" => $this->gettipo3(),
-                ":tipo4" => $this->gettipo4(),
+                ":tipo2" => ($this->gettipo2()  == '' ? NULL : $this->gettipo2()),
+                ":tipo3" => ($this->gettipo3()  == '' ? NULL : $this->gettipo3()),
+                ":tipo4" => ($this->gettipo4()  == '' ? NULL : $this->gettipo4()),
                 ":categoria" => $this->getcategoria()
             ));
 

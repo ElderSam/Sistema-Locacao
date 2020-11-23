@@ -25,15 +25,19 @@ class ProductController extends Generator
             return $verified;    
         }
 
-        $aux = $this->verifyCodeExists($arr, $update);
-        if(json_decode($aux)->error) {
-            return $aux;
-        }
-
         $product = new Product(); //Model
 
         $product->setData($arr);
         $product->createDescription();
+
+        $json = $this->verifyCodeExists($arr, $update);
+        $aux = json_decode($json);
+
+        if($aux->error) {
+            return $json;
+        }else {
+            $product->setcodigoGen($aux->codigoGen);
+        }
 
         if ($update) { //se for atualizar
             
@@ -72,10 +76,11 @@ class ProductController extends Generator
             }
 
         } else { // se for cadastrar novo Produto
-            
-            $res = $product->insert();
 
-            return $res;      
+            $idCategoria = substr($product->getcategoria(), 0, -4); //excluir os 4 últimos caracteres (ex: -003 -> código da cagetoria)
+            $product->setcategoria($idCategoria);          
+
+            return $product->insert();     
         }
     }
 
@@ -244,7 +249,8 @@ class ProductController extends Generator
         }else {
             
             return json_encode([
-                'error' => false
+                'error' => false,
+                'codigoGen' => $arr["codigoGen"],
             ]);
         }
 
