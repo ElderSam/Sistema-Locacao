@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 07-Nov-2020 às 12:48
+-- Tempo de geração: 23-Nov-2020 às 21:00
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -263,7 +263,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` 
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` INT(11), IN `pnumFatura` VARCHAR(11), IN `pdtEmissao` DATE, IN `pdtInicio` DATE, IN `pdtFim` DATE, IN `penviarPorEmail` TINYINT(1), IN `pemailEnvio` VARCHAR(40), IN `pdtEnvio` DATE, IN `padicional` FLOAT, IN `pvalorTotal` FLOAT, IN `pobservacoes` VARCHAR(100), IN `pformaPagamento` INT(1), IN `pdtVencimento` DATE, IN `pespecCobranca` VARCHAR(60), IN `pdtCobranca` DATE, IN `pstatusPagamento` INT(1), IN `pnumNF` INT(11), IN `pnumBoletoInt` INT(11), IN `pnumBoletoBanco` INT(11), IN `pvalorPago` FLOAT, IN `pdtPagamento` DATE, IN `pdtVerificacao` DATE)  BEGIN
     
         DECLARE vidFatura, vidCobranca INT;
 
@@ -284,8 +284,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `idContrato` I
         pidContrato,
         pnumFatura,
         pdtEmissao,
-        dtInicio,
-        dtFim,
+        pdtInicio,
+        pdtFim,
         penviarPorEmail,
         pemailEnvio,
         pdtEnvio,
@@ -872,11 +872,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_delete` (IN `pidRes
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `pidResp` INT(11), IN `pcodigo` VARCHAR(3), IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_responsaveis_save` (IN `pcodigo` VARCHAR(3), IN `prespObra` VARCHAR(45), IN `ptelefone1` VARCHAR(15), IN `ptelefone2` VARCHAR(15), IN `ptelefone3` VARCHAR(15), IN `pemail1` VARCHAR(45), IN `pemail2` VARCHAR(45), IN `panotacoes` VARCHAR(150), IN `pid_fk_cliente` INT)  BEGIN
 DECLARE vidResp INT;
     
-  INSERT INTO resp_obras (idResp, codigo, respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
-    VALUES(pidResp, pcodigo, prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
+  INSERT INTO resp_obras (codigo, respObra, telefone1, telefone2, telefone3, email1, email2, anotacoes, id_fk_cliente)
+    VALUES(pcodigo, prespObra, ptelefone1, ptelefone2, ptelefone3, pemail1, pemail2, panotacoes, pid_fk_cliente);
     
     SET vidResp = LAST_INSERT_ID();
     
@@ -987,7 +987,8 @@ CREATE TABLE `clientes` (
 INSERT INTO `clientes` (`idCliente`, `codigo`, `nome`, `status`, `telefone1`, `telefone2`, `email1`, `email2`, `endereco`, `complemento`, `cidade`, `bairro`, `numero`, `uf`, `cep`, `cpf`, `rg`, `cnpj`, `ie`, `tipoCliente`, `dtCadastro`) VALUES
 (1, '001', 'ConstPira', 1, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '534.534.524-25', '35.353.425-3', '', '0', 'F', '2020-06-16 19:53:47'),
 (2, '002', 'Construtora Forte', 1, '', '', '', '', '', '', '', '', 0, '', '', '', '', '42.341.123/423', '4234124234', 'J', '2020-06-16 20:12:50'),
-(3, '003', 'ConstruDoug', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40');
+(3, '003', 'ConstruDoug', 0, '(19) 9953-13563', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', 'Dr. Arlindo Justos Baptistella', '', 'Limeira', '', 0, 'SP', '13481-659', '312.312.312-31', '14.132.312-3', '', '0', 'F', '2020-06-16 20:15:40'),
+(7, '004', 'TESTE', 0, '', '', '', '', '', '', '', '', 0, '', '', '345.654.645-64', '12.334.345-2', '', '0', 'J', '2020-11-22 20:47:38');
 
 -- --------------------------------------------------------
 
@@ -1025,7 +1026,11 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (3, '19', '', NULL, '2020-05-24', 'TESTE', '', '', NULL, NULL, NULL, 1, 0, NULL, NULL, NULL, '', '2020-05-24 08:27:46'),
 (4, '20201231-001', '', 16, '2020-12-31', 'JOÃO MIGUEL', '', 'eldersamuel98@gmail.com', '2020-10-26', '0000-00-00', '0000-00-00', 3, 0, NULL, NULL, NULL, '', '2020-05-24 08:44:10'),
 (5, '21', '', NULL, '2020-05-20', 'TESTSE3', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-05-24 08:45:42'),
-(6, '20200530-002', NULL, 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '2020-09-07', '0000-00-00', 4, 1, 2, 1, 3, 'teste', '2020-05-25 08:16:14');
+(6, '20200530-002', NULL, 16, '2020-05-30', 'Rodrigo Souza', '3235413242', 'rodrigo@construforte.com', '2020-07-02', '2020-09-07', '0000-00-00', 4, 1, 2, 1, 3, 'teste', '2020-05-25 08:16:14'),
+(7, '22', 'construtora X', NULL, '2020-11-22', 'Pedro', '19999999999', 'pedro@gmail.com', NULL, '0000-00-00', '0000-00-00', 0, 0, NULL, NULL, NULL, 'cadastro teste', '2020-11-22 17:06:24'),
+(8, '23', 'construtora Y', NULL, '2020-11-22', 'JOÃO', '19000000000', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:09:40'),
+(9, '24', 'teste', NULL, '2020-11-22', 'pedro', '10000000000', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:16:03'),
+(10, '25', '', NULL, '2020-11-15', 'joao', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:23:36');
 
 -- --------------------------------------------------------
 
@@ -1055,7 +1060,15 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (2, 6, 5, 15470, '2', 215, 215, 4, 'Entrega em 2DD úteis', '2020-09-20 12:45:06'),
 (3, 4, 1, 450, '5', 190, 190, 4, '', '2020-09-20 15:43:21'),
 (4, 2, 1, 450, '2', 190, 190, 4, 'Entrega em 2DD', '2020-09-21 18:45:10'),
-(5, 2, 2, 234, '2', 150, 150, 2, '', '2020-10-23 19:00:30');
+(5, 2, 2, 234, '2', 150, 150, 2, '', '2020-10-23 19:00:30'),
+(6, 7, 1, 450, '2', 200, 200, 4, '', '2020-11-22 17:07:20'),
+(7, 7, 8, 600, '2', 100, 100, 4, '', '2020-11-22 17:08:23'),
+(8, 8, 2, 234, '2', 100, 100, 4, '', '2020-11-22 17:10:19'),
+(9, 8, 2, 234, '2', 0, 0, 4, '', '2020-11-22 17:10:33'),
+(10, 8, 2, 234, '2', 100, 100, 4, '', '2020-11-22 17:11:16'),
+(11, 8, 4, 500, '1', 40, 40, 4, '', '2020-11-22 17:12:54'),
+(12, 9, 1, 450, '1', 30, 30, 4, '', '2020-11-22 17:16:17'),
+(13, 10, 1, 450, '1', 100, 100, 4, '', '2020-11-22 17:23:52');
 
 -- --------------------------------------------------------
 
@@ -1101,13 +1114,24 @@ CREATE TABLE `faturas` (
   `dtInicio` date NOT NULL,
   `dtFim` date NOT NULL,
   `enviarPorEmail` tinyint(1) NOT NULL COMMENT '0-não 1-sim',
-  `emailEnvio` varchar(40) NOT NULL,
+  `emailEnvio` varchar(40) DEFAULT NULL,
   `dtEnvio` date NOT NULL,
   `adicional` varchar(100) DEFAULT NULL,
   `valorTotal` float NOT NULL,
   `observacoes` varchar(100) DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `faturas`
+--
+
+INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `valorTotal`, `observacoes`, `dtCadastro`) VALUES
+(3, 6, '1-2020', '2020-10-24', '0000-00-00', '0000-00-00', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:30:32'),
+(4, 6, '2-2020', '2020-10-24', '0000-00-00', '0000-00-00', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:33:21'),
+(5, 6, '3-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:36:26'),
+(6, 6, '4-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, '', '2020-11-07', '0', 0, NULL, '2020-11-07 11:39:17'),
+(7, 6, '5-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, '', '2020-11-07', '0', 0, NULL, '2020-11-07 11:40:00');
 
 -- --------------------------------------------------------
 
@@ -1131,6 +1155,17 @@ CREATE TABLE `fatura_cobrancas` (
   `dtVerificacao` date DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `fatura_cobrancas`
+--
+
+INSERT INTO `fatura_cobrancas` (`idCobranca`, `idFatura`, `formaPagamento`, `dtVencimento`, `especCobranca`, `dtCobranca`, `statusPagamento`, `numNF`, `numBoletoInt`, `numBoletoBanco`, `valorPago`, `dtPagamento`, `dtVerificacao`, `dtCadastro`) VALUES
+(3, 3, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:30:32'),
+(4, 4, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:33:21'),
+(5, 5, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:36:26'),
+(6, 6, 1, '2020-11-03', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-11-07 11:39:17'),
+(7, 7, 1, '2020-11-03', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-11-07 11:40:00');
 
 -- --------------------------------------------------------
 
@@ -1239,7 +1274,7 @@ CREATE TABLE `historicoalugueis` (
 --
 
 INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idContrato`, `produto_idProduto`, `status`, `vlAluguel`, `dtInicio`, `dtFinal`, `custoEntrega`, `custoRetirada`, `observacao`, `dtCadastro`) VALUES
-(7, '3', 6, 3, 3, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
+(7, '3', 6, 3, 1, 600, '2020-09-07', '2020-09-15', 200, 200, '', '2020-09-11 23:47:57'),
 (13, '4', 6, 1, 3, 450, '2020-09-20', '2020-10-20', 190, 190, '', '2020-09-20 09:30:03'),
 (15, '5', 6, 2, 1, 15470, '2020-10-18', '2020-11-25', 215, 215, '', '2020-10-05 20:22:21'),
 (16, '6', 6, 15, 1, 15470, '2020-10-05', '2020-12-05', 215, 215, '', '2020-10-05 20:22:21'),
@@ -1509,7 +1544,7 @@ CREATE TABLE `resp_obras` (
 --
 
 INSERT INTO `resp_obras` (`idResp`, `codigo`, `id_fk_cliente`, `respObra`, `telefone1`, `telefone2`, `telefone3`, `email1`, `email2`, `anotacoes`, `dtCadastro`) VALUES
-(16, '001', 1, 'Roberto', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-16 22:16:37'),
+(16, '001', 1, 'Roberto', '(19) 9890-35434', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-16 22:16:37'),
 (17, '002', 1, 'Douglas', '(19) 9953-13563', '', '', '', '', '', '2020-06-21 21:19:56'),
 (18, '001', 2, 'Resp 1', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-21 22:02:14'),
 (22, '002', 2, 'Resp 2', '(19) 9953-13563', '', '', 'douglas.rnmeriano@gmail.com', 'douglas.rnmeriano@gmail.com', '', '2020-06-21 22:03:24'),
@@ -1539,10 +1574,10 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `senha`, `email`, `administrador`, `foto`, `dtCadastro`) VALUES
 (0, 'DOUGLAS RODRIGUES NUMERIANO', 'Diretor', 'douglas', '$2y$12$LKuhzYgrLzatkMgmAmGNC.KYZWmIYmQMDFDGBe6Wek96MmVfE1YNy', 'douglas.rnmeriano@gmail.com', 1, '/res/img/users/1590973211_1583190423_avatar5.png', '2020-05-31 22:00:11'),
-(1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 1, '/res/img/users/1583106585_elder-profile.jpg', '2020-02-26 10:45:06'),
-(2, 'Administrador', 'Teste', 'admin', '$2y$12$VN9ODzeRl2lKLhE84XmWF.lf5UbP9gfWFtEa7f1jEuyaeV9ILIhz6', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
+(1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 0, '/res/img/users/user-default.jpg', '2020-02-26 10:45:06'),
+(2, 'Administrador', 'Admin', 'admin', '$2y$12$Gn6FtBrS9EjKS8OFuhkjQOfgGfZTR2OJnToY8PC7y2fLoFGZU9g.i', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
 (3, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
-(4, 'teste', 'teste', 'teste', '$2y$12$7sxu7KZZ5tNXyWgBlekeSudyonnOaUbkvcd8jRj.p2P1NPqRqqBx.', 'teste@teste.com', 0, '/res/img/users/user-default.jpg', '2020-03-30 09:50:43');
+(5, 'teste 2 ', 'teste', 'teste2', '$2y$12$duHHwct9Cm8LJPo.gkHZt.xJzGIrKnfGUkcWTGepGG.xEnGP4ZK32', 'eldersamuel98@gmail.com', 0, '/res/img/users/user-default.jpg', '2020-11-22 20:46:22');
 
 --
 -- Índices para tabelas despejadas
@@ -1699,19 +1734,19 @@ ALTER TABLE `aditamentos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1723,13 +1758,13 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `faturas`
 --
 ALTER TABLE `faturas`
-  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_cobrancas`
 --
 ALTER TABLE `fatura_cobrancas`
-  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_itens`
@@ -1759,7 +1794,7 @@ ALTER TABLE `historicoalugueis`
 -- AUTO_INCREMENT de tabela `obras`
 --
 ALTER TABLE `obras`
-  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `idObra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_esp`
@@ -1795,13 +1830,13 @@ ALTER TABLE `prod_tipos`
 -- AUTO_INCREMENT de tabela `resp_obras`
 --
 ALTER TABLE `resp_obras`
-  MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idResp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restrições para despejos de tabelas
