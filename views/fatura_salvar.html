@@ -28,8 +28,8 @@
                         <div class="form-row">
 
                             <div class="form-group col-lg-3">
-                                <label for="numeroFatura">Número da Fatura</label>
-                                <input type="text" class="form-control" id="numeroFatura" name="numeroFatura"
+                                <label for="numFatura">Número da Fatura</label>
+                                <input type="text" class="form-control" id="numFatura" name="numFatura"
                                     placeholder="000" maxlength="12" value="">
                                 <span class="help-block"></span>
                             </div>
@@ -50,10 +50,10 @@
                             </div>
 
                             <div class="form-group col-lg-3">
-                                <label for="envioEmail">Envio por Email</label>
-                                <select class="form-control" id="envioEmail" name="envioEmail" value="">    
-                                    <option selected value="0">Sim</option>  
-                                    <option value="1">Não</option>                  
+                                <label for="enviarPorEmail">Enviar por Email</label>
+                                <select class="form-control" id="enviarPorEmail" name="enviarPorEmail" value="">    
+                                    <option selected value="1">Sim</option>  
+                                    <option value="0">Não</option>                  
                                 </select>
                             </div>
 
@@ -69,8 +69,8 @@
                             </div>
 
                             <div class="form-group col-lg-3">
-                                <label for="vlTotal">Valor Total</label>
-                                <input type="text" class="form-control" id="vlTotal" name="vlTotal" value="">
+                                <label for="valorTotal">Valor Total</label>
+                                <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="">
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -97,7 +97,16 @@
 
                             <div class="form-group col-lg-3">
                                 <label for="formaPagamento">Forma de pagamento</label>
-                                <input type="text" class="form-control" id="formaPagamento" name="formaPagamento" value="">
+                                <select class="form-control" id="formaPagamento" name="formaPagamento" value="">    
+                                    <option selected value="">escolha</option>  
+                                    <option value="1">boleto</option>
+                                    <option value="2">DOC</option>
+                                    <option value="3">transferência</option>
+                                    <option value="4">dinheiro</option>
+                                    <option value="5">cheque</option>
+                                    <option value="6">outros</option>          
+                                </select>
+
                                 <span class="help-block" style="background-color: white"></span>
                             </div>
 
@@ -141,10 +150,10 @@
                                 <input type="date" class="form-control" id="dtVerificacao" name="dtVerificacao" value="">
                             </div>
 
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="statusPagamento">Status do Pagamento</label>
                                 <select class="form-control" id="statusPagamento" name="statusPagamento" value="">    
-                                    <option selected value="0">Pago</option>  
+                                    <option selected value="0">Pendente</option>  
                                     <option value="1">Pago Parcialmente</option>   
                                     <option value="2">Pago</option> 
                                     <option value="3">Cancelado</option>
@@ -153,14 +162,14 @@
                                 <span class="help-block"></span>
                             </div>
 
-                            <div class="form-group col-lg-4">
-                                <label for="especCobranca">Especificação da Cobrança</label>
-                                <input type="text" class="form-control" id="especCobranca" name="especCobranca" value="">
-                            </div>
-
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="vlPago">Valor Pago</label>
                                 <input type="text" class="form-control" id="vlPago" name="vlPago" value="">
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label for="especCobranca">Especificação da Cobrança</label>
+                                <input type="text" class="form-control" id="especCobranca" name="especCobranca" value="">
                             </div>
 
                         </div>
