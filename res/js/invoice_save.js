@@ -31,6 +31,10 @@ $(function() {
 		let formData = new FormData(form[0]);
 
 		sendForm(formData)
+
+		$('#numFatura').prop('disabled', true);
+		$('#valorTotal').prop('disabled', true);
+
 		return false;
 	});
 
@@ -52,6 +56,7 @@ function loadData(idContract) {
 	}/*else { // se for para Editar -------------------------------------------------- 
 		$('#btnSaveContract').hide();
 		$('#btnUpdate').show();
+
 		loadInvoice(idFatura)
 	}*/
 	
@@ -116,9 +121,9 @@ function sendForm(formData) {
 
 			response = JSON.parse(response)
 			console.log(response);
-			console.log(`error: ${response.error}`)
-
+			
 			if (response.error) {
+				console.log(`error: ${response.error}`)
 				console.log(`erro ao ${msg1} Fatura!`)
 
 				Swal.fire(
@@ -139,6 +144,13 @@ function sendForm(formData) {
 				}
 
 			} else {
+
+				if(route == 'create') {
+					$('#idFatura').val(response.idFatura);
+					console.log(`idFatura: ${$('#idFatura').val()}`);
+					$('#numFatura').val(response.numFatura);
+					$('#divListItens').attr('hidden', false);
+				}
 
 				Swal.fire(
 					'Sucesso!',
