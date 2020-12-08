@@ -24,6 +24,11 @@ $app->get('/invoices', function(){
     getPage('faturas');
 });
 
+/* rota para página de faturas --------------*/
+$app->get('/invoices/new', function(){
+    getPage('fatura_salvar');
+});
+
 /* rota para pegar lista de faturas pendentes (para fazer) */
 $app->get('/invoices/json/pending', function(){
     //User::verifyLogin();
@@ -44,7 +49,7 @@ $app->post('/invoices/list_datatables', function(){ //ajax list datatables
 	
 });
 
-/* entrar na página que tem o formulário para salvar fatura */
+// /* entrar na página que tem o formulário para salvar fatura */
 $app->get('/invoices/contract/:idContract/createForm', function($idContract){   
 
     getPage('fatura_salvar', array(
