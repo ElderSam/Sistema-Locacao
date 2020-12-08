@@ -40,7 +40,9 @@ class InvoiceController extends Generator //controller de Fatura
             return  $this->fatura->update();
 
         } else { // se for cadastrar nova Fatura
-            $this->fatura->setnumFatura($this->generateNumFatura());             
+            $dtEmissao = $this->fatura->getdtEmissao();
+            $this->fatura->setnumFatura($this->generateNumFatura($dtEmissao));
+            
             return $this->fatura->insert();
         }
     }
@@ -83,7 +85,7 @@ class InvoiceController extends Generator //controller de Fatura
             'dtInicio',
             'dtFim',
             'dtEnvio',
-            'valorTotal',
+            //'valorTotal',
 
             'formaPagamento', // (1-boleto, 2-DOC, 3-transferência, 4-dinheiro, 5-cheque, 6-outros)
             'dtVencimento',
@@ -118,9 +120,10 @@ class InvoiceController extends Generator //controller de Fatura
         }
     }/* --- fim verifyFields() ---------------------------*/
 
-    public function generateNumFatura() {
-        $this->fatura->getMaxNumFatura();
-        
+    public function generateNumFatura($dtEmissao) {
+        $ano = substr($dtEmissao, 0, 4);
+        $num = ((int)$this->fatura->getMaxNumFatura($dtEmissao)) + 1; //soma +1 ao último número de fatura no ano
+        return $num . "-" . $ano;
     }
 
     public function ajax_list_invoices($requestData)

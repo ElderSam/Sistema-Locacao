@@ -30,7 +30,7 @@
                             <div class="form-group col-lg-3">
                                 <label for="numFatura">Número da Fatura</label>
                                 <input type="text" class="form-control" id="numFatura" name="numFatura"
-                                    placeholder="000" maxlength="12" value="">
+                                    placeholder="000" value="" disabled="true">
                                 <span class="help-block"></span>
                             </div>
                             
@@ -174,7 +174,7 @@
 
                         </div>
 
-                        <div id="divListItens" class="ml-2">
+                        <div id="divListItens" class="ml-2" hidden="true">
                             <div class="row">
                                 <!--Header List -->
                                 <div class="col-lg-12" style="background-color: lightgrey;">
@@ -386,3 +386,4 @@
         <script src="/res/plugins/mask/jquery.mask.min.js"></script>
         <script src="/res/js/util.js"></script>
         <script src="/res/js/invoice_save.js"></script>
+        <script src="/res/js/invoiceItens_save.js"></script>
