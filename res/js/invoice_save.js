@@ -1,15 +1,17 @@
 /* Formulário de Fatura */
 
-let myTable = null;
 
 let idContract;
 let fatura;
 let fatura_itens;
 
-const idFatura = $("#idFatura").val();
+let idFatura = $("#idFatura").val();
 let typeForm = '';
 
 $(function() { 
+
+	loadTableItens();
+
     idContract = $('#idContrato').val();
 	loadData(idContract);
 
@@ -29,6 +31,10 @@ $(function() {
 
 		let form = $('#formInvoice');
 		let formData = new FormData(form[0]);
+		formData.append(
+			'arrFatura_itens',
+			JSON.stringify(fatura_itens)
+		);
 
 		sendForm(formData)
 
@@ -121,7 +127,7 @@ function sendForm(formData) {
 
 			response = JSON.parse(response)
 			console.log(response);
-			
+
 			if (response.error) {
 				console.log(`error: ${response.error}`)
 				console.log(`erro ao ${msg1} Fatura!`)
@@ -144,12 +150,18 @@ function sendForm(formData) {
 				}
 
 			} else {
-
+				let fatura = JSON.parse(response.fatura);
+				
 				if(route == 'create') {
-					$('#idFatura').val(response.idFatura);
+					idFatura = fatura.idFatura;
+					$('#idFatura').val(idFatura);
+					
 					console.log(`idFatura: ${$('#idFatura').val()}`);
-					$('#numFatura').val(response.numFatura);
+					$('#numFatura').val(fatura.numFatura);
+
 					$('#divListItens').attr('hidden', false);
+					loadTableItens(response.fatura_itens);
+
 				}
 
 				Swal.fire(

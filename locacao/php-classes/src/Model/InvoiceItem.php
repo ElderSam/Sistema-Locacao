@@ -16,21 +16,20 @@ class InvoiceItem extends Generator{
     }
 
     public function insert(){
-        //print_r($_POST);
         
         $sql = new Sql();
 
-        if(($this->getidProduto_gen() != "") && ($this->getidFatura() != "")){
-           
-            $results = $sql->select("CALL sp_fatura_itens_save(:idFatura, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
+        if(($this->getidAluguel() != "") && ($this->getidFatura() != "")){
+
+            $results = $sql->select("CALL sp_fatura_itens_save(:idFatura, :idAluguel, :periodoLocacao, :vlAluguelCobrado, :custoEntrega, :custoRetirada, :dtInicio, :dtFim)", array(
                 ":idFatura"=>$this->getidFatura(),
-                ":idProduto_gen"=>$this->getidProduto_gen(),
-                ":vlAluguel"=>$this->getvlAluguel(),
-                ":quantidade"=>$this->getquantidade(),
-                ":custoEntrega"=>$this->getcustoEntrega(),
-                ":custoRetirada"=>$this->getcustoRetirada(),
+                ":idAluguel"=>$this->getidAluguel(),
                 ":periodoLocacao"=>$this->getperiodoLocacao(),
-                ":observacao"=>$this->getobservacao()
+                ":vlAluguelCobrado"=>$this->getvlAluguelCobrado(),
+                ":custoEntrega"=>$this->getfrete()['custoEntrega'],
+                ":custoRetirada"=>$this->getfrete()['custoRetirada'],
+                ":dtInicio"=>$this->getdtInicio(),
+                ":dtFim"=>$this->getdtFim()
             ));
 
             if(count($results) > 0){
@@ -74,16 +73,16 @@ class InvoiceItem extends Generator{
         
         $sql = new Sql();
 
-        $results = $sql->select("CALL sp_fatura_itensUpdate_save(:idItem, :idFatura, :idProduto_gen, :vlAluguel, :quantidade, :custoEntrega, :custoRetirada, :periodoLocacao, :observacao)", array(
-            ":idItem"=>$this->getidItem(),
-            ":idFatura"=>$this->getidFatura(),
-            ":idProduto_gen"=>$this->getidProduto_gen(),
-            ":vlAluguel"=>$this->getvlAluguel(),
-            ":quantidade"=>$this->getquantidade(),
-            ":custoEntrega"=>$this->getcustoEntrega(),
-            ":custoRetirada"=>$this->getcustoRetirada(),
-            ":periodoLocacao"=>$this->getperiodoLocacao(),
-            ":observacao"=>$this->getobservacao()
+        $results = $sql->select("CALL sp_fatura_itensUpdate_save(:idItem, :idFatura, :idAluguel, :periodoLocacao, :vlAluguelCobrado, :custoEntrega, :custoRetirada, :dtInicio, :dtFim)", array(
+                ":idItem"=>$this->getidItem(),
+                ":idFatura"=>$this->getidFatura(),
+                ":idAluguel"=>$this->getidAluguel(),
+                ":periodoLocacao"=>$this->getperiodoLocacao(),
+                ":vlAluguelCobrado"=>$this->getvlAluguelCobrado(),
+                ":custoEntrega"=>$this->getfrete()['custoEntrega'],
+                ":custoRetirada"=>$this->getfrete()['custoRetirada'],
+                ":dtInicio"=>$this->getdtInicio(),
+                ":dtFim"=>$this->getdtFim()
         ));
 
         if(count($results) > 0){

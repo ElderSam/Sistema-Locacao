@@ -43,7 +43,32 @@ class InvoiceController extends Generator //controller de Fatura
             $dtEmissao = $this->fatura->getdtEmissao();
             $this->fatura->setnumFatura($this->generateNumFatura($dtEmissao));
             
-            return $this->fatura->insert();
+            $res = $this->fatura->insert();
+
+            $auxInsert = json_decode($res);
+
+            if (isset($auxInsert->error) && ($auxInsert->error)){
+                return $error;
+            }
+
+            $itemController = new InvoiceItemController();
+
+            $arrFatura_itens = $this->fatura->getarrFatura_itens();
+            $arrFatura_itens = json_decode($arrFatura_itens, true);
+
+            //print_r($arrFatura_itens);
+            $invoiceItens = [];
+
+            foreach($arrFatura_itens as $item) {
+                $item['idFatura'] = $this->fatura->getidFatura();
+                $invoiceItens[] = $itemController->save($item);
+            }
+
+            return json_encode([
+                'fatura'=>$res,
+                'fatura_itens'=>$invoiceItens
+            ]);
+            
         }
     }
 

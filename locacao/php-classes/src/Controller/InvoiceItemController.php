@@ -19,33 +19,32 @@ class InvoiceItemController extends Generator
         $this->fatura = new InvoiceItem(); //model
     }
 
-    public function save($update = false) //salva (insere/atualiza) um item de Fatura
+    public function save($arrItem, $update = false) //salva (insere/atualiza) um item de Fatura
     {
-        User::verifyLogin();
-        
-        $error = $this->verifyFields($update); //verifica os campos do formulário   
+        //User::verifyLogin();
+        //print_r($arrItem);
+
+        $error = $this->verifyFields($arrItem, $update); //verifica os campos do formulário   
         $aux = json_decode($error);
 
         if ($aux->error){
             return $error;
         }
 
-        $item = new InvoiceItem(); //Model
-        $item->setData($_POST);
-
+        $this->item = new InvoiceItem(); //Model
+        $this->item->setData($arrItem);
+        
         if ($update) { //se for atualizar   
-            return  $item->update();
+            return  $this->item->update();
 
-        } else { // se for cadastrar nova Fatura              
-            return $item->insert();
+        } else { // se for cadastrar nova Fatura   
+            return $this->item->insert();
         }
     }
 
-    public function verifyFields($update = false) /* Verifica todos os campos ---------------------------*/
+    public function verifyFields($arrItem, $update = false) /* Verifica todos os campos ---------------------------*/
     {    
         $errors = array();
-
-        //print_r($_POST);
 
         //CAMPOS OBRIGATÓRIOS:
 
@@ -59,12 +58,12 @@ class InvoiceItemController extends Generator
         ];
 
         foreach($camposObrigatorios as $campo) { //verifica todos os itens do array se estão vazios
-            if($_POST[$campo] == '') {
+            if($arrItem[$campo] == '') {
                 $erros['#'.$campo] = 'campo obrigatório!';
             }
         }
 
-        if(($_POST['periodoLocacao'] < 1) || ($_POST['periodoLocacao'] > 4)) {
+        if(($arrItem['periodoLocacao'] < 1) || ($arrItem['periodoLocacao'] > 4)) {
             $erros['#periodoLocacao'] = 'valor inválido!';
         }
         
@@ -111,7 +110,8 @@ class InvoiceItemController extends Generator
         $dtFim = $this->getDtFim($fatura, $aluguel);
 
         $valorCobrado = $this->calculaValorCobrado($dtInicio, $dtFim, $aluguel);
-        
+        $valorCobrado = number_format($valorCobrado, 2, '.', '');
+
         if($valorCobrado === false) return false;
              
         $valorFrete = $this->calculaValorFrete($fatura, $aluguel);
