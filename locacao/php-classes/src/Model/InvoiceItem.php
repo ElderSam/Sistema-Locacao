@@ -69,18 +69,25 @@ class InvoiceItem extends Generator{
         }
     }
 
+    public function searchAll($query){ //pesquisa genérica (para todos os campos). Recebe uma query
+
+        $sql = new Sql();
+        $results = $sql->select($query);
+        return $results;
+    }   
+
     public function update(){
         
         $sql = new Sql();
 
         $results = $sql->select("CALL sp_fatura_itensUpdate_save(:idItem, :idFatura, :idAluguel, :periodoLocacao, :vlAluguelCobrado, :custoEntrega, :custoRetirada, :dtInicio, :dtFim)", array(
-                ":idItem"=>$this->getidItem(),
+                ":idItem"=>$this->getidItemFatura(),
                 ":idFatura"=>$this->getidFatura(),
                 ":idAluguel"=>$this->getidAluguel(),
                 ":periodoLocacao"=>$this->getperiodoLocacao(),
                 ":vlAluguelCobrado"=>$this->getvlAluguelCobrado(),
-                ":custoEntrega"=>$this->getfrete()['custoEntrega'],
-                ":custoRetirada"=>$this->getfrete()['custoRetirada'],
+                ":custoEntrega"=>$this->getcustoEntrega(),
+                ":custoRetirada"=>$this->getcustoRetirada(),
                 ":dtInicio"=>$this->getdtInicio(),
                 ":dtFim"=>$this->getdtFim()
         ));
@@ -130,6 +137,22 @@ class InvoiceItem extends Generator{
             ]);
 
         }
+    }
+
+    public function getInvoiceItens($idItem = false) {
+        
+        $query = "SELECT a.*, c.codigoEsp, d.descricao, e.descCategoria FROM `fatura_itens` a
+        INNER JOIN `historicoalugueis` b ON (a.idAluguel = b.idHistoricoAluguel)
+        INNER JOIN `produtos_esp` c ON (b.produto_idProduto = c.idProduto_esp)
+        INNER JOIN `produtos_gen` d ON (c.idProduto_gen = d.idProduto_gen)
+        INNER JOIN `prod_categorias` e ON (d.idCategoria = e.idCategoria)";
+
+        if($idItem) {
+            $query .= "WHERE (a.idItemFatura = $idItem)";
+        }
+        //echo "query: $query";
+
+        return json_encode($this->searchAll($query)); //retorna um array de itens
     }
 
 }

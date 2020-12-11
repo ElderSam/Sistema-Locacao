@@ -37,8 +37,8 @@ $app->get("/invoice_itens/json/:idItem", function($idItem){
     User::verifyLogin();
 
 	$invoiceItem = new InvoiceItem();
-	$invoiceItem->get((int)$idItem);
-	echo $invoiceItem->loadInvoiceItem((int)$idItem);
+	//$invoiceItem->get((int)$idItem);
+	echo $invoiceItem->getInvoiceItens((int)$idItem);
 });
 
 /* rota para mostrar dados de uma fatura pelo id */
@@ -51,11 +51,11 @@ $app->get("/invoice_itens/json/invoice/:idInvoice", function($idInvoice){
 });
 
 /* rota para criar item de fatura (salva no banco) -----------*/
-$app->post("/invoice_itens/create", function(){
+/*$app->post("/invoice_itens/create", function(){
     
 	$invoiceItem = new InvoiceItemController();
 	echo $invoiceItem->save();
-});
+});*/
 
 /* rota para atualizar  --------------------------*/
 $app->post("/invoice_itens/:idItem", function($idItem){ //update
@@ -64,5 +64,6 @@ $app->post("/invoice_itens/:idItem", function($idItem){ //update
 
 	$invoiceItem = new InvoiceItemController();
 	$update = true;
-	echo $invoiceItem->save($update);
+	$item = $_POST;
+	echo $invoiceItem->save($item, $update);
 });

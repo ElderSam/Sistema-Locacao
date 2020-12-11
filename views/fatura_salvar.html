@@ -1,9 +1,3 @@
-<style>
-    .linhaFrete {
-        background-color: lightgray;
-    }
-</style>
-
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
@@ -183,7 +177,7 @@
 
                                 <div class="col-lg-3">
                                     <button type="button" id="btnCart" class="btn btn-success float-right"
-                                        data-toggle="modal" data-target="#rentModal">
+                                        data-toggle="modal" data-target="#itemModal">
                                         <i title="Adicionar Item a Fatura" class="fas fa-cart-plus"></i>
                                     </button>
                                 </div>
@@ -234,7 +228,7 @@
 
                     </div><!----Aluguel Modal------------------------------------------------------------------------------->
 
-            <div class="modal fade" id="rentModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Fatura"
+            <div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="Detalhes da Fatura"
                 aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -249,33 +243,30 @@
                             <form id="formItem">
                                 <!-- Formulário do Item -->
                                 <div class="form-row">
+                                    
+                                    <div id="divDetailsItem" class="col-lg-9 ml-2 mb-2" style="background-color: lightgrey;"></div> <!-- div de detalhes de um Item (detalhes do produto relacionado)-->
 
-                                    <div class="form-group col-lg-3">
-                                        <label for="codeProduct">Código</label>
-                                        <input type="text" class="form-control" id="codeProduct" name="codeProduct"
-                                            placeholder="">
-                                        <span class="help-block"></span>
-                                    </div>
-                                            
                                     <div hidden="true">
-                                        <label for="idAluguel">Aluguel</label>
+                                        <input type="text" id="idItemFatura" name="idItemFatura" value="">
+                                    </div>
+
+                                    <div hidden="true">
+                                        <input type="text" id="idFatura" name="idFatura" value="">
+                                    </div>
+
+                                    <div hidden="true">
                                         <input type="text" id="idAluguel" name="idAluguel" value="">
                                     </div>
 
-                                    
-                                    <div class="form-group col-lg-3">
-                                        <label for="periodoLocacao">Período de Locação</label>
-                                        <input type="text" class="form-control" name="periodoLocacao" id="periodoLocacao">
-                                    </div>
-
-                                    <div class="form-group col-lg-3">
-                                        <label for="vlAluguelCobrado">Valor cobrado</label>
-                                        <input type="text" class="form-control" name="vlAluguelCobrado" id="vlAluguelCobrado">
-                                    </div>
-
-                                    <div class="form-group col-lg-3">
-                                        <label for="vlFrete">Valor Frete</label>
-                                        <input type="text" class="form-control" name="vlFrete" id="vlFrete">
+                                    <div class="form-group col-lg-6">
+                                        <label for="periodoLocacao">Periodo Locação</label>
+                                        <select class="form-control" id="periodoLocacao" name="periodoLocacao">
+                                            <option selected value="1">diário</option>
+                                            <option value="2">semanal</option>  
+                                            <option value="3">quinzenal</option>     
+                                            <option selected value="4">mensal</option>                        
+                                        </select>
+                                        <span class="help-block"></span>
                                     </div>
 
                                     <div class="form-group col-lg-3">
@@ -287,6 +278,28 @@
                                         <label for="dtFim">Data Final</label>
                                         <input type="date" class="form-control" id="dtFim" name="dtFim" value="">
                                     </div>
+
+                                    <div class="form-group col-lg-3">
+                                        <label for="vlAluguelCobrado">Valor Aluguel cobrado</label>
+                                        <input type="text" class="form-control" name="vlAluguelCobrado" id="vlAluguelCobrado">
+                                    </div>
+
+                                    <div class="form-group col-lg-3">
+                                        <label for="custoEntrega">Custo de Entrega</label>
+                                        <input type="number" class="form-control" name="custoEntrega" id="custoEntrega">
+                                    </div>
+                                    
+                                    <div class="form-group col-lg-3">
+                                        <label for="custoRetirada">Custo de Retirada</label>
+                                        <input type="number" class="form-control" name="custoRetirada" id="custoRetirada">
+                                    </div>
+
+
+                                    <div class="col-lg-3 bg-dark text-white">
+                                        <label for="vlTotal">Total</label>
+                                        <div id="vlTotal"></div>
+                                    </div>
+
                             </form>
 
                             <span class="help-block status-form float-right" style="margin-top: -1.4rem;"></span>

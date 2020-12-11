@@ -17,12 +17,12 @@ $(function() {
 
 	//loadTableItens() //carrega a tabela de itens de fatura
 
-	/* Cadastrar ou Editar Contrato --------------------------------------------------------------*/
+	/* Cadastrar ou Editar Fatura --------------------------------------------------------------*/
 	$("#btnSaveInvoice").click(function (e) { //para enviar o formulário de Fatura
 		e.preventDefault();
 
 		/*$("#formInvoice #idFatura").prop('disabled', false); //para poder mandar o campo quando enviar o Formulário
-		$("#formInvoice #idContrato").prop('disabled', false);
+		$("#formInvoice #idFatura").prop('disabled', false);
 		/...
 		*/
 
