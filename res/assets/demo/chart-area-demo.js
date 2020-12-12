@@ -16,8 +16,6 @@ $.getJSON(routeChart, function (data) { //ajax
     arrMonths.push(item.month)
     arrQtds.push(item.qtd)
   });
-  console.log('arrMonths', arrMonths)
-  console.log('arrQtds', arrQtds)
 
   loadChart(arrMonths, arrQtds);
 

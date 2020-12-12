@@ -434,7 +434,7 @@ class Invoice extends Generator { //classe de Fatura
 
         return json_encode([
             'fatura'=>$fatura,
-            'itens_fatura'=>$itensFatura
+            'fatura_itens'=>$itensFatura
         ]);
     }
 

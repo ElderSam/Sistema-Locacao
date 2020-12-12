@@ -292,7 +292,7 @@ class InvoiceController extends Generator //controller de Fatura
         {
             
             //PEGA O ITEM COM A MAIOR DATA FIM DO DA ÚLTIMA FATURA
-            if(count($arrUltimaFatura['itens_fatura']) > 0)
+            if(count($arrUltimaFatura['fatura_itens']) > 0)
             {
                 //print_r($arrUltimaFatura);
 
