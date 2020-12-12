@@ -41,7 +41,6 @@ $app->post('/invoices/list_datatables', function(){ //ajax list datatables
 
 	$invoices = new InvoiceController();
 	echo $invoices->ajax_list_invoices($requestData);
-	
 });
 
 /* entrar na página que tem o formulário para salvar fatura */

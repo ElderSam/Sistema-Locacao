@@ -233,16 +233,18 @@ class Invoice extends Generator { //classe de Fatura
 
     public function get_datatable_invoices($requestData, $column_search, $idRent)
     {
-        $query = "SELECT a.idFatura, a.numFatura, a.dtEmissao, a.valorTotal,
-            b.dtVencimento, b.statusPagamento,
-            e.nome as nomeCliente
-            FROM faturas a
-            INNER JOIN fatura_cobrancas b ON(b.idFatura = a.idFatura)
-            INNER JOIN contratos c ON(c.idContrato = a.idContrato)
-            INNER JOIN obras d ON(d.idObra = c.obra_idObra)
-            INNER JOIN clientes e ON(e.idCliente = d.id_fk_cliente)";
-            
-            //numFatura, statusPagamento, dtEmissao, dtVencimento, (vlTotal+adicional), cliente
+        $query = "SELECT a.idFatura, a.numFatura, a.dtEmissao,
+        (SUM(vlAluguelCobrado) + SUM(custoEntrega) + SUM(custoRetirada)) as valorTotal,
+        b.dtVencimento, b.statusPagamento,
+        e.nome as nomeCliente
+        FROM faturas a
+        INNER JOIN fatura_cobrancas b ON(b.idFatura = a.idFatura)
+        INNER JOIN contratos c ON(c.idContrato = a.idContrato)
+        INNER JOIN obras d ON(d.idObra = c.obra_idObra)
+        INNER JOIN clientes e ON(e.idCliente = d.id_fk_cliente)
+        INNER JOIN fatura_itens f ON(f.idFatura = a.idFatura)";
+
+        //numFatura, statusPagamento, dtEmissao, dtVencimento, (vlTotal+adicional), cliente
 
         if (!empty($requestData['search']['value'])) //verifica se eu digitei algo no campo de filtro
         { 

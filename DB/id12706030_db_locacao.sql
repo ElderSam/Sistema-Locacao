@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23-Nov-2020 às 21:00
+-- Tempo de geração: 12-Dez-2020 às 14:07
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -201,7 +201,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidCon
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `valorTotal` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
   
     DECLARE vidFatura INT;
 
@@ -220,7 +220,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatur
             emailEnvio = pemailEnvio,
             dtEnvio = pdtEnvio,
             adicional = padicional,
-            valorTotal = pvalorTotal,
             observacoes = pobservacoes
 
         WHERE idFatura = vidFatura;    
@@ -263,7 +262,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` 
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` INT(11), IN `pnumFatura` VARCHAR(11), IN `pdtEmissao` DATE, IN `pdtInicio` DATE, IN `pdtFim` DATE, IN `penviarPorEmail` TINYINT(1), IN `pemailEnvio` VARCHAR(40), IN `pdtEnvio` DATE, IN `padicional` FLOAT, IN `pvalorTotal` FLOAT, IN `pobservacoes` VARCHAR(100), IN `pformaPagamento` INT(1), IN `pdtVencimento` DATE, IN `pespecCobranca` VARCHAR(60), IN `pdtCobranca` DATE, IN `pstatusPagamento` INT(1), IN `pnumNF` INT(11), IN `pnumBoletoInt` INT(11), IN `pnumBoletoBanco` INT(11), IN `pvalorPago` FLOAT, IN `pdtPagamento` DATE, IN `pdtVerificacao` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` INT(11), IN `pnumFatura` VARCHAR(11), IN `pdtEmissao` DATE, IN `pdtInicio` DATE, IN `pdtFim` DATE, IN `penviarPorEmail` TINYINT(1), IN `pemailEnvio` VARCHAR(40), IN `pdtEnvio` DATE, IN `padicional` FLOAT, IN `pobservacoes` VARCHAR(100), IN `pformaPagamento` INT(1), IN `pdtVencimento` DATE, IN `pespecCobranca` VARCHAR(60), IN `pdtCobranca` DATE, IN `pstatusPagamento` INT(1), IN `pnumNF` INT(11), IN `pnumBoletoInt` INT(11), IN `pnumBoletoBanco` INT(11), IN `pvalorPago` FLOAT, IN `pdtPagamento` DATE, IN `pdtVerificacao` DATE)  BEGIN
     
         DECLARE vidFatura, vidCobranca INT;
 
@@ -277,7 +276,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` 
         emailEnvio,
         dtEnvio,
         adicional,
-        valorTotal,
         observacoes
     )
     VALUES(
@@ -290,7 +288,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` 
         pemailEnvio,
         pdtEnvio,
         padicional,
-        pvalorTotal,
         pobservacoes
     );
 
@@ -337,7 +334,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_save` (IN `pidContrato` 
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itensUpdate_save` (IN `pidItemFatura` INT(11), IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pvalorFrete` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itensUpdate_save` (IN `pidItemFatura` INT(11), IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
 
     DECLARE vidItemFatura INT;
     
@@ -351,7 +348,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itensUpdate_save` (IN `pi
             idAluguel = pidAluguel,
             periodoLocacao = pperiodoLocacao,
             vlAluguelCobrado = pvlAluguelCobrado,
-            valorFrete = pvalorFrete,
+            custoEntrega = pcustoEntrega,
+            custoRetirada = pcustoRetirada,
             dtInicio = pdtInicio,
             dtFim = pdtFim  
         WHERE idItemFatura = vidItemFatura;    
@@ -372,7 +370,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_delete` (IN `pidIte
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_save` (IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pvalorFrete` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_save` (IN `pidFatura` INT(11), IN `pidAluguel` INT(11), IN `pperiodoLocacao` INT(1), IN `pvlAluguelCobrado` FLOAT, IN `pcustoEntrega` FLOAT, IN `pcustoRetirada` FLOAT, IN `pdtInicio` DATE, IN `pdtFim` DATE)  BEGIN
   
     DECLARE vidItemFatura INT;
     
@@ -381,16 +379,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_fatura_itens_save` (IN `pidFatur
     idAluguel,
     periodoLocacao,
     vlAluguelCobrado,
-    valorFrete,
+    custoEntrega,
+    custoRetirada,
     dtInicio,
     dtFim
   )
-  VALUES(pcodigo,
+  VALUES(
     pidFatura,
     pidAluguel,
     pperiodoLocacao,
     pvlAluguelCobrado,
-    pvalorFrete,
+    pcustoEntrega,
+    pcustoRetirada,
     pdtInicio,
     pdtFim
   );
@@ -1030,7 +1030,9 @@ INSERT INTO `contratos` (`idContrato`, `codContrato`, `nomeEmpresa`, `obra_idObr
 (7, '22', 'construtora X', NULL, '2020-11-22', 'Pedro', '19999999999', 'pedro@gmail.com', NULL, '0000-00-00', '0000-00-00', 0, 0, NULL, NULL, NULL, 'cadastro teste', '2020-11-22 17:06:24'),
 (8, '23', 'construtora Y', NULL, '2020-11-22', 'JOÃO', '19000000000', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:09:40'),
 (9, '24', 'teste', NULL, '2020-11-22', 'pedro', '10000000000', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:16:03'),
-(10, '25', '', NULL, '2020-11-15', 'joao', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:23:36');
+(10, '25', '', NULL, '2020-11-15', 'joao', '', '', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '', '2020-11-22 17:23:36'),
+(11, '20201101-002', NULL, 18, '2020-11-01', 'João', '19999999999', 'eldersamuel98@gmail.com', '2020-11-22', '2020-11-22', '0000-00-00', 4, 0, 0, 0, 0, '', '2020-11-22 23:08:44'),
+(12, '20201122-002', NULL, 18, '2020-11-22', 'João', '19999999999', 'eldersamuel98@gmail.com', '2020-11-22', '2020-11-22', '0000-00-00', 4, 0, 0, 0, 0, 'teste', '2020-11-22 23:22:58');
 
 -- --------------------------------------------------------
 
@@ -1068,7 +1070,9 @@ INSERT INTO `contrato_itens` (`idItem`, `idContrato`, `idProduto_gen`, `vlAlugue
 (10, 8, 2, 234, '2', 100, 100, 4, '', '2020-11-22 17:11:16'),
 (11, 8, 4, 500, '1', 40, 40, 4, '', '2020-11-22 17:12:54'),
 (12, 9, 1, 450, '1', 30, 30, 4, '', '2020-11-22 17:16:17'),
-(13, 10, 1, 450, '1', 100, 100, 4, '', '2020-11-22 17:23:52');
+(13, 10, 1, 450, '1', 100, 100, 4, '', '2020-11-22 17:23:52'),
+(14, 11, 1, 450, '3', 334, 50, 4, '', '2020-11-22 23:09:19'),
+(15, 12, 68, 500, '2', 50, 50, 2, 'teste', '2020-11-22 23:23:32');
 
 -- --------------------------------------------------------
 
@@ -1117,7 +1121,6 @@ CREATE TABLE `faturas` (
   `emailEnvio` varchar(40) DEFAULT NULL,
   `dtEnvio` date NOT NULL,
   `adicional` varchar(100) DEFAULT NULL,
-  `valorTotal` float NOT NULL,
   `observacoes` varchar(100) DEFAULT NULL,
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1126,12 +1129,8 @@ CREATE TABLE `faturas` (
 -- Extraindo dados da tabela `faturas`
 --
 
-INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `valorTotal`, `observacoes`, `dtCadastro`) VALUES
-(3, 6, '1-2020', '2020-10-24', '0000-00-00', '0000-00-00', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:30:32'),
-(4, 6, '2-2020', '2020-10-24', '0000-00-00', '0000-00-00', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:33:21'),
-(5, 6, '3-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, NULL, '2020-11-07', NULL, 0, NULL, '2020-11-07 11:36:26'),
-(6, 6, '4-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, '', '2020-11-07', '0', 0, NULL, '2020-11-07 11:39:17'),
-(7, 6, '5-2020', '2020-10-24', '2020-09-07', '2020-11-02', 0, '', '2020-11-07', '0', 0, NULL, '2020-11-07 11:40:00');
+INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `observacoes`, `dtCadastro`) VALUES
+(83, 6, '1-2020', '2020-11-28', '2020-09-07', '2020-12-07', 0, '', '2020-12-31', '0', NULL, '2020-12-10 22:13:39');
 
 -- --------------------------------------------------------
 
@@ -1161,11 +1160,7 @@ CREATE TABLE `fatura_cobrancas` (
 --
 
 INSERT INTO `fatura_cobrancas` (`idCobranca`, `idFatura`, `formaPagamento`, `dtVencimento`, `especCobranca`, `dtCobranca`, `statusPagamento`, `numNF`, `numBoletoInt`, `numBoletoBanco`, `valorPago`, `dtPagamento`, `dtVerificacao`, `dtCadastro`) VALUES
-(3, 3, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:30:32'),
-(4, 4, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:33:21'),
-(5, 5, 1, '2020-11-03', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2020-11-07 11:36:26'),
-(6, 6, 1, '2020-11-03', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-11-07 11:39:17'),
-(7, 7, 1, '2020-11-03', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-11-07 11:40:00');
+(83, 83, 1, '2020-12-08', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-12-10 22:13:39');
 
 -- --------------------------------------------------------
 
@@ -1178,12 +1173,23 @@ CREATE TABLE `fatura_itens` (
   `idFatura` int(11) NOT NULL,
   `idAluguel` int(11) NOT NULL,
   `periodoLocacao` int(1) NOT NULL COMMENT '1-diário  2-semanal  3-quinzenal  4-mensal',
-  `vlAluguelCobrado` float NOT NULL COMMENT 'valor calculado em cima do período (dtInicio - dtFim)',
-  `valorFrete` float NOT NULL COMMENT 'valor de frete de entrega ou retirada, se houver',
+  `vlAluguelCobrado` decimal(11,2) NOT NULL COMMENT 'valor calculado em cima do período (dtInicio - dtFim)',
+  `custoEntrega` float NOT NULL COMMENT 'valor de frete de entrega, se houver',
+  `custoRetirada` float NOT NULL COMMENT 'valor de frete de retirada, se houver',
   `dtInicio` date NOT NULL COMMENT 'data de início do período cobrado',
   `dtFim` date NOT NULL COMMENT 'data final do período cobrado',
   `dtCadastro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Tabela de itens da fatura';
+
+--
+-- Extraindo dados da tabela `fatura_itens`
+--
+
+INSERT INTO `fatura_itens` (`idItemFatura`, `idFatura`, `idAluguel`, `periodoLocacao`, `vlAluguelCobrado`, `custoEntrega`, `custoRetirada`, `dtInicio`, `dtFim`, `dtCadastro`) VALUES
+(117, 83, 7, 4, '160.00', 200, 0, '2020-09-07', '2020-09-15', '2020-12-10 22:13:39'),
+(118, 83, 13, 4, '450.00', 190, 0, '2020-09-20', '2020-10-20', '2020-12-10 22:13:39'),
+(119, 83, 16, 4, '31455.67', 215, 0, '2020-10-05', '2020-12-05', '2020-12-10 22:13:39'),
+(120, 83, 15, 4, '19595.33', 215, 0, '2020-10-18', '2020-11-25', '2020-12-10 22:13:39');
 
 -- --------------------------------------------------------
 
@@ -1246,7 +1252,9 @@ INSERT INTO `fretes` (`id`, `idLocacao`, `tipo_frete`, `status`, `data_hora`, `o
 (5, 16, 0, 1, '2020-10-05 09:30:00', 'teste', '2020-10-12 09:23:37'),
 (13, 7, 1, 1, '2020-11-05 16:38:00', 'Cod. Prod.: 001.01.01.01.01.002-0003,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  TESTE ATUALIZAR\r\n', '2020-10-12 16:38:40'),
 (14, 15, 0, 1, '2020-10-18 09:22:00', 'Cod. Prod.: 001.04.05.02.02.002-0002,  \r\n<b>Produto: 12M stand de vendas sem lavabo HC</b>,  \r\n', '2020-10-18 09:23:01'),
-(15, 18, 0, 1, '2020-10-25 00:06:00', 'Cod. Prod.: 001.01.01.01.01.002-0001,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  \r\n', '2020-10-25 00:06:55');
+(15, 18, 0, 1, '2020-10-25 00:06:00', 'Cod. Prod.: 001.01.01.01.01.002-0001,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  \r\n', '2020-10-25 00:06:55'),
+(16, 20, 0, 1, '2020-11-23 08:00:00', 'Cod. Prod.: 001.01.01.01.01.002-0004,  \r\n<b>Produto: 3M almoxarifado com lavabo DC</b>,  \r\n', '2020-11-22 23:14:31'),
+(17, 21, 0, 1, '2020-11-23 08:30:00', 'Cod. Prod.: 002.01.01.01.02.002-0006,  \r\n<b>Produto: MARCA X MODELO X Elétrica 220V</b>,  \r\n', '2020-11-22 23:25:51');
 
 -- --------------------------------------------------------
 
@@ -1279,7 +1287,9 @@ INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idCon
 (15, '5', 6, 2, 1, 15470, '2020-10-18', '2020-11-25', 215, 215, '', '2020-10-05 20:22:21'),
 (16, '6', 6, 15, 1, 15470, '2020-10-05', '2020-12-05', 215, 215, '', '2020-10-05 20:22:21'),
 (18, '7', 2, 1, 1, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44'),
-(19, '8', 2, 3, 0, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44');
+(19, '8', 2, 3, 0, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44'),
+(20, '9', 11, 8, 1, 450, '2020-11-23', '0000-00-00', 334, 50, 'teste', '2020-11-22 23:14:01'),
+(21, '10', 12, 18, 1, 500, '2020-11-23', '0000-00-00', 50, 50, '', '2020-11-22 23:25:21');
 
 -- --------------------------------------------------------
 
@@ -1342,13 +1352,15 @@ INSERT INTO `produtos_esp` (`idProduto_esp`, `idProduto_gen`, `codigoEsp`, `valo
 (5, 2, '002.01.01.01.01.004-0002', 450.77, 1, '2020-04-22', '0002', 'cadastro teste', 5, '2020-04-22 10:47:10'),
 (6, 2, '002.01.01.01.01.002-0003', 459.89, 1, '2020-04-22', '0003', 'cadastro teste', 2, '2020-04-22 10:49:38'),
 (7, 2, '002.01.01.01.01.002-0004', 345.76, 1, '2020-04-22', '0004', 'CADASTRO TESTE', 2, '2020-04-22 10:50:40'),
-(8, 1, '001.01.01.01.01.002-0004', 15477.2, 1, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
+(8, 1, '001.01.01.01.01.002-0004', 15477.2, 0, '2011-04-12', '0004', '', 2, '2020-04-22 11:47:06'),
 (10, 4, '005.02.01.02.xx.003-0001', 2520.02, 1, '2020-12-05', '0001', '', 4, '2020-05-23 22:02:04'),
 (12, 8, '001.03.01.02.01.002-0005', 9870.65, 1, '2020-09-10', '0005', '', 2, '2020-09-10 11:51:55'),
 (13, 8, '001.03.01.02.01.001-0006', 9000, 1, '2019-08-10', '0006', '', 1, '2020-09-10 12:02:15'),
 (14, 1, '001.01.01.01.01.002-0007', 5000, 1, '0000-00-00', '0007', '', 2, '2020-09-12 13:52:36'),
 (15, 5, '001.04.05.02.02.002-0008', 15000, 0, '2020-02-01', '0008', '', 2, '2020-09-21 19:30:52'),
-(16, 5, '001.04.05.02.02.002-0009', 15200, 1, '0000-00-00', '0009', '', 2, '2020-09-21 19:35:07');
+(16, 5, '001.04.05.02.02.002-0009', 15200, 1, '0000-00-00', '0009', '', 2, '2020-09-21 19:35:07'),
+(17, 65, '002.01.01.02.xx.001-0005', 456, 1, '2020-11-01', '0005', 'teste', 1, '2020-11-22 23:07:53'),
+(18, 68, '002.01.01.01.02.002-0006', 450, 0, '2020-11-16', '0006', 'teste', 2, '2020-11-22 23:22:18');
 
 -- --------------------------------------------------------
 
@@ -1382,7 +1394,14 @@ INSERT INTO `produtos_gen` (`idProduto_gen`, `codigoGen`, `descricao`, `idCatego
 (6, '004.05.xx.xx.xx', '3,00m a 5,10m', 4, 52, NULL, NULL, NULL, 250, '2020-04-22 15:07:22'),
 (7, '003.01.01.01.xx', 'Tubular Painel 1,00m', 3, 30, 33, 45, NULL, 200, '2020-04-22 15:17:37'),
 (8, '001.03.01.02.01', '6M almoxarifado sem lavabo DC', 1, 3, 5, 13, 14, 600, '2020-05-23 20:58:53'),
-(9, '001.03.03.xx.01', '6M sanitário DC', 1, 3, 7, NULL, 14, 600, '2020-05-23 21:03:20');
+(9, '001.03.03.xx.01', '6M sanitário DC', 1, 3, 7, NULL, 14, 600, '2020-05-23 21:03:20'),
+(10, '001.01.01.02.02', '3M almoxarifado sem lavabo HC', 1, 1, 5, 13, 15, 5000, '2020-11-22 21:31:57'),
+(21, '001.02.06.02.02', '4M lanchonete sem lavabo HC', 1, 2, 10, 13, 15, 1300, '2020-11-22 21:48:11'),
+(28, '005.02.01.01.xx', 'Janela 10.000 btu 110V', 5, 54, 55, 58, NULL, 578, '2020-11-22 22:11:10'),
+(63, '003.01.06.02.xx', 'Tubular Rodapé 1,50m', 3, 30, 38, 46, NULL, 4564, '2020-11-22 23:00:04'),
+(65, '002.01.01.02.xx', 'MARCA X MODELO X Combustão', 2, 16, 17, 19, NULL, 678, '2020-11-22 23:07:07'),
+(66, '003.01.02.01.xx', 'Tubular Trava diagonal 1,00m', 3, 30, 34, 45, NULL, 567, '2020-11-22 23:18:30'),
+(68, '002.01.01.01.02', 'MARCA X MODELO X Elétrica 220V', 2, 16, 17, 18, 22, 500, '2020-11-22 23:21:42');
 
 -- --------------------------------------------------------
 
@@ -1577,7 +1596,7 @@ INSERT INTO `usuarios` (`idUsuario`, `nomeCompleto`, `funcao`, `nomeUsuario`, `s
 (1, 'Elder Samuel', 'Programador', 'elder', '$2y$12$6UBTMz.ZC3ZEf8ytouE5ReApu0tjrDPOjmb7/vY5ooh0coVFXHMPS', 'eldersamuel98@gmail.com', 0, '/res/img/users/user-default.jpg', '2020-02-26 10:45:06'),
 (2, 'Administrador', 'Admin', 'admin', '$2y$12$Gn6FtBrS9EjKS8OFuhkjQOfgGfZTR2OJnToY8PC7y2fLoFGZU9g.i', 'eldersamuel98@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-02-29 22:45:00'),
 (3, 'Matheus Leite de Campos', 'Product Owner', 'matheus', '$2y$12$HgGxPtV/zZhse52m9Dc6HuE8bUiXeFWCW66AtdiUW2OB537qmhmrO', 'matheus@gmail.com', 1, '/res/img/users/user-default.jpg', '2020-03-05 17:22:07'),
-(5, 'teste 2 ', 'teste', 'teste2', '$2y$12$duHHwct9Cm8LJPo.gkHZt.xJzGIrKnfGUkcWTGepGG.xEnGP4ZK32', 'eldersamuel98@gmail.com', 0, '/res/img/users/user-default.jpg', '2020-11-22 20:46:22');
+(7, 'teste', 'teste', 'teste', '$2y$12$EEBilymLfWvZXlkIJU9AbuRzTk0RRRu8AgGFBCajpYCYVKI7B6kci', 'eldersamuel98@gmail.com', 0, '/res/img/users/user-default.jpg', '2020-11-22 23:05:24');
 
 --
 -- Índices para tabelas despejadas
@@ -1740,13 +1759,13 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de tabela `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `contrato_itens`
 --
 ALTER TABLE `contrato_itens`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -1758,19 +1777,19 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `faturas`
 --
 ALTER TABLE `faturas`
-  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_cobrancas`
 --
 ALTER TABLE `fatura_cobrancas`
-  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_itens`
 --
 ALTER TABLE `fatura_itens`
-  MODIFY `idItemFatura` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idItemFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT de tabela `fornecedores`
@@ -1782,13 +1801,13 @@ ALTER TABLE `fornecedores`
 -- AUTO_INCREMENT de tabela `fretes`
 --
 ALTER TABLE `fretes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `historicoalugueis`
 --
 ALTER TABLE `historicoalugueis`
-  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `idHistoricoAluguel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de tabela `obras`
@@ -1800,13 +1819,13 @@ ALTER TABLE `obras`
 -- AUTO_INCREMENT de tabela `produtos_esp`
 --
 ALTER TABLE `produtos_esp`
-  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idProduto_esp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `produtos_gen`
 --
 ALTER TABLE `produtos_gen`
-  MODIFY `idProduto_gen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idProduto_gen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de tabela `prod_categorias`
@@ -1836,7 +1855,7 @@ ALTER TABLE `resp_obras`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restrições para despejos de tabelas
