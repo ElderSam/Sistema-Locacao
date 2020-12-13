@@ -18,9 +18,10 @@ $(function() {
 	});
 });
 
-function loadTableItens(itens) { //carrega a tabela de Itens de fatura
+function loadTableItens(itens=[]) { //carrega a tabela de Itens de fatura
 
 	console.log('loading Table fatura_itens')
+	//console.log(itens)
 	
 	if(myTable != null){
 		myTable.destroy(); //desfaz as paginações
@@ -38,22 +39,20 @@ function loadTableItens(itens) { //carrega a tabela de Itens de fatura
         }*/
 
         const data = () => {			
-            rows = [];
+			let rows = [];
+			
+			rows = itens.map((item) => {
 
-            itens.forEach(el => {
-                element = JSON.parse(el)
-                //console.log(element)
-                rows.push(loadRowItem(element))					
-                
-                /*let fretes = loadRowsFrete(element)
-                rows.push(fretes[0]) //entrega
-                rows.push(fretes[1]) //retirada*/
-            });
+				if((typeof(item) == 'string'))
+					item = JSON.parse(item);
+
+				return loadRowItem(item)
+			})
+
             //atualizaValorTotal(); //valor total do orçamento/contrato
             console.log(rows)
             return rows;
-        }
-        
+		}    
 
 		myTable = $("#dataTable").DataTable({ 
             //retrieve: true,
@@ -289,14 +288,28 @@ function sendFormItem(formData) {
 					msg2,
 					'success'
 				);
-
-				loadTableItens();
+				
 				$('#formItem').trigger("reset");
+
+				loadTableFromAPI(idFatura)				
 			}
 		},
 		error: function (response) {
 			console.log(`Erro! Mensagem: ${response}`);
 		}
+	});
+}
+
+function loadTableFromAPI(idInvoice) {
+	$.getJSON(`/invoice_itens/json/invoice/${idInvoice}`, function (data) { //ajax
+		console.log(data)
+	}).then((data) => {
+		//typeForm = ''
+		loadTableItens(data);
+		$('#dataTable button').prop('hidden', false)
+
+	}).fail(function () {
+		console.log(`Rota não encontrada! (/invoice_itens/json/invoice/${idInvoice})`);
 	});
 }
 

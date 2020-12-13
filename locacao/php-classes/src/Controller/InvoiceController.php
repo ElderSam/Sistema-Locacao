@@ -6,6 +6,7 @@ use \Locacao\Model\User;
 use \Locacao\Generator;
 use \Locacao\Model\Invoice;
 use \Locacao\Controller\InvoiceItemController;
+use \Locacao\Model\InvoiceItem;
 
 use Exception;
 use stdClass;
@@ -23,10 +24,20 @@ class InvoiceController extends Generator //controller de Fatura
         $this->fatura = new Invoice(); //model
     }
 
+    public function getInvoice($id) {
+
+        $itemController = new InvoiceItem();
+
+        return json_encode([
+            'fatura'=>$this->fatura->loadInvoice($id),
+            'fatura_itens'=>$itemController->getInvoiceItens($id)
+        ]);
+    }
+
     public function save($update = false) //salva (insere/atualiza) uma Fatura
     {
         User::verifyLogin();
-        
+
         $error = $this->verifyFields($update); //verifica os campos do formulário   
         $aux = json_decode($error);
 
@@ -279,7 +290,7 @@ class InvoiceController extends Generator //controller de Fatura
             "dtEmissao"=>$dtEmissao->format('Y-m-d'),
             "dtInicio"=>$dtInicio->format('Y-m-d'),
             "dtFim"=>$dtFim->format('Y-m-d'),
-            "dtVenc"=>$dtVenc
+            "dtVencimento"=>$dtVenc
         ];
 
         /* VERIFICAR O QUE ESTÁ ATRASADO PARA FATURAR E PEGAR A LISTA

@@ -43,7 +43,6 @@ class Invoice extends Generator { //classe de Fatura
             :emailEnvio,
             :dtEnvio,
             :adicional,
-            :valorTotal,
             :observacoes,
 
             :formaPagamento,
@@ -69,7 +68,6 @@ class Invoice extends Generator { //classe de Fatura
             ':emailEnvio'=>$this->getemailEnvio(),
             ':dtEnvio'=>$this->getdtEnvio(),
             ':adicional'=>$this->getadicional(),
-            ':valorTotal'=>$this->getvalorTotal(),
             ':observacoes'=>$this->getobservacoes(),
 
             //':idFatura'=>$this->getidFatura(),
@@ -113,7 +111,6 @@ class Invoice extends Generator { //classe de Fatura
             emailEnvio,
             dtEnvio,
             adicional,
-            valorTotal,
             observacoes,
             
             formaPagamento,
@@ -139,7 +136,6 @@ class Invoice extends Generator { //classe de Fatura
             ':emailEnvio'=>$this->getemailEnvio(),
             ':dtEnvio'=>$this->getdtEnvio(),
             ':adicional'=>$this->getadicional(),
-            ':valorTotal'=>$this->getvalorTotal(),
             ':observacoes'=>$this->getobservacoes(),
 
             //':idCobranca'=>$this->getidCobranca(),
@@ -339,7 +335,7 @@ class Invoice extends Generator { //classe de Fatura
 
         $query = "SELECT * FROM faturas a
         INNER JOIN fatura_cobrancas b ON(b.idFatura = a.idFatura)
-        WHERE idFatura = :id";
+        WHERE a.idFatura = :id";
 
         $rent = $sql->select($query, array(
             ":id"=>$id

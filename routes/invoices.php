@@ -32,6 +32,11 @@ $app->get('/invoices/json/pending', function(){
     echo $faturaController->getFaturasParaFazer();
 });
 
+$app->get('/invoices/json/:idInvoice', function($idInvoice) {
+    $fatura = new InvoiceController();
+    echo $fatura->getInvoice($idInvoice);
+});
+
 $app->post('/invoices/list_datatables', function(){ //ajax list datatables
 
 	User::verifyLogin();
@@ -47,7 +52,8 @@ $app->post('/invoices/list_datatables', function(){ //ajax list datatables
 $app->get('/invoices/contract/:idContract/createForm', function($idContract){   
 
     getPage('fatura_salvar', array(
-        'idContrato'=>$idContract
+        'idContrato'=>$idContract,
+        'idFatura'=>''
     ));
 });
 
@@ -56,6 +62,15 @@ $app->get('/invoices/contract/:idContract/create', function($idContract){
     //echo "gerar fatura<br> idContract: $idContract <br>";
     $faturaController = new InvoiceController();
     echo $faturaController->getDataToFormFatura($idContract);
+});
+
+/* rota para ver/atualizar dados da fatura -------------------------- */
+$app->get("/invoices/:idInvoice", function($idInvoice) { //update
+
+    getPage('fatura_salvar', array(
+        'idFatura'=>$idInvoice,
+        'idContrato'=>''
+    ));
 });
 
 /* rota para criar uma nova fatura --------------------------*/

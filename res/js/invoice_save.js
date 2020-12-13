@@ -1,6 +1,5 @@
 /* Formulário de Fatura */
 
-
 let idContract;
 let fatura;
 let fatura_itens;
@@ -8,14 +7,17 @@ let fatura_itens;
 let idFatura = $("#idFatura").val();
 let typeForm = '';
 
+let keys;
+
 $(function() { 
+	idContract = $('#idContrato').val();
+	
+	if(idFatura == '') { //se for cadastrar nova fatura
+		loadData(false, idContract);
 
-	loadTableItens();
-
-    idContract = $('#idContrato').val();
-	loadData(idContract);
-
-	//loadTableItens() //carrega a tabela de itens de fatura
+	} else { //se for editar fatura
+		loadData(idFatura, false);
+	}
 
 	/* Cadastrar ou Editar Fatura --------------------------------------------------------------*/
 	$("#btnSaveInvoice").click(function (e) { //para enviar o formulário de Fatura
@@ -27,7 +29,6 @@ $(function() {
 		*/
 
 		$('#numFatura').prop('disabled', false);
-		$('#valorTotal').prop('disabled', false);
 
 		let form = $('#formInvoice');
 		let formData = new FormData(form[0]);
@@ -39,7 +40,6 @@ $(function() {
 		sendForm(formData)
 
 		$('#numFatura').prop('disabled', true);
-		$('#valorTotal').prop('disabled', true);
 
 		return false;
 	});
@@ -49,9 +49,11 @@ $(function() {
 	});*/
 }); 
 
-function loadData(idContract) {
+function loadData(idFatura, idContract) {
+	loadTableItens(); //carrega a tabela de itens de fatura
 
-	if((idFatura == '') || (idFatura == undefined)) { //se vai cadastrar uma nova fatura --------------------------------------------------
+	if(!idFatura) { //se vai cadastrar uma nova fatura --------------------------------------------------
+
 		$('#btnSaveContract').show();
 		$('#btnUpdate').hide();
 
@@ -59,13 +61,12 @@ function loadData(idContract) {
 
 		loadDataNewInvoice(idContract)
 
-	}/*else { // se for para Editar -------------------------------------------------- 
+	}else { // se for para Editar -------------------------------------------------- 
 		$('#btnSaveContract').hide();
 		$('#btnUpdate').show();
 
 		loadInvoice(idFatura)
-	}*/
-	
+	}
 }
 
 function loadDataNewInvoice(idContract){ //carrega dados no formulário para a nova fatura
@@ -77,30 +78,141 @@ function loadDataNewInvoice(idContract){ //carrega dados no formulário para a n
 	});
     console.log(`idContract=${idContract}`)
 
-    $("#formInvoice #numeroFatura").prop('disabled', true );
-    $("#formInvoice #valorTotal").prop('disabled', true );
+    $("#formInvoice #numFatura").prop('disabled', true );
 }
 
-function loadFormInvoice(idFatura, dataNewInvoice=false) {
-    fatura = dataNewInvoice.fatura;
-    fatura_itens = dataNewInvoice.fatura_itens;
+//carrega detalhes de uma Fatura existente
+async function loadInvoice(idFatura) {
+    $('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
 
-    if(!idFatura) { //carrega campos para cadastrar nova fatura
+    if(idFatura > 0){ //se for para ver uma fatura existente
+		
+		// console.log(`idFatura: ${idFatura}`)
+		typeForm = 'view';
 
-        $('#formInvoice #dtInicio').val(fatura.dtInicio);
-        $('#formInvoice #dtFim').val(fatura.dtFim);
-        $('#dtEmissao').val(fatura.dtEmissao);
-        $('#dtVencimento').val(fatura.dtVenc);
+		$("#idFatura").val(idFatura)
+		$('#divListItens').attr('hidden', false); //mostra a parte da lista de produtos para adicionar
 
-    }else{ //carrega campos de uma fatura existente
-        
-    }
+		$('#btnCart').hide();
+
+		$('#btnDeleteInvoice').show();
+		$('#btnShowPDF').show();
+		//$('#btnEmail').show();
+	}
+	//console.log(`function loadInvoice(${idFatura})`)
+	
+	//clearFieldsValues();
+	clearErrors();
+
+	$('#title').html('Detalhes de Fatura')
+	$('#btnClose').val('Fechar').removeClass('btn-danger').addClass('btn-primary')
+	$('#btnSaveInvoice').hide();
+	$('#btnUpdate').show();
+
+	$.getJSON(`/invoices/json/${idFatura}`, function (data) { //requisição
+		console.log(data)
+
+		fatura = JSON.parse(data.fatura)
+		$("#idFatura").val(fatura.idFatura);
+		$("#formInvoice #dtEmissao").val(fatura.dtEmissao).prop('disabled', true);
+		//...
+
+	}).then((data) => {
+		//$("#InvoiceModal").modal();
+
+		loadFormInvoice(idFatura, data);
+
+		/* Atualizar formInvoice ------------------------------------------------------------------ */
+		$('#btnUpdate').click(function () { //se eu quiser atualizar o Contrato atual
+
+			//typeForm = 'save';
+			$('#dataTable button').prop('hidden', false)
+			$('#title').html('Editar Fatura');
+			$('#btnClose').html('Cancelar').removeClass('btn-primary').addClass('btn-danger');
+			$('#btnSaveInvoice').val('Atualizar').show();
+			$('#btnUpdate').hide();
+
+			setDisabledFields(false);
+		});
+	});	
+}
+
+
+function setDisabledFields(value) {
+
+	keys.forEach((field) => {
+		if(field != 'numFatura')
+			$(`#formInvoice #${field}`).prop('disabled', value);
+	});	
+}
+
+
+function loadFormInvoice(idFatura, data=false) {
+
+	fatura = data.fatura;
+	if(typeof(fatura) == 'string')
+		fatura = JSON.parse(fatura)
+
+	fatura_itens = data.fatura_itens;
+
+	keys = [
+		'dtInicio',
+		'dtFim',
+		'dtEmissao',
+		'dtVencimento'
+	];
+
+	if(idFatura) { //carrega campos de uma fatura existente
+
+		fatura_itens = JSON.parse(fatura_itens)
+		
+		keys2 = [
+			'adicional',
+			'dtCadastro',
+			'dtCobranca',
+			'dtEnvio',
+			'dtPagamento',
+			'dtVerificacao',
+			'emailEnvio',
+			'enviarPorEmail',
+			'especCobranca',
+			'formaPagamento',
+			'idContrato',
+			'idFatura',
+			'numBoletoBanco',
+			'numBoletoInt',
+			'numFatura',
+			'numNF',
+			'observacoes',
+			'statusPagamento',
+			'valorPago'
+		];
+
+		keys = keys.concat(keys2);
+	}
+	
+	setValuesToForm(fatura, keys);
+	setDisabledFields(true);
+
+	if(idFatura)
+		loadTableItens(fatura_itens) //carrega a tabela de itens de fatura
+}
+
+function setValuesToForm(fatura, keys) {
+	keys.forEach(function(field) {
+		if(field != undefined) {
+			//console.log(field, fatura[field])
+			$(`#formInvoice #${field}`).val(fatura[field]);
+		}
+		
+		
+	});
 }
 
 function sendForm(formData) {
 	console.log('sendForm')
 
-	if((idFatura == 0) || (idFatura == undefined)) {
+	if((idFatura == 0) || (idFatura == '')) {
 		route = 'create';
 		msg1 = 'cadastrar';
 		msg2 = 'Fatura cadastrada!';
@@ -150,7 +262,10 @@ function sendForm(formData) {
 				}
 
 			} else {
-				let fatura = JSON.parse(response.fatura);
+
+				let fatura = response.fatura;
+				if(typeof(fatura == 'string'))
+					fatura = JSON.parse(fatura)
 				
 				if(route == 'create') {
 					idFatura = fatura.idFatura;

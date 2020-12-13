@@ -29,7 +29,7 @@ function loadTableFaturasParaFazer() {
 
                     row['codContrato'] = `<a href='/contracts/${item.idContrato}' target='_blank'>${item.codContrato}</a>`
                     row['dtEmissao'] = `<b>${formatDateToShow(item.dtEmissao)}</b>`
-                    row['dtVenc'] = formatDateToShow(item.dtVenc)
+                    row['dtVenc'] = formatDateToShow(item.dtVencimento)
                     row['dtInicio'] = formatDateToShow(item.dtInicio)
                     row['dtFim'] = formatDateToShow(item.dtFim)
                     

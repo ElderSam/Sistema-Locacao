@@ -74,7 +74,7 @@ class InvoiceItem extends Generator{
         $sql = new Sql();
         $results = $sql->select($query);
         return $results;
-    }   
+    }
 
     public function update(){
         
@@ -139,15 +139,18 @@ class InvoiceItem extends Generator{
         }
     }
 
-    public function getInvoiceItens($idItem = false) {
+    public function getInvoiceItens($idInvoice=false, $idItem=false) {
         
         $query = "SELECT a.*, c.codigoEsp, d.descricao, e.descCategoria FROM `fatura_itens` a
         INNER JOIN `historicoalugueis` b ON (a.idAluguel = b.idHistoricoAluguel)
         INNER JOIN `produtos_esp` c ON (b.produto_idProduto = c.idProduto_esp)
         INNER JOIN `produtos_gen` d ON (c.idProduto_gen = d.idProduto_gen)
-        INNER JOIN `prod_categorias` e ON (d.idCategoria = e.idCategoria)";
+        INNER JOIN `prod_categorias` e ON (d.idCategoria = e.idCategoria) ";
 
-        if($idItem) {
+        if($idInvoice) {
+            $query .= "WHERE (a.idFatura = $idInvoice)";
+
+        }else {
             $query .= "WHERE (a.idItemFatura = $idItem)";
         }
         //echo "query: $query";

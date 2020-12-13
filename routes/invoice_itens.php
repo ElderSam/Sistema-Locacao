@@ -38,15 +38,15 @@ $app->get("/invoice_itens/json/:idItem", function($idItem){
 
 	$invoiceItem = new InvoiceItem();
 	//$invoiceItem->get((int)$idItem);
-	echo $invoiceItem->getInvoiceItens((int)$idItem);
+	echo $invoiceItem->getInvoiceItens(false, (int)$idItem);
 });
 
 /* rota para mostrar dados de uma fatura pelo id */
 $app->get("/invoice_itens/json/invoice/:idInvoice", function($idInvoice){
-	
+
     User::verifyLogin();
 
-    $invoiceItem = new InvoiceItemController();
+    $invoiceItem = new InvoiceItem();
 	echo $invoiceItem->getInvoiceItens((int)$idInvoice);
 });
 
