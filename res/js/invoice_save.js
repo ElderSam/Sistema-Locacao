@@ -13,6 +13,7 @@ $(function() {
 	idContract = $('#idContrato').val();
 	
 	if(idFatura == '') { //se for cadastrar nova fatura
+		$('#btnDeleteInvoice').hide();
 		loadData(false, idContract);
 
 	} else { //se for editar fatura
@@ -54,7 +55,7 @@ function loadData(idFatura, idContract) {
 
 	if(!idFatura) { //se vai cadastrar uma nova fatura --------------------------------------------------
 
-		$('#btnSaveContract').show();
+		$('#btnSaveInvoice').show();
 		$('#btnUpdate').hide();
 
 		$('#divListItens').attr('hidden', true); //esconde a parte da lista de produtos para adicionar
@@ -62,7 +63,7 @@ function loadData(idFatura, idContract) {
 		loadDataNewInvoice(idContract)
 
 	}else { // se for para Editar -------------------------------------------------- 
-		$('#btnSaveContract').hide();
+		$('#btnSaveInvoice').hide();
 		$('#btnUpdate').show();
 
 		loadInvoice(idFatura)
@@ -114,7 +115,7 @@ async function loadInvoice(idFatura) {
 
 		fatura = JSON.parse(data.fatura)
 		$("#idFatura").val(fatura.idFatura);
-		$("#formInvoice #dtEmissao").val(fatura.dtEmissao).prop('disabled', true);
+		//$("#formInvoice #dtEmissao").val(fatura.dtEmissao).prop('disabled', true);
 		//...
 
 	}).then((data) => {
@@ -192,10 +193,12 @@ function loadFormInvoice(idFatura, data=false) {
 	}
 	
 	setValuesToForm(fatura, keys);
-	setDisabledFields(true);
 
-	if(idFatura)
+	if(idFatura) {
+		setDisabledFields(true);
 		loadTableItens(fatura_itens) //carrega a tabela de itens de fatura
+	}
+		
 }
 
 function setValuesToForm(fatura, keys) {
@@ -203,9 +206,7 @@ function setValuesToForm(fatura, keys) {
 		if(field != undefined) {
 			//console.log(field, fatura[field])
 			$(`#formInvoice #${field}`).val(fatura[field]);
-		}
-		
-		
+		}		
 	});
 }
 
@@ -277,6 +278,13 @@ function sendForm(formData) {
 					$('#divListItens').attr('hidden', false);
 					loadTableItens(response.fatura_itens);
 
+					$('#btnDeleteInvoice').show();
+
+					$('#dataTable button').prop('hidden', false)
+					$('#title').html('Editar Fatura');
+					$('#btnClose').html('Voltar').removeClass('btn-primary').addClass('btn-danger');
+					$('#btnSaveInvoice').val('Atualizar').show();
+					$('#btnUpdate').hide();
 				}
 
 				Swal.fire(
@@ -293,4 +301,77 @@ function sendForm(formData) {
 		}
 	});
 
+}
+
+function deleteInvoice() {
+	idFatura = $('#idFatura').val();
+	numFatura = $("#numFatura").val();
+
+	if(idFatura == ''){ //se a fatura acabou de ser cadastrada
+		console.log('idFatura == 0')	
+	}
+
+	Swal.fire({
+		title: `Você tem certeza de excluir a fatura nº ${numFatura}?`,
+		text: "Você não será capaz de reverter isso! OBS: Todos os itens da fatura também serão excluídos",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
+		confirmButtonText: 'Sim, apagar!'
+
+	}).then((result) => {
+
+		if (result.value) {
+
+			$.ajax({
+				type: "POST",
+				url: `/invoices/${idFatura}/delete`,
+				beforeSend: function () {
+
+					$('.swal2-content').hide()
+					$('.swal2-actions').hide()
+					$('.swal2-title').html(`<div class="help-block">${loadingImg("Verificando...")}</div>`);
+
+				},
+				success: function (response) {
+
+					if (JSON.parse(response).error) {
+						console.log('erro ao excluir!')
+						response = JSON.parse(response)
+
+						Swal.fire(
+							'Erro!',
+							'Não foi possível excluir',
+							'error'
+						)
+
+					} else {
+
+						Swal.fire(
+							'Excluído!',
+							'Fatura apagada!',
+							'success'
+						)
+
+						console.log(`fatura ${idFatura} deletada`)
+						window.location.assign("/invoices"); //vai para a página de orçamentos
+
+						//loadTableInoices();
+					}
+				},
+				error: function (response) {
+					Swal.fire(
+						'Erro!',
+						'Não foi possível excluir a fatura',
+						'error'
+					)
+					console.log(`Erro! Mensagem: ${response}`);
+				}
+			});
+
+		}
+	})
+
+	$('.swal2-cancel').html('Cancelar');
 }

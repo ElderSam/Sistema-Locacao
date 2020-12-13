@@ -48,6 +48,15 @@ $app->post('/invoices/list_datatables', function(){ //ajax list datatables
 	echo $invoices->ajax_list_invoices($requestData);
 });
 
+/* rota para deletar fatura --------------------------*/
+$app->post("/invoices/:idInvoice/delete", function($idInvoice){
+    
+    User::verifyLogin();
+
+    $contract = new Invoice();
+	echo $contract->delete();
+});
+
 /* entrar na página que tem o formulário para salvar fatura */
 $app->get('/invoices/contract/:idContract/createForm', function($idContract){   
 
