@@ -320,10 +320,20 @@ class Invoice extends Generator { //classe de Fatura
         
         $freights = new Freight();
         //echo $query;
-        
+        $data = $freights->searchAll($query);
+
+        $totalFiltered = $this->getTotalFiltered();
+
+        if(count($data) == 1) {
+            if($data[0]['idFatura'] == NULL) {
+                $data = [];
+                $totalFiltered = 0;
+            }
+        }
+
         return array(
-            'totalFiltered'=>$this->getTotalFiltered(),
-            'data'=>$freights->searchAll($query)
+            'totalFiltered'=>$totalFiltered,
+            'data'=>$data
         );
 
     } // fim do método get_datatable()
