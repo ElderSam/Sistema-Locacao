@@ -266,7 +266,7 @@ function sendForm(formData) {
 
 				let fatura = response.fatura;
 				if(typeof(fatura == 'string'))
-					fatura = JSON.parse(fatura)
+					//fatura = JSON.parse(fatura)
 				
 				if(route == 'create') {
 					idFatura = fatura.idFatura;

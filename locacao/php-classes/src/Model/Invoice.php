@@ -100,30 +100,31 @@ class Invoice extends Generator { //classe de Fatura
     public function update()
     {      
         $sql = new Sql();
+
         $update = $sql->select("CALL sp_faturasUpdate_save(
-            idFatura,
-            idContrato,
-            numFatura,
-            dtEmissao,
-            dtInicio,
-            dtFim,
-            enviarPorEmail,
-            emailEnvio,
-            dtEnvio,
-            adicional,
-            observacoes,
+            :idFatura,
+            :idContrato,
+            :numFatura,
+            :dtEmissao,
+            :dtInicio,
+            :dtFim,
+            :enviarPorEmail,
+            :emailEnvio,
+            :dtEnvio,
+            :adicional,
+            :observacoes,
             
-            formaPagamento,
-            dtVencimento,
-            especCobranca,       
-            dtCobranca,
-            statusPagamento,     
-            numNF,
-            numBoletoInt,
-            numBoletoBanco,
-            valorPago,
-            dtPagamento,
-            dtVerificacao
+            :formaPagamento,
+            :dtVencimento,
+            :especCobranca,       
+            :dtCobranca,
+            :statusPagamento,     
+            :numNF,
+            :numBoletoInt,
+            :numBoletoBanco,
+            :valorPago,
+            :dtPagamento,
+            :dtVerificacao
             )", array(
 
             ':idFatura'=>$this->getidFatura(),
