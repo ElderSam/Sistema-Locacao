@@ -139,6 +139,24 @@ class InvoiceItem extends Generator{
         }
     }
 
+    public function getValuesToInvoicePDF($idFatura){
+        
+        $sql = new Sql();
+
+        $query = "";
+        /*$query = "SELECT a.*, b.descricao, c.descCategoria FROM fatura_itens a
+            INNER JOIN produtos_gen b ON (a.idProduto_gen = b.idProduto_gen)
+            INNER JOIN prod_categorias c ON (b.idCategoria = c.idCategoria)
+            WHERE (a.idFatura = :idOrcamento)
+            ORDER BY a.idItem ASC";*/
+
+        $listItems = $sql->select($query, array(
+            ':idFatura'=>$idFatura
+        ));
+        
+        return $listItems; //array
+    }
+
     public function getInvoiceItens($idInvoice=false, $idItem=false) {
         
         $query = "SELECT a.*, c.codigoEsp, d.descricao, e.descCategoria FROM `fatura_itens` a

@@ -97,3 +97,12 @@ $app->post("/invoices/:idInvoice", function($idInvoice) { //update
     echo $invoice->save($update);
 });
 
+$app->get("/invoices/:id/pdf/show", function($id){ //o destino pode ser a visualização do PDF (/show) ou enviar por e-mail (/sendEmail)
+	
+	User::verifyLogin();
+
+	$invoiceController = new InvoiceController();
+	echo $invoiceController->getPDF($id, 'show');
+
+});
+

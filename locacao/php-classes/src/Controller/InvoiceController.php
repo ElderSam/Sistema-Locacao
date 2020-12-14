@@ -7,6 +7,10 @@ use \Locacao\Generator;
 use \Locacao\Model\Invoice;
 use \Locacao\Controller\InvoiceItemController;
 use \Locacao\Model\InvoiceItem;
+use \Locacao\Model\Contract;
+
+use Locacao\Utils\myPDF;
+use Locacao\Utils\PDFs\InvoicePDF;
 
 use Exception;
 use stdClass;
@@ -532,6 +536,50 @@ class InvoiceController extends Generator //controller de Fatura
                 'msg'=>"CONTRATO SEM ALUGUEL INICIADO",
             ]);
         }
+    }
+
+    public function getPDF($id, $destiny){
+
+        $invoice = new Invoice();
+
+        $fatura = $invoice->getValuesToInvoicePDF($id);
+
+        $contract = new Contract();
+        $empresa = $contract->getValuesToCompanyPDF();
+        //$empresa = $invoice->getValuesToCompanyPDF();
+        
+        $itens = new InvoiceItemController();
+
+        $listItens = $itens->getValuesToInvoicePDF($id);
+
+        $invoicePDF = new InvoicePDF($fatura, $listItens, $empresa);
+
+        $res = $invoicePDF->show();
+
+        $pdf = new myPDF();
+
+        $file_name = str_replace('/', '-', $res[0]);
+
+        $pdf->createPDF($file_name. ".pdf", $res[1]);
+       
+        if($destiny == "sendEmail"){
+            //print_r($_POST);
+
+            //valida os campos
+            $error = $this->verifyFieldsEmail(); //verifica os campos do formulário de email
+            $aux = json_decode($error);
+    
+            if ($aux->error) {
+                return $error;
+            }
+            
+            //se estiver tudo ok, então envia o e-mail
+            return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
+
+        }else{
+            $pdf->display();
+        }
+        
     }
 
 }

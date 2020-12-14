@@ -89,6 +89,24 @@ class InvoiceItemController extends Generator
         return $invoiceItem->delete();      
     }
 
+    public function getValuesToInvoicePDF($idInvoice){
+
+        $items = new InvoiceItem();
+        $listItems = $items->getValuesToInvoicePDF($idInvoice);
+
+        for($i=0; $i<count($listItems); $i++){
+            //print_r($item);
+
+            $periodo = $listItems[$i]['periodoLocacao'];
+            $arrayPeriodos = array("diário", "semanal", "quinzenal", "mensal");
+
+            $listItems[$i]['periodoLocacao'] = $arrayPeriodos[$periodo -1]; //pega a string no array referente ao número 
+            //echo "<br>periodoLocacao: $periodo => " . $listItems[$i]['periodoLocacao'];   
+        }
+
+        return json_encode($listItems);
+    }
+
     /* -------------------------------------------------------------------------------------------------------------------------- */
     function getItemFatura($fatura, $aluguel) {
        
