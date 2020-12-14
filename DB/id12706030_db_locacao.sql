@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Dez-2020 às 14:07
+-- Tempo de geração: 14-Dez-2020 às 19:52
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.5
 
@@ -201,7 +201,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contrato_itens_save` (IN `pidCon
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `idFatura` INT(11), IN `idContrato` INT(11), IN `numFatura` VARCHAR(11), IN `dtEmissao` DATE, IN `dtInicio` DATE, IN `dtFim` DATE, IN `enviarPorEmail` TINYINT(1), IN `emailEnvio` VARCHAR(40), IN `dtEnvio` DATE, IN `adicional` FLOAT, IN `observacoes` VARCHAR(100), IN `formaPagamento` INT(1), IN `dtVencimento` DATE, IN `especCobranca` VARCHAR(60), IN `dtCobranca` DATE, IN `statusPagamento` INT(1), IN `numNF` INT(11), IN `numBoletoInt` INT(11), IN `numBoletoBanco` INT(11), IN `valorPago` FLOAT, IN `dtPagamento` DATE, IN `dtVerificacao` DATE)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturasUpdate_save` (IN `pidFatura` INT(11), IN `pidContrato` INT(11), IN `pnumFatura` VARCHAR(11), IN `pdtEmissao` DATE, IN `pdtInicio` DATE, IN `pdtFim` DATE, IN `penviarPorEmail` TINYINT(1), IN `pemailEnvio` VARCHAR(40), IN `pdtEnvio` DATE, IN `padicional` FLOAT, IN `pobservacoes` VARCHAR(100), IN `pformaPagamento` INT(1), IN `pdtVencimento` DATE, IN `pespecCobranca` VARCHAR(60), IN `pdtCobranca` DATE, IN `pstatusPagamento` INT(1), IN `pnumNF` INT(11), IN `pnumBoletoInt` INT(11), IN `pnumBoletoBanco` INT(11), IN `pvalorPago` FLOAT, IN `pdtPagamento` DATE, IN `pdtVerificacao` DATE)  BEGIN
   
     DECLARE vidFatura INT;
 
@@ -257,8 +257,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_faturas_delete` (IN `pidFatura` 
     FROM faturas
     WHERE idFatura = pidFatura;
     
-    DELETE FROM faturas WHERE idFatura = pidFatura;
+    DELETE FROM fatura_itens WHERE idFatura = pidFatura;
     DELETE FROM fatura_cobrancas WHERE idFatura = pidFatura;
+    DELETE FROM faturas WHERE idFatura = pidFatura;
     
 END$$
 
@@ -1130,7 +1131,7 @@ CREATE TABLE `faturas` (
 --
 
 INSERT INTO `faturas` (`idFatura`, `idContrato`, `numFatura`, `dtEmissao`, `dtInicio`, `dtFim`, `enviarPorEmail`, `emailEnvio`, `dtEnvio`, `adicional`, `observacoes`, `dtCadastro`) VALUES
-(83, 6, '1-2020', '2020-11-28', '2020-09-07', '2020-12-07', 0, '', '2020-12-31', '0', NULL, '2020-12-10 22:13:39');
+(87, 6, '1-2020', '2020-11-28', '2020-09-07', '2020-12-07', 0, '', '2020-12-31', '0', NULL, '2020-12-14 18:43:16');
 
 -- --------------------------------------------------------
 
@@ -1160,7 +1161,7 @@ CREATE TABLE `fatura_cobrancas` (
 --
 
 INSERT INTO `fatura_cobrancas` (`idCobranca`, `idFatura`, `formaPagamento`, `dtVencimento`, `especCobranca`, `dtCobranca`, `statusPagamento`, `numNF`, `numBoletoInt`, `numBoletoBanco`, `valorPago`, `dtPagamento`, `dtVerificacao`, `dtCadastro`) VALUES
-(83, 83, 1, '2020-12-08', '', '0000-00-00', 0, NULL, NULL, NULL, NULL, '0000-00-00', '0000-00-00', '2020-12-10 22:13:39');
+(87, 87, 2, '2020-12-08', '', '0000-00-00', 0, 0, 0, 0, 0, '0000-00-00', '0000-00-00', '2020-12-14 18:43:16');
 
 -- --------------------------------------------------------
 
@@ -1186,10 +1187,10 @@ CREATE TABLE `fatura_itens` (
 --
 
 INSERT INTO `fatura_itens` (`idItemFatura`, `idFatura`, `idAluguel`, `periodoLocacao`, `vlAluguelCobrado`, `custoEntrega`, `custoRetirada`, `dtInicio`, `dtFim`, `dtCadastro`) VALUES
-(117, 83, 7, 4, '160.00', 200, 0, '2020-09-07', '2020-09-15', '2020-12-10 22:13:39'),
-(118, 83, 13, 4, '450.00', 190, 0, '2020-09-20', '2020-10-20', '2020-12-10 22:13:39'),
-(119, 83, 16, 4, '31455.67', 215, 0, '2020-10-05', '2020-12-05', '2020-12-10 22:13:39'),
-(120, 83, 15, 4, '19595.33', 215, 0, '2020-10-18', '2020-11-25', '2020-12-10 22:13:39');
+(124, 87, 7, 4, '160.00', 200, 0, '2020-09-07', '2020-09-15', '2020-12-14 18:43:16'),
+(125, 87, 13, 4, '450.00', 190, 0, '2020-09-20', '2020-10-20', '2020-12-14 18:43:16'),
+(126, 87, 16, 4, '31455.67', 215, 0, '2020-10-05', '2020-12-05', '2020-12-14 18:43:16'),
+(127, 87, 15, 4, '19595.33', 215, 0, '2020-10-18', '2020-11-25', '2020-12-14 18:43:16');
 
 -- --------------------------------------------------------
 
@@ -1288,7 +1289,7 @@ INSERT INTO `historicoalugueis` (`idHistoricoAluguel`, `codigo`, `contrato_idCon
 (16, '6', 6, 15, 1, 15470, '2020-10-05', '2020-12-05', 215, 215, '', '2020-10-05 20:22:21'),
 (18, '7', 2, 1, 1, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44'),
 (19, '8', 2, 3, 0, 450, '2020-10-25', '0000-00-00', 190, 190, '', '2020-10-25 00:03:44'),
-(20, '9', 11, 8, 1, 450, '2020-11-23', '0000-00-00', 334, 50, 'teste', '2020-11-22 23:14:01'),
+(20, '9', 11, 8, 1, 450, '2020-11-23', '2020-12-15', 334, 50, 'teste', '2020-11-22 23:14:01'),
 (21, '10', 12, 18, 1, 500, '2020-11-23', '0000-00-00', 50, 50, '', '2020-11-22 23:25:21');
 
 -- --------------------------------------------------------
@@ -1777,19 +1778,19 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `faturas`
 --
 ALTER TABLE `faturas`
-  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `idFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_cobrancas`
 --
 ALTER TABLE `fatura_cobrancas`
-  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `idCobranca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT de tabela `fatura_itens`
 --
 ALTER TABLE `fatura_itens`
-  MODIFY `idItemFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `idItemFatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- AUTO_INCREMENT de tabela `fornecedores`
