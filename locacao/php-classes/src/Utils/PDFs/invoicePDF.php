@@ -22,17 +22,17 @@ class InvoicePDF
 
     public function setInvoiceValues($invoice, $empresa){ //Informações da Fatura, para o cabeçalho do documento PDF
 
-        $this->numFatura = $invoice->numFatura;
+        $this->numFatura = ""; // $invoice->numFatura
         $this->nomeEmpresa = $empresa->nome;
         //$this->cpfCnpjEmpresa = $empresa->cpf == "" ? $empresa->cnpj : $empresa->cpf;
         
        
-        $this->title = "FATURA - Nº $this->numFatura - $this->nomeCliente";
+        // $this->title = "FATURA - Nº $this->numFatura - $this->nomeCliente";
 
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese'); //para a data ficar em Português
         //date_default_timezone_set('America/Sao_Paulo');
         //$data = strftime('%d/%m/%Y', strtotime($budget->dtEmissao));
-        $this->dtEmissao = utf8_encode(strftime('%d de %B de %Y', strtotime($invoice->dtEmissao)));
+        // $this->dtEmissao = utf8_encode(strftime('%d de %B de %Y', strtotime($invoice->dtEmissao)));
 
     }
 
@@ -94,152 +94,95 @@ class InvoicePDF
     {
         $result = "<!DOCTYPE html>
         <html lang='pt-br'>
-        <head>
-            <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Document</title>
-        
-        <style>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Modelo Fatura</title>
             
-            body{
-                /* background-color: #d6d3d3fd;
-                color: rgba(0,0,0,1); */
-                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-                font-size: 12px;
-            }
-            
-            #corpo{
-            position: relative;
-            top: -30px;
-            }
-            
-            #logo{
-                position: relative;
-                width: 20rem;
-                left:0px;
-                float: left;
-            }
+            <style>
+                
+                header {
+                    position:absolute;
+                    width: 730px;
+                    height: 130px;
+                    border: solid;
+                    padding: 10px;
+                    padding-top: 10px;
+                }
 
-            #logo img{
-                width: 80%;
-                border: 3px solid grey;
-            }
-            
-            table.tabela{
-                border-spacing: 0px;
-                margin-left: auto;
-                margin-right: auto; 
-            }
-            
-            table.tabela th{
-            
-                border-right: 1px solid black;
-            }
-            table.tabela td{
-                padding: 4px;
-                text-align: left;
-                vertical-align: middle;
-                border-right: 1px solid black;
-            }
-            
-            tr:nth-child(even) {background-color: #f2f2f2;}
-            
-            h4 { 
-            text-align: center;
-            }
-            
-            p {    
-            text-align: justify;
-            }
-            
-            #direitaHeader { 
-                width: 200px;       
-                height: 100px;
-                padding-top: 0px;
-                position: relative;
-                margin-left: 520px;
-                font-size: 13px;
-            }
+                #logo{
+                    position: relative;
+                    width: 350px;
+                    float: left;
+                    margim-left:300px;
+                }
 
-            #esquerdaHeader {
-                width: 200px;
-                height: 100px;
-                margin-top: 40px;
-                font-size: 13px;
-            }
+                #logo img{
+                    width: 80%;
+                }
+                
+                #direitaHeader { 
+                    width: 300px;       
+                    height: 100px;
+                    padding-top: 20px;
+                    position: relative;
+                    margin-left: 420px;
+                    font-size: 13px;
+                }
 
-        </style>
-        
-        
-        </head>
-        <body>
+                #direitaHeader, strong{
+                    text-align: right;
+                }
 
-            <div class='text-center bg-warning' style='background-color: yellow; text-align: center;'><small>$this->title</small></div><br>
-            <div> <!-- CABEÇALHO DA FATURA -->
+                #corpo {
+                    margin-top: 152px;
+                    width: 730px;
+                    height: 300px;
+                    padding: 10px;
+                    border: solid;
+                }
+
+                #esquerdaBody, strong{
+                    font-size: 13px;
+                }
+
+            </style>
+            
+            
+            </head>
+
+            <header>
+               
                 <div id='logo'>
                     <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
                 </div>
             
                 <div id='direitaHeader'>
-                    <b class='text-success' style='color: green;'>FATURA</b><br>
-                    <b>Data: $this->dtEmissao</b><br>
-                    <b>Nº $this->numFatura</b><br>
-                    Rerefência: <b>locação</b>. validade: 3 três dias
+                    <strong>COMFAL LOCAÇÃO DE MÁQUINAS LTDA - ME</strong><br>
+                    <strong>Tel: () 99999 - 9999</strong><br>
+                    <strong>E-mail: exemplo@exemplo.com</strong><br>
+                    <strong>Site: www.cofal.com.br</strong>
                 </div>
-                
-                <div id='esquerdaHeader'>
-                    <b style='color: green;'>EMPRESA:</b> $this->nomeCliente<br>
-                    <b>A/C SR./SRA:</b> $this->solicitante<br>
-                    <b>CONTATO:</b> $this->telefone / $this->email
-                </div>
-            </div>
-            
+                <br><br><br><br><br>
+               <div id='linhaCabecalho'></div>
+            </header>
+            <body>
                 <div id='corpo'>
-        
-                    <table class='tabela'>
-                        <thead style='background-color: lightgreen;'>
-                            <tr> 
-                                <th>ITEM</th>
-                                <th>PERIODO</th>
-                                <th>LOCAÇÃO</th>
-                                <th>QUANTIDADE</th>
-                                <th>ENTREGA</th>
-                                <th>RETIRADA</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>";
-                        /*foreach($this->listItems as $item){
-                            $desc = $item['desc'];
-                            $periodo = $item['periodo'];
-                            $locacao = $item['locacao'];
-                            $quantidade = $item['quantidade'];
-                            $entrega = $item['entrega'];
-                            $retirada = $item['retirada'];
+                    <div id='esquerdaBody'></div>
+                    <br><br>
+                    <strong>COMFAL LOCAÇÃO DE MÁQUINAS LTDA - ME</strong><br>
+                    <strong>Rua Hugo Rondelli, 66 - Praia Azul - Americana</strong><br>
+                    <strong>CEP: 13476-692 - UF: SP</strong><br>
+                    <strong>CNPJ: 71.528.426/0001-60 IE: 165.122.184.116</strong>
+                </div>    
 
-                            $entrega =  $this->toRealMoney($entrega);
-                            $retirada = $this->toRealMoney($retirada);
-
-                            $result .= "<tr>
-                                <td class='center'><b>$desc</b></td>
-                                <td class='center'><b>$periodo</b></td>
-                                <td class='center'>$locacao</td>
-                                <td class='center' style='text-align: center;'>$quantidade</td>
-                                <td class='center'>$entrega</td>
-                                <td class='center'>$retirada</td>
-                            </tr>";
-                        }*/
-
-                      $result .= "  
-                      </tbody>
-                    </table>
-                    
-                </div>
-     
             </body>
-            </html>";
+            <footer>
+            
+            </footer>
+        </html>";
         
-        $this->title = "FATURA - N. $this->numFatura - $this->nomeCliente";
+        $this->title = "FATURA - N. 324343 - Cliente teste"; // $this->numFatura - $this->nomeCliente
 
         return array($this->title, $result);
     }
