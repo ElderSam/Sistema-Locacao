@@ -134,19 +134,64 @@ class InvoicePDF
                     text-align: right;
                 }
 
-                #corpo {
+                #corpoSuperior {
                     margin-top: 152px;
-                    width: 730px;
-                    height: 300px;
-                    padding: 10px;
+                    width: 750px;
+                    height: 200px;
                     border: solid;
                 }
 
-                #esquerdaBody, strong{
+                #esquerdaBody, strong {
                     font-size: 13px;
                 }
 
-            </style>
+                #corpoSuperior-esquerda {
+                    
+                 
+                    margin: 5px;
+                    width: 350px;
+                    height: 150px;
+
+                } 
+
+                #corpoSuperior-direita {
+                    
+                    position: relative;
+         
+                    width: 350px;
+                    height: 180px;
+                    left: 370px;
+                    top: -150px;
+                    padding: 20px;
+                } 
+
+                #esquerda-superior {
+            
+                    position: relative;
+                    width: 170px
+                    height: 50px;
+                    left: 0px;
+                    top: 40px;
+                    margin: 5px;
+                }
+
+                #direita-superior {
+               
+                    position: relative;
+                    width: 150px
+                    height: 50px;
+                    left: 190px;
+                    top: -45px;
+                }
+
+                #numero-fatura {
+                    position: relative;
+                    font-size: 27px;
+                    color: red;
+                    left: 80px;
+                }
+
+             </style>
             
             
             </head>
@@ -167,15 +212,35 @@ class InvoicePDF
                <div id='linhaCabecalho'></div>
             </header>
             <body>
-                <div id='corpo'>
-                    <div id='esquerdaBody'></div>
-                    <br><br>
-                    <strong>COMFAL LOCAÇÃO DE MÁQUINAS LTDA - ME</strong><br>
-                    <strong>Rua Hugo Rondelli, 66 - Praia Azul - Americana</strong><br>
-                    <strong>CEP: 13476-692 - UF: SP</strong><br>
-                    <strong>CNPJ: 71.528.426/0001-60 IE: 165.122.184.116</strong>
+                <div id='corpoSuperior'>
+
+                    <div id='corpoSuperior-esquerda'>            
+                        <div id='esquerdaBody'></div>
+                        <br><br>
+                        <strong>COMFAL LOCAÇÃO DE MÁQUINAS LTDA - ME</strong><br>
+                        <strong>Rua Hugo Rondelli, 66 - Praia Azul - Americana</strong><br>
+                        <strong>CEP: 13476-692 - UF: SP</strong><br>
+                        <strong>CNPJ: 71.528.426/0001-60 IE: 165.122.184.116</strong>
+                    </div>
+
+                    <div id='corpoSuperior-direita'>
+                        <strong>FATURA DE LOCAÇÃO</strong><br>
+                        <strong>Data de emissão: 21/12/2020</strong>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <strong id='numero-fatura'>Nº: 4343</strong>
+                        <div id='esquerda-superior'>
+                            <p>1º Via: Dest/Remetente</p>
+                            <p>2º Via: Arq. Fiscal</p>
+                        </div>
+                        <div id='direita-superior'>
+                            <p>3º Via: Fisco Destino</p>
+                            <p>4º Via: Fisco Destino</p>
+                        </div>
+                    </div>
+
                 </div>    
 
+                
             </body>
             <footer>
             
