@@ -276,7 +276,7 @@ class BudgetController extends Generator
         $budgetPDF = new BudgetPDF($orcamento, $listItems);
     
         $res = $budgetPDF->show();
-        //echo $content;
+        //print_r($res);
 
         $pdf = new myPDF();
         $file_name = str_replace('/', '-', $res[0]); //substitui / por - (porque quando baixa o PDF, não reconhece a barra no nome do arquivo)
@@ -298,7 +298,8 @@ class BudgetController extends Generator
             return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
 
         }else{
-            $pdf->display();
+            //$pdf->display(); //OBS: algumas hospedagem de site dão erro ao mostrar o pdf (display) 
+            $pdf->download(); 
         }
         
     }

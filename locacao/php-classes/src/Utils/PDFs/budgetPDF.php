@@ -151,52 +151,52 @@ class BudgetPDF
         <html lang='pt-br'>
 
         <head>
-            <meta charset='UTF-8'>
+            <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <title>$this->title</title>
 
             <style>
-            table{
-                font-size: 14px;
-            }
+                table{
+                    font-size: 14px;
+                }
 
-            .center{
-                text-align: center;
-            }
+                .center{
+                    text-align: center;
+                }
 
-            th{
-                border-right: 1px solid black;
-            }
+                th{
+                    border-right: 1px solid black;
+                }
 
-            td{
-                border-right: 1px solid black;
-            }
+                td{
+                    border-right: 1px solid black;
+                }
 
-            #div-lateral{
-                position:relative;
-                width:20rem;
-                float: left;
-            }
-            #div-logo{
-                position: relative;
-                width: 20rem;
-                left:0px;
-                float: left;
-            }
+                #div-lateral{
+                    position:relative;
+                    width:20rem;
+                    float: left;
+                }
+                #div-logo{
+                    position: relative;
+                    width: 20rem;
+                    left:0px;
+                    float: left;
+                }
 
-            #div-logo img{
-                width: 80%;
-                border: 3px solid grey;
-            }
+                #div-logo img{
+                    width: 80%;
+                    border: 3px solid grey;
+                }
 
-            .group:before,
-            .group:after {
-                content: '';
-                display: table;
-            } 
-            .group:after {
-                clear: both;
-            }
+                .group:before,
+                .group:after {
+                    content: '';
+                    display: table;
+                } 
+                .group:after {
+                    clear: both;
+                }
             </style>
         </head>
 
@@ -207,7 +207,7 @@ class BudgetPDF
             <div> <!-- CABEÇALHO DO ORÇAMENTO -->
                 <div class='group'>
                     <div id='div-logo' class='bg-dark p-1'>
-                        <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
+                        <img src='http://". $_SERVER["HTTP_HOST"]."/res/img/logo-COMFAL.jpg' alt='logo'>
                     </div>
                     <div id='div-lateral' class='text-center mt-4 ml-4 center' style='padding-left: 40px;'>
                         <h3 class='text-success' style='color: green;'>ORÇAMENTO</h3>

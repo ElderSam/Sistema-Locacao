@@ -248,7 +248,6 @@ class ContractController extends BudgetController
             return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
 
         }else{
-            //header('Content-Type: text/html; charset=iso-8859-2');
             //$pdf->display(); //OBS: algumas hospedagem de site dão erro ao mostrar o pdf (display) 
             $pdf->download();    
         }
