@@ -10,11 +10,8 @@ class ConstructionController extends Generator
 {
 
     //construtor
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
-  
     public function ajax_list_construction($requestData, $idCliente)
     {
 
@@ -75,14 +72,12 @@ class ConstructionController extends Generator
 
     public function save($update = false, $idCliente = 0) // Adicionar novo cliente ou editar
     {
+        $error = $this->verifyFields($update); //verifica os campos do formulário
+        $aux = json_decode($error);
 
-
-        // $error = $this->verifyFields($update); //verifica os campos do formulário
-        // $aux = json_decode($error);
-
-        // if ($aux->error) {
-        //     return $error;
-        // }
+        if ($aux->error) {
+            return $error;
+        }
        
         $construction = new Construction(); //Model
 
@@ -97,78 +92,94 @@ class ConstructionController extends Generator
     }
 
 
-    // public function verifyFields($update = false)
-    // {/*Verifica todos os campos ---------------------------*/
+    public function verifyFields($update = false)
+    {/*Verifica todos os campos ---------------------------*/
 
-    //     $errors = array();
+        $errors = array();
 
-    //     // if($_POST["email1"] != ""){
-    //     //     if($this->validaEmail($_POST["email1"]) == false){ //se o e-mail estiver correto
-    //     //         $errors["#email1"] = "E-mail Incorreto!";
-    //     //     }
-    //     // }    
+        /*if($_POST["email1"] != ""){
+            if($this->validaEmail($_POST["email1"]) == false){ //se o e-mail estiver correto
+                $errors["#email1"] = "E-mail Incorreto!";
+            }
+        }    
         
-    //     // if($_POST["email2"] != ""){
-    //     //     if($this->validaEmail($_POST["email2"]) == false){ //se o e-mail estiver correto
-    //     //         $errors["#email2"] = "E-mail Incorreto!";
-    //     //     }
-    //     // }
-        
+        if($_POST["email2"] != ""){
+            if($this->validaEmail($_POST["email2"]) == false){ //se o e-mail estiver correto
+                $errors["#email2"] = "E-mail Incorreto!";
+            }
+        }*/
 
-    //     $exists = 0;
+        if((!isset($_POST["respObra"])) || ($_POST["respObra"] == "")) {
+            $errors["#respObra"] = "Responsável é obrigatório!";
+        }
 
-    //     $exists = Construction::searchCompany($_POST["respObra"]);
-    //     if (count($exists) > 0) { //se existe cliente igual já registrado
+        if((!isset($_POST["uf"])) || ($_POST["uf"] == "")) {
+            $errors["#uf"] = "UF é obrigatória!";
+        }
 
-    //         if ($update) {
-    //             foreach ($exists as $reposible) {
+        if((!isset($_POST["cep"])) || ($_POST["cep"] == "")) {
+            $errors["#cep"] = "CEP é obrigatório!";
+        }
 
-    //                 //Ver se o nome que foi retornado é igual ao que está sendo enviado, descosiderando o registro que o mesmo ID
-    //                 if (($_POST['respObra'] == $reposible['respObra']) && ($_POST['idResp'] != $reposible['idResp'])) {
-    //                     $errors["#respObra"] = "Esse Responsável já existe";
-    //                     break;
-    //                 }
-    //             }
-    //         } else {
-    //             $errors["#respObra"] = "Esse Responsávels já existe";
-    //         }
+        if((!isset($_POST["cidade"])) || ($_POST["cidade"] == "")) {
+            $errors["#cidade"] = "Cidade é obrigatória!";
+        }
 
-    //     }
+        $exists = 0;
+
+        $exists = Construction::searchCompany($_POST["respObra"]);
+        if (count($exists) > 0) { //se existe cliente igual já registrado
+
+            if ($update) {
+                foreach ($exists as $reposible) {
+
+                    //Ver se o nome que foi retornado é igual ao que está sendo enviado, descosiderando o registro que o mesmo ID
+                    if (($_POST['respObra'] == $reposible['respObra']) && ($_POST['idResp'] != $reposible['idResp'])) {
+                        $errors["#respObra"] = "Esse Responsável já existe";
+                        break;
+                    }
+                }
+            } else {
+                $errors["#respObra"] = "Esse Responsávels já existe";
+            }
+
+        }
 
 
-    //     if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
+        if (count($errors) > 0) { //se tiver algum erro de input (campo) do formulário
 
-    //         return json_encode([
-    //             'error' => true,
-    //             'error_list' => $errors
-    //         ]);
-    //     } else { //se ainda não tem erro
+            return json_encode([
+                'error' => true,
+                'error_list' => $errors
+            ]);
+        } else { //se ainda não tem erro
 
-    //         return json_encode([
-    //             'error' => false
-    //         ]);
+            return json_encode([
+                'error' => false
+            ]);
 
-    //         /*if($this->getfoto() == ""){
-    //             $json["error_list"]["#desImagePath"] = "Não foi possível fazer Upload da imagem!";               
-    //         }*/
-    //     }
-    // }/* --- fim verificaErros() ---------------------------*/
+            /*if($this->getfoto() == ""){
+                $json["error_list"]["#desImagePath"] = "Não foi possível fazer Upload da imagem!";               
+            }*/
+        }
+    }/* --- fim verificaErros() ---------------------------*/
 
-    // public function validaEmail($email)
-    // {
-    //     //verifica se e-mail esta no formato correto de escrita
-    //     if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
-    //         return false;
-    //     } else {
-    //         //Valida o dominio
-    //         $dominio = explode('@', $email);
-    //         if (!checkdnsrr($dominio[1], 'A')) {
-    //             return false;
-    //         } else {
-    //             return true;
-    //         } // Retorno true para indicar que o e-mail é valido
-    //     }
-    // }
+    public function validaEmail($email)
+    {
+        //verifica se e-mail esta no formato correto de escrita
+        if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
+            return false;
+        } else {
+            //Valida o dominio
+            /*$dominio = explode('@', $email);
+            if (!checkdnsrr($dominio[1], 'A')) {
+                return false;
+            } else {
+                return true;
+            } // Retorno true para indicar que o e-mail é valido*/
+            return true;
+        }
+    }
 
 
 

@@ -286,7 +286,7 @@ function loadReposibleWorks(){
     $.getJSON(`/loadReposibleWorks/${idCostumer}`, function (data) {
 
 
-        var optionsObra = "<option value='0'>Escolher...</option>";
+        var optionsObra = "<option value=''>Escolher...</option>";
 
         data.forEach(function(item){
         
@@ -319,12 +319,13 @@ $(document).on("keydown", "#complemento", function () {
 });
 
 function limparCampos(){
-
+alert("sdf")
     loadReposibleWorks(); 
     
     $('#IdObra').val(0);
     //$('#codObra').val();
-    $('#respObra').val(0);
+    $('#respObra').val('');
+    console.log('respObra', $('#respObra').val())
 	$('#complemento').val('');
 	$('#cidade').val('');
 	$('#bairro').val('');
