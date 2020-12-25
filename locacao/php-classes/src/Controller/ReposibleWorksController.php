@@ -68,14 +68,11 @@ class ReposibleWorksController extends Generator
 
     public function records_total($idCliente)
     {
-
         return ReposibleWorks::total($idCliente);
     }
 
     public function save($update = false, $idCliente = 0) // Adicionar novo cliente ou editar
     {
-
-
         $error = $this->verifyFields($update); //verifica os campos do formulário
         $aux = json_decode($error);
 
@@ -101,6 +98,10 @@ class ReposibleWorksController extends Generator
 
         $errors = array();
 
+        if($_POST["respObra"] == "") {
+            $errors["#respObra"] = "Responsável obrigatório";
+        }
+
         if($_POST["email1"] != ""){
             if($this->validaEmail($_POST["email1"]) == false){ //se o e-mail estiver correto
                 $errors["#email1"] = "E-mail Incorreto!";
@@ -112,7 +113,6 @@ class ReposibleWorksController extends Generator
                 $errors["#email2"] = "E-mail Incorreto!";
             }
         }
-        
 
         $exists = 0;
 
@@ -159,18 +159,8 @@ class ReposibleWorksController extends Generator
         if (!preg_match('/^([a-zA-Z0-9.-_])*([@])([a-z0-9]).([a-z]{2,3})/', $email)) {
             return false;
         } else {
-            //Valida o dominio
-            $dominio = explode('@', $email);
-            if (!checkdnsrr($dominio[1], 'A')) {
-                return false;
-            } else {
-                return true;
-            } // Retorno true para indicar que o e-mail é valido
+            return true;
         }
     }
-
-
-
-
 
 }//end class UserController

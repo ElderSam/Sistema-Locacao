@@ -46,10 +46,8 @@ class ReposibleWorks extends Generator{
     
 
     public function get_datatable($requestData, $column_search, $column_order, $idCliente){
-        
-           $sql = new Sql(); 
-        
-        $query = "SELECT * FROM resp_Obras";
+
+        $query = "SELECT * FROM resp_obras";
 
         if (!empty($requestData['search']['value'])) { //verifica se eu digitei algo no campo de filtro
 
@@ -83,8 +81,10 @@ class ReposibleWorks extends Generator{
         $query .= " ORDER BY " . $column_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'] . 
         "  LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   "; 
         
-        
+        //echo $query  . "<br>";
+
         $reposible = new ReposibleWorks();
+        
         return array(
             'totalFiltered'=>$this->getTotalFiltered(),
             'data'=>$reposible->searchAll($query)

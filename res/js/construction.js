@@ -5,7 +5,7 @@ $(function() { //quando a página carrega
 
 
     idCostumer = parameters[parameters.length -1];
-   
+    setCostumerName(idCostumer)
 
    //Carrega a tabela de Obras
    myTable = $("#dataTable").DataTable({ 
@@ -171,6 +171,11 @@ $(function() { //quando a página carrega
 
 });
 
+function setCostumerName(idCostumer) {
+	$.getJSON(`/costumers/json/${idCostumer}`, function (data) {
+		$("#costumer-name-header").html(` - cliente: ${data.nome}`)
+	});
+}
 
 function loadTableConstruction(){ //carrega a tabela de Chesfes de Obra depois de umas alteração
 
@@ -319,7 +324,7 @@ $(document).on("keydown", "#complemento", function () {
 });
 
 function limparCampos(){
-alert("sdf")
+
     loadReposibleWorks(); 
     
     $('#IdObra').val(0);

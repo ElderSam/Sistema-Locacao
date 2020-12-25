@@ -3,7 +3,7 @@ $(function() { //quando a página carrega
 
 	 var parameters = window.location.href.split('/');
 	 idCostumer = parameters[parameters.length -1];
-	
+	setCostumerName(idCostumer);
 	//carrega a tabela de Chefe de Obras
 	myTable = $("#dataTable").DataTable({ 
 		"oLanguage": DATATABLE_PTBR, //tradução
@@ -166,6 +166,13 @@ $(function() { //quando a página carrega
 	});
 
 });
+
+function setCostumerName(idCostumer) {
+	$.getJSON(`/costumers/json/${idCostumer}`, function (data) {
+		$("#costumer-name-header").html(` - cliente: ${data.nome}`)
+		$("#formReposibleWorks #cliente").val(data.nome).prop('disabled', true);
+	});
+}
 
 function showsNextNumber(){ //mostra o próximo número de série relacionado ao cliente
 
