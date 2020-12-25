@@ -139,3 +139,14 @@ $app->get("/contracts/json/costumer/:idCliente", function($idCliente){
 	echo $contract->getContractsCostumer((int)$idCliente);
 
 });
+
+
+$app->get("/company/json/", function(){
+	
+    User::verifyLogin();
+
+	$contract = new Contract();
+
+	echo $contract->getValuesToCompanyPDF();
+
+});

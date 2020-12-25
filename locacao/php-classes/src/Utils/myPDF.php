@@ -23,7 +23,7 @@ class myPDF{
     {
         $this->file_name = $file_name;
 
-        $this->dompdf->load_html($content);
+        $this->dompdf->loadHtml($content);
         $this->dompdf->render();
         $canvas = $this->dompdf->get_canvas();  
         $canvas->page_text(550, 755, "Pág. {PAGE_NUM}/{PAGE_COUNT}", 'Verdana', 10, array(0,0,0)); //footer

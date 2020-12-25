@@ -5,8 +5,8 @@ namespace Locacao\Controller;
 use \Locacao\Model\User;
 use \Locacao\Model\Contract;
 use \Locacao\Controller\BudgetController;
-use Locacao\Utils\myPDF;
-use Locacao\Utils\PDFs\ContractPDF;
+use \Locacao\Utils\myPDF;
+use \Locacao\Utils\PDFs\ContractPDF;
 
 class ContractController extends BudgetController
 {
@@ -202,9 +202,23 @@ class ContractController extends BudgetController
         $contract = new Contract();
 
         $contrato = $contract->getValuesToContractPDF($id);
+        $arrContrato = json_decode($contrato, true);
+        if(count($arrContrato) == 0) {
+            return json_encode([
+                'error'=>true,
+                'msg'=>'Erro ao consultar dados do Contrato!'
+            ]);
+        }
 
         $empresa = $contract->getValuesToCompanyPDF();
-        
+        $arrEmpresa = json_decode($empresa, true);
+        if(count($arrEmpresa) == 0) {
+            return json_encode([
+                'error'=>true,
+                'msg'=>'Erro ao consultar dados da tabela empresa!'
+            ]);
+        }
+
         $itens = new ContractItemController();
 
         $listItens = $itens->getValuesToContractPDF($id);
@@ -212,7 +226,7 @@ class ContractController extends BudgetController
         $contractPDF = new ContractPDF($contrato, $listItens, $empresa);
 
         $res = $contractPDF->show();
-
+        //print_r($res);
         $pdf = new myPDF();
 
         $file_name = str_replace('/', '-', $res[0]);
@@ -234,7 +248,9 @@ class ContractController extends BudgetController
             return $pdf->sendEmail($_POST['toAdress'], $_POST['toName'], $_POST['subject'], $_POST['html']);
 
         }else{
-            $pdf->display();
+            //header('Content-Type: text/html; charset=iso-8859-2');
+            //$pdf->display(); //OBS: algumas hospedagem de site dão erro ao mostrar o pdf (display) 
+            $pdf->download();    
         }
         
     }

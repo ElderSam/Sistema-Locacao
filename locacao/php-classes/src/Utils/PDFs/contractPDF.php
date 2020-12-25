@@ -44,7 +44,6 @@ class ContractPDF
 
     public function __construct($contract, $listItems, $empresa)
     {
-       // echo $budget;
         $contract = json_decode($contract);
         $empresa = json_decode($empresa);
 
@@ -157,90 +156,90 @@ class ContractPDF
         $result = "<!DOCTYPE html>
         <html lang='pt-br'>
         <head>
-            <meta charset='UTF-8'>
+            <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <title>Document</title>
         
         <style>
-        
-        body{
-            /* background-color: #d6d3d3fd;
-            color: rgba(0,0,0,1); */
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 12px;
-        }
-        
-        #corpo{
-           position: relative;
-           top: -30px;
-        }
-        
-        #logo{
+            
+            body{
+                /* background-color: #d6d3d3fd;
+                color: rgba(0,0,0,1); */
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                font-size: 12px;
+            }
+            
+            #corpo{
             position: relative;
-            width: 20rem;
-            left:0px;
-            float: left;
-        }
+            top: -30px;
+            }
+            
+            #logo{
+                position: relative;
+                width: 20rem;
+                left:0px;
+                float: left;
+            }
 
-        #logo img{
-            width: 80%;
-            border: 3px solid grey;
-        }
+            #logo img{
+                width: 80%;
+                border: 3px solid grey;
+            }
 
-        
-        .left{
-            float: left;
-            margin-right: 350px;
-        }
+            
+            .left{
+                float: left;
+                margin-right: 350px;
+            }
 
-        .right{
-            float: right;
-            margin-left: 350px;
-        }
+            .right{
+                float: right;
+                margin-left: 350px;
+            }
 
-        
-        table.tabela{
-            border-spacing: 0px;
-            margin-left: auto;
-            margin-right: auto; 
-        }
-        
-        table.tabela th{
-        
-            border-right: 1px solid black;
-        }
-        table.tabela td{
-            padding: 4px;
-            text-align: left;
-            vertical-align: middle;
-            border-right: 1px solid black;
-        }
-        
-        tr:nth-child(even) {background-color: #f2f2f2;}
-        
-        h4 { 
-        text-align: center;
-        }
-        
-        p {    
-        text-align: justify;
-        }
-        
-        #direitaHeader { 
-            width: 200px;       
-            height: 100px;
-            padding-top: 0px;
-            position: relative;
-            margin-left: 520px;
-            font-size: 13px;
-        }
+            
+            table.tabela{
+                border-spacing: 0px;
+                margin-left: auto;
+                margin-right: auto; 
+            }
+            
+            table.tabela th{
+            
+                border-right: 1px solid black;
+            }
+            table.tabela td{
+                padding: 4px;
+                text-align: left;
+                vertical-align: middle;
+                border-right: 1px solid black;
+            }
+            
+            tr:nth-child(even) {background-color: #f2f2f2;}
+            
+            h4 { 
+            text-align: center;
+            }
+            
+            p {    
+            text-align: justify;
+            }
+            
+            #direitaHeader { 
+                width: 200px;       
+                height: 100px;
+                padding-top: 0px;
+                position: relative;
+                margin-left: 520px;
+                font-size: 13px;
+            }
 
-        #esquerdaHeader {
-            width: 200px;
-            height: 100px;
-            margin-top: 40px;
-            font-size: 13px;
-        }
+            #esquerdaHeader {
+                width: 200px;
+                height: 100px;
+                margin-top: 40px;
+                font-size: 13px;
+            }
 
         </style>
         
@@ -251,7 +250,7 @@ class ContractPDF
             <div class='text-center bg-warning' style='background-color: yellow; text-align: center;'><small>$this->title</small></div><br>
             <div> <!-- CABEÇALHO DO CONTRATO -->
                 <div id='logo'>
-                    <img src='http://localhost/res/img/logo-COMFAL.jpg' alt='logo'>
+                    <img src='http://". $_SERVER["HTTP_HOST"]."/res/img/logo-COMFAL.jpg' alt='logo'>
                 </div>
             
                 <div id='direitaHeader'>
@@ -571,8 +570,8 @@ class ContractPDF
      
             </body>
             </html>";
-        
-        $this->title = "PROPOSTA - N. $this->codContrato - $this->nomeCliente";
+
+            $this->title = "PROPOSTA - N. $this->codContrato - $this->nomeCliente";
 
         return array($this->title, $result);
     }
